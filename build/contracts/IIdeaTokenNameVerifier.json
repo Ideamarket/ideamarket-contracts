@@ -1,0 +1,305 @@
+{
+  "contractName": "IIdeaTokenNameVerifier",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "verifyTokenName",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"verifyTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Alexander/Desktop/ideamarket/contracts/core/IIdeaTokenNameVerifier.sol\":\"IIdeaTokenNameVerifier\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Alexander/Desktop/ideamarket/contracts/core/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0xaf3c8d02852edc08ac85198fa3d37f3c512dc215a5409992e45cf877c34c172d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1303500e1882260f5f77d8b331184e8e7972e94b3be8ca972ae1de41089bcc9e\",\"dweb:/ipfs/QmVQbjUbaD5iXhQEBQqREE51TibRQREqdDBkQRf1SfxyVr\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\ninterface IIdeaTokenNameVerifier {\r\n    function verifyTokenName(string calldata name) external pure returns (bool);\r\n}",
+  "sourcePath": "C:\\Users\\Alexander\\Desktop\\ideamarket\\contracts\\core\\IIdeaTokenNameVerifier.sol",
+  "ast": {
+    "absolutePath": "/C/Users/Alexander/Desktop/ideamarket/contracts/core/IIdeaTokenNameVerifier.sol",
+    "exportedSymbols": {
+      "IIdeaTokenNameVerifier": [
+        46
+      ]
+    },
+    "id": 47,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 38,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:1"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 46,
+        "linearizedBaseContracts": [
+          46
+        ],
+        "name": "IIdeaTokenNameVerifier",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "4c8bc1c9",
+            "id": 45,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "verifyTokenName",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 41,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 40,
+                  "mutability": "mutable",
+                  "name": "name",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 45,
+                  "src": "125:20:1",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 39,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "125:6:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "124:22:1"
+            },
+            "returnParameters": {
+              "id": 44,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 43,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 45,
+                  "src": "170:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 42,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "170:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "169:6:1"
+            },
+            "scope": 46,
+            "src": "100:76:1",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 47,
+        "src": "60:119:1"
+      }
+    ],
+    "src": "33:146:1"
+  },
+  "legacyAST": {
+    "absolutePath": "/C/Users/Alexander/Desktop/ideamarket/contracts/core/IIdeaTokenNameVerifier.sol",
+    "exportedSymbols": {
+      "IIdeaTokenNameVerifier": [
+        46
+      ]
+    },
+    "id": 47,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 38,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:1"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 46,
+        "linearizedBaseContracts": [
+          46
+        ],
+        "name": "IIdeaTokenNameVerifier",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "4c8bc1c9",
+            "id": 45,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "verifyTokenName",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 41,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 40,
+                  "mutability": "mutable",
+                  "name": "name",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 45,
+                  "src": "125:20:1",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 39,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "125:6:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "124:22:1"
+            },
+            "returnParameters": {
+              "id": 44,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 43,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 45,
+                  "src": "170:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 42,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "170:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "169:6:1"
+            },
+            "scope": 46,
+            "src": "100:76:1",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 47,
+        "src": "60:119:1"
+      }
+    ],
+    "src": "33:146:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.9+commit.3e3065ac.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.2",
+  "updatedAt": "2020-07-20T15:42:31.347Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
