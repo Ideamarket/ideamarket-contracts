@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Ideamarket/ideamarket/issues"
   },
-  "homepage": "https://github.com/Ideamarket/ideamarket#readme"
+  "homepage": "https://github.com/Ideamarket/ideamarket#readme",
+  "devDependencies": {
+    "@openzeppelin/contracts": "^3.1.0"
+  }
 }
