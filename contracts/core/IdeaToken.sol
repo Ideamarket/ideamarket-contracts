@@ -2,7 +2,7 @@
 pragma solidity ^0.6.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "../util/Ownable.sol";
 
 /**
  * @title IdeaToken
@@ -17,7 +17,7 @@ contract IdeaToken is ERC20, Ownable {
      * @param name The name of the token
      * @param symbol The symbol of the token
      */
-    constructor (string memory name, string memory symbol) public ERC20(name, symbol) Ownable() {}
+    constructor (string memory name, string memory symbol) public ERC20(name, symbol) {}
 
     /**
      * @dev Mints a given amount of tokens to an address. May only be called by the owner
