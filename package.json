@@ -19,5 +19,8 @@
   "homepage": "https://github.com/Ideamarket/ideamarket#readme",
   "devDependencies": {
     "@openzeppelin/contracts": "^3.1.0"
+  },
+  "dependencies": {
+    "@openzeppelin/cli": "^2.8.2"
   }
 }
