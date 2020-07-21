@@ -10,7 +10,7 @@ import "@openzeppelin/upgrades/contracts/Initializable.sol";
  * @title IdeaTokenFactory
  * @author Alexander Schlindwein
  *
- * @dev Manages the creation, exchange and interest distribution of IdeaTokens
+ * @dev Manages the creation, exchange and interest distribution of IdeaTokens. Sits behind a proxy
  */
 contract IdeaTokenFactory is Initializable, Ownable {
 
@@ -50,7 +50,7 @@ contract IdeaTokenFactory is Initializable, Ownable {
      * @param owner The owner of the contract
      */
     function initialize(address owner) external initializer {
-        _owner = owner;
+        setOwnerInternal(owner);
     }
 
     /**
