@@ -11,12 +11,27 @@ contract Ownable {
 
     address public _owner;
 
+    event OwnershipChanged(address oldOwner, address newOwner);
+
     constructor() public {
         _owner = msg.sender;
+
+        emit OwnershipChanged(address(0), msg.sender);
     }
 
     modifier onlyOwner {
         require(_owner == msg.sender, "Ownable: onlyOwner");
         _;
+    }
+
+    function setOwner(address newOwner) external onlyOwner {
+        setOwnerInternal(newOwner);
+    }
+
+    function setOwnerInternal(address newOwner) internal {
+        address oldOwner = _owner;
+        _owner = newOwner;
+
+        emit OwnershipChanged(oldOwner, newOwner);
     }
 }
