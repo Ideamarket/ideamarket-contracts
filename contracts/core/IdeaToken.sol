@@ -17,7 +17,7 @@ contract IdeaToken is ERC20, Ownable {
      * @param name The name of the token
      * @param symbol The symbol of the token
      */
-    constructor (string memory name, string memory symbol) public ERC20(name, symbol) {}
+    constructor (string memory _name, string memory _symbol) public ERC20(_name, _symbol) {}
 
     /**
      * @dev Mints a given amount of tokens to an address. May only be called by the owner
