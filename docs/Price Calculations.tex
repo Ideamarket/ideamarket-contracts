@@ -1,0 +1,75 @@
+\documentclass[12pt]{article}
+\usepackage{lingmacros}
+\usepackage{tree-dvips}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\begin{document}
+
+\begin{center}
+\begin{huge}
+\textbf{IdeaMarkets Docs}
+\end{huge}
+\linebreak\linebreak
+\textbf{Bonding Curve Price Calculations}
+\end{center}
+
+The IdeaMarkets contracts use a bonding curve mechanism to exchange tokens in turn for Dai. 
+
+\section{Constants}
+There are several constants required for price calculation which are set in the smart contract:
+\begin{itemize}
+\item[\textbf{B}] Base cost: The initial cost in Dai per IdeaToken in the first interval
+\item[\textbf{R}] Rise: The price rise in Dai per IdeaToken per completed interval
+\item[\textbf{T}] Tokens per interval: The amount of IdeaTokens in each interval
+\end{itemize}
+
+\section{Price calculation by IdeaToken amount}
+To calculate the price $Y$ in Dai to buy $X$ amount of IdeaTokens we calculate the difference between the price of the existing supply $S$ and the supply $S + X$ after the tokens have been bought:
+\begin{center}
+$Y = P(S + X) - P(S)$
+\end{center}
+with $P$ being a function which calculates the price for a given amount of IdeaTokens from $0$ supply. $P(X)$ consists of the sum of two parts: the price for the completed intervals and the price for the IdeaTokens in the remaining interval:
+\begin{center}
+$P(X) = C(X) + M(X)$
+\end{center}
+To calculate $C(X)$ we sum up the cost of the completed intervals with $N$ being the amount of completed intervals:
+\begin{center}
+$N = \floor*{\frac{X}{T}}$\\~\\
+$C(X) = \sum\nolimits_{n=1}^{N}(B + R \cdot (n - 1)) \cdot T$ \\~\\
+$= NT \cdot (B - R) + RT \cdot \frac{N \cdot (N + 1)}{2}$
+\end{center}
+\pagebreak
+To calculate the $M(X)$ we multiply the amount of remaining IdeaTokens with the price of the last interval:
+\begin{center}
+$M(X) = (X - NT) \cdot (B + NR)$
+\end{center}
+This leaves us with the final formula for $P(X)$:
+\begin{center}
+$P(X) = NT \cdot (B - R) + RT \cdot \frac{N \cdot (N + 1)}{2} + (X - NT) \cdot (B + NR)$
+\end{center}
+
+\section{Price calculation by Dai amount}
+To calculate the amount $Y$ of IdeaTokens which can be purchased by $X$ amount of Dai we calculate the difference between the existing supply $S$ and the supply after additional IdeaTokens have been bought for $X$ Dai:
+\begin{center}
+$Y = D(P(S) + X) - S$
+\end{center}
+with $D$ being a function which calculates the amount of IdeaTokens purchasable for a given amount of Dai from $0$ supply. To calculate the formula for $D$ we first need to find the amount of completed intervals for a given amount of $X$ Dai. This can be done by solving $C(X)$ for $N$:
+\begin{center}
+$N(X) = \frac{\sqrt{T \cdot (4B^2T - 4BRT + R^2T + 8RX) - 2BT + RT}}{2RT}$
+\end{center}
+To calculate the amount of IdeaTokens which can be bought by the remaining Dai in the final interval:
+\begin{center}
+$\frac{X - C(N(X))}{B + N(X) \cdot R}$
+\end{center}
+This leaves us with the final formula for $D(X)$:
+\begin{center}
+$D(X) = N(X) \cdot T + \frac{X - C(N(X))}{B + N(X) \cdot R}$
+\end{center}
+
+
+
+\end{document}
