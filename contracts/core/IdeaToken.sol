@@ -14,8 +14,8 @@ contract IdeaToken is ERC20, Ownable {
 
     /**
      * @dev Tokens are always created with 18 decimals
-     * @param name The name of the token
-     * @param symbol The symbol of the token
+     * @param _name The name of the token
+     * @param _symbol The symbol of the token
      */
     constructor (string memory _name, string memory _symbol) public ERC20(_name, _symbol) {}
 

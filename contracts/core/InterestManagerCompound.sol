@@ -14,7 +14,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
  *
  * @dev Manages DAI investments into Compound. Sits behind a proxy
  */
-contract InterestManagerCompound is Ownable, Initializable, IInterestManager {
+contract InterestManagerCompound is Ownable, Initializable {
 
     using SafeMath for uint;
 
