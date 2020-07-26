@@ -145,7 +145,11 @@ contract IdeaTokenFactory is Initializable, Ownable {
         return true;
     }
 
-    function getMarketDetailsById(uint marketID) external view returns (MarketDetails memory) {
+    function getMarketIDByName(string calldata marketName) external view returns (uint) {
+        return _marketIDs[marketName];
+    }
+
+    function getMarketDetailsByID(uint marketID) external view returns (MarketDetails memory) {
         return _markets[marketID].marketDetails;
     }
 
@@ -155,6 +159,10 @@ contract IdeaTokenFactory is Initializable, Ownable {
 
     function getNumMarkets() external view returns (uint) {
         return _numMarkets;
+    }
+
+    function getTokenIDByName(string calldata tokenName, uint marketID) external view returns (uint) {
+        return _markets[marketID].tokenIDs[tokenName];
     }
 
     function getTokenInfo(uint marketID, uint tokenID) external view returns (TokenInfo memory) {
