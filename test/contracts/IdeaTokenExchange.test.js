@@ -3,14 +3,21 @@ const InterestManagerCompound = artifacts.require('InterestManagerCompound')
 const IdeaTokenFactory = artifacts.require('IdeaTokenFactory')
 const IdeaTokenExchange = artifacts.require('IdeaTokenExchange')
 
+const BN = web3.utils.BN
+
 contract("IdeaTokenFormula", async accounts => {
+
+    const tenPow18 = new BN('10').pow(new BN('18'))
 
     const marketName = 'main'
     const tokenName = 'test.com'
     const baseCost = new web3.utils.BN('1000000000000000000') // 10**18
     const priceRise = new web3.utils.BN('100000000000000000') // 10**17
     const tokensPerInterval = new web3.utils.BN('100000000000000000000') // 10**20
-    const tradingFee = 100
+    const tradingFeeRate = 100
+    const tradingFeeRateScale = 10000
+    const permafundRate = 200
+    const permafundRateScale = 10000
 
     const adminAccount = accounts[0]
 
@@ -40,7 +47,6 @@ contract("IdeaTokenFormula", async accounts => {
                                           ideaTokenExchange.address)
 
         await ideaTokenExchange.initialize(adminAccount,
-                                           tradingFee,
                                            '0x0000000000000000000000000000000000000000',
                                            ideaTokenFactory.address,
                                            interestManagerCompound.address,
@@ -51,7 +57,11 @@ contract("IdeaTokenFormula", async accounts => {
                                          domainNoSubdomainNameVerifier.address,
                                          baseCost,
                                          priceRise,
-                                         tokensPerInterval)
+                                         tokensPerInterval,
+                                         tradingFeeRate,
+                                         tradingFeeRateScale,
+                                         permafundRate,
+                                         permafundRateScale)
 
         marketID = await ideaTokenFactory.getMarketIDByName(marketName)
 
@@ -62,6 +72,6 @@ contract("IdeaTokenFormula", async accounts => {
     })
   
     it("should have correct buy price from 0 supply", async () => {
-        console.log((await ideaTokenExchange.getCostForBuyingTokens(marketID, tokenID, '1000000000000000000')).toString())
+        console.log((await ideaTokenExchange.getCostForBuyingTokens(marketID, tokenID, tenPow18)).toString())
     })
 })

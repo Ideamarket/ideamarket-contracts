@@ -26,6 +26,10 @@ interface IIdeaTokenFactory {
         uint baseCost;
         uint priceRise;
         uint tokensPerInterval;
+        uint tradingFeeRate;
+        uint tradingFeeRateScale;
+        uint permafundRate;
+        uint permafundRateScale;
     }
 
     function isValidTokenName(string calldata tokenName, uint marketID) external view returns (bool);

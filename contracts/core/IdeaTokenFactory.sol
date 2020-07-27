@@ -38,6 +38,10 @@ contract IdeaTokenFactory is Initializable, Ownable {
         uint baseCost;
         uint priceRise;
         uint tokensPerInterval;
+        uint tradingFeeRate;
+        uint tradingFeeRateScale;
+        uint permafundRate;
+        uint permafundRateScale;
     }
 
     /// @dev Stores information about a market
@@ -78,9 +82,15 @@ contract IdeaTokenFactory is Initializable, Ownable {
      * @param baseCost: The initial cost in Dai per IdeaToken in the first interval
      * @param priceRise: The price rise in Dai per IdeaToken per completed interval
      * @param tokensPerInterval: The amount of IdeaTokens in each interval
+     * @param tradingFeeRate: The trading fee rate
+     * @param tradingFeeRateScale: The scale by which the trading fee is scaled
+     * @param permafundRate: The permafund rate
+     * @param permafundRateScale: The scale by which the permafund rate is scaled
      */
     function addMarket(string calldata marketName, address nameVerifier,
-                       uint baseCost, uint priceRise, uint tokensPerInterval) external onlyOwner {
+                       uint baseCost, uint priceRise, uint tokensPerInterval,
+                       uint tradingFeeRate, uint tradingFeeRateScale,
+                       uint permafundRate, uint permafundRateScale) external onlyOwner {
         require(_marketIDs[marketName] == 0, "addMarket: market exists already");
         require(baseCost > 0 && priceRise > 0 && tokensPerInterval > 0, "addMarket: invalid parameters");
 
@@ -94,7 +104,11 @@ contract IdeaTokenFactory is Initializable, Ownable {
                 numTokens: 0,
                 baseCost: baseCost,
                 priceRise: priceRise,
-                tokensPerInterval: tokensPerInterval
+                tokensPerInterval: tokensPerInterval,
+                tradingFeeRate: tradingFeeRate,
+                tradingFeeRateScale: tradingFeeRateScale,
+                permafundRate: permafundRate,
+                permafundRateScale: permafundRateScale
             })
         });
 
@@ -134,6 +148,14 @@ contract IdeaTokenFactory is Initializable, Ownable {
         emit NewToken(tokenID, marketID, tokenName);
     }
 
+    /**
+     * @dev Checks whether a token name is allowed and not used already
+     *
+     * @param tokenName The intended token name
+     * @param marketID The market on which the token is to be listed
+     *
+     * @return True if the name is allowed, false otherwise
+     */
     function isValidTokenName(string calldata tokenName, uint marketID) public view returns (bool) {
 
         MarketDetails storage marketDetails = _markets[marketID].marketDetails;
