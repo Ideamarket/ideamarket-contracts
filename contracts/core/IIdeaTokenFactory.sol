@@ -7,6 +7,13 @@ import "./IIdeaTokenNameVerifier.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface IIdeaTokenFactory {
+
+    struct IDPair {
+        bool exists;
+        uint marketID;
+        uint tokenID;
+    }
+
     struct TokenInfo {
         bool exists;
         uint id;
@@ -14,7 +21,6 @@ interface IIdeaTokenFactory {
         IIdeaToken ideaToken;
     }
 
-    /// @dev Stores information about a market
     struct MarketDetails {
         bool exists;
         uint id;
@@ -32,6 +38,13 @@ interface IIdeaTokenFactory {
         uint permafundRateScale;
     }
 
+    function addMarket(string calldata marketName, address nameVerifier,
+                       uint baseCost, uint priceRise, uint tokensPerInterval,
+                       uint tradingFeeRate, uint tradingFeeRateScale,
+                       uint permafundRate, uint permafundRateScale) external;
+
+    function addToken(string calldata tokenName, uint marketID) external;
+
     function isValidTokenName(string calldata tokenName, uint marketID) external view returns (bool);
     function getMarketIDByName(string calldata marketName) external view returns (uint);
     function getMarketDetailsByID(uint marketID) external view returns (MarketDetails memory);
@@ -39,4 +52,5 @@ interface IIdeaTokenFactory {
     function getNumMarkets() external view returns (uint);
     function getTokenIDByName(string calldata tokenName, uint marketID) external view returns (uint);
     function getTokenInfo(uint marketID, uint tokenID) external view returns (TokenInfo memory);
+    function getTokenIDPair(address token) external view returns (IDPair memory);
 }

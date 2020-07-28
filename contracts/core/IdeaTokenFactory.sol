@@ -2,12 +2,13 @@
 pragma solidity ^0.6.9;
 pragma experimental ABIEncoderV2;
 
+import "@openzeppelin/upgrades/contracts/Initializable.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../util/Ownable.sol";
+import "./IIdeaTokenFactory.sol";
 import "./IdeaToken.sol";
 import "./IIdeaToken.sol";
 import "./IIdeaTokenNameVerifier.sol";
-import "@openzeppelin/upgrades/contracts/Initializable.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
 
 /**
  * @title IdeaTokenFactory
@@ -15,36 +16,10 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
  *
  * @dev Manages the creation, exchange and interest distribution of IdeaTokens. Sits behind a proxy
  */
-contract IdeaTokenFactory is Initializable, Ownable {
+contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
 
     using SafeMath for uint256;
 
-    /// @dev Stores information about a token
-    struct TokenInfo {
-        bool exists;
-        uint id;
-        string name;
-        IIdeaToken ideaToken;
-    }
-
-    struct MarketDetails {
-        bool exists;
-        uint id;
-        string name;
-
-        IIdeaTokenNameVerifier nameVerifier;
-        uint numTokens;
-
-        uint baseCost;
-        uint priceRise;
-        uint tokensPerInterval;
-        uint tradingFeeRate;
-        uint tradingFeeRateScale;
-        uint permafundRate;
-        uint permafundRateScale;
-    }
-
-    /// @dev Stores information about a market
     struct MarketInfo {
         mapping(uint => TokenInfo) tokens;
         mapping(string => uint) tokenIDs;
@@ -54,12 +29,14 @@ contract IdeaTokenFactory is Initializable, Ownable {
 
     address _ideaTokenExchange;
 
+    mapping(address => IDPair) _tokenIDPairs;
+
     mapping(uint => MarketInfo) _markets;
     mapping(string => uint) _marketIDs;
     uint _numMarkets;
 
     /// @dev We want token names to be unique across markets, so we keep track of them in a seperate map
-    mapping(string => bool) tokenNameUsed;
+    mapping(string => bool) _tokenNameUsed;
 
     event NewMarket(uint id, string name);
     event NewToken(uint id, uint marketID, string name);
@@ -90,7 +67,7 @@ contract IdeaTokenFactory is Initializable, Ownable {
     function addMarket(string calldata marketName, address nameVerifier,
                        uint baseCost, uint priceRise, uint tokensPerInterval,
                        uint tradingFeeRate, uint tradingFeeRateScale,
-                       uint permafundRate, uint permafundRateScale) external onlyOwner {
+                       uint permafundRate, uint permafundRateScale) external override onlyOwner {
         require(_marketIDs[marketName] == 0, "addMarket: market exists already");
         require(baseCost > 0 && priceRise > 0 && tokensPerInterval > 0, "addMarket: invalid parameters");
 
@@ -124,7 +101,7 @@ contract IdeaTokenFactory is Initializable, Ownable {
      * @param tokenName The name of the token
      * @param marketID The ID of the market
      */
-    function addToken(string calldata tokenName, uint marketID) external {
+    function addToken(string calldata tokenName, uint marketID) external override {
         MarketInfo storage marketInfo = _markets[marketID];
         require(marketInfo.marketDetails.exists, "addToken: market does not exist");
         require(isValidTokenName(tokenName, marketID), "addToken: name verification failed");
@@ -143,7 +120,12 @@ contract IdeaTokenFactory is Initializable, Ownable {
 
         marketInfo.tokens[tokenID] = tokenInfo;
         marketInfo.tokenIDs[tokenName] = tokenID;
-        tokenNameUsed[tokenName] = true;
+        _tokenNameUsed[tokenName] = true;
+        _tokenIDPairs[address(ideaToken)] = IDPair({
+            exists: true,
+            marketID: marketID,
+            tokenID: tokenID
+        });
 
         emit NewToken(tokenID, marketID, tokenName);
     }
@@ -156,38 +138,42 @@ contract IdeaTokenFactory is Initializable, Ownable {
      *
      * @return True if the name is allowed, false otherwise
      */
-    function isValidTokenName(string calldata tokenName, uint marketID) public view returns (bool) {
+    function isValidTokenName(string calldata tokenName, uint marketID) public view override returns (bool) {
 
         MarketDetails storage marketDetails = _markets[marketID].marketDetails;
 
-        if(tokenNameUsed[tokenName] || !marketDetails.nameVerifier.verifyTokenName(tokenName)) {
+        if(_tokenNameUsed[tokenName] || !marketDetails.nameVerifier.verifyTokenName(tokenName)) {
             return false;
         }
 
         return true;
     }
 
-    function getMarketIDByName(string calldata marketName) external view returns (uint) {
+    function getMarketIDByName(string calldata marketName) external view override returns (uint) {
         return _marketIDs[marketName];
     }
 
-    function getMarketDetailsByID(uint marketID) external view returns (MarketDetails memory) {
+    function getMarketDetailsByID(uint marketID) external view override returns (MarketDetails memory) {
         return _markets[marketID].marketDetails;
     }
 
-    function getMarketDetailsByName(string calldata marketName) external view returns (MarketDetails memory) {
+    function getMarketDetailsByName(string calldata marketName) external view override returns (MarketDetails memory) {
         return _markets[_marketIDs[marketName]].marketDetails;
     }
 
-    function getNumMarkets() external view returns (uint) {
+    function getNumMarkets() external view override  returns (uint) {
         return _numMarkets;
     }
 
-    function getTokenIDByName(string calldata tokenName, uint marketID) external view returns (uint) {
+    function getTokenIDByName(string calldata tokenName, uint marketID) external view override returns (uint) {
         return _markets[marketID].tokenIDs[tokenName];
     }
 
-    function getTokenInfo(uint marketID, uint tokenID) external view returns (TokenInfo memory) {
+    function getTokenInfo(uint marketID, uint tokenID) external view override returns (TokenInfo memory) {
         return _markets[marketID].tokens[tokenID];
+    }
+
+    function getTokenIDPair(address token) external view override returns (IDPair memory) {
+        return _tokenIDPairs[token];
     }
 }

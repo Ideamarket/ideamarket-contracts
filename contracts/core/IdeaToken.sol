@@ -3,6 +3,7 @@ pragma solidity ^0.6.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../util/Ownable.sol";
+import "./IIdeaToken.sol";
 
 /**
  * @title IdeaToken
@@ -10,7 +11,7 @@ import "../util/Ownable.sol";
  *
  * @dev Represents an ERC20 IdeaToken which can be burned and minted by the owner of the contract instance
  */
-contract IdeaToken is ERC20, Ownable {
+contract IdeaToken is IIdeaToken, ERC20, Ownable {
 
     /**
      * @dev Tokens are always created with 18 decimals
@@ -24,7 +25,7 @@ contract IdeaToken is ERC20, Ownable {
      * @param account The account to receive the minted tokens
      * @param amount The amount of tokens to mint
      */
-    function mint(address account, uint256 amount) external onlyOwner {
+    function mint(address account, uint256 amount) external override onlyOwner {
         _mint(account, amount);
     }
 
@@ -33,7 +34,7 @@ contract IdeaToken is ERC20, Ownable {
      * @param account The account for the tokens to be burned from
      * @param amount The amount of tokens to be burned
      */
-    function burn(address account, uint256 amount) external onlyOwner {
+    function burn(address account, uint256 amount) external override onlyOwner {
         _burn(account, amount);
     }
 }

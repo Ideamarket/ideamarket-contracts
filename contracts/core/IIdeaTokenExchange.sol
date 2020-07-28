@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.6.9;
+
+interface IIdeaTokenExchange {
+    function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external;
+    function getPriceForSellingTokens(address ideaToken, uint amount) external view returns (uint);
+    function buyTokens(address ideaToken, uint amount, uint maxCost, address recipient) external;
+    function getCostForBuyingTokens(address ideaToken, uint amount) external view returns (uint);
+}

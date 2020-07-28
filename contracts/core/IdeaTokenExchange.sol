@@ -3,6 +3,7 @@ pragma solidity ^0.6.9;
 pragma experimental ABIEncoderV2;
 
 import "../util/Ownable.sol";
+import "./IIdeaTokenExchange.sol";
 import "./IIdeaToken.sol";
 import "./IIdeaTokenFactory.sol";
 import "./IInterestManager.sol";
@@ -16,7 +17,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
  *
  * @dev Exchanges Dai <-> IdeaTokens using a bonding curve. Sits behind a proxy
  */
-contract IdeaTokenExchange is Initializable, Ownable {
+contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     using SafeMath for uint256;
 
     struct TokenExchangeInfo {
@@ -57,22 +58,21 @@ contract IdeaTokenExchange is Initializable, Ownable {
     /**
      * @dev Burns IdeaTokens in exchange for Dai
      *
-     * @param marketID The ID of the market
-     * @param tokenID The ID of the IdeaToken to sell
+     * @param ideaToken The IdeaToken to sell
      * @param amount The amount of IdeaTokens to sell
      * @param minPrice The minimum allowed price in Dai for selling `amount` IdeaTokens
      * @param recipient The recipient of the redeemed Dai
      */
-    function sellTokens(uint marketID, uint tokenID, uint amount, uint minPrice, address recipient) external {
-        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(marketID);
-        require(marketDetails.exists, "buyTokensByAmount: market does not exist");
-        IIdeaTokenFactory.TokenInfo memory tokenInfo = _ideaTokenFactory.getTokenInfo(marketID, tokenID);
-        require(tokenInfo.exists, "buyTokensByAmount: token does not exist");
+    function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
+        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
+        require(idPair.exists, "sellTokens: token does not exist");
+        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
+        require(marketDetails.exists, "sellTokens: market does not exist");
 
         uint rawPrice = getRawPriceForSellingTokens(marketDetails.baseCost,
                                                     marketDetails.priceRise,
                                                     marketDetails.tokensPerInterval,
-                                                    tokenInfo.ideaToken.totalSupply(),
+                                                    IERC20(ideaToken).totalSupply(),
                                                     amount);
 
         uint permafundAmount = rawPrice.mul(marketDetails.permafundRate).div(marketDetails.permafundRateScale);
@@ -80,11 +80,9 @@ contract IdeaTokenExchange is Initializable, Ownable {
         uint finalPrice = rawPrice.sub(permafundAmount).sub(fee);
 
         require(finalPrice >= minPrice, "sellTokens: price subceeds min price");
+        require(IIdeaToken(ideaToken).balanceOf(msg.sender) >= amount, "sellTokens: not enough tokens");
 
-        IIdeaToken ideaToken = tokenInfo.ideaToken;
-        require(ideaToken.balanceOf(msg.sender) >= amount, "sellTokens: not enough tokens");
-
-        ideaToken.burn(msg.sender, amount);
+        IIdeaToken(ideaToken).burn(msg.sender, amount);
         _interestManager.redeem(address(this), finalPrice.add(fee));
 
         require(_dai.transfer(recipient, finalPrice), "sellTokens: dai transfer failed");
@@ -98,20 +96,19 @@ contract IdeaTokenExchange is Initializable, Ownable {
     /**
      * @dev Returns the price for selling IdeaTokens
      *
-     * @param marketID The ID of the market
-     * @param tokenID The ID of the IdeaToken to sell
+     * @param ideaToken The IdeaToken to sell
      * @param amount The amount of IdeaTokens to sell
      *
      * @return The price in Dai for selling `amount` IdeaTokens
      */
-    function getPriceForSellingTokens(uint marketID, uint tokenID, uint amount) external view returns (uint) {
-        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(marketID);
-        IIdeaTokenFactory.TokenInfo memory tokenInfo = _ideaTokenFactory.getTokenInfo(marketID, tokenID);
+    function getPriceForSellingTokens(address ideaToken, uint amount) external view override returns (uint) {
+        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
+        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
         uint rawPrice = getRawPriceForSellingTokens(marketDetails.baseCost,
                                                     marketDetails.priceRise,
                                                     marketDetails.tokensPerInterval,
-                                                    tokenInfo.ideaToken.totalSupply(),
+                                                    IERC20(ideaToken).totalSupply(),
                                                     amount);
 
         uint permafundAmount = rawPrice.mul(marketDetails.permafundRate).div(marketDetails.permafundRateScale);
@@ -142,58 +139,56 @@ contract IdeaTokenExchange is Initializable, Ownable {
     /**
      * @dev Mints IdeaTokens in exchange for Dai
      *
-     * @param marketID The ID of the market
-     * @param tokenID The ID of the IdeaToken to buy
+     * @param ideaToken The IdeaToken to buy
      * @param amount The amount of IdeaTokens to buy
      * @param maxCost The maximum allowed cost in Dai to buy `amount` IdeaTokens
      * @param recipient The recipient of the bought IdeaTokens
      */
-    function buyTokens(uint marketID, uint tokenID, uint amount, uint maxCost, address recipient) external {
-        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(marketID);
-        require(marketDetails.exists, "buyTokensByAmount: market does not exist");
-        IIdeaTokenFactory.TokenInfo memory tokenInfo = _ideaTokenFactory.getTokenInfo(marketID, tokenID);
-        require(tokenInfo.exists, "buyTokensByAmount: token does not exist");
+    function buyTokens(address ideaToken, uint amount, uint maxCost, address recipient) external override {
+        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
+        require(idPair.exists, "buyTokens: token does not exist");
+        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
+        require(marketDetails.exists, "buyTokens: market does not exist");
 
         uint rawCost = getRawCostForBuyingTokens(marketDetails.baseCost,
                                                  marketDetails.priceRise,
                                                  marketDetails.tokensPerInterval,
-                                                 tokenInfo.ideaToken.totalSupply(),
+                                                 IERC20(ideaToken).totalSupply(),
                                                  amount);
 
         uint fee = rawCost.mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
         uint finalCost = rawCost.add(fee);
 
-        require(finalCost <= maxCost, "buyTokensByAmount: cost exceeds maxCost");
-        require(_dai.allowance(msg.sender, address(this)) >= finalCost, "transferAndMintTokens: not enough allowance");
-        require(_dai.transferFrom(msg.sender, address(_interestManager), rawCost), "transferAndMintTokens: dai transfer failed");
+        require(finalCost <= maxCost, "buyTokens: cost exceeds maxCost");
+        require(_dai.allowance(msg.sender, address(this)) >= finalCost, "buyTokens: not enough allowance");
+        require(_dai.transferFrom(msg.sender, address(_interestManager), rawCost), "buyTokens: dai transfer failed");
 
         if(fee > 0) {
-            require(_dai.transferFrom(msg.sender, _tradingFeeRecipient, fee), "transferAndMintTokens: fee transfer failed");
+            require(_dai.transferFrom(msg.sender, _tradingFeeRecipient, fee), "buyTokens: fee transfer failed");
         }
 
         // TODO: Update tokens interest
 
         _interestManager.invest(rawCost);
-        tokenInfo.ideaToken.mint(recipient, amount);
+        IIdeaToken(ideaToken).mint(recipient, amount);
     }
 
     /**
      * @dev Returns the cost for buying IdeaTokens
      *
-     * @param marketID The ID of the market
-     * @param tokenID The ID of the IdeaToken to buy
+     * @param ideaToken The IdeaToken to sell
      * @param amount The amount of IdeaTokens to buy
      *
      * @return The cost in Dai for buying `amount` IdeaTokens
      */
-    function getCostForBuyingTokens(uint marketID, uint tokenID, uint amount) external view returns (uint) {
-        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(marketID);
-        IIdeaTokenFactory.TokenInfo memory tokenInfo = _ideaTokenFactory.getTokenInfo(marketID, tokenID);
+    function getCostForBuyingTokens(address ideaToken, uint amount) external view override returns (uint) {
+        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
+        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
         uint rawCost = getRawCostForBuyingTokens(marketDetails.baseCost,
                                                  marketDetails.priceRise,
                                                  marketDetails.tokensPerInterval,
-                                                 tokenInfo.ideaToken.totalSupply(),
+                                                 IERC20(ideaToken).totalSupply(),
                                                  amount);
 
         uint fee = rawCost.mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
