@@ -111,7 +111,12 @@ contract CurrencyConverter is Initializable {
                                                                                      recipient,
                                                                                      now + 1);
         }
-        
-
     }
+
+    /**
+     * @dev Fallback required for WETH withdraw
+     */
+    receive() external payable {
+        require(msg.sender == address(_weth));
+    } 
 }
