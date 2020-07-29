@@ -5,7 +5,7 @@ const IdeaTokenExchange = artifacts.require('IdeaTokenExchange')
 
 const BN = web3.utils.BN
 
-contract("IdeaTokenFormula", async accounts => {
+contract("IdeaTokenExchange", async accounts => {
 
     const tenPow18 = new BN('10').pow(new BN('18'))
 
@@ -28,6 +28,7 @@ contract("IdeaTokenFormula", async accounts => {
 
     let marketID
     let tokenID
+    let ideaToken
 
     beforeEach(async () => {
         
@@ -69,9 +70,11 @@ contract("IdeaTokenFormula", async accounts => {
 
         tokenID = await ideaTokenFactory.getTokenIDByName(tokenName, marketID)
 
+        ideaToken = (await ideaTokenFactory.getTokenInfo(marketID, tokenID)).ideaToken
+
     })
   
     it("should have correct buy price from 0 supply", async () => {
-        console.log((await ideaTokenExchange.getCostForBuyingTokens(marketID, tokenID, tenPow18)).toString())
+        console.log((await ideaTokenExchange.getCostForBuyingTokens(ideaToken, tenPow18)).toString())
     })
 })

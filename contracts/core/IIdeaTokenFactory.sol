@@ -2,9 +2,9 @@
 pragma solidity ^0.6.9;
 pragma experimental ABIEncoderV2;
 
-import "./IIdeaToken.sol";
-import "./IIdeaTokenNameVerifier.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./IIdeaToken.sol";
+import "./nameVerifiers/IIdeaTokenNameVerifier.sol";
 
 interface IIdeaTokenFactory {
 

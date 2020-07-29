@@ -8,7 +8,7 @@ import "../util/Ownable.sol";
 import "./IIdeaTokenFactory.sol";
 import "./IdeaToken.sol";
 import "./IIdeaToken.sol";
-import "./IIdeaTokenNameVerifier.sol";
+import "./nameVerifiers/IIdeaTokenNameVerifier.sol";
 
 /**
  * @title IdeaTokenFactory

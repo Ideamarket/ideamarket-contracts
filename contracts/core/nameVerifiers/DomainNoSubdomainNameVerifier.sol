@@ -1,16 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.9;
 
+import "./IIdeaTokenNameVerifier.sol";
+
 /**
  * @title DomainNoSubdomainNameVerifier
  * @author Alexander Schlindwein
  *
  * @dev Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains
  */
-contract DomainNoSubdomainNameVerifier {
-    function verifyTokenName(string calldata name) external pure returns (bool) {
+contract DomainNoSubdomainNameVerifier is IIdeaTokenNameVerifier {
+    function verifyTokenName(string calldata name) external pure override returns (bool) {
         bytes memory b = bytes(name);
+        bool hasDomain = false;
         bool hasDot = false;
+        bool hasTLD = false;
 
         for(uint i = 0; i < b.length; i++) {
             bytes1 char = b[i];
@@ -28,8 +32,15 @@ contract DomainNoSubdomainNameVerifier {
                     return false;
                 }
                 hasDot = true;
+             } else {
+                if(hasDot) {
+                    hasTLD = true;
+                } else {
+                    hasDomain = true;
+                }
              }
         }
-        return true;
+
+        return hasDomain && hasDot && hasTLD;
     }
 }
