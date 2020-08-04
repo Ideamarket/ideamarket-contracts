@@ -61,13 +61,10 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      * @param tokensPerInterval: The amount of IdeaTokens in each interval
      * @param tradingFeeRate: The trading fee rate
      * @param tradingFeeRateScale: The scale by which the trading fee is scaled
-     * @param permafundRate: The permafund rate
-     * @param permafundRateScale: The scale by which the permafund rate is scaled
      */
     function addMarket(string calldata marketName, address nameVerifier,
                        uint baseCost, uint priceRise, uint tokensPerInterval,
-                       uint tradingFeeRate, uint tradingFeeRateScale,
-                       uint permafundRate, uint permafundRateScale) external override onlyOwner {
+                       uint tradingFeeRate, uint tradingFeeRateScale) external override onlyOwner {
         require(_marketIDs[marketName] == 0, "addMarket: market exists already");
         require(baseCost > 0 && priceRise > 0 && tokensPerInterval > 0, "addMarket: invalid parameters");
 
@@ -83,9 +80,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                 priceRise: priceRise,
                 tokensPerInterval: tokensPerInterval,
                 tradingFeeRate: tradingFeeRate,
-                tradingFeeRateScale: tradingFeeRateScale,
-                permafundRate: permafundRate,
-                permafundRateScale: permafundRateScale
+                tradingFeeRateScale: tradingFeeRateScale
             })
         });
 

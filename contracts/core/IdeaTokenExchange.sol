@@ -74,10 +74,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                     marketDetails.tokensPerInterval,
                                                     IERC20(ideaToken).totalSupply(),
                                                     amount);
-
-        uint permafundAmount = rawPrice.mul(marketDetails.permafundRate).div(marketDetails.permafundRateScale);
-        uint fee = rawPrice.sub(permafundAmount).mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
-        uint finalPrice = rawPrice.sub(permafundAmount).sub(fee);
+        uint fee = rawPrice.mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
+        uint finalPrice = rawPrice.sub(fee);
 
         require(finalPrice >= minPrice, "sellTokens: price subceeds min price");
         require(IIdeaToken(ideaToken).balanceOf(msg.sender) >= amount, "sellTokens: not enough tokens");
@@ -111,14 +109,13 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                     IERC20(ideaToken).totalSupply(),
                                                     amount);
 
-        uint permafundAmount = rawPrice.mul(marketDetails.permafundRate).div(marketDetails.permafundRateScale);
-        uint fee = rawPrice.sub(permafundAmount).mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
+        uint fee = rawPrice.mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
 
-        return rawPrice.sub(permafundAmount).sub(fee);
+        return rawPrice.sub(fee);
     }
 
     /**
-     * @dev Returns the price for selling IdeaTokens without any fees or permafund rates applied
+     * @dev Returns the price for selling IdeaTokens without any fees applied
      *
      * @param b The baseCost of the token
      * @param r The priceRise of the token
@@ -126,7 +123,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param supply The current total supply of the token
      * @param amount The amount of IdeaTokens to sell
      *
-     * @return Returns the price for selling `amount` IdeaTokens without any fees or permafund rates applied
+     * @return Returns the price for selling `amount` IdeaTokens without any fees applied
      */
     function getRawPriceForSellingTokens(uint b, uint r, uint t, uint supply, uint amount) internal pure returns (uint) {
         uint costForSupply = getCostFromZeroSupply(b, r, t, supply);

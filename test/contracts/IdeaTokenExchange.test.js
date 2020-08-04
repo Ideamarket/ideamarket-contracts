@@ -16,8 +16,6 @@ contract("IdeaTokenExchange", async accounts => {
     const tokensPerInterval = new web3.utils.BN('100000000000000000000') // 10**20
     const tradingFeeRate = 100
     const tradingFeeRateScale = 10000
-    const permafundRate = 200
-    const permafundRateScale = 10000
 
     const adminAccount = accounts[0]
 
@@ -60,9 +58,7 @@ contract("IdeaTokenExchange", async accounts => {
                                          priceRise,
                                          tokensPerInterval,
                                          tradingFeeRate,
-                                         tradingFeeRateScale,
-                                         permafundRate,
-                                         permafundRateScale)
+                                         tradingFeeRateScale)
 
         marketID = await ideaTokenFactory.getMarketIDByName(marketName)
 
