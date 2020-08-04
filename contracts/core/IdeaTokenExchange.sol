@@ -21,12 +21,14 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     using SafeMath for uint256;
 
     struct TokenExchangeInfo {
-        uint lastInterest;
+        uint daiInToken; // The amount of Dai collected by trading
         uint interestShares;
         uint generatedInterest;
+        uint withdrawnInterest;
     }
 
-    mapping(IIdeaToken => TokenExchangeInfo) _tokensExchangeInfo;
+    mapping(address => TokenExchangeInfo) _tokensExchangeInfo;
+    mapping(address => address) _authorizedInterestWithdrawers;
 
     address _tradingFeeRecipient;
 
@@ -241,13 +243,65 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         return n.mul(t).mul(b.sub(r)).add(r.mul(t).mul(n.mul(n.add(1)).div(2)));
     }
 
-    function updateTokenInterest(IIdeaToken token) public {
+    /**
+     * @dev Withdraws available interest for a publisher
+     *
+     * @param token The token from which the generated interest is to be withdrawn
+     */
+    function withdrawInterest(address token) external {
+        require(_authorizedInterestWithdrawers[token] == msg.sender, "withdrawInterest: not authorized");
+
+        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
+        exchangeInfo.generatedInterest = exchangeInfo.generatedInterest.add(getPendingInterest(token));
+
+        uint interestPayable = exchangeInfo.generatedInterest.sub(exchangeInfo.withdrawnInterest);
+        if(interestPayable == 0) {
+            return;
+        }
+
+        exchangeInfo.withdrawnInterest = exchangeInfo.generatedInterest;
+        _interestManager.redeem(msg.sender, interestPayable);
+    }
+
+    /**
+     * @dev Returns the interest available to be paid out
+     *
+     * @param token The token from which the generated interest is to be withdrawn
+     *
+     * @return The interest available to be paid out
+     */
+    function getInterestPayable(address token) public returns (uint) {
+        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
+        return exchangeInfo.generatedInterest.add(getPendingInterest(token)).sub(exchangeInfo.withdrawnInterest);
+    }
+
+    /**
+     * @dev Returns the new interest which has been generated since last updated
+     *
+     * @param token The token for which to check the interest
+     *
+     * @return The new interest which has been generated since last updated
+     */
+    function getPendingInterest(address token) internal returns (uint) {
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
 
         _interestManager.accrueInterest();
         uint exchangeRate = _interestManager.getExchangeRate();
 
-        uint newInterest = exchangeInfo.interestShares.mul(exchangeRate).sub(exchangeInfo.lastInterest);
-        exchangeInfo.generatedInterest = exchangeInfo.generatedInterest.add(newInterest);
+        uint want = exchangeInfo.interestShares.mul(exchangeRate); // TODO: Decimals
+        uint have = exchangeInfo.daiInToken.add(exchangeInfo.generatedInterest).sub(exchangeInfo.withdrawnInterest);
+
+        return want.sub(have);
+    }
+
+    /**
+     * @dev Authorizes an address which is allowed to withdraw interest for a token
+     *
+     * @param token The token for which to authorize an address
+     * @param withdrawer The address to be authorized
+     */
+    function authorizeInterestWithdrawer(address token, address withdrawer) external {
+        require(msg.sender == _owner || msg.sender == _authorizedInterestWithdrawers[token], "authorizeInterestWithdrawer: not authorized");
+        _authorizedInterestWithdrawers[token] = withdrawer;
     }
 }
