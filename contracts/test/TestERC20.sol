@@ -23,7 +23,7 @@ contract TestERC20 is ERC20 {
      * @param account The account to receive the minted tokens
      * @param amount The amount of tokens to mint
      */
-    function mint(address account, uint256 amount) external {
+     function mint(address account, uint256 amount) external {
         _mint(account, amount);
     }
 
@@ -31,8 +31,7 @@ contract TestERC20 is ERC20 {
      * @dev Burns a given amount of tokens from an address.
      * @param account The account for the tokens to be burned from
      * @param amount The amount of tokens to be burned
-     */
-    function burn(address account, uint256 amount) external {
+     */    function burn(address account, uint256 amount) external {
         _burn(account, amount);
     }
 }
