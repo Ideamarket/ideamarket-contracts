@@ -1,4 +1,8 @@
+const { expectRevert } = require('@openzeppelin/test-helpers');
+
 const DomainNoSubdomainNameVerifier = artifacts.require('DomainNoSubdomainNameVerifier')
+const TestERC20 = artifacts.require('TestERC20')
+const TestCDai = artifacts.require('TestCDai')
 const InterestManagerCompound = artifacts.require('InterestManagerCompound')
 const IdeaTokenFactory = artifacts.require('IdeaTokenFactory')
 const IdeaTokenExchange = artifacts.require('IdeaTokenExchange')
@@ -6,7 +10,7 @@ const IdeaToken = artifacts.require('IdeaToken')
 
 const BN = web3.utils.BN
 
-contract("IdeaTokenExchange", async accounts => {
+contract('IdeaTokenExchange', async accounts => {
 
     const tenPow18 = new BN('10').pow(new BN('18'))
 
@@ -18,9 +22,13 @@ contract("IdeaTokenExchange", async accounts => {
     const tradingFeeRate = new BN('100')
     const tradingFeeRateScale = new BN('10000')
 
+    const userAccount = accounts[0]
     const adminAccount = accounts[1]
+    const zeroAddress = '0x0000000000000000000000000000000000000000'
 
     let domainNoSubdomainNameVerifier
+    let dai
+    let cDai
     let interestManagerCompound
     let ideaTokenFactory
     let ideaTokenExchange
@@ -32,15 +40,17 @@ contract("IdeaTokenExchange", async accounts => {
     beforeEach(async () => {
         
         domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.new()
+        dai = await TestERC20.new('DAI', 'DAI')
+        cDai = await TestCDai.new(dai.address)
         interestManagerCompound = await InterestManagerCompound.new()
         ideaTokenFactory = await IdeaTokenFactory.new()
         ideaTokenExchange = await IdeaTokenExchange.new()
 
         await interestManagerCompound.initialize(ideaTokenExchange.address,
-                                                 '0x0000000000000000000000000000000000000000',
-                                                 '0x0000000000000000000000000000000000000000',
-                                                 '0x0000000000000000000000000000000000000000',
-                                                 '0x0000000000000000000000000000000000000000',
+                                                 dai.address,
+                                                 cDai.address,
+                                                 zeroAddress,
+                                                 zeroAddress,
                                                  {from: adminAccount})
 
         await ideaTokenFactory.initialize(adminAccount,
@@ -48,10 +58,10 @@ contract("IdeaTokenExchange", async accounts => {
                                           {from: adminAccount})
 
         await ideaTokenExchange.initialize(adminAccount,
-                                           '0x0000000000000000000000000000000000000000',
+                                           adminAccount,
                                            ideaTokenFactory.address,
                                            interestManagerCompound.address,
-                                           '0x0000000000000000000000000000000000000000',
+                                           dai.address,
                                            {from: adminAccount})
 
         await ideaTokenFactory.addMarket(marketName,
@@ -73,13 +83,109 @@ contract("IdeaTokenExchange", async accounts => {
 
     })
   
-    it("can buy 500 tokens", async () => {
+    it('can buy and sell 500 tokens', async () => {
         const amount = new BN('250').mul(tenPow18)
-        const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
-        assert.isTrue(cost.eq(await getCostForBuyingTokens(ideaToken, amount)))
+        const firstCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+        assert.isTrue(firstCost.eq(await getCostForBuyingTokens(ideaToken, amount)))
 
-        
+        await dai.mint(userAccount, firstCost)
+        await dai.approve(ideaTokenExchange.address, firstCost)
+        await ideaTokenExchange.buyTokens(ideaToken.address, amount, firstCost, userAccount)
 
+        assert.isTrue((await dai.balanceOf(userAccount)).eq(new BN('0')))
+        assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount))
+
+        const secondCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+        assert.isTrue(secondCost.eq(await getCostForBuyingTokens(ideaToken, amount)))
+
+        await dai.mint(userAccount, secondCost)
+        await dai.approve(ideaTokenExchange.address, secondCost)
+        await ideaTokenExchange.buyTokens(ideaToken.address, amount, secondCost, userAccount)
+
+        assert.isTrue((await dai.balanceOf(userAccount)).eq(new BN('0')))
+        assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount.add(amount)))
+
+        const firstPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
+        assert.isTrue(firstPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
+
+        await ideaTokenExchange.sellTokens(ideaToken.address, amount, firstPrice, userAccount)
+
+        assert.isTrue((await dai.balanceOf(userAccount)).eq(firstPrice))
+        assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount))
+
+        const secondPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
+        assert.isTrue(secondPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
+
+        await ideaTokenExchange.sellTokens(ideaToken.address, amount, secondPrice, userAccount)
+
+        assert.isTrue((await dai.balanceOf(userAccount)).eq(firstPrice.add(secondPrice)))
+        assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(new BN('0')))
+    })
+
+    it('fail buy/sell - invalid token', async () => {
+        await expectRevert(
+            ideaTokenExchange.buyTokens(zeroAddress, tenPow18, tenPow18, userAccount),
+            'buyTokens: token does not exist'
+        )
+
+        await expectRevert(
+            ideaTokenExchange.sellTokens(zeroAddress, tenPow18, tenPow18, userAccount),
+            'sellTokens: token does not exist'
+        )
+    })
+
+    it('fail buy/sell - max cost / minPrice', async () => {
+        const amount = tenPow18
+        const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
+
+        await expectRevert(
+            ideaTokenExchange.buyTokens(ideaToken.address, amount, cost.sub(new BN('1')), userAccount),
+            'buyTokens: cost exceeds maxCost'
+        )
+
+        await dai.mint(userAccount, cost)
+        await dai.approve(ideaTokenExchange.address, cost)
+        await ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, userAccount)
+
+        const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tenPow18)
+
+        await expectRevert(
+            ideaTokenExchange.sellTokens(ideaToken.address, amount, price.add(new BN('1')), userAccount),
+            'sellTokens: price subceeds min price'
+        )
+    })
+
+    it('fail buy - not enough allowance', async () => {
+        const amount = tenPow18
+        const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
+        await dai.mint(userAccount, cost)
+
+        await expectRevert(
+            ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, userAccount),
+            'buyTokens: not enough allowance'
+        )
+    })
+
+    it('fail buy/sell - not enough tokens', async () => {
+        const amount = tenPow18
+        const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
+        await dai.mint(userAccount, cost.sub(new BN('1')))
+        await dai.approve(ideaTokenExchange.address, cost)
+
+        await expectRevert(
+            ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, userAccount),
+            'ERC20: transfer amount exceeds balance'
+        )
+
+        await dai.mint(adminAccount, new BN(cost))
+        await dai.approve(ideaTokenExchange.address, cost, { from: adminAccount })
+        await ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, adminAccount, { from: adminAccount })
+
+        const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
+        await expectRevert(
+            ideaTokenExchange.sellTokens(ideaToken.address, new BN('1'), new BN('0'), userAccount),
+            'sellTokens: not enough tokens'
+        )
     })
 
     function getCostForCompletedIntervals(b, r, t, n) {
@@ -91,11 +197,18 @@ contract("IdeaTokenExchange", async accounts => {
         return getCostForCompletedIntervals(b, r, t, n).add(amount.sub(n.mul(t)).mul(b.add(n.mul(r)))).div(tenPow18)
     }
 
-    function getRawCostForBuyingTokens(b, r, t, supply, amount){
+    function getRawCostForBuyingTokens(b, r, t, supply, amount) {
         const costForSupply = getCostFromZeroSupply(b, r, t, supply)
         const costForSupplyPlusAmount = getCostFromZeroSupply(b, r, t, supply.add(amount))
 
         return costForSupplyPlusAmount.sub(costForSupply)
+    }
+
+    function getRawPriceForSellingTokens(b, r, t, supply, amount) {
+        const costForSupply = getCostFromZeroSupply(b, r, t, supply)
+        const costForSupplyMinusAmount = getCostFromZeroSupply(b, r, t, supply.sub(amount))
+
+        return costForSupply.sub(costForSupplyMinusAmount)
     }
 
     async function getCostForBuyingTokens(token, amount) {
@@ -109,5 +222,18 @@ contract("IdeaTokenExchange", async accounts => {
         const fee = rawCost.mul(tradingFeeRate).div(tradingFeeRateScale);
 
         return rawCost.add(fee);
+    }
+
+    async function getPriceForSellingTokens(token, amount) {
+        const supply = await token.totalSupply()
+        const rawPrice = getRawPriceForSellingTokens(baseCost,
+                                                     priceRise,
+                                                     tokensPerInterval,
+                                                     supply,
+                                                     amount)
+
+        const fee = rawPrice.mul(tradingFeeRate).div(tradingFeeRateScale)
+
+        return rawPrice.sub(fee)
     }
 })
