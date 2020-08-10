@@ -24,6 +24,7 @@ contract('IdeaTokenExchange', async accounts => {
 
     const userAccount = accounts[0]
     const adminAccount = accounts[1]
+    const tradingFeeAccount = accounts[2]
     const zeroAddress = '0x0000000000000000000000000000000000000000'
 
     let domainNoSubdomainNameVerifier
@@ -58,7 +59,7 @@ contract('IdeaTokenExchange', async accounts => {
                                           {from: adminAccount})
 
         await ideaTokenExchange.initialize(adminAccount,
-                                           adminAccount,
+                                           tradingFeeAccount,
                                            ideaTokenFactory.address,
                                            interestManagerCompound.address,
                                            dai.address,
@@ -86,6 +87,7 @@ contract('IdeaTokenExchange', async accounts => {
     it('can buy and sell 500 tokens', async () => {
         const amount = new BN('250').mul(tenPow18)
         const firstCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+        const firstTradingFee = await getTradingFeeForBuying(ideaToken, amount)
         assert.isTrue(firstCost.eq(await getCostForBuyingTokens(ideaToken, amount)))
 
         await dai.mint(userAccount, firstCost)
@@ -94,8 +96,10 @@ contract('IdeaTokenExchange', async accounts => {
 
         assert.isTrue((await dai.balanceOf(userAccount)).eq(new BN('0')))
         assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount))
+        assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(firstTradingFee))
 
         const secondCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+        const secondTradingFee = await getTradingFeeForBuying(ideaToken, amount)
         assert.isTrue(secondCost.eq(await getCostForBuyingTokens(ideaToken, amount)))
 
         await dai.mint(userAccount, secondCost)
@@ -104,22 +108,27 @@ contract('IdeaTokenExchange', async accounts => {
 
         assert.isTrue((await dai.balanceOf(userAccount)).eq(new BN('0')))
         assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount.add(amount)))
+        assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(firstTradingFee.add(secondTradingFee)))
 
         const firstPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
+        const thirdTradingFee = await getTradingFeeForSelling(ideaToken, amount)
         assert.isTrue(firstPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
 
         await ideaTokenExchange.sellTokens(ideaToken.address, amount, firstPrice, userAccount)
 
         assert.isTrue((await dai.balanceOf(userAccount)).eq(firstPrice))
         assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount))
+        assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(firstTradingFee.add(secondTradingFee).add(thirdTradingFee)))
 
         const secondPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
+        const fourthTradingFee = await getTradingFeeForSelling(ideaToken, amount)
         assert.isTrue(secondPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
 
         await ideaTokenExchange.sellTokens(ideaToken.address, amount, secondPrice, userAccount)
 
         assert.isTrue((await dai.balanceOf(userAccount)).eq(firstPrice.add(secondPrice)))
         assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(new BN('0')))
+        assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(firstTradingFee.add(secondTradingFee).add(thirdTradingFee).add(fourthTradingFee)))
     })
 
     it('fail buy/sell - invalid token', async () => {
@@ -181,7 +190,6 @@ contract('IdeaTokenExchange', async accounts => {
         await dai.approve(ideaTokenExchange.address, cost, { from: adminAccount })
         await ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, adminAccount, { from: adminAccount })
 
-        const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
         await expectRevert(
             ideaTokenExchange.sellTokens(ideaToken.address, new BN('1'), new BN('0'), userAccount),
             'sellTokens: not enough tokens'
@@ -211,6 +219,28 @@ contract('IdeaTokenExchange', async accounts => {
         return costForSupply.sub(costForSupplyMinusAmount)
     }
 
+    async function getTradingFeeForBuying(token, amount) {
+        const supply = await token.totalSupply()
+        const rawCost = getRawCostForBuyingTokens(baseCost,
+                                                  priceRise,
+                                                  tokensPerInterval,
+                                                  supply,
+                                                  amount)
+
+        return rawCost.mul(tradingFeeRate).div(tradingFeeRateScale)
+    }
+
+    async function getTradingFeeForSelling(token, amount) {
+        const supply = await token.totalSupply()
+        const rawPrice = getRawPriceForSellingTokens(baseCost,
+                                                     priceRise,
+                                                     tokensPerInterval,
+                                                     supply,
+                                                     amount)
+
+        return rawPrice.mul(tradingFeeRate).div(tradingFeeRateScale)
+    }
+
     async function getCostForBuyingTokens(token, amount) {
         const supply = await token.totalSupply()
         const rawCost = getRawCostForBuyingTokens(baseCost,
@@ -219,9 +249,9 @@ contract('IdeaTokenExchange', async accounts => {
                                                   supply,
                                                   amount)
 
-        const fee = rawCost.mul(tradingFeeRate).div(tradingFeeRateScale);
+        const fee = rawCost.mul(tradingFeeRate).div(tradingFeeRateScale)
 
-        return rawCost.add(fee);
+        return rawCost.add(fee)
     }
 
     async function getPriceForSellingTokens(token, amount) {

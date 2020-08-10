@@ -161,7 +161,6 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         require(finalCost <= maxCost, "buyTokens: cost exceeds maxCost");
         require(_dai.allowance(msg.sender, address(this)) >= finalCost, "buyTokens: not enough allowance");
         require(_dai.transferFrom(msg.sender, address(_interestManager), rawCost), "buyTokens: dai transfer failed");
-
         if(fee > 0) {
             require(_dai.transferFrom(msg.sender, _tradingFeeRecipient, fee), "buyTokens: fee transfer failed");
         }
