@@ -83,6 +83,10 @@ contract('IdeaTokenExchange', async accounts => {
         ideaToken = await IdeaToken.at((await ideaTokenFactory.getTokenInfo(marketID, tokenID)).ideaToken)
 
     })
+
+    it('admin is owner', async () => {
+        assert.equal(adminAccount, await ideaTokenExchange.getOwner())
+    })
   
     it('can buy and sell 500 tokens', async () => {
         const amount = new BN('250').mul(tenPow18)

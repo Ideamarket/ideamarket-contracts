@@ -9,7 +9,7 @@ pragma solidity ^0.6.9;
  */
 contract Ownable {
 
-    address public _owner;
+    address _owner;
 
     event OwnershipChanged(address oldOwner, address newOwner);
 
@@ -33,5 +33,9 @@ contract Ownable {
         _owner = newOwner;
 
         emit OwnershipChanged(oldOwner, newOwner);
+    }
+
+    function getOwner() external view returns (address) {
+        return _owner;
     }
 }
