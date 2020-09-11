@@ -150,8 +150,6 @@ contract('IdeaTokenFactory', async accounts => {
         ]
 
         assert.deepEqual(marketDetails, expectedMarketDetails)
-
-        
     })
 
 })

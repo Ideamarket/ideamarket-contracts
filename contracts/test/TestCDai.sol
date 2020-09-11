@@ -14,6 +14,7 @@ import "./TestERC20.sol";
 contract TestCDai is ERC20, ICToken {
 
     TestERC20 _dai;
+    uint _exchangeRate;
 
     /**
      * @dev Constructs a new TestCDai
@@ -53,14 +54,29 @@ contract TestCDai is ERC20, ICToken {
         require(balanceOf(msg.sender) >= cDaiAmount, "cDai redeemUnderlying: not enough balance");
 
         _burn(msg.sender, cDaiAmount);
-        _dai.mint(msg.sender, redeemAmount);
+        uint daiBalance = _dai.balanceOf(address(this));
+        if(daiBalance < redeemAmount) {
+            _dai.mint(address(this), redeemAmount - daiBalance);
+        }
+        _dai.transfer(msg.sender, redeemAmount);
+    }
+
+    /**
+     * @dev Sets the exchange rate
+     *
+     * @param exchangeRate The exchange rate
+     */
+    function setExchangeRate(uint exchangeRate) external {
+        require(exchangeRate >= _exchangeRate, "TestCDai: new exchange rate must be larger");
+        _exchangeRate = exchangeRate;
     }
 
     /**
      * @dev Returns the exchange rate for cDai -> Dai
-     * @dev For testing, we add 10**18 for every block
+     *
+     * @return The exchange rate
      */
     function exchangeRateStored() public view override returns (uint) {
-        return uint(10**18).add(block.number.mul(10**18));
+        return _exchangeRate;
     }
 }
