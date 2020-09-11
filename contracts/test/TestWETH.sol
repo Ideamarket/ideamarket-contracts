@@ -10,7 +10,7 @@ import "../weth/IWETH.sol";
  *
  * @dev WETH token for testing.
  */
-contract IdeaToken is ERC20, IWETH {
+contract TestWETH is ERC20, IWETH {
 
     /**
      * @dev Tokens are always created with 18 decimals
