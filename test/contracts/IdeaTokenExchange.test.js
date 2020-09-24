@@ -43,6 +43,7 @@ contract('IdeaTokenExchange', async accounts => {
         domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.new()
         dai = await TestERC20.new('DAI', 'DAI')
         cDai = await TestCDai.new(dai.address)
+        await cDai.setExchangeRate(tenPow18)
         interestManagerCompound = await InterestManagerCompound.new()
         ideaTokenFactory = await IdeaTokenFactory.new()
         ideaTokenExchange = await IdeaTokenExchange.new()
