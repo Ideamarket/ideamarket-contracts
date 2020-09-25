@@ -8,6 +8,8 @@ const IdeaTokenFactory = artifacts.require('IdeaTokenFactory')
 const IdeaTokenExchange = artifacts.require('IdeaTokenExchange')
 const IdeaToken = artifacts.require('IdeaToken')
 const TestWETH = artifacts.require('TestWETH')
+const TestUniswapV2Factory = artifacts.require('TestUniswapV2Factory')
+const TestUniswapV2Router02 = artifacts.require('TestUniswapV2Router02')
 const CurrencyConverter = artifacts.require('CurrencyConverter')
 
 const BN = web3.utils.BN
@@ -36,6 +38,8 @@ contract('IdeaTokenExchange', async accounts => {
     let ideaTokenFactory
     let ideaTokenExchange
     let weth
+    let uniswapFactory
+    let router
     let currencyConverter
 
     let marketID
@@ -52,6 +56,8 @@ contract('IdeaTokenExchange', async accounts => {
         ideaTokenFactory = await IdeaTokenFactory.new()
         ideaTokenExchange = await IdeaTokenExchange.new()
         weth = await TestWETH.new('WETH', 'WETH')
+        uniswapFactory = await TestUniswapV2Factory.new(zeroAddress)
+        router = await TestUniswapV2Router02.new(uniswapFactory.address, weth.address)
         currencyConverter = await CurrencyConverter.new(
             ideaTokenExchange.address,
             dai.address,
@@ -94,6 +100,9 @@ contract('IdeaTokenExchange', async accounts => {
         tokenID = await ideaTokenFactory.getTokenIDByName(tokenName, marketID)
 
         ideaToken = await IdeaToken.at((await ideaTokenFactory.getTokenInfo(marketID, tokenID)).ideaToken)
+    })
 
+    it('test', async () => {
+        
     })
 })
