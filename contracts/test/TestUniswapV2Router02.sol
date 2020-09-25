@@ -10,7 +10,7 @@ import "../uniswap/IUniswapV2Router02.sol";
  *
  * @dev UniswapV2Router02 for testing
  */
-contract TestUniswapV2Router02 is IUniswapV2Router02 {
+contract TestTestUniswapV2Router02 is IUniswapV2Router02 {
 
     uint _multiplier;
     uint constant MULTIPLIER_SCALE = 10000;
