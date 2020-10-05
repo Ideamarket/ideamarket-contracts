@@ -151,7 +151,6 @@ contract('IdeaTokenExchange', async accounts => {
 
     it('can buy/sell tokens ETH', async () => {
 
-        // 25 idea tokens
         const ideaTokenAmount = tenPow18.mul(new BN('25'))
         const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
         const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
@@ -182,7 +181,6 @@ contract('IdeaTokenExchange', async accounts => {
 
     it('can buy/sell tokens WETH', async () => {
 
-        // 25 idea tokens
         const ideaTokenAmount = tenPow18.mul(new BN('25'))
         const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
         const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
@@ -218,7 +216,6 @@ contract('IdeaTokenExchange', async accounts => {
 
     it('can buy/sell tokens SOME', async () => {
 
-        // 25 idea tokens
         const ideaTokenAmount = tenPow18.mul(new BN('25'))
         const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
         const requiredInputForCost = (await router.getAmountsIn(buyCost, [someToken.address, dai.address]))[0]
@@ -251,4 +248,52 @@ contract('IdeaTokenExchange', async accounts => {
         const tokenBalanceAfterSell = await ideaToken.balanceOf(userAccount)
         assert.isTrue(tokenBalanceAfterSell.eq(new BN('0')))
     })
+
+    it('fail buy cost too high', async () => {
+
+        const ideaTokenAmount = tenPow18.mul(new BN('25'))
+        const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
+        const requiredInputForCost = (await router.getAmountsIn(buyCost, [someToken.address, dai.address]))[0]
+
+        await expectRevert(
+            currencyConverter.buyTokens(someToken.address,
+                                        ideaToken.address,
+                                        ideaTokenAmount,
+                                        requiredInputForCost.sub(new BN('1')),
+                                        userAccount),
+            "buyTokens: cost too high")
+    })
+
+    it('fail sell price too low', async () => {
+
+        const ideaTokenAmount = tenPow18.mul(new BN('25'))
+        const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
+        const requiredInputForCost = (await router.getAmountsIn(buyCost, [someToken.address, dai.address]))[0]
+
+        await someToken.mint(userAccount, requiredInputForCost)
+        await someToken.approve(currencyConverter.address, requiredInputForCost)
+        await currencyConverter.buyTokens(someToken.address,
+                                          ideaToken.address,
+                                          ideaTokenAmount,
+                                          requiredInputForCost,
+                                          userAccount)
+        
+        const someBalanceAfterBuy = await someToken.balanceOf(userAccount)
+        assert.isTrue(someBalanceAfterBuy.eq(new BN('0')))
+        const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount)
+        assert.isTrue(tokenBalanceAfterBuy.eq(ideaTokenAmount))
+
+        const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
+        const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, someToken.address]))[1]
+        
+        await ideaToken.approve(currencyConverter.address, tokenBalanceAfterBuy)
+        await expectRevert(
+            currencyConverter.sellTokens(someToken.address,
+                                         ideaToken.address,
+                                         tokenBalanceAfterBuy,
+                                         outputFromSell.add(new BN('1')),
+                                         userAccount),
+            'sellTokens: price too low')
+    })
+
 })
