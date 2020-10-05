@@ -144,30 +144,79 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
         return true;
     }
 
+    /**
+     * @dev Returns the market id by the market name
+     *
+     * @param marketName The market name
+     *
+     * @return The market id
+     */
     function getMarketIDByName(string calldata marketName) external view override returns (uint) {
         return _marketIDs[marketName];
     }
 
+    /**
+     * @dev Returns the market details by the market id
+     *
+     * @param marketID The market id
+     *
+     * @return The market details
+     */
     function getMarketDetailsByID(uint marketID) external view override returns (MarketDetails memory) {
         return _markets[marketID].marketDetails;
     }
 
+    /**
+     * @dev Returns the market details by the market name
+     *
+     * @param marketName The market name
+     *
+     * @return The market details
+     */
     function getMarketDetailsByName(string calldata marketName) external view override returns (MarketDetails memory) {
         return _markets[_marketIDs[marketName]].marketDetails;
     }
 
+    /**
+     * @dev Returns the amount of existing markets
+     *
+     * @return The amount of existing markets
+     */
     function getNumMarkets() external view override  returns (uint) {
         return _numMarkets;
     }
 
+    /**
+     * @dev Returns the token id by the token name and market id
+     *
+     * @param tokenName The token name
+     * @param marketID The market id
+     *
+     * @return The token id
+     */
     function getTokenIDByName(string calldata tokenName, uint marketID) external view override returns (uint) {
         return _markets[marketID].tokenIDs[tokenName];
     }
 
+    /**
+     * @dev Returns the token info by the token id and market id
+     *
+     * @param marketID The market id
+     * @param tokenID The token id
+     *
+     * @return The token info
+     */
     function getTokenInfo(uint marketID, uint tokenID) external view override returns (TokenInfo memory) {
         return _markets[marketID].tokens[tokenID];
     }
 
+    /**
+     * @dev Returns the token id pair by the tokens address
+     *
+     * @param token The tokens address
+     *
+     * @return The token id pair
+     */
     function getTokenIDPair(address token) external view override returns (IDPair memory) {
         return _tokenIDPairs[token];
     }
