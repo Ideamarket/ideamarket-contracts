@@ -139,74 +139,6 @@ contract TestUniswapV2Router02 is IUniswapV2Router02 {
         IWETH(WETH).withdraw(amountETH);
         TestTransferHelper.safeTransferETH(to, amountETH);
     }
-    function removeLiquidityWithPermit(
-        address tokenA,
-        address tokenB,
-        uint liquidity,
-        uint amountAMin,
-        uint amountBMin,
-        address to,
-        uint deadline,
-        bool approveMax, uint8 v, bytes32 r, bytes32 s
-    ) external virtual override returns (uint amountA, uint amountB) {
-        address pair = TestUniswapV2Library.pairFor(factory, tokenA, tokenB);
-        uint value = approveMax ? uint(-1) : liquidity;
-        ITestUniswapV2Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
-        (amountA, amountB) = removeLiquidity(tokenA, tokenB, liquidity, amountAMin, amountBMin, to, deadline);
-    }
-    function removeLiquidityETHWithPermit(
-        address token,
-        uint liquidity,
-        uint amountTokenMin,
-        uint amountETHMin,
-        address to,
-        uint deadline,
-        bool approveMax, uint8 v, bytes32 r, bytes32 s
-    ) external virtual override returns (uint amountToken, uint amountETH) {
-        address pair = TestUniswapV2Library.pairFor(factory, token, WETH);
-        uint value = approveMax ? uint(-1) : liquidity;
-        ITestUniswapV2Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
-        (amountToken, amountETH) = removeLiquidityETH(token, liquidity, amountTokenMin, amountETHMin, to, deadline);
-    }
-
-    // **** REMOVE LIQUIDITY (supporting fee-on-transfer tokens) ****
-    function removeLiquidityETHSupportingFeeOnTransferTokens(
-        address token,
-        uint liquidity,
-        uint amountTokenMin,
-        uint amountETHMin,
-        address to,
-        uint deadline
-    ) public virtual override ensure(deadline) returns (uint amountETH) {
-        (, amountETH) = removeLiquidity(
-            token,
-            WETH,
-            liquidity,
-            amountTokenMin,
-            amountETHMin,
-            address(this),
-            deadline
-        );
-        TestTransferHelper.safeTransfer(token, to, IERC20(token).balanceOf(address(this)));
-        IWETH(WETH).withdraw(amountETH);
-        TestTransferHelper.safeTransferETH(to, amountETH);
-    }
-    function removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(
-        address token,
-        uint liquidity,
-        uint amountTokenMin,
-        uint amountETHMin,
-        address to,
-        uint deadline,
-        bool approveMax, uint8 v, bytes32 r, bytes32 s
-    ) external virtual override returns (uint amountETH) {
-        address pair = TestUniswapV2Library.pairFor(factory, token, WETH);
-        uint value = approveMax ? uint(-1) : liquidity;
-        ITestUniswapV2Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
-        amountETH = removeLiquidityETHSupportingFeeOnTransferTokens(
-            token, liquidity, amountTokenMin, amountETHMin, to, deadline
-        );
-    }
 
     // **** SWAP ****
     // requires the initial amount to have already been sent to the first pair
@@ -401,10 +333,6 @@ contract TestUniswapV2Router02 is IUniswapV2Router02 {
     }
 
     // **** LIBRARY FUNCTIONS ****
-    function quote(uint amountA, uint reserveA, uint reserveB) public pure virtual override returns (uint amountB) {
-        return TestUniswapV2Library.quote(amountA, reserveA, reserveB);
-    }
-
     function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut)
         public
         pure
