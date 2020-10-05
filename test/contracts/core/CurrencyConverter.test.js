@@ -18,7 +18,7 @@ const CurrencyConverter = artifacts.require('CurrencyConverter')
 
 const BN = web3.utils.BN
 
-contract('IdeaTokenExchange', async accounts => {
+contract('core/CurrencyConverter', async accounts => {
 
     const tenPow18 = new BN('10').pow(new BN('18'))
 

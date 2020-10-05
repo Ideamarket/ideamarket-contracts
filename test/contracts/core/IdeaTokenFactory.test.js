@@ -4,7 +4,7 @@ const IdeaTokenFactory = artifacts.require('IdeaTokenFactory')
 
 const BN = web3.utils.BN
 
-contract('IdeaTokenFactory', async accounts => {
+contract('core/IdeaTokenFactory', async accounts => {
 
     const tenPow18 = new BN('10').pow(new BN('18'))
 

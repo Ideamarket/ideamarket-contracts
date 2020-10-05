@@ -5,7 +5,7 @@ const TestERC20 = artifacts.require('TestERC20')
 
 const BN = web3.utils.BN
 
-contract('InterestManagerCompound', async accounts => {
+contract('core/InterestManagerCompound', async accounts => {
 
     const zero = new BN('0')
     const tenPow18 = new BN('10').pow(new BN('18'))
