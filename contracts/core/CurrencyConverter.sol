@@ -6,6 +6,12 @@ import "../weth/IWETH.sol";
 import "../uniswap/IUniswapV2Router02.sol";
 import "./IIdeaTokenExchange.sol";
 
+/**
+ * @title CurrencyConverter
+ * @author Alexander Schlindwein
+ *
+ * @dev Allows to use different currencies to buy/sell IdeaTokens by integrating UniswapV2
+ */
 contract CurrencyConverter {
 
     IIdeaTokenExchange _ideaTokenExchange;
@@ -13,6 +19,12 @@ contract CurrencyConverter {
     IUniswapV2Router02 public _uniswapV2Router02;
     IWETH public _weth;
 
+    /**
+     * @param ideaTokenExchange The address of the IdeaTokenExchange contract
+     * @param dai The address of the Dai token
+     * @param uniswapV2Router02 The address of the UniswapV2Router02 contract
+     * @param weth The address of the WETH token
+     */
     constructor(address ideaTokenExchange,
                 address dai,
                 address uniswapV2Router02,
@@ -23,6 +35,15 @@ contract CurrencyConverter {
         _weth = IWETH(weth);
     }
 
+    /**
+     * @dev Converts an input currency to Dai and buys IdeaTokens
+     *
+     * @param inputCurrency The address of the input currency. 0x0 means ETH
+     * @param ideaToken The address of the IdeaToken to buy
+     * @param amount The amount of IdeaTokens to buy
+     * @param maxCost The maximum cost in inputCurrency for the purchase
+     * @param recipient The recipient of the IdeaTokens
+     */
     function buyTokens(address inputCurrency,
                        address ideaToken,
                        uint amount,
@@ -69,6 +90,15 @@ contract CurrencyConverter {
         }
     }
 
+    /**
+     * @dev Sells IdeaTokens and converts the received Dai to a specified currency
+     *
+     * @param outputCurrency The address of the desired output currency
+     * @param ideaToken The address of the IdeaToken to sell
+     * @param amount The amount of IdeaTokens to sell
+     * @param minPrice The minimum price in outputCurrency for the sell
+     * @param recipient The recipient of the output currency
+     */
     function sellTokens(address outputCurrency,
                         address ideaToken,
                         uint amount,
@@ -115,7 +145,7 @@ contract CurrencyConverter {
     }
 
     /**
-     * @dev Fallback required for WETH withdraw
+     * @dev Fallback required for WETH withdraw. Fails if sender is not WETH contract
      */
     receive() external payable {
         require(msg.sender == address(_weth));
