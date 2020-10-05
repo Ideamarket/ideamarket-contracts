@@ -10,6 +10,13 @@ import "./IIdeaTokenNameVerifier.sol";
  * @dev Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains
  */
 contract DomainNoSubdomainNameVerifier is IIdeaTokenNameVerifier {
+    /**
+     * @dev Verifies whether a string matches the required format
+     *
+     * @param name The input string (domain name)
+     *
+     * @return Bool; True=matches, False=does not match
+     */
     function verifyTokenName(string calldata name) external pure override returns (bool) {
         bytes memory b = bytes(name);
         bool hasDomain = false;
