@@ -1,23 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.9;
 
-import "@openzeppelin/upgrades/contracts/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../weth/IWETH.sol";
 import "../uniswap/IUniswapV2Router02.sol";
 import "./IIdeaTokenExchange.sol";
 
-contract CurrencyConverter is Initializable {
+contract CurrencyConverter {
 
     IIdeaTokenExchange _ideaTokenExchange;
     IERC20 public _dai;
     IUniswapV2Router02 public _uniswapV2Router02;
     IWETH public _weth;
 
-    function initialize(address ideaTokenExchange,
-                        address dai,
-                        address uniswapV2Router02,
-                        address weth) external initializer {
+    constructor(address ideaTokenExchange,
+                address dai,
+                address uniswapV2Router02,
+                address weth) public {
         _ideaTokenExchange = IIdeaTokenExchange(ideaTokenExchange);
         _dai = IERC20(dai);
         _uniswapV2Router02 = IUniswapV2Router02(uniswapV2Router02);
@@ -44,7 +43,7 @@ contract CurrencyConverter is Initializable {
         uint requiredInput = _uniswapV2Router02.getAmountsIn(cost, path)[0];
 
         require(requiredInput <= maxCost, "buyTokens: cost too high");
-
+        
         if(inputCurrency == address(0)) {
             _weth.deposit{value: requiredInput}();
             require(IERC20(address(_weth)).approve(address(_uniswapV2Router02), requiredInput), "buyTokens: failed to weth approve router");
@@ -94,6 +93,8 @@ contract CurrencyConverter is Initializable {
         require(IERC20(ideaToken).approve(address(_ideaTokenExchange), amount), "sellTokens: failed to approve exchange");
 
         _ideaTokenExchange.sellTokens(ideaToken, amount, price, address(this));
+
+        require(_dai.approve(address(_uniswapV2Router02), price), "sellTokens: dai approve failed");
 
         if(outputCurrency == address(0)) {
             _uniswapV2Router02.swapExactTokensForTokensSupportingFeeOnTransferTokens(price,
