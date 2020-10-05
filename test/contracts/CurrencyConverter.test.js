@@ -179,4 +179,76 @@ contract('IdeaTokenExchange', async accounts => {
         const tokenBalanceAfterSell = await ideaToken.balanceOf(userAccount)
         assert.isTrue(tokenBalanceAfterSell.eq(new BN('0')))
     })
+
+    it('can buy/sell tokens WETH', async () => {
+
+        // 25 idea tokens
+        const ideaTokenAmount = tenPow18.mul(new BN('25'))
+        const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
+        const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
+
+        await weth.deposit({ value: requiredInputForCost })
+        await weth.approve(currencyConverter.address, requiredInputForCost)
+        await currencyConverter.buyTokens(weth.address,
+                                          ideaToken.address,
+                                          ideaTokenAmount,
+                                          requiredInputForCost,
+                                          userAccount)
+        
+        const wethBalanceAfterBuy = await weth.balanceOf(userAccount)
+        assert.isTrue(wethBalanceAfterBuy.eq(new BN('0')))
+        const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount)
+        assert.isTrue(tokenBalanceAfterBuy.eq(ideaTokenAmount))
+
+        const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
+        const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, weth.address]))[1]
+        
+        await ideaToken.approve(currencyConverter.address, tokenBalanceAfterBuy)
+        await currencyConverter.sellTokens(weth.address,
+                                           ideaToken.address,
+                                           tokenBalanceAfterBuy,
+                                           outputFromSell,
+                                           userAccount)
+
+        const wethBalanceAfterSell = await weth.balanceOf(userAccount)
+        assert.isTrue(wethBalanceAfterSell.eq(outputFromSell))
+        const tokenBalanceAfterSell = await ideaToken.balanceOf(userAccount)
+        assert.isTrue(tokenBalanceAfterSell.eq(new BN('0')))
+    })
+
+    it('can buy/sell tokens SOME', async () => {
+
+        // 25 idea tokens
+        const ideaTokenAmount = tenPow18.mul(new BN('25'))
+        const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
+        const requiredInputForCost = (await router.getAmountsIn(buyCost, [someToken.address, dai.address]))[0]
+
+        await someToken.mint(userAccount, requiredInputForCost)
+        await someToken.approve(currencyConverter.address, requiredInputForCost)
+        await currencyConverter.buyTokens(someToken.address,
+                                          ideaToken.address,
+                                          ideaTokenAmount,
+                                          requiredInputForCost,
+                                          userAccount)
+        
+        const someBalanceAfterBuy = await someToken.balanceOf(userAccount)
+        assert.isTrue(someBalanceAfterBuy.eq(new BN('0')))
+        const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount)
+        assert.isTrue(tokenBalanceAfterBuy.eq(ideaTokenAmount))
+
+        const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
+        const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, someToken.address]))[1]
+        
+        await ideaToken.approve(currencyConverter.address, tokenBalanceAfterBuy)
+        await currencyConverter.sellTokens(someToken.address,
+                                           ideaToken.address,
+                                           tokenBalanceAfterBuy,
+                                           outputFromSell,
+                                           userAccount)
+
+        const someBalanceAfterSell = await someToken.balanceOf(userAccount)
+        assert.isTrue(someBalanceAfterSell.eq(outputFromSell))
+        const tokenBalanceAfterSell = await ideaToken.balanceOf(userAccount)
+        assert.isTrue(tokenBalanceAfterSell.eq(new BN('0')))
+    })
 })
