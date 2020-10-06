@@ -23,8 +23,6 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     struct TokenExchangeInfo {
         uint daiInToken; // The amount of Dai collected by trading
         uint interestShares;
-        uint generatedInterest;
-        uint withdrawnInterest;
     }
 
     mapping(address => TokenExchangeInfo) _tokensExchangeInfo;
@@ -81,16 +79,16 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
         require(finalPrice >= minPrice, "sellTokens: price subceeds min price");
         require(IIdeaToken(ideaToken).balanceOf(msg.sender) >= amount, "sellTokens: not enough tokens");
-
+    
+        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
+        exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(rawPrice);
         IIdeaToken(ideaToken).burn(msg.sender, amount);
-        _interestManager.redeem(address(this), finalPrice.add(fee));
+        exchangeInfo.interestShares = exchangeInfo.interestShares.sub(_interestManager.redeem(address(this), rawPrice));
 
         require(_dai.transfer(recipient, finalPrice), "sellTokens: dai transfer failed");
         if(fee > 0) {
             require(_dai.transfer(_tradingFeeRecipient, fee), "sellTokens: dai fee transfer failed");
         }
-
-        // TODO: Update tokens interest
     }
 
     /**
@@ -154,7 +152,6 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                  marketDetails.tokensPerInterval,
                                                  IERC20(ideaToken).totalSupply(),
                                                  amount);
-
         uint fee = rawCost.mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
         uint finalCost = rawCost.add(fee);
 
@@ -165,9 +162,9 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
             require(_dai.transferFrom(msg.sender, _tradingFeeRecipient, fee), "buyTokens: fee transfer failed");
         }
 
-        // TODO: Update tokens interest
-
-        _interestManager.invest(rawCost);
+        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
+        exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(rawCost);
+        exchangeInfo.interestShares = exchangeInfo.interestShares.add(_interestManager.invest(rawCost));
         IIdeaToken(ideaToken).mint(recipient, amount);
     }
 
@@ -249,17 +246,15 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      */
     function withdrawInterest(address token) external {
         require(_authorizedInterestWithdrawers[token] == msg.sender, "withdrawInterest: not authorized");
+        _interestManager.accrueInterest();
 
-        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
-        exchangeInfo.generatedInterest = exchangeInfo.generatedInterest.add(getPendingInterest(token));
-
-        uint interestPayable = exchangeInfo.generatedInterest.sub(exchangeInfo.withdrawnInterest);
+        uint interestPayable = getInterestPayable(token);
         if(interestPayable == 0) {
             return;
         }
 
-        exchangeInfo.withdrawnInterest = exchangeInfo.generatedInterest;
-        _interestManager.redeem(msg.sender, interestPayable);
+        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
+        exchangeInfo.interestShares = exchangeInfo.interestShares.sub(_interestManager.redeem(msg.sender, interestPayable));
     }
 
     /**
@@ -269,28 +264,10 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The interest available to be paid out
      */
-    function getInterestPayable(address token) public returns (uint) {
+    function getInterestPayable(address token) public view returns (uint) {
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
-        return exchangeInfo.generatedInterest.add(getPendingInterest(token)).sub(exchangeInfo.withdrawnInterest);
-    }
-
-    /**
-     * @dev Returns the new interest which has been generated since last updated
-     *
-     * @param token The token for which to check the interest
-     *
-     * @return The new interest which has been generated since last updated
-     */
-    function getPendingInterest(address token) internal returns (uint) {
-        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
-
-        _interestManager.accrueInterest();
-        uint exchangeRate = _interestManager.getExchangeRate();
-
-        uint want = exchangeInfo.interestShares.mul(exchangeRate); // TODO: Decimals
-        uint have = exchangeInfo.daiInToken.add(exchangeInfo.generatedInterest).sub(exchangeInfo.withdrawnInterest);
-
-        return want.sub(have);
+        return exchangeInfo.interestShares.mul(_interestManager.getExchangeRate()).div(10**18)
+                                          .sub(exchangeInfo.daiInToken);
     }
 
     /**

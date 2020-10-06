@@ -46,18 +46,25 @@ contract InterestManagerCompound is Ownable, Initializable {
      * @dev Invests a given amount of Dai into Compound
      *
      * @param amount The amount of Dai to invest
+     *
+     * @return The amount of minted cDai
      */
-    function invest(uint amount) public {
+    function invest(uint amount) public returns (uint) {
+        uint balanceBefore = _cDai.balanceOf(address(this));
         require(_dai.balanceOf(address(this)) >= amount, "invest: not enough dai");
         require(_dai.approve(address(_cDai), amount), "invest: dai approve cDai failed");
         require(_cDai.mint(amount) == 0, "invest: cDai mint failed");
+        uint balanceAfter = _cDai.balanceOf(address(this));
+        return balanceAfter.sub(balanceBefore);
     }
 
     /**
      * @dev Checks that the caller is the owner and delegates to redeemInternal
+     *
+     * @return The amount of burned cDai
      */
-    function redeem(address recipient, uint amount) external onlyOwner {
-        redeemInternal(recipient, amount);
+    function redeem(address recipient, uint amount) external onlyOwner returns (uint) {
+        return redeemInternal(recipient, amount);
     }
 
     /**
@@ -65,10 +72,15 @@ contract InterestManagerCompound is Ownable, Initializable {
      *
      * @param recipient The recipient of the redeemed Dai
      * @param amount The amount of Dai to redeem
+     *
+     * @return The amount of burned cDai
      */
-    function redeemInternal(address recipient, uint amount) internal {
+    function redeemInternal(address recipient, uint amount) internal returns (uint) {
+        uint balanceBefore = _cDai.balanceOf(address(this));
         require(_cDai.redeemUnderlying(amount) == 0, "redeem: failed to redeem");
         require(_dai.transfer(recipient, amount), "redeem: dai transfer failed");
+        uint balanceAfter = _cDai.balanceOf(address(this));
+        return balanceBefore.sub(balanceAfter);
     }
 
     /**

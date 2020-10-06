@@ -12,6 +12,7 @@ const BN = web3.utils.BN
 
 contract('core/IdeaTokenExchange', async accounts => {
 
+    const tenPow17 = new BN('10').pow(new BN('17'))
     const tenPow18 = new BN('10').pow(new BN('18'))
 
     const marketName = 'main'
@@ -25,6 +26,7 @@ contract('core/IdeaTokenExchange', async accounts => {
     const userAccount = accounts[0]
     const adminAccount = accounts[1]
     const tradingFeeAccount = accounts[2]
+    const interestReceiverAccount = accounts[3]
     const zeroAddress = '0x0000000000000000000000000000000000000000'
 
     let domainNoSubdomainNameVerifier
@@ -89,10 +91,11 @@ contract('core/IdeaTokenExchange', async accounts => {
         assert.equal(adminAccount, await ideaTokenExchange.getOwner())
     })
   
-    it('can buy and sell 500 tokens', async () => {
+    it('can buy and sell 500 tokens with correct interest', async () => {
         const amount = new BN('250').mul(tenPow18)
         const firstCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
         const firstTradingFee = await getTradingFeeForBuying(ideaToken, amount)
+        const firstRawCost = firstCost.sub(firstTradingFee)
         assert.isTrue(firstCost.eq(await getCostForBuyingTokens(ideaToken, amount)))
 
         await dai.mint(userAccount, firstCost)
@@ -103,8 +106,20 @@ contract('core/IdeaTokenExchange', async accounts => {
         assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount))
         assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(firstTradingFee))
 
+        assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(new BN('0')))
+        const firstExchangeRate = tenPow18.add(tenPow17) // 1.1
+        await cDai.setExchangeRate(firstExchangeRate)
+
+        const firstInterestPayable = firstRawCost
+                                     .mul(firstExchangeRate)
+                                     .div(tenPow18)
+                                     .sub(firstRawCost)
+
+        assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable))
+
         const secondCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
         const secondTradingFee = await getTradingFeeForBuying(ideaToken, amount)
+        const secondRawCost = secondCost.sub(secondTradingFee)
         assert.isTrue(secondCost.eq(await getCostForBuyingTokens(ideaToken, amount)))
 
         await dai.mint(userAccount, secondCost)
@@ -115,8 +130,21 @@ contract('core/IdeaTokenExchange', async accounts => {
         assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount.add(amount)))
         assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(firstTradingFee.add(secondTradingFee)))
 
+        assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable))
+        const secondExchangeRate = tenPow18.add(tenPow17.mul(new BN('2'))) // 1.2
+        await cDai.setExchangeRate(secondExchangeRate)
+
+        const secondInterestPayable = firstRawCost
+                                      .add(secondRawCost.mul(tenPow18).div(firstExchangeRate))
+                                      .mul(secondExchangeRate)
+                                      .div(tenPow18)
+                                      .sub(firstRawCost.add(secondRawCost))
+        
+        assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(secondInterestPayable))
+
         const firstPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
         const thirdTradingFee = await getTradingFeeForSelling(ideaToken, amount)
+        const firstRawPrice = firstPrice.add(thirdTradingFee)
         assert.isTrue(firstPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
 
         await ideaTokenExchange.sellTokens(ideaToken.address, amount, firstPrice, userAccount)
@@ -125,8 +153,21 @@ contract('core/IdeaTokenExchange', async accounts => {
         assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount))
         assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(firstTradingFee.add(secondTradingFee).add(thirdTradingFee)))
 
+        assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(secondInterestPayable))
+        const thirdExchangeRate = tenPow18.add(tenPow17.mul(new BN('3'))) // 1.3
+        await cDai.setExchangeRate(thirdExchangeRate)
+
+        const thirdInterestPayable = firstRawCost
+                                     .add(secondRawCost.mul(tenPow18).div(firstExchangeRate))
+                                     .sub(firstRawPrice.mul(tenPow18).div(secondExchangeRate))
+                                     .mul(thirdExchangeRate).div(tenPow18)
+                                     .sub(firstRawCost.add(secondRawCost).sub(firstRawPrice))
+
+        assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable))
+
         const secondPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
         const fourthTradingFee = await getTradingFeeForSelling(ideaToken, amount)
+        const secondRawPrice = secondPrice.add(fourthTradingFee)
         assert.isTrue(secondPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
 
         await ideaTokenExchange.sellTokens(ideaToken.address, amount, secondPrice, userAccount)
@@ -134,6 +175,26 @@ contract('core/IdeaTokenExchange', async accounts => {
         assert.isTrue((await dai.balanceOf(userAccount)).eq(firstPrice.add(secondPrice)))
         assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(new BN('0')))
         assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(firstTradingFee.add(secondTradingFee).add(thirdTradingFee).add(fourthTradingFee)))
+    
+        assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable))
+        const fourthExchangeRate = tenPow18.add(tenPow17.mul(new BN('4'))) // 1.4
+        await cDai.setExchangeRate(fourthExchangeRate)
+
+        const fourthInterestPayable = firstRawCost
+                                      .add(secondRawCost.mul(tenPow18).div(firstExchangeRate))
+                                      .sub(firstRawPrice.mul(tenPow18).div(secondExchangeRate))
+                                      .sub(secondRawPrice.mul(tenPow18).div(thirdExchangeRate))
+                                      .mul(fourthExchangeRate).div(tenPow18)
+                                      .sub(firstRawCost.add(secondRawCost).sub(firstRawPrice).sub(secondRawPrice))
+
+        assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(fourthInterestPayable))
+    
+        await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address,
+                                                            interestReceiverAccount,
+                                                            { from: adminAccount })
+
+        await ideaTokenExchange.withdrawInterest(ideaToken.address, { from: interestReceiverAccount })
+        assert.isTrue((await dai.balanceOf(interestReceiverAccount)).eq(fourthInterestPayable))
     })
 
     it('fail buy/sell - invalid token', async () => {

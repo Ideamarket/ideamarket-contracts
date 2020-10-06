@@ -2,8 +2,8 @@
 pragma solidity ^0.6.9;
 
 interface IInterestManager {
-    function invest(uint amount) external;
-    function redeem(address recipient, uint amount) external;
+    function invest(uint amount) external returns (uint);
+    function redeem(address recipient, uint amount) external returns (uint);
     function donateInterest(uint amount) external;
     function redeemDonated(uint amount) external;
     function accrueInterest() external;
