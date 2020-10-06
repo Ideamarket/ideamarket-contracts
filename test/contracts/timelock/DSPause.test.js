@@ -18,7 +18,7 @@ contract('timelock/DSPause', async accounts => {
     const adminAccount = accounts[0]
     const userAccount = accounts[1]
     
-    before(async () => {
+    beforeEach(async () => {
         dsPause = await DSPause.new(delay, adminAccount)
         dsPauseProxyAddress = await dsPause._proxy()
         spell = await AddMarketSpell.new()
