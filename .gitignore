@@ -1,2 +1,5 @@
 # NPM / Node
 node_modules
+
+# Truffle
+build/contracts
