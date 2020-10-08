@@ -39,7 +39,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     mapping(string => bool) _tokenNameUsed;
 
     event NewMarket(uint id, string name);
-    event NewToken(uint id, uint marketID, string name);
+    event NewToken(uint id, uint marketID, string name, address addr);
 
     /**
      * @dev Initializes the contract
@@ -122,7 +122,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
             tokenID: tokenID
         });
 
-        emit NewToken(tokenID, marketID, tokenName);
+        emit NewToken(tokenID, marketID, tokenName, address(ideaToken));
     }
 
     /**
