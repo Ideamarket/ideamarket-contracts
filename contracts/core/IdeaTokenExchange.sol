@@ -25,6 +25,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         uint interestShares;
     }
 
+    uint constant private FEE_SCALE = 10000;
+
     mapping(address => TokenExchangeInfo) _tokensExchangeInfo;
     mapping(address => address) _authorizedInterestWithdrawers;
 
@@ -74,7 +76,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                     marketDetails.tokensPerInterval,
                                                     IERC20(ideaToken).totalSupply(),
                                                     amount);
-        uint fee = rawPrice.mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
+        uint fee = rawPrice.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
         uint finalPrice = rawPrice.sub(fee);
 
         require(finalPrice >= minPrice, "sellTokens: price subceeds min price");
@@ -109,7 +111,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                     IERC20(ideaToken).totalSupply(),
                                                     amount);
 
-        uint fee = rawPrice.mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
+        uint fee = rawPrice.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
 
         return rawPrice.sub(fee);
     }
@@ -152,7 +154,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                  marketDetails.tokensPerInterval,
                                                  IERC20(ideaToken).totalSupply(),
                                                  amount);
-        uint fee = rawCost.mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
+        uint fee = rawCost.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
         uint finalCost = rawCost.add(fee);
 
         require(finalCost <= maxCost, "buyTokens: cost exceeds maxCost");
@@ -186,7 +188,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                  IERC20(ideaToken).totalSupply(),
                                                  amount);
 
-        uint fee = rawCost.mul(marketDetails.tradingFeeRate).div(marketDetails.tradingFeeRateScale);
+        uint fee = rawCost.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
 
         return rawCost.add(fee);
     }

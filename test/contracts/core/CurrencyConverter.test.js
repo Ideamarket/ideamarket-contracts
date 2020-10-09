@@ -28,7 +28,6 @@ contract('core/CurrencyConverter', async accounts => {
     const priceRise = new BN('100000000000000000') // 10**17
     const tokensPerInterval = new BN('100000000000000000000') // 10**20
     const tradingFeeRate = new BN('100')
-    const tradingFeeRateScale = new BN('10000')
 
     const userAccount = accounts[0]
     const adminAccount = accounts[1]
@@ -100,7 +99,6 @@ contract('core/CurrencyConverter', async accounts => {
                                          priceRise,
                                          tokensPerInterval,
                                          tradingFeeRate,
-                                         tradingFeeRateScale,
                                          {from: adminAccount})
 
         marketID = await ideaTokenFactory.getMarketIDByName(marketName)

@@ -21,7 +21,7 @@ contract('core/IdeaTokenExchange', async accounts => {
     const priceRise = new BN('100000000000000000') // 10**17
     const tokensPerInterval = new BN('100000000000000000000') // 10**20
     const tradingFeeRate = new BN('100')
-    const tradingFeeRateScale = new BN('10000')
+    const feeScale = new BN('10000')
 
     const userAccount = accounts[0]
     const adminAccount = accounts[1]
@@ -74,7 +74,6 @@ contract('core/IdeaTokenExchange', async accounts => {
                                          priceRise,
                                          tokensPerInterval,
                                          tradingFeeRate,
-                                         tradingFeeRateScale,
                                          {from: adminAccount})
 
         marketID = await ideaTokenFactory.getMarketIDByName(marketName)
@@ -293,7 +292,7 @@ contract('core/IdeaTokenExchange', async accounts => {
                                                   supply,
                                                   amount)
 
-        return rawCost.mul(tradingFeeRate).div(tradingFeeRateScale)
+        return rawCost.mul(tradingFeeRate).div(feeScale)
     }
 
     async function getTradingFeeForSelling(token, amount) {
@@ -304,7 +303,7 @@ contract('core/IdeaTokenExchange', async accounts => {
                                                      supply,
                                                      amount)
 
-        return rawPrice.mul(tradingFeeRate).div(tradingFeeRateScale)
+        return rawPrice.mul(tradingFeeRate).div(feeScale)
     }
 
     async function getCostForBuyingTokens(token, amount) {
@@ -315,7 +314,7 @@ contract('core/IdeaTokenExchange', async accounts => {
                                                   supply,
                                                   amount)
 
-        const fee = rawCost.mul(tradingFeeRate).div(tradingFeeRateScale)
+        const fee = rawCost.mul(tradingFeeRate).div(feeScale)
 
         return rawCost.add(fee)
     }
@@ -328,7 +327,7 @@ contract('core/IdeaTokenExchange', async accounts => {
                                                      supply,
                                                      amount)
 
-        const fee = rawPrice.mul(tradingFeeRate).div(tradingFeeRateScale)
+        const fee = rawPrice.mul(tradingFeeRate).div(feeScale)
 
         return rawPrice.sub(fee)
     }
