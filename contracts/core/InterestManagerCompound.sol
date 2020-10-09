@@ -78,9 +78,25 @@ contract InterestManagerCompound is Ownable, Initializable {
     function redeemInternal(address recipient, uint amount) internal returns (uint) {
         uint balanceBefore = _cDai.balanceOf(address(this));
         require(_cDai.redeemUnderlying(amount) == 0, "redeem: failed to redeem");
-        require(_dai.transfer(recipient, amount), "redeem: dai transfer failed");
         uint balanceAfter = _cDai.balanceOf(address(this));
+        require(_dai.transfer(recipient, amount), "redeem: dai transfer failed");
         return balanceBefore.sub(balanceAfter);
+    }
+
+    /**
+     * @dev Redeem a given amount of cDai from Compound and sends Dai to the recipient
+     *
+     * @param recipient The recipient of the redeemed Dai
+     * @param amount The amount of cDai to redeem
+     *
+     * @return The amount of redeemed Dai
+     */
+    function redeemInvestmentToken(address recipient, uint amount) external onlyOwner returns (uint) {
+        uint balanceBefore = _dai.balanceOf(address(this));
+        require(_cDai.redeem(amount) == 0, "redeemInvestmentToken: failed to redeem");
+        uint redeemed = _dai.balanceOf(address(this)).sub(balanceBefore);
+        require(_dai.transfer(recipient, redeemed), "redeemInvestmentToken: failed to transfer");
+        return redeemed;
     }
 
     /**

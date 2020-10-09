@@ -62,6 +62,23 @@ contract TestCDai is ERC20, ICToken {
     }
 
     /**
+     * @dev Redeems a given amount of cDai
+     *
+     * @param redeemAmount The amount of cDai to redeem
+     */
+    function redeem(uint redeemAmount) external override returns (uint) {
+        require(balanceOf(msg.sender) >= redeemAmount, "cDai redeem: not enough balance");
+        _burn(msg.sender, redeemAmount);
+
+        uint daiAmount = redeemAmount.mul(_exchangeRate).div(10**18);
+        uint daiBalance = _dai.balanceOf(address(this));
+        if(daiBalance < daiAmount) {
+            _dai.mint(address(this), daiAmount - daiBalance);
+        }
+        _dai.transfer(msg.sender, daiAmount);
+    }
+
+    /**
      * @dev Sets the exchange rate
      *
      * @param exchangeRate The exchange rate

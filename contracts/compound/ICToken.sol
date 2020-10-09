@@ -14,4 +14,5 @@ interface ICToken is IERC20 {
     function accrueInterest() external returns (uint);
     function mint(uint mintAmount) external returns (uint);
     function redeemUnderlying(uint redeemAmount) external returns (uint);
+    function redeem(uint redeemTokens) external returns (uint);
 }
