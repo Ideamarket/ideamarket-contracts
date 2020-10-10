@@ -89,7 +89,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _tradingFeeInvested = _tradingFeeInvested.add(tradingFeeRedeemed);
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(rawPrice);
     
-        _dai.transfer(msg.sender, finalPrice);
+        _dai.transfer(recipient, finalPrice);
     }
 
     /**
