@@ -30,6 +30,9 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     uint _tradingFeeInvested; // The amount of "investment tokens" for the collected trading fee, e.g. cDai
     address _tradingFeeRecipient;
 
+    mapping(uint => uint) _platformFeeInvested;
+    mapping(uint => address) _authorizedPlatformFeeWithdrawers;
+
     mapping(address => TokenExchangeInfo) _tokensExchangeInfo;
     mapping(address => address) _authorizedInterestWithdrawers;
 
@@ -72,7 +75,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
         require(marketDetails.exists, "sellTokens: market does not exist");
 
-        (uint finalPrice, uint rawPrice, uint tradingFee) = getPricesForSellingTokens(ideaToken, amount);
+        (uint finalPrice, uint rawPrice, uint tradingFee, uint platformFee) = getPricesForSellingTokens(ideaToken, amount);
 
         require(finalPrice >= minPrice, "sellTokens: price subceeds min price");
         require(IIdeaToken(ideaToken).balanceOf(msg.sender) >= amount, "sellTokens: not enough tokens");
@@ -83,10 +86,13 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         uint finalRedeemed = _interestManager.redeem(address(this), finalPrice);
         uint tradingFeeRedeemed = _interestManager.redeem(address(_interestManager), tradingFee);
         _interestManager.invest(tradingFee);
+        uint platformFeeRedeemed = _interestManager.redeem(address(_interestManager), platformFee);
+        _interestManager.invest(platformFee);
 
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
-        exchangeInfo.invested = exchangeInfo.invested.sub(finalRedeemed.add(tradingFeeRedeemed));
+        exchangeInfo.invested = exchangeInfo.invested.sub(finalRedeemed.add(tradingFeeRedeemed).add(platformFeeRedeemed));
         _tradingFeeInvested = _tradingFeeInvested.add(tradingFeeRedeemed);
+        _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(platformFeeRedeemed);
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(rawPrice);
     
         _dai.transfer(recipient, finalPrice);
@@ -101,7 +107,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @return The price in Dai for selling `amount` IdeaTokens
      */
     function getPriceForSellingTokens(address ideaToken, uint amount) external view override returns (uint) {
-        (uint finalCost, , ) = getPricesForSellingTokens(ideaToken, amount);
+        (uint finalCost, , , ) = getPricesForSellingTokens(ideaToken, amount);
         return finalCost;
     }
 
@@ -113,7 +119,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return Final cost, raw cost and trading fee
      */
-    function getPricesForSellingTokens(address ideaToken, uint amount) internal view returns (uint, uint, uint) {
+    function getPricesForSellingTokens(address ideaToken, uint amount) internal view returns (uint, uint, uint, uint) {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
@@ -123,9 +129,10 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                     IERC20(ideaToken).totalSupply(),
                                                     amount);
         uint tradingFee = rawPrice.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
-        uint finalCost = rawPrice.sub(tradingFee);
+        uint platformFee = rawPrice.mul(marketDetails.platformFeeRate).div(FEE_SCALE);
+        uint finalCost = rawPrice.sub(tradingFee).sub(platformFee);
 
-        return (finalCost, rawPrice, tradingFee);
+        return (finalCost, rawPrice, tradingFee, platformFee);
     }
 
     /**
@@ -161,7 +168,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
         require(marketDetails.exists, "buyTokens: market does not exist");
 
-        (uint finalCost, uint rawCost, uint tradingFee) = getCostsForBuyingTokens(ideaToken, amount);
+        (uint finalCost, uint rawCost, uint tradingFee, uint platformFee) = getCostsForBuyingTokens(ideaToken, amount);
 
         require(finalCost <= maxCost, "buyTokens: cost exceeds maxCost");
         require(_dai.allowance(msg.sender, address(this)) >= finalCost, "buyTokens: not enough allowance");
@@ -171,6 +178,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
         exchangeInfo.invested = exchangeInfo.invested.add(_interestManager.invest(rawCost));
         _tradingFeeInvested = _tradingFeeInvested.add(_interestManager.invest(tradingFee));
+        _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(_interestManager.invest(platformFee));
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(rawCost);
     
         IIdeaToken(ideaToken).mint(recipient, amount);
@@ -185,7 +193,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @return The cost in Dai for buying `amount` IdeaTokens
      */
     function getCostForBuyingTokens(address ideaToken, uint amount) external view override returns (uint) {
-        (uint finalCost, , ) = getCostsForBuyingTokens(ideaToken, amount);
+        (uint finalCost, , , ) = getCostsForBuyingTokens(ideaToken, amount);
         return finalCost;
     }
 
@@ -197,7 +205,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return Final cost, raw cost and trading fee
      */
-    function getCostsForBuyingTokens(address ideaToken, uint amount) internal view returns (uint, uint, uint) {
+    function getCostsForBuyingTokens(address ideaToken, uint amount) internal view returns (uint, uint, uint, uint) {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
@@ -207,9 +215,10 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                  IERC20(ideaToken).totalSupply(),
                                                  amount);
         uint tradingFee = rawCost.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
-        uint finalCost = rawCost.add(tradingFee);
+        uint platformFee = rawCost.mul(marketDetails.platformFeeRate).div(FEE_SCALE);
+        uint finalCost = rawCost.add(tradingFee).add(platformFee);
 
-        return (finalCost, rawCost, tradingFee);
+        return (finalCost, rawCost, tradingFee, platformFee);
     }
 
     /**
@@ -304,6 +313,46 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
+     * @dev Withdraws available platform fee
+     *
+     * @param marketID The market from which the generated platform fee is to be withdrawn
+     */
+    function withdrawPlatformFee(uint marketID) external {
+        require(_authorizedPlatformFeeWithdrawers[marketID] == msg.sender, "withdrawPlatformFee: not authorized");
+        _interestManager.accrueInterest();
+
+        uint platformFeePayable = getPlatformFeePayable(marketID);
+        if(platformFeePayable == 0) {
+            return;
+        }
+
+        _platformFeeInvested[marketID] = 0;
+        _interestManager.redeem(msg.sender, platformFeePayable);
+    }
+
+    /**
+     * @dev Returns the platform fee available to be paid out
+     *
+     * @param marketID The market from which the generated interest is to be withdrawn
+     *
+     * @return The platform fee available to be paid out
+     */
+    function getPlatformFeePayable(uint marketID) public view returns (uint) {
+        return _platformFeeInvested[marketID].mul(_interestManager.getExchangeRate()).div(10**18);
+    }
+
+    /**
+     * @dev Authorizes an address which is allowed to withdraw platform fee for a market
+     *
+     * @param marketID The market for which to authorize an address
+     * @param withdrawer The address to be authorized
+     */
+    function authorizePlatformFeeWithdrawer(uint marketID, address withdrawer) external {
+        require(msg.sender == _owner || msg.sender == _authorizedPlatformFeeWithdrawers[marketID], "authorizePlatformFeeWithdrawer: not authorized");
+        _authorizedPlatformFeeWithdrawers[marketID] = withdrawer;
+    }
+
+    /**
      * @dev Withdraws available trading fee
      */
     function withdrawTradingFee() external {
@@ -314,7 +363,6 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
         uint redeem = _tradingFeeInvested;
         _tradingFeeInvested = 0;
-        _interestManager.accrueInterest();
         _interestManager.redeemInvestmentToken(_tradingFeeRecipient, redeem);
     }
 

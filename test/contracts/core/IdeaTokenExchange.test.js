@@ -21,12 +21,14 @@ contract('core/IdeaTokenExchange', async accounts => {
     const priceRise = new BN('100000000000000000') // 10**17
     const tokensPerInterval = new BN('100000000000000000000') // 10**20
     const tradingFeeRate = new BN('100')
+    const platformFeeRate = new BN('50')
     const feeScale = new BN('10000')
 
     const userAccount = accounts[0]
     const adminAccount = accounts[1]
     const tradingFeeAccount = accounts[2]
     const interestReceiverAccount = accounts[3]
+    const platformFeeReceiverAccount = accounts[4]
     const zeroAddress = '0x0000000000000000000000000000000000000000'
 
     let domainNoSubdomainNameVerifier
@@ -76,6 +78,7 @@ contract('core/IdeaTokenExchange', async accounts => {
                                          priceRise,
                                          tokensPerInterval,
                                          tradingFeeRate,
+                                         platformFeeRate,
                                          {from: adminAccount})
 
         marketID = await ideaTokenFactory.getMarketIDByName(marketName)
@@ -98,7 +101,9 @@ contract('core/IdeaTokenExchange', async accounts => {
         const firstCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
         const firstTradingFee = await getTradingFeeForBuying(ideaToken, amount)
         const firstTradingFeeInvested = firstTradingFee.mul(tenPow18).div(initialExchangeRate)
-        const firstRawCost = firstCost.sub(firstTradingFee)
+        const firstPlatformFee = await getPlatformFeeForBuying(ideaToken, amount)
+        const firstPlatformFeeInvested = firstPlatformFee.mul(tenPow18).div(initialExchangeRate)
+        const firstRawCost = firstCost.sub(firstTradingFee).sub(firstPlatformFee)
         assert.isTrue(firstCost.eq(await getCostForBuyingTokens(ideaToken, amount)))
 
         await dai.mint(userAccount, firstCost)
@@ -108,6 +113,7 @@ contract('core/IdeaTokenExchange', async accounts => {
         assert.isTrue((await dai.balanceOf(userAccount)).eq(new BN('0')))
         assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount))
         assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(firstTradingFeeInvested.mul(initialExchangeRate).div(tenPow18)))
+        assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested.mul(initialExchangeRate).div(tenPow18)))
 
         assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(new BN('0')))
         const firstExchangeRate = tenPow18.add(tenPow17) // 1.1
@@ -123,7 +129,9 @@ contract('core/IdeaTokenExchange', async accounts => {
         const secondCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
         const secondTradingFee = await getTradingFeeForBuying(ideaToken, amount)
         const secondTradingFeeInvested = secondTradingFee.mul(tenPow18).div(firstExchangeRate)
-        const secondRawCost = secondCost.sub(secondTradingFee)
+        const secondPlatformFee = await getPlatformFeeForBuying(ideaToken, amount)
+        const secondPlatformFeeInvested = secondPlatformFee.mul(tenPow18).div(firstExchangeRate)
+        const secondRawCost = secondCost.sub(secondTradingFee).sub(secondPlatformFee)
         assert.isTrue(secondCost.eq(await getCostForBuyingTokens(ideaToken, amount)))
 
         await dai.mint(userAccount, secondCost)
@@ -136,6 +144,10 @@ contract('core/IdeaTokenExchange', async accounts => {
                                                                           .add(secondTradingFeeInvested)
                                                                           .mul(firstExchangeRate)
                                                                           .div(tenPow18)))
+        assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested
+                                                                                   .add(secondPlatformFeeInvested)
+                                                                                   .mul(firstExchangeRate)
+                                                                                   .div(tenPow18)))
 
         assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable))
         const secondExchangeRate = tenPow18.add(tenPow17.mul(new BN('2'))) // 1.2
@@ -152,7 +164,9 @@ contract('core/IdeaTokenExchange', async accounts => {
         const firstPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
         const thirdTradingFee = await getTradingFeeForSelling(ideaToken, amount)
         const thirdTradingFeeInvested = thirdTradingFee.mul(tenPow18).div(secondExchangeRate)
-        const firstRawPrice = firstPrice.add(thirdTradingFee)
+        const thirdPlatformFee = await getPlatformFeeForSelling(ideaToken, amount)
+        const thirdPlatformFeeInvested = thirdPlatformFee.mul(tenPow18).div(secondExchangeRate)
+        const firstRawPrice = firstPrice.add(thirdTradingFee).add(thirdPlatformFee)
         assert.isTrue(firstPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
 
         await ideaTokenExchange.sellTokens(ideaToken.address, amount, firstPrice, userAccount)
@@ -164,7 +178,11 @@ contract('core/IdeaTokenExchange', async accounts => {
                                                                           .add(thirdTradingFeeInvested)
                                                                           .mul(secondExchangeRate)
                                                                           .div(tenPow18)))
-
+        assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested
+                                                                                   .add(secondPlatformFeeInvested)
+                                                                                   .add(thirdPlatformFeeInvested)
+                                                                                   .mul(secondExchangeRate)
+                                                                                   .div(tenPow18)))
         assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(secondInterestPayable))
         const thirdExchangeRate = tenPow18.add(tenPow17.mul(new BN('3'))) // 1.3
         await cDai.setExchangeRate(thirdExchangeRate)
@@ -180,7 +198,9 @@ contract('core/IdeaTokenExchange', async accounts => {
         const secondPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
         const fourthTradingFee = await getTradingFeeForSelling(ideaToken, amount)
         const fourthTradingFeeInvested = fourthTradingFee.mul(tenPow18).div(thirdExchangeRate)
-        const secondRawPrice = secondPrice.add(fourthTradingFee)
+        const fourthPlatformFee = await getPlatformFeeForSelling(ideaToken, amount)
+        const fourthPlatformFeeInvested = fourthPlatformFee.mul(tenPow18).div(thirdExchangeRate)
+        const secondRawPrice = secondPrice.add(fourthTradingFee).add(fourthPlatformFee)
         assert.isTrue(secondPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
 
         await ideaTokenExchange.sellTokens(ideaToken.address, amount, secondPrice, userAccount)
@@ -193,6 +213,12 @@ contract('core/IdeaTokenExchange', async accounts => {
                                                                           .add(fourthTradingFeeInvested)
                                                                           .mul(thirdExchangeRate)
                                                                           .div(tenPow18)))
+        assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested
+                                                                                   .add(secondPlatformFeeInvested)
+                                                                                   .add(thirdPlatformFeeInvested)
+                                                                                   .add(fourthPlatformFeeInvested)
+                                                                                   .mul(thirdExchangeRate)
+                                                                                   .div(tenPow18)))
     
         assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable))
         const fourthExchangeRate = tenPow18.add(tenPow17.mul(new BN('4'))) // 1.4
@@ -207,6 +233,15 @@ contract('core/IdeaTokenExchange', async accounts => {
 
         assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(fourthInterestPayable))
 
+        const finalPlatformFee = firstPlatformFeeInvested
+                                 .add(secondPlatformFeeInvested)
+                                 .add(thirdPlatformFeeInvested)
+                                 .add(fourthPlatformFeeInvested)
+                                 .mul(fourthExchangeRate)
+                                 .div(tenPow18)
+
+        assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(finalPlatformFee))
+
         const finalTradingFee = firstTradingFeeInvested
                                 .add(secondTradingFeeInvested)
                                 .add(thirdTradingFeeInvested)
@@ -216,6 +251,13 @@ contract('core/IdeaTokenExchange', async accounts => {
 
         assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(finalTradingFee))
     
+        await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID,
+                                                               platformFeeReceiverAccount,
+                                                               { from: adminAccount })
+
+        await ideaTokenExchange.withdrawPlatformFee(marketID, { from: platformFeeReceiverAccount })
+        assert.isTrue((await dai.balanceOf(platformFeeReceiverAccount)).eq(finalPlatformFee))
+
         await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address,
                                                             interestReceiverAccount,
                                                             { from: adminAccount })
@@ -299,6 +341,15 @@ contract('core/IdeaTokenExchange', async accounts => {
         assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(new BN('0')))
     })
 
+    it('no platform fee available', async () => {
+        await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID,
+                                                               platformFeeReceiverAccount,
+                                                               { from: adminAccount })
+        assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(new BN('0')))
+        await ideaTokenExchange.withdrawPlatformFee(marketID, { from: platformFeeReceiverAccount })
+        assert.isTrue((await dai.balanceOf(platformFeeReceiverAccount)).eq(new BN('0')))
+    })
+
     it('no interest available', async () => {
         await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address,
                                                             interestReceiverAccount,
@@ -353,6 +404,28 @@ contract('core/IdeaTokenExchange', async accounts => {
         return rawPrice.mul(tradingFeeRate).div(feeScale)
     }
 
+    async function getPlatformFeeForBuying(token, amount) {
+        const supply = await token.totalSupply()
+        const rawCost = getRawCostForBuyingTokens(baseCost,
+                                                  priceRise,
+                                                  tokensPerInterval,
+                                                  supply,
+                                                  amount)
+
+        return rawCost.mul(platformFeeRate).div(feeScale)
+    }
+
+    async function getPlatformFeeForSelling(token, amount) {
+        const supply = await token.totalSupply()
+        const rawPrice = getRawPriceForSellingTokens(baseCost,
+                                                     priceRise,
+                                                     tokensPerInterval,
+                                                     supply,
+                                                     amount)
+
+        return rawPrice.mul(platformFeeRate).div(feeScale)
+    }
+
     async function getCostForBuyingTokens(token, amount) {
         const supply = await token.totalSupply()
         const rawCost = getRawCostForBuyingTokens(baseCost,
@@ -361,9 +434,10 @@ contract('core/IdeaTokenExchange', async accounts => {
                                                   supply,
                                                   amount)
 
-        const fee = rawCost.mul(tradingFeeRate).div(feeScale)
+        const tradingFee = rawCost.mul(tradingFeeRate).div(feeScale)
+        const platformFee = rawCost.mul(platformFeeRate).div(feeScale)
 
-        return rawCost.add(fee)
+        return rawCost.add(tradingFee).add(platformFee)
     }
 
     async function getPriceForSellingTokens(token, amount) {
@@ -374,8 +448,9 @@ contract('core/IdeaTokenExchange', async accounts => {
                                                      supply,
                                                      amount)
 
-        const fee = rawPrice.mul(tradingFeeRate).div(feeScale)
+        const tradingFee = rawPrice.mul(tradingFeeRate).div(feeScale)
+        const platformFee = rawPrice.mul(platformFeeRate).div(feeScale)
 
-        return rawPrice.sub(fee)
+        return rawPrice.sub(tradingFee).sub(platformFee)
     }
 })

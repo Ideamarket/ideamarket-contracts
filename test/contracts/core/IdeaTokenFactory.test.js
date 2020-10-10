@@ -14,6 +14,7 @@ contract('core/IdeaTokenFactory', async accounts => {
     const priceRise = new BN('100000000000000000') // 10**17
     const tokensPerInterval = new BN('100000000000000000000') // 10**20
     const tradingFeeRate = new BN('100')
+    const platformFeeRate = new BN('50')
     const feeScale = new BN('10000')
 
     const userAccount = accounts[0]
@@ -36,7 +37,7 @@ contract('core/IdeaTokenFactory', async accounts => {
         await ideaTokenFactory.addMarket(
             marketName,  nameVerifier.address,
             baseCost, priceRise, tokensPerInterval,
-            tradingFeeRate,
+            tradingFeeRate, platformFeeRate,
             { from: adminAccount }
         )
 
@@ -54,7 +55,8 @@ contract('core/IdeaTokenFactory', async accounts => {
             baseCost.toString(),
             priceRise.toString(),
             tokensPerInterval.toString(),
-            tradingFeeRate.toString()
+            tradingFeeRate.toString(),
+            platformFeeRate.toString()
         ]
 
         assert.deepEqual(marketDetailsByID, expectedMarketDetails)
@@ -66,7 +68,7 @@ contract('core/IdeaTokenFactory', async accounts => {
         await ideaTokenFactory.addMarket(
             marketName,  nameVerifier.address,
             baseCost, priceRise, tokensPerInterval,
-            tradingFeeRate,
+            tradingFeeRate, platformFeeRate,
             { from: adminAccount }
         )
 
@@ -74,7 +76,7 @@ contract('core/IdeaTokenFactory', async accounts => {
             ideaTokenFactory.addMarket(
                 marketName,  nameVerifier.address,
                 baseCost, priceRise, tokensPerInterval,
-                tradingFeeRate,
+                tradingFeeRate, platformFeeRate,
                 { from: adminAccount }
             ),
             'addMarket: market exists already'
@@ -86,7 +88,7 @@ contract('core/IdeaTokenFactory', async accounts => {
             ideaTokenFactory.addMarket(
                 marketName, '0x0000000000000000000000000000000000000000',
                 new BN('0'), priceRise, tokensPerInterval,
-                tradingFeeRate,
+                tradingFeeRate, platformFeeRate, 
                 { from : adminAccount }
             ),
             'addMarket: invalid parameters'
@@ -96,7 +98,7 @@ contract('core/IdeaTokenFactory', async accounts => {
             ideaTokenFactory.addMarket(
                 marketName, '0x0000000000000000000000000000000000000000',
                 baseCost, new BN('0'), tokensPerInterval,
-                tradingFeeRate,
+                tradingFeeRate, platformFeeRate,
                 { from : adminAccount }
             ),
             'addMarket: invalid parameters'
@@ -106,7 +108,7 @@ contract('core/IdeaTokenFactory', async accounts => {
             ideaTokenFactory.addMarket(
                 marketName, '0x0000000000000000000000000000000000000000',
                 baseCost, priceRise, new BN('0'),
-                tradingFeeRate,
+                tradingFeeRate, platformFeeRate,
                 { from : adminAccount }
             ),
             'addMarket: invalid parameters'
@@ -118,7 +120,7 @@ contract('core/IdeaTokenFactory', async accounts => {
             ideaTokenFactory.addMarket(
                 marketName, '0x0000000000000000000000000000000000000000',
                 baseCost, priceRise, tokensPerInterval,
-                tradingFeeRate,
+                tradingFeeRate, platformFeeRate,
                 { from: userAccount }
             ),
             'Ownable: onlyOwner'
@@ -130,7 +132,7 @@ contract('core/IdeaTokenFactory', async accounts => {
         await ideaTokenFactory.addMarket(
             marketName,  nameVerifier.address,
             baseCost, priceRise, tokensPerInterval,
-            tradingFeeRate,
+            tradingFeeRate, platformFeeRate,
             { from: adminAccount }
         )
 
@@ -146,7 +148,8 @@ contract('core/IdeaTokenFactory', async accounts => {
             baseCost.toString(),
             priceRise.toString(),
             tokensPerInterval.toString(),
-            tradingFeeRate.toString()
+            tradingFeeRate.toString(),
+            platformFeeRate.toString()
         ]
 
         assert.deepEqual(marketDetails, expectedMarketDetails)
@@ -157,7 +160,7 @@ contract('core/IdeaTokenFactory', async accounts => {
         await ideaTokenFactory.addMarket(
             marketName,  nameVerifier.address,
             baseCost, priceRise, tokensPerInterval,
-            tradingFeeRate,
+            tradingFeeRate, platformFeeRate,
             { from: adminAccount }
         )
 
@@ -172,7 +175,7 @@ contract('core/IdeaTokenFactory', async accounts => {
         await ideaTokenFactory.addMarket(
             marketName,  nameVerifier.address,
             baseCost, priceRise, tokensPerInterval,
-            tradingFeeRate,
+            tradingFeeRate, platformFeeRate,
             { from: adminAccount }
         )
 

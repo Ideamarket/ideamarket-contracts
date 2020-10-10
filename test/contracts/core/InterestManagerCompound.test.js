@@ -1,4 +1,4 @@
-const { expectRevert } = require('@openzeppelin/test-helpers');
+const { expectRevert } = require('@openzeppelin/test-helpers')
 const InterestManagerCompound = artifacts.require('InterestManagerCompound')
 const TestCDai = artifacts.require('TestCDai')
 const TestERC20 = artifacts.require('TestERC20')

@@ -60,10 +60,11 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      * @param priceRise: The price rise in Dai per IdeaToken per completed interval
      * @param tokensPerInterval: The amount of IdeaTokens in each interval
      * @param tradingFeeRate: The trading fee rate
+     * @param platformFeeRate: The platform fee rate
      */
     function addMarket(string calldata marketName, address nameVerifier,
                        uint baseCost, uint priceRise, uint tokensPerInterval,
-                       uint tradingFeeRate) external override onlyOwner {
+                       uint tradingFeeRate, uint platformFeeRate) external override onlyOwner {
         require(_marketIDs[marketName] == 0, "addMarket: market exists already");
         require(baseCost > 0 && priceRise > 0 && tokensPerInterval > 0, "addMarket: invalid parameters");
 
@@ -78,7 +79,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                 baseCost: baseCost,
                 priceRise: priceRise,
                 tokensPerInterval: tokensPerInterval,
-                tradingFeeRate: tradingFeeRate
+                tradingFeeRate: tradingFeeRate,
+                platformFeeRate: platformFeeRate
             })
         });
 

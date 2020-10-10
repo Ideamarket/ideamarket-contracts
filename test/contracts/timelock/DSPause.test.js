@@ -51,7 +51,7 @@ contract('timelock/DSPause', async accounts => {
         // For some reason web3 doesnt want BNs here
         const fax = spell.contract.methods.execute(factory.address, 'SOME_MARKET', zeroAddress,
                                                    '1', '1', '1',
-                                                   '0').encodeABI()
+                                                   '0', '0').encodeABI()
 
         await dsPause.plot(spell.address, tag, fax, eta)
         await time.increaseTo(eta.add(new BN('1')))
