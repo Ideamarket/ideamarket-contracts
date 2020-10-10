@@ -73,7 +73,6 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "sellTokens: token does not exist");
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
-        require(marketDetails.exists, "sellTokens: market does not exist");
 
         (uint finalPrice, uint rawPrice, uint tradingFee, uint platformFee) = getPricesForSellingTokens(ideaToken, amount);
 
@@ -166,7 +165,6 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "buyTokens: token does not exist");
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
-        require(marketDetails.exists, "buyTokens: market does not exist");
 
         (uint finalCost, uint rawCost, uint tradingFee, uint platformFee) = getCostsForBuyingTokens(ideaToken, amount);
 

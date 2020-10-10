@@ -359,6 +359,34 @@ contract('core/IdeaTokenExchange', async accounts => {
         assert.isTrue((await dai.balanceOf(interestReceiverAccount)).eq(new BN('0')))
     })
 
+    it('fail authorize interest withdrawer not authorized', async () => {
+        await expectRevert(
+            ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, interestReceiverAccount),
+            'authorizeInterestWithdrawer: not authorized'
+        )
+    })
+
+    it('fail withdraw interest not authorized', async () => {
+        await expectRevert(
+            ideaTokenExchange.withdrawInterest(ideaToken.address),
+            'withdrawInterest: not authorized'
+        )
+    })
+
+    it('fail withdraw platform fee not authorized', async () => {
+        await expectRevert(
+            ideaTokenExchange.withdrawPlatformFee(marketID),
+            'withdrawPlatformFee: not authorized'
+        )
+    })
+
+    it('fail authorize platform fee withdrawer not authorized', async () => {
+        await expectRevert(
+            ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, platformFeeReceiverAccount),
+            'authorizePlatformFeeWithdrawer: not authorized'
+        )
+    })
+
     function getCostForCompletedIntervals(b, r, t, n) {
         return n.mul(t).mul(b.sub(r)).add(r.mul(t).mul(n.mul(n.add(new BN('1'))).div(new BN('2'))))
     }
