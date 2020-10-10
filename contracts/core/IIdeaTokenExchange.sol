@@ -6,4 +6,6 @@ interface IIdeaTokenExchange {
     function getPriceForSellingTokens(address ideaToken, uint amount) external view returns (uint);
     function buyTokens(address ideaToken, uint amount, uint maxCost, address recipient) external;
     function getCostForBuyingTokens(address ideaToken, uint amount) external view returns (uint);
+    function authorizeInterestWithdrawer(address ideaToken, address withdrawer) external;
+    function authorizePlatformFeeWithdrawer(uint marketID, address withdrawer) external;
 }

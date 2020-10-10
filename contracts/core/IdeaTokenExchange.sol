@@ -305,7 +305,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param token The token for which to authorize an address
      * @param withdrawer The address to be authorized
      */
-    function authorizeInterestWithdrawer(address token, address withdrawer) external {
+    function authorizeInterestWithdrawer(address token, address withdrawer) external override {
         require(msg.sender == _owner || msg.sender == _authorizedInterestWithdrawers[token], "authorizeInterestWithdrawer: not authorized");
         _authorizedInterestWithdrawers[token] = withdrawer;
     }
@@ -345,7 +345,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param marketID The market for which to authorize an address
      * @param withdrawer The address to be authorized
      */
-    function authorizePlatformFeeWithdrawer(uint marketID, address withdrawer) external {
+    function authorizePlatformFeeWithdrawer(uint marketID, address withdrawer) external override {
         require(msg.sender == _owner || msg.sender == _authorizedPlatformFeeWithdrawers[marketID], "authorizePlatformFeeWithdrawer: not authorized");
         _authorizedPlatformFeeWithdrawers[marketID] = withdrawer;
     }
