@@ -291,6 +291,21 @@ contract('core/IdeaTokenExchange', async accounts => {
         )
     })
 
+    it('no trading fee available', async () => {
+        assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(new BN('0')))
+        await ideaTokenExchange.withdrawTradingFee()
+        assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(new BN('0')))
+    })
+
+    it('no interest available', async () => {
+        await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address,
+                                                            interestReceiverAccount,
+                                                            { from: adminAccount })
+        assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(new BN('0')))
+        await ideaTokenExchange.withdrawInterest(ideaToken.address, { from: interestReceiverAccount })
+        assert.isTrue((await dai.balanceOf(interestReceiverAccount)).eq(new BN('0')))
+    })
+
     function getCostForCompletedIntervals(b, r, t, n) {
         return n.mul(t).mul(b.sub(r)).add(r.mul(t).mul(n.mul(n.add(new BN('1'))).div(new BN('2'))))
     }
