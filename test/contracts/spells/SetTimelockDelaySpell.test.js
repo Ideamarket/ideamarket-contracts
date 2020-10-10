@@ -20,7 +20,7 @@ contract('spells/SetTimelockDelaySpell', async accounts => {
         spell = await SetTimelockDelaySpell.new()
     })
 
-    it('can set new admin', async () => {
+    it('can set new delay', async () => {
         const eta = new BN((parseInt(await time.latest()) + delay + 100).toString())
         const tag = await dsPause.soul(spell.address)
 
