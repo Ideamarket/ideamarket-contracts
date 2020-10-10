@@ -72,26 +72,24 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
         require(marketDetails.exists, "sellTokens: market does not exist");
 
-        uint rawPrice = getRawPriceForSellingTokens(marketDetails.baseCost,
-                                                    marketDetails.priceRise,
-                                                    marketDetails.tokensPerInterval,
-                                                    IERC20(ideaToken).totalSupply(),
-                                                    amount);
-        uint fee = rawPrice.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
-        uint finalPrice = rawPrice.sub(fee);
+        (uint finalPrice, uint rawPrice, uint tradingFee) = getPricesForSellingTokens(ideaToken, amount);
 
         require(finalPrice >= minPrice, "sellTokens: price subceeds min price");
         require(IIdeaToken(ideaToken).balanceOf(msg.sender) >= amount, "sellTokens: not enough tokens");
-    
-        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
-        exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(rawPrice);
+        
         IIdeaToken(ideaToken).burn(msg.sender, amount);
-        exchangeInfo.invested = exchangeInfo.invested.sub(_interestManager.redeem(address(this), rawPrice));
 
-        require(_dai.transfer(recipient, finalPrice), "sellTokens: dai transfer failed");
-        if(fee > 0) {
-            require(_dai.transfer(_tradingFeeRecipient, fee), "sellTokens: dai fee transfer failed");
-        }
+        // TODO: Make this more efficient
+        uint finalRedeemed = _interestManager.redeem(address(this), finalPrice);
+        uint tradingFeeRedeemed = _interestManager.redeem(address(_interestManager), tradingFee);
+        _interestManager.invest(tradingFee);
+
+        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
+        exchangeInfo.invested = exchangeInfo.invested.sub(finalRedeemed.add(tradingFeeRedeemed));
+        _tradingFeeInvested = _tradingFeeInvested.add(tradingFeeRedeemed);
+        exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(rawPrice);
+    
+        _dai.transfer(msg.sender, finalPrice);
     }
 
     /**
@@ -103,6 +101,19 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @return The price in Dai for selling `amount` IdeaTokens
      */
     function getPriceForSellingTokens(address ideaToken, uint amount) external view override returns (uint) {
+        (uint finalCost, , ) = getPricesForSellingTokens(ideaToken, amount);
+        return finalCost;
+    }
+
+    /**
+     * @dev Calculates each price related to selling tokens
+     *
+     * @param ideaToken The IdeaToken to sell
+     * @param amount The amount of IdeaTokens to sell
+     *
+     * @return Final cost, raw cost and trading fee
+     */
+    function getPricesForSellingTokens(address ideaToken, uint amount) internal view returns (uint, uint, uint) {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
@@ -111,10 +122,10 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                     marketDetails.tokensPerInterval,
                                                     IERC20(ideaToken).totalSupply(),
                                                     amount);
+        uint tradingFee = rawPrice.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
+        uint finalCost = rawPrice.sub(tradingFee);
 
-        uint fee = rawPrice.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
-
-        return rawPrice.sub(fee);
+        return (finalCost, rawPrice, tradingFee);
     }
 
     /**
@@ -132,8 +143,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         uint costForSupply = getCostFromZeroSupply(b, r, t, supply);
         uint costForSupplyMinusAmount = getCostFromZeroSupply(b, r, t, supply.sub(amount));
 
-        uint rawCost = costForSupply.sub(costForSupplyMinusAmount);
-        return rawCost;
+        uint rawPrice = costForSupply.sub(costForSupplyMinusAmount);
+        return rawPrice;
     }
 
     /**
@@ -168,7 +179,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     /**
      * @dev Returns the cost for buying IdeaTokens
      *
-     * @param ideaToken The IdeaToken to sell
+     * @param ideaToken The IdeaToken to buy
      * @param amount The amount of IdeaTokens to buy
      *
      * @return The cost in Dai for buying `amount` IdeaTokens
@@ -181,7 +192,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     /**
      * @dev Calculates each cost related to buying tokens
      *
-     * @param ideaToken The IdeaToken to sell
+     * @param ideaToken The IdeaToken to buy
      * @param amount The amount of IdeaTokens to buy
      *
      * @return Final cost, raw cost and trading fee
