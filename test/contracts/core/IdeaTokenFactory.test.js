@@ -43,7 +43,8 @@ contract('core/IdeaTokenFactory', async accounts => {
         assert.isTrue(new BN('1').eq(await ideaTokenFactory.getNumMarkets()))
         assert.isTrue(new BN('1').eq(await ideaTokenFactory.getMarketIDByName(marketName)))
         
-        const marketDetails = await ideaTokenFactory.getMarketDetailsByID(new BN('1'))
+        const marketDetailsByID = await ideaTokenFactory.getMarketDetailsByID(new BN('1'))
+        const marketDetailsByName = await ideaTokenFactory.getMarketDetailsByName(marketName)
         const expectedMarketDetails = [
             true, // exists
             '1', // id
@@ -56,10 +57,11 @@ contract('core/IdeaTokenFactory', async accounts => {
             tradingFeeRate.toString()
         ]
 
-        assert.deepEqual(marketDetails, expectedMarketDetails)
+        assert.deepEqual(marketDetailsByID, expectedMarketDetails)
+        assert.deepEqual(marketDetailsByName, expectedMarketDetails)
     })
 
-    it('cannot add market with same name', async () => {
+    it('fail add market with same name', async () => {
         const nameVerifier = await DomainNoSubdomainNameVerifier.new()
         await ideaTokenFactory.addMarket(
             marketName,  nameVerifier.address,
@@ -148,6 +150,37 @@ contract('core/IdeaTokenFactory', async accounts => {
         ]
 
         assert.deepEqual(marketDetails, expectedMarketDetails)
+    })
+
+    it('fail add token with invalid name', async () => {
+        const nameVerifier = await DomainNoSubdomainNameVerifier.new()
+        await ideaTokenFactory.addMarket(
+            marketName,  nameVerifier.address,
+            baseCost, priceRise, tokensPerInterval,
+            tradingFeeRate,
+            { from: adminAccount }
+        )
+
+        await expectRevert(
+            ideaTokenFactory.addToken('some.invalid.name', new BN('1')),
+            'addToken: name verification failed'
+        )
+    })
+
+    it('fail add token with same name twice', async () => {
+        const nameVerifier = await DomainNoSubdomainNameVerifier.new()
+        await ideaTokenFactory.addMarket(
+            marketName,  nameVerifier.address,
+            baseCost, priceRise, tokensPerInterval,
+            tradingFeeRate,
+            { from: adminAccount }
+        )
+
+        await ideaTokenFactory.addToken(tokenName, new BN('1'))
+        await expectRevert(
+            ideaTokenFactory.addToken(tokenName, new BN('1')),
+            'addToken: name verification failed'
+        )
     })
 
 })
