@@ -31,6 +31,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 
     let domainNoSubdomainNameVerifier
     let dai
+    let comp
     let cDai
     let interestManagerCompound
     let ideaTokenFactory
@@ -44,7 +45,8 @@ contract('core/IdeaTokenExchange', async accounts => {
         
         domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.new()
         dai = await TestERC20.new('DAI', 'DAI')
-        cDai = await TestCDai.new(dai.address)
+        comp = await TestERC20.new('COMP', 'COMP')
+        cDai = await TestCDai.new(dai.address, comp.address)
         await cDai.setExchangeRate(tenPow18)
         interestManagerCompound = await InterestManagerCompound.new()
         ideaTokenFactory = await IdeaTokenFactory.new()
@@ -53,7 +55,7 @@ contract('core/IdeaTokenExchange', async accounts => {
         await interestManagerCompound.initialize(ideaTokenExchange.address,
                                                  dai.address,
                                                  cDai.address,
-                                                 zeroAddress,
+                                                 comp.address,
                                                  zeroAddress,
                                                  {from: adminAccount})
 

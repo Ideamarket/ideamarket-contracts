@@ -36,6 +36,7 @@ contract('core/CurrencyConverter', async accounts => {
 
     let domainNoSubdomainNameVerifier
     let dai
+    let comp
     let someToken
     let cDai
     let interestManagerCompound
@@ -54,8 +55,9 @@ contract('core/CurrencyConverter', async accounts => {
         
         domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.new()
         dai = await TestERC20.new('DAI', 'DAI')
+        comp = await TestERC20.new('COMP', 'COMP')
         someToken = await TestERC20.new('SOME', 'SOME')
-        cDai = await TestCDai.new(dai.address)
+        cDai = await TestCDai.new(dai.address, comp.address)
         await cDai.setExchangeRate(tenPow18)
         interestManagerCompound = await InterestManagerCompound.new()
         ideaTokenFactory = await IdeaTokenFactory.new()
@@ -78,7 +80,7 @@ contract('core/CurrencyConverter', async accounts => {
         await interestManagerCompound.initialize(ideaTokenExchange.address,
                                                  dai.address,
                                                  cDai.address,
-                                                 zeroAddress,
+                                                 comp.address,
                                                  zeroAddress,
                                                  {from: adminAccount})
 

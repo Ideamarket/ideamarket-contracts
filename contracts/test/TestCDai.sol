@@ -14,14 +14,17 @@ import "./TestERC20.sol";
 contract TestCDai is ERC20, ICToken {
 
     TestERC20 _dai;
+    TestERC20 _comp;
     uint _exchangeRate;
 
     /**
      * @dev Constructs a new TestCDai
      * @param dai The address of the test dai
+     * @param comp The address of the test comp
      */
-    constructor (address dai) public ERC20("cDai", "cDai") {
+    constructor (address dai, address comp) public ERC20("cDai", "cDai") {
         _dai = TestERC20(dai);
+        _comp = TestERC20(comp);
     }
 
     /**
@@ -42,6 +45,10 @@ contract TestCDai is ERC20, ICToken {
 
         uint cDaiAmount = mintAmount.mul(10 ** 18).div(exchangeRateStored());
         _mint(msg.sender, cDaiAmount);
+
+        // Mint some COMP for the msg.sender
+        uint compAmount = 1 ether;
+        _comp.mint(msg.sender, compAmount);
     }
 
     /**

@@ -20,10 +20,10 @@ contract('core/InterestManagerCompound', async accounts => {
     let comp
 
     beforeEach(async () => {
-        dai = await TestERC20.new('dai', 'dai')
-        cDai = await TestCDai.new(dai.address)
+        dai = await TestERC20.new('DAI', 'DAI')
+        comp = await TestERC20.new('COMP', 'COMP')
+        cDai = await TestCDai.new(dai.address, comp.address)
         await cDai.setExchangeRate(tenPow18)
-        comp = await TestERC20.new('comp', 'comp')
         interestManagerCompound = await InterestManagerCompound.new()
         await interestManagerCompound.initialize(
             adminAccount,
@@ -116,5 +116,16 @@ contract('core/InterestManagerCompound', async accounts => {
             interestManagerCompound.redeemDonated(tenPow18.mul(new BN('2'))),
             'redeemDonated: not enough donated'
         )
+    })
+
+    it('can withdraw COMP', async () => {
+        await dai.mint(userAccount, tenPow18)
+        await dai.approve(interestManagerCompound.address, tenPow18)
+        await interestManagerCompound.donateInterest(tenPow18)
+
+        const compBalance = await comp.balanceOf(interestManagerCompound.address)
+        await interestManagerCompound.withdrawComp()
+        assert.isTrue((await comp.balanceOf(interestManagerCompound.address)).eq(new BN('0')))
+        assert.isTrue((await comp.balanceOf(compRecipient)).eq(compBalance))
     })
 })

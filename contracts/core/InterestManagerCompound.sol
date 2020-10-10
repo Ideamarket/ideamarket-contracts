@@ -130,9 +130,9 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * @dev Sends the generated Comp tokens to the Comp recipient
+     * @dev Withdraws the generated Comp tokens to the Comp recipient
      */
-    function redeemComp() external {
+    function withdrawComp() external {
         require(_comp.transfer(_compRecipient, _comp.balanceOf(address(this))), "redeemComp: transfer failed");
     }
 
