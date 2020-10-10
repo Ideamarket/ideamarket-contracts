@@ -17,11 +17,12 @@
 
 pragma solidity ^0.6.9;
 
+import "./IDSPause.sol";
 import "./DSPauseProxy.sol";
 
-contract DSPause {
+contract DSPause is IDSPause {
 
-    address _owner;
+    address public _owner;
     mapping (bytes32 => bool) public _plans;
     DSPauseProxy public _proxy;
     uint         public _delay;
@@ -35,11 +36,11 @@ contract DSPause {
         _proxy = new DSPauseProxy();
     }
 
-    function setOwner(address owner) public wait {
+    function setOwner(address owner) public wait override {
         _owner = owner;
     }
 
-    function setDelay(uint delay) public wait {
+    function setDelay(uint delay) public wait override {
         _delay = delay;
     }
 
@@ -51,27 +52,27 @@ contract DSPause {
     }
 
     function soul(address usr)
-        public view
+        public view override
         returns (bytes32 tag)
     {
         assembly { tag := extcodehash(usr) }
     }
 
     function plot(address usr, bytes32 tag, bytes memory fax, uint eta)
-        public auth
+        public auth override
     {
         require(eta >= add(now, _delay), "ds-pause-delay-not-respected");
         _plans[hash(usr, tag, fax, eta)] = true;
     }
 
     function drop(address usr, bytes32 tag, bytes memory fax, uint eta)
-        public auth
+        public auth override
     {
         _plans[hash(usr, tag, fax, eta)] = false;
     }
 
     function exec(address usr, bytes32 tag, bytes memory fax, uint eta)
-        public auth
+        public auth override
         returns (bytes memory out)
     {
         require(_plans[hash(usr, tag, fax, eta)], "ds-pause-unplotted-plan");
