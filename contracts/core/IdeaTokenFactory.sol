@@ -38,7 +38,14 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     /// @dev We want token names to be unique across markets, so we keep track of them in a seperate map
     mapping(string => bool) _tokenNameUsed;
 
-    event NewMarket(uint id, string name);
+    event NewMarket(uint id,
+                    string name,
+                    uint baseCost,
+                    uint priceRise,
+                    uint tokensPerInterval,
+                    uint tradingFeeRate,
+                    uint platformFeeRate);
+
     event NewToken(uint id, uint marketID, string name, address addr);
 
     /**
@@ -56,7 +63,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
 
      * @param marketName The name of the market
      * @param nameVerifier The address of the name verifier
-     * @param baseCost: The initial cost in Dai per IdeaToken in the first interval
+     * @param baseCost: The initial cost in Dai per IdeaToken in the first interval
      * @param priceRise: The price rise in Dai per IdeaToken per completed interval
      * @param tokensPerInterval: The amount of IdeaTokens in each interval
      * @param tradingFeeRate: The trading fee rate
@@ -87,7 +94,13 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
         _markets[marketID] = marketInfo;
         _marketIDs[marketName] = marketID;
 
-        emit NewMarket(marketID, marketName);
+        emit NewMarket(marketID,
+                       marketName,
+                       baseCost,
+                       priceRise,
+                       tokensPerInterval, 
+                       tradingFeeRate,
+                       platformFeeRate);
     }
 
     /**
