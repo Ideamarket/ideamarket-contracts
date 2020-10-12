@@ -15,7 +15,7 @@ module.exports = async function(deployer, network, accounts) {
 
     const ideaTokenExchange = await deployProxy(IdeaTokenExchange,
                                                 [
-                                                    accounts[0], // owner - this will be changed to the multisig later
+                                                    accounts[0], // owner - this will be changed to the Timelock later
                                                     externalAddresses.multisig,
                                                     loadDeployedAddress(network, 'interestManager'),
                                                     externalAddresses.dai,

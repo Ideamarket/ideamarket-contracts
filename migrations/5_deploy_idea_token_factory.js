@@ -15,7 +15,7 @@ module.exports = async function(deployer, network, accounts) {
 
     const ideaTokenFactory = await deployProxy(IdeaTokenFactory,
                                                [
-                                                   externalAddresses.multisig,
+                                                   loadDeployedAddress(network, 'dsPauseProxy'),
                                                    loadDeployedAddress(network, 'ideaTokenExchange')
                                                ],
                                                { deployer })

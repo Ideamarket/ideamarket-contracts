@@ -1,5 +1,11 @@
 const fs = require('fs')
 
+module.exports.deploymentParams = {
+    'kovan': {
+        timelockDelay: '1'
+    }
+}
+
 module.exports.externalContractAddresses = {
     'kovan': {
 
