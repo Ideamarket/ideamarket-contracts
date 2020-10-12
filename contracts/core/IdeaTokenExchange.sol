@@ -40,7 +40,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     IInterestManager _interestManager;
     IERC20 _dai;
 
-    event TokensBought(address ideaToken, uint amount, uint rawPrice, uint finalPrice);
+    event TokensBought(address ideaToken, uint amount, uint rawCost, uint finalCost);
     event TokensSold(address ideaToken, uint amount, uint rawPrice, uint finalPrice);
 
     /**
@@ -183,7 +183,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(_interestManager.invest(platformFee));
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(rawCost);
     
-        emit TokensBought(ideaToken, amount, rawPrice, finalPrice);
+        emit TokensBought(ideaToken, amount, rawCost, finalCost);
         IIdeaToken(ideaToken).mint(recipient, amount);
     }
 
