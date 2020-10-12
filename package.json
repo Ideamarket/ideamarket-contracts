@@ -23,6 +23,7 @@
     "solidity-coverage": "^0.7.11"
   },
   "dependencies": {
-    "@openzeppelin/cli": "^2.8.2"
+    "@openzeppelin/cli": "^2.8.2",
+    "dotenv": "^8.2.0"
   }
 }
