@@ -7,10 +7,10 @@ const InterestManagerCompound = artifacts.require('InterestManagerCompound')
 module.exports = async function(deployer, network, accounts) {
     let externalAddresses
 
-    if(network != 'kovan') {
+    if(network == 'kovan') {
         externalAddresses = externalContractAddresses.kovan
     } else {
-        throw 'Unknown network: ' + network
+        return
     }
 
     const interestManager = await deployProxy(InterestManagerCompound,
