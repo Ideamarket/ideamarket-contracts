@@ -48,18 +48,15 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param owner The owner of the contract
      * @param tradingFeeRecipient The address of the recipient of the trading fee
-     * @param ideaTokenFactory The address of the IdeaTokenFactory
      * @param interestManager The address of the InterestManager
      * @param dai The address of Dai
      */
     function initialize(address owner,
                         address tradingFeeRecipient,
-                        address ideaTokenFactory,
                         address interestManager,
                         address dai) external initializer {
         setOwnerInternal(owner);
         _tradingFeeRecipient = tradingFeeRecipient;
-        _ideaTokenFactory = IIdeaTokenFactory(ideaTokenFactory);
         _interestManager = IInterestManager(interestManager);
         _dai = IERC20(dai);
     }
@@ -376,5 +373,15 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      */
     function getTradingFeePayable() public view returns (uint) {
         return _tradingFeeInvested.mul(_interestManager.getExchangeRate()).div(10**18);
+    }
+
+    /**
+     * @dev Sets the IdeaTokenFactory address. Only required once for deployment
+     *
+     * @param factory The address of the IdeaTokenFactory 
+     */
+    function setIdeaTokenFactoryAddress(uint factory) external onlyOwner {
+        require(address(_ideaTokenFactory) == address(0));
+        _ideaTokenFactory = IIdeaTokenFactory(factory);
     }
 }

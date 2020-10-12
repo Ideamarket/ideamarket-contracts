@@ -27,7 +27,6 @@ contract('spells/AuthorizePlatformFeeWithdrawerSpell', async accounts => {
                                            zeroAddress,
                                            zeroAddress,
                                            zeroAddress,
-                                           zeroAddress,
                                            { from: adminAccount })
     })
 

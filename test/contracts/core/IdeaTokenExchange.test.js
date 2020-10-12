@@ -67,10 +67,10 @@ contract('core/IdeaTokenExchange', async accounts => {
 
         await ideaTokenExchange.initialize(adminAccount,
                                            tradingFeeAccount,
-                                           ideaTokenFactory.address,
                                            interestManagerCompound.address,
                                            dai.address,
                                            {from: adminAccount})
+        await ideaTokenExchange.setIdeaTokenFactoryAddress(ideaTokenFactory.address, { from: adminAccount })
 
         await ideaTokenFactory.addMarket(marketName,
                                          domainNoSubdomainNameVerifier.address,

@@ -27,7 +27,6 @@ contract('spells/AuthorizeInterestWithdrawerSpell', async accounts => {
                                            zeroAddress,
                                            zeroAddress,
                                            zeroAddress,
-                                           zeroAddress,
                                            { from: adminAccount })
     })
 
