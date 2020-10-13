@@ -1,4 +1,5 @@
 const fs = require('fs')
+const AdminUpgradeabilityProxy = artifacts.require('AdminUpgradeabilityProxy')
 
 module.exports.deploymentParams = {
     'kovan': {
@@ -34,4 +35,17 @@ module.exports.loadDeployedAddress = function (network, contract) {
     const raw = fs.readFileSync(path)
     const addresses = JSON.parse(raw)
     return addresses[contract]
+}
+
+module.exports.deployProxy = async function(artifact, deployer, admin, ...args) {
+    // Deploy the logic contract
+    await deployer.deploy(artifact)
+    const logicContract = await artifact.at(artifact.address)
+
+    // Proxy will delegatecall into the initializer
+    const data = logicContract.contract.methods.initialize(...args).encodeABI()
+
+    await deployer.deploy(AdminUpgradeabilityProxy, logicContract.address, admin, data)
+
+    return [AdminUpgradeabilityProxy.address, logicContract.address]
 }
