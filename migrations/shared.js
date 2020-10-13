@@ -18,7 +18,7 @@ module.exports.externalContractAddresses = {
 }
 
 module.exports.saveDeployedAddress = function (network, contract, address) {
-    let addresses
+    let addresses = {}
     const path = '../deployed/deployed-' + network + '.json'
     if(fs.existsSync(path)) {
         const raw = fs.readFileSync(path)
