@@ -1,4 +1,3 @@
-require('dotenv').config()
 const { externalContractAddresses, loadDeployedAddress } = require('./shared')
 
 const IdeaTokenExchange = artifacts.require('IdeaTokenExchange')

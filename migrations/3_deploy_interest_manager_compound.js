@@ -1,4 +1,3 @@
-require('dotenv').config()
 const { externalContractAddresses, saveDeployedAddress } = require('./shared')
 const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 
