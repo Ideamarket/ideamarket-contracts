@@ -12413,12 +12413,12 @@
         }
       },
       "links": {},
-      "address": "0xd60B1424fC331576bFF4910C3e3d3E1F83470D1A",
-      "transactionHash": "0xff9cedfd69bf4c7815da88106551bab9bc9d71eec289bfd136ba2a0ee2073d6b"
+      "address": "0x338eE373C15220Fc9EA05e9Cd5Dd92e081eF05d9",
+      "transactionHash": "0x4c720c711696721f044b9aa4c124b0b221be39aec359ff65dc0475891ad51822"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-13T10:19:02.526Z",
+  "updatedAt": "2020-10-13T12:08:29.969Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",

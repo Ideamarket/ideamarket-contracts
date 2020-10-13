@@ -1897,7 +1897,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-13T10:16:44.151Z",
+  "updatedAt": "2020-10-13T12:02:00.218Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Represents an ERC20 IdeaToken which can be burned and minted by the owner of the contract instance",

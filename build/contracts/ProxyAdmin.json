@@ -3797,12 +3797,12 @@
         }
       },
       "links": {},
-      "address": "0x6Ddeb3d68F058b426aF59672FCB4AeEaBd7E85D8",
-      "transactionHash": "0x196e590e97ea8bf4ed5c69548cb0f1f803271d65d652e5c6e59478f8211cb002"
+      "address": "0xb3a81e4F31c66af72a05738c5478239a43EB2D79",
+      "transactionHash": "0xff49b65ce259f962d436272fde77b4cc2733861d1e0760886027b7042edf3e1f"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-13T10:17:45.495Z",
+  "updatedAt": "2020-10-13T12:04:34.506Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "This contract is the admin of a proxy, and is in charge of upgrading it as well as transferring it to another admin.",

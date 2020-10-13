@@ -1198,7 +1198,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-13T10:16:44.124Z",
+  "updatedAt": "2020-10-13T12:02:00.196Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "A simplified interface for Compound's cToken",

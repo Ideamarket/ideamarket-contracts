@@ -32944,12 +32944,12 @@
         }
       },
       "links": {},
-      "address": "0x9F1f514D7fe9110f404e812eF34efb2930B15a5a",
-      "transactionHash": "0xd1c37b28543f01837447bf925ae6eab55946f2e342b02bb31a7f2cb0e6768488"
+      "address": "0x84ba3f3eD929b0fc781C5081794eCa7DaB24ae0D",
+      "transactionHash": "0xe8718ad162cff1576c99314c1194272a8b86f439b131cf6f42cc9a0b4aa4146e"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-13T10:19:29.943Z",
+  "updatedAt": "2020-10-13T12:09:02.154Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",

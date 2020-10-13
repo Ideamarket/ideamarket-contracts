@@ -1,13 +1,13 @@
 {
-    "migrations": "0x1D6E1F36CC7fe412B4F60323f65DDEDd9b9c82D0",
-    "dsPause": "0x9BF4D42d4AFBc1AaF6349C302548Ff19c607407B",
-    "dsPauseProxy": "0x86F77b0aF909DB71a10c50cCfFcd8ba07f21BCC5",
-    "proxyAdmin": "0x6Ddeb3d68F058b426aF59672FCB4AeEaBd7E85D8",
-    "interestManager": "0xDcc3b024E7eD4F08dCd8d0e9d9E4fEFe0c8ab5B8",
-    "interestManagerLogic": "0xcED3f75AA61c8A67eABA70CE0f175E4547C8CD5B",
-    "ideaTokenExchange": "0x13c3020cD35440F1E095E6F1cFf7b46697A07c07",
-    "ideaTokenExchangeLogic": "0x9F1f514D7fe9110f404e812eF34efb2930B15a5a",
-    "ideaTokenFactory": "0xbAb876e760CA1c5a422C4711c4923CD89479eb30",
-    "ideaTokenFactoryLogic": "0xd60B1424fC331576bFF4910C3e3d3E1F83470D1A",
-    "currencyConverter": "0x6559987eD3732b2CC98D485b02F5C0894fb48Ed2"
+    "migrations": "0xD6cFd2ea4Bc14E6f899Fd16Bd0aA8821a4b923C2",
+    "dsPause": "0xA099991a83E7032F7D2c4e98E25BF570b9304883",
+    "dsPauseProxy": "0x1DD4594ec27C79bD244C93D8041f7eEd3D5cfd7e",
+    "proxyAdmin": "0xb3a81e4F31c66af72a05738c5478239a43EB2D79",
+    "interestManager": "0xd845358af407F4c6FFf9Ba8e54f7B2F66581AB2d",
+    "interestManagerLogic": "0xee522DECCb9C13d158f023ACB21cAe15CdFFeC9E",
+    "ideaTokenExchange": "0x17bdbc206B4cb26C55a917451cF17c5485b9AEeB",
+    "ideaTokenExchangeLogic": "0x84ba3f3eD929b0fc781C5081794eCa7DaB24ae0D",
+    "ideaTokenFactory": "0xfa62487f64C1EC8eF2e19786e4E07cC85A008E93",
+    "ideaTokenFactoryLogic": "0x338eE373C15220Fc9EA05e9Cd5Dd92e081eF05d9",
+    "currencyConverter": "0x8b93B611a92AC8E43B3b32948232426B54d0d32B"
 }
