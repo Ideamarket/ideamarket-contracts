@@ -1,4 +1,4 @@
-const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress } = require('./shared')
+const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress, verifyOnEtherscan } = require('./shared')
 const CurrencyConverter = artifacts.require('CurrencyConverter')
 
 module.exports = async function(deployer, network, accounts) {
@@ -16,5 +16,6 @@ module.exports = async function(deployer, network, accounts) {
                           externalAddresses.uniswapV2Router02,
                           externalAddresses.weth)
 
+    await verifyOnEtherscan(network, CurrencyConverter.address, 'CurrencyConverter')
     saveDeployedAddress(network, 'currencyConverter', CurrencyConverter.address)
 }
