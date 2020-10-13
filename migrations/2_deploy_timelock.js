@@ -13,7 +13,8 @@ module.exports = async function(deployer, network, accounts) {
         return
     }
 
-    const dsPause = await deployer.deploy(DSPause, params.timelockDelay, externalAddresses.multisig)
+    await deployer.deploy(DSPause, params.timelockDelay, externalAddresses.multisig)
+    const dsPause = await DSPause.at(DSPause.address)
     const dsPauseProxyAddress = await dsPause._proxy()
 
     saveDeployedAddress(network, 'dsPause', dsPause.address)

@@ -11,11 +11,11 @@ module.exports = async function(deployer, network, accounts) {
         return
     }
 
-    const currencyConverter = await deployer.deploy(CurrencyConverter,
-                                                    loadDeployedAddress(network, 'ideaTokenExchange'),
-                                                    externalAddresses.dai,
-                                                    externalAddresses.uniswapV2Router02,
-                                                    externalAddresses.weth)
+    await deployer.deploy(CurrencyConverter,
+                          loadDeployedAddress(network, 'ideaTokenExchange'),
+                          externalAddresses.dai,
+                          externalAddresses.uniswapV2Router02,
+                          externalAddresses.weth)
 
-    saveDeployedAddress(network, 'currencyConverter', currencyConverter.address)
+    saveDeployedAddress(network, 'currencyConverter', CurrencyConverter.address)
 }
