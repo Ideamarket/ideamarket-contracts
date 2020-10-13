@@ -18,7 +18,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"verifyTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains\",\"methods\":{\"verifyTokenName(string)\":{\"details\":\"Verifies whether a string matches the required format\",\"params\":{\"name\":\"The input string (domain name)\"},\"returns\":{\"_0\":\"Bool; True=matches, False=does not match\"}}},\"title\":\"DomainNoSubdomainNameVerifier\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol\":\"DomainNoSubdomainNameVerifier\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol\":{\"keccak256\":\"0x0f393706ecd41fe568877a5d09dac5b4d3a31c3f25a455af5371c6ea531620b9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d840db0961a17430f3554a58537e62e941d86ac886d3e879953b0f2dad0a0a63\",\"dweb:/ipfs/QmdDygHJjV82quoL68kuKQjg2q2uNfTMswA3KtgqFCunMZ\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0xaf3c8d02852edc08ac85198fa3d37f3c512dc215a5409992e45cf877c34c172d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1303500e1882260f5f77d8b331184e8e7972e94b3be8ca972ae1de41089bcc9e\",\"dweb:/ipfs/QmVQbjUbaD5iXhQEBQqREE51TibRQREqdDBkQRf1SfxyVr\"]}},\"version\":1}",
@@ -3529,9 +3530,17 @@
     "name": "solc",
     "version": "0.6.9+commit.3e3065ac.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0xb7aDe1E2CC349A76dE9E0a03ceEACBD42157d57A",
+      "transactionHash": "0x090365af43fed274e48d887699ddb8b62a27d6c69e3598a1683eb5d7188fc435"
+    }
+  },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-13T10:03:13.812Z",
+  "updatedAt": "2020-10-13T13:25:02.651Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains",
