@@ -13,5 +13,4 @@ contract AddMarketSpell {
                                               baseCost, priceRise, tokensPerInterval,
                                               tradingFeeRate, platformFeeRate);
     }
-
 }
