@@ -1,9 +1,6 @@
 # NPM / Node
 node_modules
 
-# Truffle
-build/contracts
-
 # Coverage
 coverage
 coverage.json
