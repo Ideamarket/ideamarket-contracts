@@ -1,5 +1,5 @@
-const { externalContractAddresses, saveDeployedAddress } = require('./shared')
-const { deployProxy } = require('@openzeppelin/truffle-upgrades')
+const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress } = require('./shared')
+const { deployProxy, admin } = require('@openzeppelin/truffle-upgrades')
 
 const InterestManagerCompound = artifacts.require('InterestManagerCompound')
 
@@ -11,6 +11,8 @@ module.exports = async function(deployer, network, accounts) {
     } else {
         return
     }
+
+    await admin.transferProxyAdminOwnership(loadDeployedAddress(network, 'dsPauseProxy'))
 
     const interestManager = await deployProxy(InterestManagerCompound,
                                               [
