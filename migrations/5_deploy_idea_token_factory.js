@@ -1,5 +1,5 @@
 const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress } = require('./shared')
-const { deployProxy, admin } = require('@openzeppelin/truffle-upgrades')
+const { deployProxy } = require('@openzeppelin/truffle-upgrades')
 
 const IdeaTokenFactory = artifacts.require('IdeaTokenFactory')
 
@@ -11,8 +11,6 @@ module.exports = async function(deployer, network, accounts) {
     } else {
         return
     }
-
-    await admin.transferProxyAdminOwnership(loadDeployedAddress(network, 'dsPauseProxy'))
 
     const ideaTokenFactory = await deployProxy(IdeaTokenFactory,
                                                [

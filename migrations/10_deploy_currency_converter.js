@@ -1,5 +1,4 @@
 const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress } = require('./shared')
-
 const CurrencyConverter = artifacts.require('CurrencyConverter')
 
 module.exports = async function(deployer, network, accounts) {
