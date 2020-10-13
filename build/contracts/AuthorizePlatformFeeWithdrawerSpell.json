@@ -1,0 +1,651 @@
+{
+  "contractName": "AuthorizePlatformFeeWithdrawerSpell",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "exchange",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "marketID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "withdrawer",
+          "type": "address"
+        }
+      ],
+      "name": "execute",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"exchange\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"withdrawer\",\"type\":\"address\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AuthorizePlatformFeeWithdrawerSpell.sol\":\"AuthorizePlatformFeeWithdrawerSpell\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenExchange.sol\":{\"keccak256\":\"0x0103e29888cf4c50229f44211922e6928eac3542f37c0aa869a22678b599f471\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://77432081c31e2c89e4d36bd973fdec2964eab11fe0cba9dc93ed8d6962c6aa53\",\"dweb:/ipfs/QmVM4u8uTx4NjBGH75du1gxv6qzwtRd9gmRHL7r2U5uoVQ\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AuthorizePlatformFeeWithdrawerSpell.sol\":{\"keccak256\":\"0xadf3e67cff19bc0746aa354baf7b5a75bcd9f59629e3cebc0c72c5d03f07deca\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a77c4001a19d8e004c7177786d31b8019d9c894994f42b5a4aa6a5c7181c6b02\",\"dweb:/ipfs/QmehXdCFRPzZdwZ6uKwZrwa2c2HX8pJ4hJf1Z4byqbBUd8\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610178806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063e0af5f6a14610030575b600080fd5b61009c6004803603606081101561004657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061009e565b005b8273ffffffffffffffffffffffffffffffffffffffff1663130362b383836040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200192505050600060405180830381600087803b15801561012557600080fd5b505af1158015610139573d6000803e3d6000fd5b5050505050505056fea2646970667358221220a4d049246c6d72cf4427b5711e07449256a3c3b2051acd3b8aec81b9303b2bce64736f6c63430006090033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063e0af5f6a14610030575b600080fd5b61009c6004803603606081101561004657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061009e565b005b8273ffffffffffffffffffffffffffffffffffffffff1663130362b383836040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200192505050600060405180830381600087803b15801561012557600080fd5b505af1158015610139573d6000803e3d6000fd5b5050505050505056fea2646970667358221220a4d049246c6d72cf4427b5711e07449256a3c3b2051acd3b8aec81b9303b2bce64736f6c63430006090033",
+  "immutableReferences": {},
+  "sourceMap": "104:234:19:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "104:234:19:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;156:179;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;265:8;246:59;;;306:8;316:10;246:81;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;156:179;;;:::o",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\nimport \"../core/IIdeaTokenExchange.sol\";\r\n\r\ncontract AuthorizePlatformFeeWithdrawerSpell {\r\n    function execute(address exchange, uint marketID, address withdrawer) external {\r\n        IIdeaTokenExchange(exchange).authorizePlatformFeeWithdrawer(marketID, withdrawer);\r\n    }\r\n}",
+  "sourcePath": "C:/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AuthorizePlatformFeeWithdrawerSpell.sol",
+  "ast": {
+    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AuthorizePlatformFeeWithdrawerSpell.sol",
+    "exportedSymbols": {
+      "AuthorizePlatformFeeWithdrawerSpell": [
+        3665
+      ]
+    },
+    "id": 3666,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3645,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:19"
+      },
+      {
+        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenExchange.sol",
+        "file": "../core/IIdeaTokenExchange.sol",
+        "id": 3646,
+        "nodeType": "ImportDirective",
+        "scope": 3666,
+        "sourceUnit": 674,
+        "src": "60:40:19",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 3665,
+        "linearizedBaseContracts": [
+          3665
+        ],
+        "name": "AuthorizePlatformFeeWithdrawerSpell",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 3663,
+              "nodeType": "Block",
+              "src": "235:100:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 3659,
+                        "name": "marketID",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3650,
+                        "src": "306:8:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 3660,
+                        "name": "withdrawer",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3652,
+                        "src": "316:10:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 3656,
+                            "name": "exchange",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3648,
+                            "src": "265:8:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          ],
+                          "id": 3655,
+                          "name": "IIdeaTokenExchange",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 673,
+                          "src": "246:18:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_IIdeaTokenExchange_$673_$",
+                            "typeString": "type(contract IIdeaTokenExchange)"
+                          }
+                        },
+                        "id": 3657,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "246:28:19",
+                        "tryCall": false,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_IIdeaTokenExchange_$673",
+                          "typeString": "contract IIdeaTokenExchange"
+                        }
+                      },
+                      "id": 3658,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "authorizePlatformFeeWithdrawer",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 672,
+                      "src": "246:59:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_address_$returns$__$",
+                        "typeString": "function (uint256,address) external"
+                      }
+                    },
+                    "id": 3661,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "246:81:19",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 3662,
+                  "nodeType": "ExpressionStatement",
+                  "src": "246:81:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "e0af5f6a",
+            "id": 3664,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "execute",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 3653,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3648,
+                  "mutability": "mutable",
+                  "name": "exchange",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3664,
+                  "src": "173:16:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3647,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "173:7:19",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3650,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3664,
+                  "src": "191:13:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3649,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "191:4:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3652,
+                  "mutability": "mutable",
+                  "name": "withdrawer",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3664,
+                  "src": "206:18:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3651,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "206:7:19",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "172:53:19"
+            },
+            "returnParameters": {
+              "id": 3654,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "235:0:19"
+            },
+            "scope": 3665,
+            "src": "156:179:19",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 3666,
+        "src": "104:234:19"
+      }
+    ],
+    "src": "33:305:19"
+  },
+  "legacyAST": {
+    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AuthorizePlatformFeeWithdrawerSpell.sol",
+    "exportedSymbols": {
+      "AuthorizePlatformFeeWithdrawerSpell": [
+        3665
+      ]
+    },
+    "id": 3666,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3645,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:19"
+      },
+      {
+        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenExchange.sol",
+        "file": "../core/IIdeaTokenExchange.sol",
+        "id": 3646,
+        "nodeType": "ImportDirective",
+        "scope": 3666,
+        "sourceUnit": 674,
+        "src": "60:40:19",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 3665,
+        "linearizedBaseContracts": [
+          3665
+        ],
+        "name": "AuthorizePlatformFeeWithdrawerSpell",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 3663,
+              "nodeType": "Block",
+              "src": "235:100:19",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 3659,
+                        "name": "marketID",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3650,
+                        "src": "306:8:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 3660,
+                        "name": "withdrawer",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3652,
+                        "src": "316:10:19",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 3656,
+                            "name": "exchange",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3648,
+                            "src": "265:8:19",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          ],
+                          "id": 3655,
+                          "name": "IIdeaTokenExchange",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 673,
+                          "src": "246:18:19",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_IIdeaTokenExchange_$673_$",
+                            "typeString": "type(contract IIdeaTokenExchange)"
+                          }
+                        },
+                        "id": 3657,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "246:28:19",
+                        "tryCall": false,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_IIdeaTokenExchange_$673",
+                          "typeString": "contract IIdeaTokenExchange"
+                        }
+                      },
+                      "id": 3658,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "authorizePlatformFeeWithdrawer",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 672,
+                      "src": "246:59:19",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_address_$returns$__$",
+                        "typeString": "function (uint256,address) external"
+                      }
+                    },
+                    "id": 3661,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "246:81:19",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 3662,
+                  "nodeType": "ExpressionStatement",
+                  "src": "246:81:19"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "e0af5f6a",
+            "id": 3664,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "execute",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 3653,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3648,
+                  "mutability": "mutable",
+                  "name": "exchange",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3664,
+                  "src": "173:16:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3647,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "173:7:19",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3650,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3664,
+                  "src": "191:13:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 3649,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "191:4:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3652,
+                  "mutability": "mutable",
+                  "name": "withdrawer",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3664,
+                  "src": "206:18:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3651,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "206:7:19",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "172:53:19"
+            },
+            "returnParameters": {
+              "id": 3654,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "235:0:19"
+            },
+            "scope": 3665,
+            "src": "156:179:19",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 3666,
+        "src": "104:234:19"
+      }
+    ],
+    "src": "33:305:19"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.9+commit.3e3065ac.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.3",
+  "updatedAt": "2020-10-13T10:03:13.853Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

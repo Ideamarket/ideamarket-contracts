@@ -1,0 +1,3733 @@
+{
+  "contractName": "IIdeaTokenFactory",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "marketName",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "nameVerifier",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "baseCost",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "priceRise",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokensPerInterval",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tradingFeeRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "platformFeeRate",
+          "type": "uint256"
+        }
+      ],
+      "name": "addMarket",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "tokenName",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "marketID",
+          "type": "uint256"
+        }
+      ],
+      "name": "addToken",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "tokenName",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "marketID",
+          "type": "uint256"
+        }
+      ],
+      "name": "isValidTokenName",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "marketName",
+          "type": "string"
+        }
+      ],
+      "name": "getMarketIDByName",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "marketID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getMarketDetailsByID",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "exists",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "contract IIdeaTokenNameVerifier",
+              "name": "nameVerifier",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "numTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "baseCost",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "priceRise",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokensPerInterval",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tradingFeeRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "platformFeeRate",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IIdeaTokenFactory.MarketDetails",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "marketName",
+          "type": "string"
+        }
+      ],
+      "name": "getMarketDetailsByName",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "exists",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "contract IIdeaTokenNameVerifier",
+              "name": "nameVerifier",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "numTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "baseCost",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "priceRise",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokensPerInterval",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tradingFeeRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "platformFeeRate",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IIdeaTokenFactory.MarketDetails",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getNumMarkets",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "tokenName",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "marketID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTokenIDByName",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "marketID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTokenInfo",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "exists",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "contract IIdeaToken",
+              "name": "ideaToken",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct IIdeaTokenFactory.TokenInfo",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "getTokenIDPair",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "exists",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "marketID",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenID",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IIdeaTokenFactory.IDPair",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerInterval\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"name\":\"addMarket\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"addToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"getMarketDetailsByID\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"contract IIdeaTokenNameVerifier\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"numTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerInterval\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"internalType\":\"struct IIdeaTokenFactory.MarketDetails\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"}],\"name\":\"getMarketDetailsByName\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"contract IIdeaTokenNameVerifier\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"numTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerInterval\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"internalType\":\"struct IIdeaTokenFactory.MarketDetails\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"}],\"name\":\"getMarketIDByName\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getNumMarkets\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"getTokenIDByName\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"getTokenIDPair\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"internalType\":\"struct IIdeaTokenFactory.IDPair\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"getTokenInfo\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"contract IIdeaToken\",\"name\":\"ideaToken\",\"type\":\"address\"}],\"internalType\":\"struct IIdeaTokenFactory.TokenInfo\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"isValidTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol\":\"IIdeaTokenFactory\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol\":{\"keccak256\":\"0x679deb2f552ca3ea3199e418a1e66eafda8e81a8015b4a1dcfebb3fe3fd90986\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cf70646f5dd9e18d3b19d635a8c4edb7fd2d9787d4055e1754e6b0e8e8d600b7\",\"dweb:/ipfs/QmdVYAJKd8H4nBQbUE8Badk7oQLtAeGRe1np6U37WDuiDG\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol\":{\"keccak256\":\"0x67e68b9ce30f1bf857a4c080527210a8efa2f02f71d26d9bc874d21e25936d19\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3ade974b5636af684fe70444659a18fa951f3dfa23ea3127994a489d3f4e94cd\",\"dweb:/ipfs/QmRMfXJVvGMKS8oCqwfGywvSVQEFFxwvYAnVzDaL6V7XPH\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0xaf3c8d02852edc08ac85198fa3d37f3c512dc215a5409992e45cf877c34c172d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1303500e1882260f5f77d8b331184e8e7972e94b3be8ca972ae1de41089bcc9e\",\"dweb:/ipfs/QmVQbjUbaD5iXhQEBQqREE51TibRQREqdDBkQRf1SfxyVr\"]},\"@openzeppelin/contracts/GSN/Context.sol\":{\"keccak256\":\"0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a\",\"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5\",\"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV\"]},\"@openzeppelin/contracts/token/ERC20/ERC20.sol\":{\"keccak256\":\"0xf204d98eef08edacf5a02a2af1516ea4febdb6aba7a1ae5ac8deb6e568fd3dbb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c4dea62bffbd180772a6cfe7cb90e3a045c52d6b502bdb2fdff83193da42d8d0\",\"dweb:/ipfs/QmW8qGZ5nngajmv5Aamdrpkeuq7S5YCVaR7rtcqNekKHtK\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x5c26b39d26f7ed489e555d955dcd3e01872972e71fdd1528e93ec164e4f23385\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://efdc632af6960cf865dbc113665ea1f5b90eab75cc40ec062b2f6ae6da582017\",\"dweb:/ipfs/QmfAZFDuG62vxmAN9DnXApv7e7PMzPqi4RkqqZHLMSQiY5\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0xdfb4f812600ba4ce6738c35584ceb8c9433472583051b48ba5b1f66cb758a498\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df02dffe1c1de089d9b4f6192f0dcf464526f2230f420b3deec4645e0cdd2bff\",\"dweb:/ipfs/QmcqXGAU3KJqwrgUVoGJ2W8osomhSJ4R5kdsRpbuW3fELS\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\npragma experimental ABIEncoderV2;\r\n\r\nimport \"@openzeppelin/contracts/token/ERC20/IERC20.sol\";\r\nimport \"./IIdeaToken.sol\";\r\nimport \"./nameVerifiers/IIdeaTokenNameVerifier.sol\";\r\n\r\ninterface IIdeaTokenFactory {\r\n\r\n    struct IDPair {\r\n        bool exists;\r\n        uint marketID;\r\n        uint tokenID;\r\n    }\r\n\r\n    struct TokenInfo {\r\n        bool exists;\r\n        uint id;\r\n        string name;\r\n        IIdeaToken ideaToken;\r\n    }\r\n\r\n    struct MarketDetails {\r\n        bool exists;\r\n        uint id;\r\n        string name;\r\n\r\n        IIdeaTokenNameVerifier nameVerifier;\r\n        uint numTokens;\r\n\r\n        uint baseCost;\r\n        uint priceRise;\r\n        uint tokensPerInterval;\r\n        uint tradingFeeRate;\r\n        uint platformFeeRate;\r\n    }\r\n\r\n    function addMarket(string calldata marketName, address nameVerifier,\r\n                       uint baseCost, uint priceRise, uint tokensPerInterval,\r\n                       uint tradingFeeRate, uint platformFeeRate) external;\r\n\r\n    function addToken(string calldata tokenName, uint marketID) external;\r\n\r\n    function isValidTokenName(string calldata tokenName, uint marketID) external view returns (bool);\r\n    function getMarketIDByName(string calldata marketName) external view returns (uint);\r\n    function getMarketDetailsByID(uint marketID) external view returns (MarketDetails memory);\r\n    function getMarketDetailsByName(string calldata marketName) external view returns (MarketDetails memory);\r\n    function getNumMarkets() external view returns (uint);\r\n    function getTokenIDByName(string calldata tokenName, uint marketID) external view returns (uint);\r\n    function getTokenInfo(uint marketID, uint tokenID) external view returns (TokenInfo memory);\r\n    function getTokenIDPair(address token) external view returns (IDPair memory);\r\n}",
+  "sourcePath": "C:\\Users\\alexa\\Desktop\\ideamarket-contracts\\contracts\\core\\IIdeaTokenFactory.sol",
+  "ast": {
+    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol",
+    "exportedSymbols": {
+      "IIdeaTokenFactory": [
+        801
+      ]
+    },
+    "id": 802,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 675,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:5"
+      },
+      {
+        "id": 676,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "58:33:5"
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "id": 677,
+        "nodeType": "ImportDirective",
+        "scope": 802,
+        "sourceUnit": 10312,
+        "src": "95:56:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol",
+        "file": "./IIdeaToken.sol",
+        "id": 678,
+        "nodeType": "ImportDirective",
+        "scope": 802,
+        "sourceUnit": 617,
+        "src": "153:26:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
+        "file": "./nameVerifiers/IIdeaTokenNameVerifier.sol",
+        "id": 679,
+        "nodeType": "ImportDirective",
+        "scope": 802,
+        "sourceUnit": 3076,
+        "src": "181:52:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 801,
+        "linearizedBaseContracts": [
+          801
+        ],
+        "name": "IIdeaTokenFactory",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IIdeaTokenFactory.IDPair",
+            "id": 686,
+            "members": [
+              {
+                "constant": false,
+                "id": 681,
+                "mutability": "mutable",
+                "name": "exists",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 686,
+                "src": "299:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 680,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "299:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 683,
+                "mutability": "mutable",
+                "name": "marketID",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 686,
+                "src": "321:13:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 682,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "321:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 685,
+                "mutability": "mutable",
+                "name": "tokenID",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 686,
+                "src": "345:12:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 684,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "345:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "IDPair",
+            "nodeType": "StructDefinition",
+            "scope": 801,
+            "src": "274:91:5",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IIdeaTokenFactory.TokenInfo",
+            "id": 695,
+            "members": [
+              {
+                "constant": false,
+                "id": 688,
+                "mutability": "mutable",
+                "name": "exists",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 695,
+                "src": "401:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 687,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "401:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 690,
+                "mutability": "mutable",
+                "name": "id",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 695,
+                "src": "423:7:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 689,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "423:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 692,
+                "mutability": "mutable",
+                "name": "name",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 695,
+                "src": "441:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 691,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "441:6:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 694,
+                "mutability": "mutable",
+                "name": "ideaToken",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 695,
+                "src": "463:20:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_IIdeaToken_$616",
+                  "typeString": "contract IIdeaToken"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 693,
+                  "name": "IIdeaToken",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 616,
+                  "src": "463:10:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IIdeaToken_$616",
+                    "typeString": "contract IIdeaToken"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "TokenInfo",
+            "nodeType": "StructDefinition",
+            "scope": 801,
+            "src": "373:118:5",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IIdeaTokenFactory.MarketDetails",
+            "id": 716,
+            "members": [
+              {
+                "constant": false,
+                "id": 697,
+                "mutability": "mutable",
+                "name": "exists",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "531:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 696,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "531:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 699,
+                "mutability": "mutable",
+                "name": "id",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "553:7:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 698,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "553:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 701,
+                "mutability": "mutable",
+                "name": "name",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "571:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 700,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "571:6:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 703,
+                "mutability": "mutable",
+                "name": "nameVerifier",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "595:35:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3075",
+                  "typeString": "contract IIdeaTokenNameVerifier"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 702,
+                  "name": "IIdeaTokenNameVerifier",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 3075,
+                  "src": "595:22:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3075",
+                    "typeString": "contract IIdeaTokenNameVerifier"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 705,
+                "mutability": "mutable",
+                "name": "numTokens",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "641:14:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 704,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "641:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 707,
+                "mutability": "mutable",
+                "name": "baseCost",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "668:13:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 706,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "668:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 709,
+                "mutability": "mutable",
+                "name": "priceRise",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "692:14:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 708,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "692:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 711,
+                "mutability": "mutable",
+                "name": "tokensPerInterval",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "717:22:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 710,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "717:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 713,
+                "mutability": "mutable",
+                "name": "tradingFeeRate",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "750:19:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 712,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "750:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 715,
+                "mutability": "mutable",
+                "name": "platformFeeRate",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "780:20:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 714,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "780:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "MarketDetails",
+            "nodeType": "StructDefinition",
+            "scope": 801,
+            "src": "499:309:5",
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "6de84a9e",
+            "id": 733,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "addMarket",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 731,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 718,
+                  "mutability": "mutable",
+                  "name": "marketName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "835:26:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 717,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "835:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 720,
+                  "mutability": "mutable",
+                  "name": "nameVerifier",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "863:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 719,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "863:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 722,
+                  "mutability": "mutable",
+                  "name": "baseCost",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "909:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 721,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "909:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 724,
+                  "mutability": "mutable",
+                  "name": "priceRise",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "924:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 723,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "924:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 726,
+                  "mutability": "mutable",
+                  "name": "tokensPerInterval",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "940:22:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 725,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "940:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 728,
+                  "mutability": "mutable",
+                  "name": "tradingFeeRate",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "988:19:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 727,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "988:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 730,
+                  "mutability": "mutable",
+                  "name": "platformFeeRate",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "1009:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 729,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1009:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "834:196:5"
+            },
+            "returnParameters": {
+              "id": 732,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1039:0:5"
+            },
+            "scope": 801,
+            "src": "816:224:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "8ca132f7",
+            "id": 740,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "addToken",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 738,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 735,
+                  "mutability": "mutable",
+                  "name": "tokenName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 740,
+                  "src": "1066:25:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 734,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1066:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 737,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 740,
+                  "src": "1093:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 736,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1093:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1065:42:5"
+            },
+            "returnParameters": {
+              "id": 739,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1116:0:5"
+            },
+            "scope": 801,
+            "src": "1048:69:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "72e99a4c",
+            "id": 749,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "isValidTokenName",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 745,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 742,
+                  "mutability": "mutable",
+                  "name": "tokenName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 749,
+                  "src": "1151:25:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 741,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1151:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 744,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 749,
+                  "src": "1178:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 743,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1178:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1150:42:5"
+            },
+            "returnParameters": {
+              "id": 748,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 747,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 749,
+                  "src": "1216:4:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 746,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1216:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1215:6:5"
+            },
+            "scope": 801,
+            "src": "1125:97:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "fcbd9edd",
+            "id": 756,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getMarketIDByName",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 752,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 751,
+                  "mutability": "mutable",
+                  "name": "marketName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 756,
+                  "src": "1255:26:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 750,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1255:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1254:28:5"
+            },
+            "returnParameters": {
+              "id": 755,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 754,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 756,
+                  "src": "1306:4:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 753,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1306:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1305:6:5"
+            },
+            "scope": 801,
+            "src": "1228:84:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "c7d5fe55",
+            "id": 763,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getMarketDetailsByID",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 759,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 758,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 763,
+                  "src": "1348:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 757,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1348:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1347:15:5"
+            },
+            "returnParameters": {
+              "id": 762,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 761,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 763,
+                  "src": "1386:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_MarketDetails_$716_memory_ptr",
+                    "typeString": "struct IIdeaTokenFactory.MarketDetails"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 760,
+                    "name": "MarketDetails",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 716,
+                    "src": "1386:13:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_MarketDetails_$716_storage_ptr",
+                      "typeString": "struct IIdeaTokenFactory.MarketDetails"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1385:22:5"
+            },
+            "scope": 801,
+            "src": "1318:90:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "81eaaa1c",
+            "id": 770,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getMarketDetailsByName",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 766,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 765,
+                  "mutability": "mutable",
+                  "name": "marketName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 770,
+                  "src": "1446:26:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 764,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1446:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1445:28:5"
+            },
+            "returnParameters": {
+              "id": 769,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 768,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 770,
+                  "src": "1497:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_MarketDetails_$716_memory_ptr",
+                    "typeString": "struct IIdeaTokenFactory.MarketDetails"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 767,
+                    "name": "MarketDetails",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 716,
+                    "src": "1497:13:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_MarketDetails_$716_storage_ptr",
+                      "typeString": "struct IIdeaTokenFactory.MarketDetails"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1496:22:5"
+            },
+            "scope": 801,
+            "src": "1414:105:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "295c39a5",
+            "id": 775,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getNumMarkets",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 771,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1547:2:5"
+            },
+            "returnParameters": {
+              "id": 774,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 773,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 775,
+                  "src": "1573:4:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 772,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1573:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1572:6:5"
+            },
+            "scope": 801,
+            "src": "1525:54:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "b8f7534a",
+            "id": 784,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokenIDByName",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 780,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 777,
+                  "mutability": "mutable",
+                  "name": "tokenName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 784,
+                  "src": "1611:25:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 776,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1611:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 779,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 784,
+                  "src": "1638:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 778,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1638:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1610:42:5"
+            },
+            "returnParameters": {
+              "id": 783,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 782,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 784,
+                  "src": "1676:4:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 781,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1676:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1675:6:5"
+            },
+            "scope": 801,
+            "src": "1585:97:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "0a81adc1",
+            "id": 793,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokenInfo",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 789,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 786,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 793,
+                  "src": "1710:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 785,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1710:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 788,
+                  "mutability": "mutable",
+                  "name": "tokenID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 793,
+                  "src": "1725:12:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 787,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1725:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1709:29:5"
+            },
+            "returnParameters": {
+              "id": 792,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 791,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 793,
+                  "src": "1762:16:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_TokenInfo_$695_memory_ptr",
+                    "typeString": "struct IIdeaTokenFactory.TokenInfo"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 790,
+                    "name": "TokenInfo",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 695,
+                    "src": "1762:9:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_TokenInfo_$695_storage_ptr",
+                      "typeString": "struct IIdeaTokenFactory.TokenInfo"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1761:18:5"
+            },
+            "scope": 801,
+            "src": "1688:92:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "3911283a",
+            "id": 800,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokenIDPair",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 796,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 795,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 800,
+                  "src": "1810:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 794,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1810:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1809:15:5"
+            },
+            "returnParameters": {
+              "id": 799,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 798,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 800,
+                  "src": "1848:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_IDPair_$686_memory_ptr",
+                    "typeString": "struct IIdeaTokenFactory.IDPair"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 797,
+                    "name": "IDPair",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 686,
+                    "src": "1848:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_IDPair_$686_storage_ptr",
+                      "typeString": "struct IIdeaTokenFactory.IDPair"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1847:15:5"
+            },
+            "scope": 801,
+            "src": "1786:77:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 802,
+        "src": "237:1629:5"
+      }
+    ],
+    "src": "33:1833:5"
+  },
+  "legacyAST": {
+    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol",
+    "exportedSymbols": {
+      "IIdeaTokenFactory": [
+        801
+      ]
+    },
+    "id": 802,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 675,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:5"
+      },
+      {
+        "id": 676,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "58:33:5"
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "id": 677,
+        "nodeType": "ImportDirective",
+        "scope": 802,
+        "sourceUnit": 10312,
+        "src": "95:56:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol",
+        "file": "./IIdeaToken.sol",
+        "id": 678,
+        "nodeType": "ImportDirective",
+        "scope": 802,
+        "sourceUnit": 617,
+        "src": "153:26:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
+        "file": "./nameVerifiers/IIdeaTokenNameVerifier.sol",
+        "id": 679,
+        "nodeType": "ImportDirective",
+        "scope": 802,
+        "sourceUnit": 3076,
+        "src": "181:52:5",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 801,
+        "linearizedBaseContracts": [
+          801
+        ],
+        "name": "IIdeaTokenFactory",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IIdeaTokenFactory.IDPair",
+            "id": 686,
+            "members": [
+              {
+                "constant": false,
+                "id": 681,
+                "mutability": "mutable",
+                "name": "exists",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 686,
+                "src": "299:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 680,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "299:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 683,
+                "mutability": "mutable",
+                "name": "marketID",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 686,
+                "src": "321:13:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 682,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "321:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 685,
+                "mutability": "mutable",
+                "name": "tokenID",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 686,
+                "src": "345:12:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 684,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "345:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "IDPair",
+            "nodeType": "StructDefinition",
+            "scope": 801,
+            "src": "274:91:5",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IIdeaTokenFactory.TokenInfo",
+            "id": 695,
+            "members": [
+              {
+                "constant": false,
+                "id": 688,
+                "mutability": "mutable",
+                "name": "exists",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 695,
+                "src": "401:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 687,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "401:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 690,
+                "mutability": "mutable",
+                "name": "id",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 695,
+                "src": "423:7:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 689,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "423:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 692,
+                "mutability": "mutable",
+                "name": "name",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 695,
+                "src": "441:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 691,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "441:6:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 694,
+                "mutability": "mutable",
+                "name": "ideaToken",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 695,
+                "src": "463:20:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_IIdeaToken_$616",
+                  "typeString": "contract IIdeaToken"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 693,
+                  "name": "IIdeaToken",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 616,
+                  "src": "463:10:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IIdeaToken_$616",
+                    "typeString": "contract IIdeaToken"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "TokenInfo",
+            "nodeType": "StructDefinition",
+            "scope": 801,
+            "src": "373:118:5",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IIdeaTokenFactory.MarketDetails",
+            "id": 716,
+            "members": [
+              {
+                "constant": false,
+                "id": 697,
+                "mutability": "mutable",
+                "name": "exists",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "531:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 696,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "531:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 699,
+                "mutability": "mutable",
+                "name": "id",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "553:7:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 698,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "553:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 701,
+                "mutability": "mutable",
+                "name": "name",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "571:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 700,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "571:6:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 703,
+                "mutability": "mutable",
+                "name": "nameVerifier",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "595:35:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3075",
+                  "typeString": "contract IIdeaTokenNameVerifier"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 702,
+                  "name": "IIdeaTokenNameVerifier",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 3075,
+                  "src": "595:22:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3075",
+                    "typeString": "contract IIdeaTokenNameVerifier"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 705,
+                "mutability": "mutable",
+                "name": "numTokens",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "641:14:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 704,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "641:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 707,
+                "mutability": "mutable",
+                "name": "baseCost",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "668:13:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 706,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "668:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 709,
+                "mutability": "mutable",
+                "name": "priceRise",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "692:14:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 708,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "692:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 711,
+                "mutability": "mutable",
+                "name": "tokensPerInterval",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "717:22:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 710,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "717:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 713,
+                "mutability": "mutable",
+                "name": "tradingFeeRate",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "750:19:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 712,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "750:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 715,
+                "mutability": "mutable",
+                "name": "platformFeeRate",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 716,
+                "src": "780:20:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 714,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "780:4:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "MarketDetails",
+            "nodeType": "StructDefinition",
+            "scope": 801,
+            "src": "499:309:5",
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "6de84a9e",
+            "id": 733,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "addMarket",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 731,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 718,
+                  "mutability": "mutable",
+                  "name": "marketName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "835:26:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 717,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "835:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 720,
+                  "mutability": "mutable",
+                  "name": "nameVerifier",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "863:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 719,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "863:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 722,
+                  "mutability": "mutable",
+                  "name": "baseCost",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "909:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 721,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "909:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 724,
+                  "mutability": "mutable",
+                  "name": "priceRise",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "924:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 723,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "924:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 726,
+                  "mutability": "mutable",
+                  "name": "tokensPerInterval",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "940:22:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 725,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "940:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 728,
+                  "mutability": "mutable",
+                  "name": "tradingFeeRate",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "988:19:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 727,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "988:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 730,
+                  "mutability": "mutable",
+                  "name": "platformFeeRate",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 733,
+                  "src": "1009:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 729,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1009:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "834:196:5"
+            },
+            "returnParameters": {
+              "id": 732,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1039:0:5"
+            },
+            "scope": 801,
+            "src": "816:224:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "8ca132f7",
+            "id": 740,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "addToken",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 738,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 735,
+                  "mutability": "mutable",
+                  "name": "tokenName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 740,
+                  "src": "1066:25:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 734,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1066:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 737,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 740,
+                  "src": "1093:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 736,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1093:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1065:42:5"
+            },
+            "returnParameters": {
+              "id": 739,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1116:0:5"
+            },
+            "scope": 801,
+            "src": "1048:69:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "72e99a4c",
+            "id": 749,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "isValidTokenName",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 745,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 742,
+                  "mutability": "mutable",
+                  "name": "tokenName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 749,
+                  "src": "1151:25:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 741,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1151:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 744,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 749,
+                  "src": "1178:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 743,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1178:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1150:42:5"
+            },
+            "returnParameters": {
+              "id": 748,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 747,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 749,
+                  "src": "1216:4:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 746,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1216:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1215:6:5"
+            },
+            "scope": 801,
+            "src": "1125:97:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "fcbd9edd",
+            "id": 756,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getMarketIDByName",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 752,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 751,
+                  "mutability": "mutable",
+                  "name": "marketName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 756,
+                  "src": "1255:26:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 750,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1255:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1254:28:5"
+            },
+            "returnParameters": {
+              "id": 755,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 754,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 756,
+                  "src": "1306:4:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 753,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1306:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1305:6:5"
+            },
+            "scope": 801,
+            "src": "1228:84:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "c7d5fe55",
+            "id": 763,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getMarketDetailsByID",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 759,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 758,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 763,
+                  "src": "1348:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 757,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1348:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1347:15:5"
+            },
+            "returnParameters": {
+              "id": 762,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 761,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 763,
+                  "src": "1386:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_MarketDetails_$716_memory_ptr",
+                    "typeString": "struct IIdeaTokenFactory.MarketDetails"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 760,
+                    "name": "MarketDetails",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 716,
+                    "src": "1386:13:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_MarketDetails_$716_storage_ptr",
+                      "typeString": "struct IIdeaTokenFactory.MarketDetails"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1385:22:5"
+            },
+            "scope": 801,
+            "src": "1318:90:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "81eaaa1c",
+            "id": 770,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getMarketDetailsByName",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 766,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 765,
+                  "mutability": "mutable",
+                  "name": "marketName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 770,
+                  "src": "1446:26:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 764,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1446:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1445:28:5"
+            },
+            "returnParameters": {
+              "id": 769,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 768,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 770,
+                  "src": "1497:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_MarketDetails_$716_memory_ptr",
+                    "typeString": "struct IIdeaTokenFactory.MarketDetails"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 767,
+                    "name": "MarketDetails",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 716,
+                    "src": "1497:13:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_MarketDetails_$716_storage_ptr",
+                      "typeString": "struct IIdeaTokenFactory.MarketDetails"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1496:22:5"
+            },
+            "scope": 801,
+            "src": "1414:105:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "295c39a5",
+            "id": 775,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getNumMarkets",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 771,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1547:2:5"
+            },
+            "returnParameters": {
+              "id": 774,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 773,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 775,
+                  "src": "1573:4:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 772,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1573:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1572:6:5"
+            },
+            "scope": 801,
+            "src": "1525:54:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "b8f7534a",
+            "id": 784,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokenIDByName",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 780,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 777,
+                  "mutability": "mutable",
+                  "name": "tokenName",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 784,
+                  "src": "1611:25:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 776,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1611:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 779,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 784,
+                  "src": "1638:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 778,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1638:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1610:42:5"
+            },
+            "returnParameters": {
+              "id": 783,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 782,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 784,
+                  "src": "1676:4:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 781,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1676:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1675:6:5"
+            },
+            "scope": 801,
+            "src": "1585:97:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "0a81adc1",
+            "id": 793,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokenInfo",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 789,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 786,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 793,
+                  "src": "1710:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 785,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1710:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 788,
+                  "mutability": "mutable",
+                  "name": "tokenID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 793,
+                  "src": "1725:12:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 787,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1725:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1709:29:5"
+            },
+            "returnParameters": {
+              "id": 792,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 791,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 793,
+                  "src": "1762:16:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_TokenInfo_$695_memory_ptr",
+                    "typeString": "struct IIdeaTokenFactory.TokenInfo"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 790,
+                    "name": "TokenInfo",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 695,
+                    "src": "1762:9:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_TokenInfo_$695_storage_ptr",
+                      "typeString": "struct IIdeaTokenFactory.TokenInfo"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1761:18:5"
+            },
+            "scope": 801,
+            "src": "1688:92:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "3911283a",
+            "id": 800,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokenIDPair",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 796,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 795,
+                  "mutability": "mutable",
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 800,
+                  "src": "1810:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 794,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1810:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1809:15:5"
+            },
+            "returnParameters": {
+              "id": 799,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 798,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 800,
+                  "src": "1848:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_IDPair_$686_memory_ptr",
+                    "typeString": "struct IIdeaTokenFactory.IDPair"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 797,
+                    "name": "IDPair",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 686,
+                    "src": "1848:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_IDPair_$686_storage_ptr",
+                      "typeString": "struct IIdeaTokenFactory.IDPair"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1847:15:5"
+            },
+            "scope": 801,
+            "src": "1786:77:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 802,
+        "src": "237:1629:5"
+      }
+    ],
+    "src": "33:1833:5"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.9+commit.3e3065ac.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.3",
+  "updatedAt": "2020-10-13T10:16:44.137Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

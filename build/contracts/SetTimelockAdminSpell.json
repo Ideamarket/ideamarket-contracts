@@ -1,0 +1,556 @@
+{
+  "contractName": "SetTimelockAdminSpell",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "dsPause",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "execute",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"dsPause\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockAdminSpell.sol\":\"SetTimelockAdminSpell\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockAdminSpell.sol\":{\"keccak256\":\"0xbc2ddc7125127e7e28703c8b9f6fbc57093621b7b226eaba71666da212e9f015\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f949dd7d4a29ed0b0c31253bfccb047539a91df6a581eb67c57bc8f32117a53f\",\"dweb:/ipfs/QmfYJ8gRBt5WXmUtfHj5ueUzb6EWiKuw7qRtYEUe7SP58r\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol\":{\"keccak256\":\"0xee3a48051c99112ecefc4f1f3a8274728230752532ccc7382b86be761f3e3141\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://72c6c57417ebd713b7d35019010b734a115248f7abb20aee297b966e9e024457\",\"dweb:/ipfs/QmfCFp4pFE2CnNHZV7vsEVCSCm8N9auPstNmHjLns2WPbT\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610165806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063d80aea1514610030575b600080fd5b6100926004803603604081101561004657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610094565b005b8173ffffffffffffffffffffffffffffffffffffffff166313af4035826040518263ffffffff1660e01b8152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15801561011357600080fd5b505af1158015610127573d6000803e3d6000fd5b50505050505056fea26469706673582212206fc11a2c27b0af79df393b1f6e5d28f1847dcab4f12bead0d6d310fc22c4749064736f6c63430006090033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063d80aea1514610030575b600080fd5b6100926004803603604081101561004657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610094565b005b8173ffffffffffffffffffffffffffffffffffffffff166313af4035826040518263ffffffff1660e01b8152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15801561011357600080fd5b505af1158015610127573d6000803e3d6000fd5b50505050505056fea26469706673582212206fc11a2c27b0af79df393b1f6e5d28f1847dcab4f12bead0d6d310fc22c4749064736f6c63430006090033",
+  "immutableReferences": {},
+  "sourceMap": "98:151:20:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "98:151:20:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;136:110;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;214:7;205:26;;;232:5;205:33;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;136:110;;:::o",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\nimport \"../timelock/IDSPause.sol\";\r\n\r\ncontract SetTimelockAdminSpell {\r\n    function execute(address dsPause, address owner) external {\r\n        IDSPause(dsPause).setOwner(owner);\r\n    }\r\n}",
+  "sourcePath": "C:/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockAdminSpell.sol",
+  "ast": {
+    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockAdminSpell.sol",
+    "exportedSymbols": {
+      "SetTimelockAdminSpell": [
+        3684
+      ]
+    },
+    "id": 3685,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3667,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:20"
+      },
+      {
+        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol",
+        "file": "../timelock/IDSPause.sol",
+        "id": 3668,
+        "nodeType": "ImportDirective",
+        "scope": 3685,
+        "sourceUnit": 9072,
+        "src": "60:34:20",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 3684,
+        "linearizedBaseContracts": [
+          3684
+        ],
+        "name": "SetTimelockAdminSpell",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 3682,
+              "nodeType": "Block",
+              "src": "194:52:20",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 3679,
+                        "name": "owner",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3672,
+                        "src": "232:5:20",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 3676,
+                            "name": "dsPause",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3670,
+                            "src": "214:7:20",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          ],
+                          "id": 3675,
+                          "name": "IDSPause",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 9071,
+                          "src": "205:8:20",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_IDSPause_$9071_$",
+                            "typeString": "type(contract IDSPause)"
+                          }
+                        },
+                        "id": 3677,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "205:17:20",
+                        "tryCall": false,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_IDSPause_$9071",
+                          "typeString": "contract IDSPause"
+                        }
+                      },
+                      "id": 3678,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setOwner",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 9023,
+                      "src": "205:26:20",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
+                        "typeString": "function (address) external"
+                      }
+                    },
+                    "id": 3680,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "205:33:20",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 3681,
+                  "nodeType": "ExpressionStatement",
+                  "src": "205:33:20"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "d80aea15",
+            "id": 3683,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "execute",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 3673,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3670,
+                  "mutability": "mutable",
+                  "name": "dsPause",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3683,
+                  "src": "153:15:20",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3669,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "153:7:20",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3672,
+                  "mutability": "mutable",
+                  "name": "owner",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3683,
+                  "src": "170:13:20",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3671,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "170:7:20",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "152:32:20"
+            },
+            "returnParameters": {
+              "id": 3674,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "194:0:20"
+            },
+            "scope": 3684,
+            "src": "136:110:20",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 3685,
+        "src": "98:151:20"
+      }
+    ],
+    "src": "33:216:20"
+  },
+  "legacyAST": {
+    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockAdminSpell.sol",
+    "exportedSymbols": {
+      "SetTimelockAdminSpell": [
+        3684
+      ]
+    },
+    "id": 3685,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3667,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".9"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:20"
+      },
+      {
+        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol",
+        "file": "../timelock/IDSPause.sol",
+        "id": 3668,
+        "nodeType": "ImportDirective",
+        "scope": 3685,
+        "sourceUnit": 9072,
+        "src": "60:34:20",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 3684,
+        "linearizedBaseContracts": [
+          3684
+        ],
+        "name": "SetTimelockAdminSpell",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 3682,
+              "nodeType": "Block",
+              "src": "194:52:20",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 3679,
+                        "name": "owner",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3672,
+                        "src": "232:5:20",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 3676,
+                            "name": "dsPause",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3670,
+                            "src": "214:7:20",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          ],
+                          "id": 3675,
+                          "name": "IDSPause",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 9071,
+                          "src": "205:8:20",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_contract$_IDSPause_$9071_$",
+                            "typeString": "type(contract IDSPause)"
+                          }
+                        },
+                        "id": 3677,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "typeConversion",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "205:17:20",
+                        "tryCall": false,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_IDSPause_$9071",
+                          "typeString": "contract IDSPause"
+                        }
+                      },
+                      "id": 3678,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setOwner",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 9023,
+                      "src": "205:26:20",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
+                        "typeString": "function (address) external"
+                      }
+                    },
+                    "id": 3680,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "205:33:20",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 3681,
+                  "nodeType": "ExpressionStatement",
+                  "src": "205:33:20"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "d80aea15",
+            "id": 3683,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "execute",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 3673,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3670,
+                  "mutability": "mutable",
+                  "name": "dsPause",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3683,
+                  "src": "153:15:20",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3669,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "153:7:20",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3672,
+                  "mutability": "mutable",
+                  "name": "owner",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3683,
+                  "src": "170:13:20",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 3671,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "170:7:20",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "152:32:20"
+            },
+            "returnParameters": {
+              "id": 3674,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "194:0:20"
+            },
+            "scope": 3684,
+            "src": "136:110:20",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 3685,
+        "src": "98:151:20"
+      }
+    ],
+    "src": "33:216:20"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.9+commit.3e3065ac.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.3",
+  "updatedAt": "2020-10-13T10:03:13.856Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
