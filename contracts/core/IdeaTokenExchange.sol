@@ -7,7 +7,7 @@ import "./IIdeaTokenExchange.sol";
 import "./IIdeaToken.sol";
 import "./IIdeaTokenFactory.sol";
 import "./IInterestManager.sol";
-import "@openzeppelin/upgrades/contracts/Initializable.sol";
+import "../util/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 

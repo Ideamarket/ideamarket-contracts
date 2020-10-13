@@ -2,7 +2,7 @@
 pragma solidity ^0.6.9;
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/upgrades/contracts/Initializable.sol";
+import "../util/Initializable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../util/Ownable.sol";
 import "./IIdeaTokenFactory.sol";
