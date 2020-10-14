@@ -11,5 +11,7 @@
     "ideaTokenFactoryLogic": "0x338eE373C15220Fc9EA05e9Cd5Dd92e081eF05d9",
     "currencyConverter": "0x8b93B611a92AC8E43B3b32948232426B54d0d32B",
     "addMarketSpell": "0x9F27F1DC031A24efce921711F8309eeA75C91587",
-    "domainNoSubdomainNameVerifier": "0xb7aDe1E2CC349A76dE9E0a03ceEACBD42157d57A"
+    "domainNoSubdomainNameVerifier": "0xb7aDe1E2CC349A76dE9E0a03ceEACBD42157d57A",
+    "authorizeInterestWithdrawerSpell": "0xCb3EA2C5a2441EF5ecE3dB3cD60d7049921d65c6",
+    "authorizePlatformFeeWithdrawerSpell": "0x4B2267697753e49834C2b3be33272fe17f2F75c4"
 }
