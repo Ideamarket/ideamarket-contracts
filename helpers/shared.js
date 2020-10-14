@@ -39,6 +39,12 @@ module.exports.loadDeployedAddress = function(network, contract) {
     return addresses[contract]
 }
 
+module.exports.loadABI = function(artifact) {
+    const raw = fs.readFileSync('../build/contracts/' + artifact + '.json')
+    const rawJson = JSON.parse(raw)
+    return rawJson.abi
+}
+
 module.exports.getFunctionABI = function(fullABI, searchFunction) {
     for(let i = 0; i < fullABI.length; i++) {
         const maybeFunction = fullABI[i]
