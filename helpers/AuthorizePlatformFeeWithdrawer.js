@@ -3,8 +3,6 @@ const fs = require('fs')
 const shared = require('./shared')
 const Web3 = require('web3')
 
-const BN = Web3.utils.BN
-
 async function run() {
 	const marketName = await shared.getInput('market name')
 	const platformFeeWithdrawerAddress = await shared.getInput('withdrawer address')

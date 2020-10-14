@@ -1,13 +1,10 @@
-const { externalContractAddresses, loadDeployedAddress } = require('./shared')
+const { loadDeployedAddress } = require('./shared')
 
 const InterestManagerCompound = artifacts.require('InterestManagerCompound')
 
-module.exports = async function(deployer, network, accounts) {
-	let externalAddresses
-
-	if(network == 'kovan') {
-		externalAddresses = externalContractAddresses.kovan
-	} else {
+module.exports = async function(deployer, network) {
+	
+	if(network != 'kovan') {
 		return
 	}
 

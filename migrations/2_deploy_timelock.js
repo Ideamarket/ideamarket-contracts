@@ -2,7 +2,7 @@ const { externalContractAddresses, deploymentParams, saveDeployedAddress, verify
 
 const DSPause = artifacts.require('DSPause')
 
-module.exports = async function(deployer, network, accounts) {
+module.exports = async function(deployer, network) {
 	let externalAddresses
 	let params
 

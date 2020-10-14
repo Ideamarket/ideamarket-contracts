@@ -1,7 +1,7 @@
 const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress, verifyOnEtherscan } = require('./shared')
 const CurrencyConverter = artifacts.require('CurrencyConverter')
 
-module.exports = async function(deployer, network, accounts) {
+module.exports = async function(deployer, network) {
 	let externalAddresses
 
 	if(network == 'kovan') {

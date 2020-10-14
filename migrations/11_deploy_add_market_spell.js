@@ -1,12 +1,9 @@
-const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress, verifyOnEtherscan } = require('./shared')
+const { saveDeployedAddress, verifyOnEtherscan } = require('./shared')
 const AddMarketSpell = artifacts.require('AddMarketSpell')
 
-module.exports = async function(deployer, network, accounts) {
-	let externalAddresses
+module.exports = async function(deployer, network) {
 
-	if(network == 'kovan') {
-		externalAddresses = externalContractAddresses.kovan
-	} else {
+	if(network != 'kovan') {
 		return
 	}
 

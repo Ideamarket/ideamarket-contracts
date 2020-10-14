@@ -2,7 +2,7 @@ const { saveDeployedAddress, verifyOnEtherscan } = require('./shared')
 
 const Migrations = artifacts.require('Migrations')
 
-module.exports = async function(deployer, network, accounts) {
+module.exports = async function(deployer, network) {
 	if(network != 'kovan') {
 		return
 	}

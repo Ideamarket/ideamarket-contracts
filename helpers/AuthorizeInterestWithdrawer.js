@@ -3,8 +3,6 @@ const fs = require('fs')
 const shared = require('./shared')
 const Web3 = require('web3')
 
-const BN = Web3.utils.BN
-
 async function run() {
 	const tokenAddress = await shared.getInput('ideatoken address')
 	const interestWithdrawerAddress = await shared.getInput('withdrawer address')

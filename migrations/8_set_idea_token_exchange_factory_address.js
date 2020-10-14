@@ -1,13 +1,10 @@
-const { externalContractAddresses, loadDeployedAddress } = require('./shared')
+const { loadDeployedAddress } = require('./shared')
 
 const IdeaTokenExchange = artifacts.require('IdeaTokenExchange')
 
-module.exports = async function(deployer, network, accounts) {
-	let externalAddresses
+module.exports = async function(deployer, network) {
 
-	if(network == 'kovan') {
-		externalAddresses = externalContractAddresses.kovan
-	} else {
+	if(network != 'kovan') {
 		return
 	}
 
