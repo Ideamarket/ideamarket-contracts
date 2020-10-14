@@ -1,5 +1,6 @@
 const { externalContractAddresses, deploymentParams, saveDeployedAddress, verifyOnEtherscan } = require('./shared')
 
+/* eslint-disable-next-line no-undef */
 const DSPause = artifacts.require('DSPause')
 
 module.exports = async function(deployer, network) {

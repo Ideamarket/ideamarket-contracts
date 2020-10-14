@@ -1,5 +1,6 @@
 const { saveDeployedAddress, loadDeployedAddress, deployProxy, verifyOnEtherscan } = require('./shared')
 
+/* eslint-disable-next-line no-undef */
 const IdeaTokenFactory = artifacts.require('IdeaTokenFactory')
 
 module.exports = async function(deployer, network) {

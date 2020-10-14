@@ -1,5 +1,6 @@
 const { saveDeployedAddress, verifyOnEtherscan } = require('./shared')
 
+/* eslint-disable-next-line no-undef */
 const Migrations = artifacts.require('Migrations')
 
 module.exports = async function(deployer, network) {

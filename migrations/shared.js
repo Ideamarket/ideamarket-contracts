@@ -2,7 +2,7 @@ require('dotenv').config()
 const fs = require('fs')
 const { exec } = require('child_process')
 
-
+/* eslint-disable-next-line no-undef */
 const AdminUpgradeabilityProxy = artifacts.require('AdminUpgradeabilityProxy')
 
 module.exports.deploymentParams = {

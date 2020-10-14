@@ -1,5 +1,6 @@
 const { loadDeployedAddress } = require('./shared')
 
+/* eslint-disable-next-line no-undef */
 const InterestManagerCompound = artifacts.require('InterestManagerCompound')
 
 module.exports = async function(deployer, network) {

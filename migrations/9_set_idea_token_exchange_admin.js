@@ -1,5 +1,6 @@
 const { loadDeployedAddress } = require('./shared')
 
+/* eslint-disable-next-line no-undef */
 const IdeaTokenExchange = artifacts.require('IdeaTokenExchange')
 
 module.exports = async function(deployer, network) {

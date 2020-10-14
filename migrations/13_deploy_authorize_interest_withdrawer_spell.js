@@ -1,4 +1,6 @@
 const { saveDeployedAddress, verifyOnEtherscan } = require('./shared')
+
+/* eslint-disable-next-line no-undef */
 const AuthorizeInterestWithdrawerSpell = artifacts.require('AuthorizeInterestWithdrawerSpell')
 
 module.exports = async function(deployer, network) {

@@ -1,4 +1,6 @@
 const { saveDeployedAddress, verifyOnEtherscan } = require('./shared')
+
+/* eslint-disable-next-line no-undef */
 const SetTradingFeeSpell = artifacts.require('SetTradingFeeSpell')
 
 module.exports = async function(deployer, network) {

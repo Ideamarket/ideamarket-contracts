@@ -1,4 +1,6 @@
 const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress, verifyOnEtherscan } = require('./shared')
+
+/* eslint-disable-next-line no-undef */
 const CurrencyConverter = artifacts.require('CurrencyConverter')
 
 module.exports = async function(deployer, network) {
