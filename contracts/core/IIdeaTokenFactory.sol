@@ -50,4 +50,6 @@ interface IIdeaTokenFactory {
     function getTokenIDByName(string calldata tokenName, uint marketID) external view returns (uint);
     function getTokenInfo(uint marketID, uint tokenID) external view returns (TokenInfo memory);
     function getTokenIDPair(address token) external view returns (IDPair memory);
+    function setTradingFee(uint marketID, uint tradingFeeRate) external;
+    function setPlatformFee(uint marketID, uint platformFeeRate) external;
 }

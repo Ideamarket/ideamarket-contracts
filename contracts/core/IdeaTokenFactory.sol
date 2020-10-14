@@ -233,4 +233,28 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     function getTokenIDPair(address token) external view override returns (IDPair memory) {
         return _tokenIDPairs[token];
     }
+
+    /**
+     * @dev Sets the trading fee for a market
+     *
+     * @param marketID The market id for which to set the trading fee
+     * @param tradingFeeRate The trading fee
+     */
+    function setTradingFee(uint marketID, uint tradingFeeRate) external override onlyOwner {
+        MarketDetails storage marketDetails = _markets[marketID].marketDetails;
+        require(marketDetails.exists, "setTradingFee: market does not exist");
+        marketDetails.tradingFeeRate = tradingFeeRate;
+    }
+
+    /**
+     * @dev Sets the platform fee for a market
+     *
+     * @param marketID The market id for which to set the platform fee
+     * @param platformFeeRate The platform fee
+     */
+    function setPlatformFee(uint marketID, uint platformFeeRate) external override onlyOwner {
+        MarketDetails storage marketDetails = _markets[marketID].marketDetails;
+        require(marketDetails.exists, "setPlatformFee: market does not exist");
+        marketDetails.platformFeeRate = platformFeeRate;
+    }
 }
