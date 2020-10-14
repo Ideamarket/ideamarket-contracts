@@ -20,6 +20,7 @@ contract('core/IdeaTokenFactory', async accounts => {
     const userAccount = accounts[0]
     const adminAccount = accounts[1]
     const ideaTokenExchangeAddress = accounts[2]
+    const zeroAddress = '0x0000000000000000000000000000000000000000'
 
     let ideaTokenFactory
 
@@ -183,6 +184,60 @@ contract('core/IdeaTokenFactory', async accounts => {
         await expectRevert(
             ideaTokenFactory.addToken(tokenName, new BN('1')),
             'addToken: name verification failed'
+        )
+    })
+
+    it('can set trading fee', async () => {
+        await ideaTokenFactory.addMarket(
+            marketName,  zeroAddress,
+            baseCost, priceRise, tokensPerInterval,
+            tradingFeeRate, platformFeeRate,
+            { from: adminAccount }
+        )
+
+        await ideaTokenFactory.setTradingFee(new BN('1'), new BN('123'), { from: adminAccount })
+        const marketDetails = await ideaTokenFactory.getMarketDetailsByID(new BN('1'))
+        assert.isTrue(marketDetails.tradingFeeRate === '123')
+    })
+
+    it('fail user sets trading fee', async () => {
+        await ideaTokenFactory.addMarket(
+            marketName,  zeroAddress,
+            baseCost, priceRise, tokensPerInterval,
+            tradingFeeRate, platformFeeRate,
+            { from: adminAccount }
+        )
+
+        await expectRevert(
+            ideaTokenFactory.setTradingFee(new BN('1'), new BN('123')),
+            'Ownable: onlyOwner'
+        )
+    })
+
+    it('can set platform fee', async () => {
+        await ideaTokenFactory.addMarket(
+            marketName,  zeroAddress,
+            baseCost, priceRise, tokensPerInterval,
+            tradingFeeRate, platformFeeRate,
+            { from: adminAccount }
+        )
+
+        await ideaTokenFactory.setPlatformFee(new BN('1'), new BN('123'), { from: adminAccount })
+        const marketDetails = await ideaTokenFactory.getMarketDetailsByID(new BN('1'))
+        assert.isTrue(marketDetails.platformFeeRate === '123')
+    })
+
+    it('fail user sets platform fee', async () => {
+        await ideaTokenFactory.addMarket(
+            marketName,  zeroAddress,
+            baseCost, priceRise, tokensPerInterval,
+            tradingFeeRate, platformFeeRate,
+            { from: adminAccount }
+        )
+
+        await expectRevert(
+            ideaTokenFactory.setPlatformFee(new BN('1'), new BN('123')),
+            'Ownable: onlyOwner'
         )
     })
 
