@@ -33,15 +33,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
     "exportedSymbols": {
       "IIdeaTokenNameVerifier": [
-        3075
+        3151
       ]
     },
-    "id": 3076,
+    "id": 3152,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3067,
+        "id": 3143,
         "literals": [
           "solidity",
           "^",
@@ -58,9 +58,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 3075,
+        "id": 3151,
         "linearizedBaseContracts": [
-          3075
+          3151
         ],
         "name": "IIdeaTokenNameVerifier",
         "nodeType": "ContractDefinition",
@@ -69,7 +69,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "4c8bc1c9",
-            "id": 3074,
+            "id": 3150,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -77,17 +77,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3070,
+              "id": 3146,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3069,
+                  "id": 3145,
                   "mutability": "mutable",
                   "name": "name",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3074,
+                  "scope": 3150,
                   "src": "125:20:12",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -96,7 +96,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3068,
+                    "id": 3144,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "125:6:12",
@@ -112,17 +112,17 @@
               "src": "124:22:12"
             },
             "returnParameters": {
-              "id": 3073,
+              "id": 3149,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3072,
+                  "id": 3148,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3074,
+                  "scope": 3150,
                   "src": "170:4:12",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -131,7 +131,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3071,
+                    "id": 3147,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "170:4:12",
@@ -146,14 +146,14 @@
               ],
               "src": "169:6:12"
             },
-            "scope": 3075,
+            "scope": 3151,
             "src": "100:76:12",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3076,
+        "scope": 3152,
         "src": "60:119:12"
       }
     ],
@@ -163,15 +163,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
     "exportedSymbols": {
       "IIdeaTokenNameVerifier": [
-        3075
+        3151
       ]
     },
-    "id": 3076,
+    "id": 3152,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3067,
+        "id": 3143,
         "literals": [
           "solidity",
           "^",
@@ -188,9 +188,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 3075,
+        "id": 3151,
         "linearizedBaseContracts": [
-          3075
+          3151
         ],
         "name": "IIdeaTokenNameVerifier",
         "nodeType": "ContractDefinition",
@@ -199,7 +199,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "4c8bc1c9",
-            "id": 3074,
+            "id": 3150,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -207,17 +207,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3070,
+              "id": 3146,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3069,
+                  "id": 3145,
                   "mutability": "mutable",
                   "name": "name",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3074,
+                  "scope": 3150,
                   "src": "125:20:12",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -226,7 +226,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3068,
+                    "id": 3144,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "125:6:12",
@@ -242,17 +242,17 @@
               "src": "124:22:12"
             },
             "returnParameters": {
-              "id": 3073,
+              "id": 3149,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3072,
+                  "id": 3148,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3074,
+                  "scope": 3150,
                   "src": "170:4:12",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -261,7 +261,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3071,
+                    "id": 3147,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "170:4:12",
@@ -276,14 +276,14 @@
               ],
               "src": "169:6:12"
             },
-            "scope": 3075,
+            "scope": 3151,
             "src": "100:76:12",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3076,
+        "scope": 3152,
         "src": "60:119:12"
       }
     ],
@@ -295,7 +295,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-14T09:40:48.567Z",
+  "updatedAt": "2020-10-14T12:08:04.050Z",
   "devdoc": {
     "methods": {}
   },

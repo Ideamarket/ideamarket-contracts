@@ -645,12 +645,12 @@
     "42": {
       "events": {},
       "links": {},
-      "address": "0xCb3EA2C5a2441EF5ecE3dB3cD60d7049921d65c6",
-      "transactionHash": "0x17202caecd49fcd1e4351d8b83ccdd1f4845f1b64c77c2823a118247742afae6"
+      "address": "0x611a3f09750058aF717dF9646951750d083fCE06",
+      "transactionHash": "0xed50e8ce48101aa4f7b3d090dc846aec61d49ba453568babb07ff074bb64abfb"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-14T09:41:29.301Z",
+  "updatedAt": "2020-10-14T12:18:09.939Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

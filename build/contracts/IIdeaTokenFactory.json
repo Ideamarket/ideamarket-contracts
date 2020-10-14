@@ -365,24 +365,60 @@
       ],
       "stateMutability": "view",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "marketID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tradingFeeRate",
+          "type": "uint256"
+        }
+      ],
+      "name": "setTradingFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "marketID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "platformFeeRate",
+          "type": "uint256"
+        }
+      ],
+      "name": "setPlatformFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerInterval\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"name\":\"addMarket\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"addToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"getMarketDetailsByID\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"contract IIdeaTokenNameVerifier\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"numTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerInterval\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"internalType\":\"struct IIdeaTokenFactory.MarketDetails\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"}],\"name\":\"getMarketDetailsByName\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"contract IIdeaTokenNameVerifier\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"numTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerInterval\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"internalType\":\"struct IIdeaTokenFactory.MarketDetails\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"}],\"name\":\"getMarketIDByName\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getNumMarkets\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"getTokenIDByName\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"getTokenIDPair\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"internalType\":\"struct IIdeaTokenFactory.IDPair\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"getTokenInfo\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"contract IIdeaToken\",\"name\":\"ideaToken\",\"type\":\"address\"}],\"internalType\":\"struct IIdeaTokenFactory.TokenInfo\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"isValidTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol\":\"IIdeaTokenFactory\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol\":{\"keccak256\":\"0x679deb2f552ca3ea3199e418a1e66eafda8e81a8015b4a1dcfebb3fe3fd90986\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cf70646f5dd9e18d3b19d635a8c4edb7fd2d9787d4055e1754e6b0e8e8d600b7\",\"dweb:/ipfs/QmdVYAJKd8H4nBQbUE8Badk7oQLtAeGRe1np6U37WDuiDG\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol\":{\"keccak256\":\"0x67e68b9ce30f1bf857a4c080527210a8efa2f02f71d26d9bc874d21e25936d19\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3ade974b5636af684fe70444659a18fa951f3dfa23ea3127994a489d3f4e94cd\",\"dweb:/ipfs/QmRMfXJVvGMKS8oCqwfGywvSVQEFFxwvYAnVzDaL6V7XPH\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0xaf3c8d02852edc08ac85198fa3d37f3c512dc215a5409992e45cf877c34c172d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1303500e1882260f5f77d8b331184e8e7972e94b3be8ca972ae1de41089bcc9e\",\"dweb:/ipfs/QmVQbjUbaD5iXhQEBQqREE51TibRQREqdDBkQRf1SfxyVr\"]},\"@openzeppelin/contracts/GSN/Context.sol\":{\"keccak256\":\"0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a\",\"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5\",\"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV\"]},\"@openzeppelin/contracts/token/ERC20/ERC20.sol\":{\"keccak256\":\"0xf204d98eef08edacf5a02a2af1516ea4febdb6aba7a1ae5ac8deb6e568fd3dbb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c4dea62bffbd180772a6cfe7cb90e3a045c52d6b502bdb2fdff83193da42d8d0\",\"dweb:/ipfs/QmW8qGZ5nngajmv5Aamdrpkeuq7S5YCVaR7rtcqNekKHtK\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x5c26b39d26f7ed489e555d955dcd3e01872972e71fdd1528e93ec164e4f23385\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://efdc632af6960cf865dbc113665ea1f5b90eab75cc40ec062b2f6ae6da582017\",\"dweb:/ipfs/QmfAZFDuG62vxmAN9DnXApv7e7PMzPqi4RkqqZHLMSQiY5\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0xdfb4f812600ba4ce6738c35584ceb8c9433472583051b48ba5b1f66cb758a498\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df02dffe1c1de089d9b4f6192f0dcf464526f2230f420b3deec4645e0cdd2bff\",\"dweb:/ipfs/QmcqXGAU3KJqwrgUVoGJ2W8osomhSJ4R5kdsRpbuW3fELS\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerInterval\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"name\":\"addMarket\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"addToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"getMarketDetailsByID\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"contract IIdeaTokenNameVerifier\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"numTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerInterval\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"internalType\":\"struct IIdeaTokenFactory.MarketDetails\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"}],\"name\":\"getMarketDetailsByName\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"contract IIdeaTokenNameVerifier\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"numTokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerInterval\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"internalType\":\"struct IIdeaTokenFactory.MarketDetails\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"}],\"name\":\"getMarketIDByName\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getNumMarkets\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"getTokenIDByName\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"getTokenIDPair\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"internalType\":\"struct IIdeaTokenFactory.IDPair\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"getTokenInfo\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"exists\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"contract IIdeaToken\",\"name\":\"ideaToken\",\"type\":\"address\"}],\"internalType\":\"struct IIdeaTokenFactory.TokenInfo\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"}],\"name\":\"isValidTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"name\":\"setPlatformFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"}],\"name\":\"setTradingFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol\":\"IIdeaTokenFactory\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol\":{\"keccak256\":\"0x679deb2f552ca3ea3199e418a1e66eafda8e81a8015b4a1dcfebb3fe3fd90986\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cf70646f5dd9e18d3b19d635a8c4edb7fd2d9787d4055e1754e6b0e8e8d600b7\",\"dweb:/ipfs/QmdVYAJKd8H4nBQbUE8Badk7oQLtAeGRe1np6U37WDuiDG\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol\":{\"keccak256\":\"0x8118accad794de946e3a55060861f35439664a364668cac951cc28a01c800dd0\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://138d7df0ef462c459e8cf22fde611a5223992f298909ba4e68ea996cf6a8b82f\",\"dweb:/ipfs/QmURbhg7DrKKM83eArx1oXTEDGgrBtvaRXFyFKNrhVyP3F\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0xaf3c8d02852edc08ac85198fa3d37f3c512dc215a5409992e45cf877c34c172d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1303500e1882260f5f77d8b331184e8e7972e94b3be8ca972ae1de41089bcc9e\",\"dweb:/ipfs/QmVQbjUbaD5iXhQEBQqREE51TibRQREqdDBkQRf1SfxyVr\"]},\"@openzeppelin/contracts/GSN/Context.sol\":{\"keccak256\":\"0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a\",\"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5\",\"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV\"]},\"@openzeppelin/contracts/token/ERC20/ERC20.sol\":{\"keccak256\":\"0xf204d98eef08edacf5a02a2af1516ea4febdb6aba7a1ae5ac8deb6e568fd3dbb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c4dea62bffbd180772a6cfe7cb90e3a045c52d6b502bdb2fdff83193da42d8d0\",\"dweb:/ipfs/QmW8qGZ5nngajmv5Aamdrpkeuq7S5YCVaR7rtcqNekKHtK\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x5c26b39d26f7ed489e555d955dcd3e01872972e71fdd1528e93ec164e4f23385\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://efdc632af6960cf865dbc113665ea1f5b90eab75cc40ec062b2f6ae6da582017\",\"dweb:/ipfs/QmfAZFDuG62vxmAN9DnXApv7e7PMzPqi4RkqqZHLMSQiY5\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0xdfb4f812600ba4ce6738c35584ceb8c9433472583051b48ba5b1f66cb758a498\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df02dffe1c1de089d9b4f6192f0dcf464526f2230f420b3deec4645e0cdd2bff\",\"dweb:/ipfs/QmcqXGAU3KJqwrgUVoGJ2W8osomhSJ4R5kdsRpbuW3fELS\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\npragma experimental ABIEncoderV2;\r\n\r\nimport \"@openzeppelin/contracts/token/ERC20/IERC20.sol\";\r\nimport \"./IIdeaToken.sol\";\r\nimport \"./nameVerifiers/IIdeaTokenNameVerifier.sol\";\r\n\r\ninterface IIdeaTokenFactory {\r\n\r\n    struct IDPair {\r\n        bool exists;\r\n        uint marketID;\r\n        uint tokenID;\r\n    }\r\n\r\n    struct TokenInfo {\r\n        bool exists;\r\n        uint id;\r\n        string name;\r\n        IIdeaToken ideaToken;\r\n    }\r\n\r\n    struct MarketDetails {\r\n        bool exists;\r\n        uint id;\r\n        string name;\r\n\r\n        IIdeaTokenNameVerifier nameVerifier;\r\n        uint numTokens;\r\n\r\n        uint baseCost;\r\n        uint priceRise;\r\n        uint tokensPerInterval;\r\n        uint tradingFeeRate;\r\n        uint platformFeeRate;\r\n    }\r\n\r\n    function addMarket(string calldata marketName, address nameVerifier,\r\n                       uint baseCost, uint priceRise, uint tokensPerInterval,\r\n                       uint tradingFeeRate, uint platformFeeRate) external;\r\n\r\n    function addToken(string calldata tokenName, uint marketID) external;\r\n\r\n    function isValidTokenName(string calldata tokenName, uint marketID) external view returns (bool);\r\n    function getMarketIDByName(string calldata marketName) external view returns (uint);\r\n    function getMarketDetailsByID(uint marketID) external view returns (MarketDetails memory);\r\n    function getMarketDetailsByName(string calldata marketName) external view returns (MarketDetails memory);\r\n    function getNumMarkets() external view returns (uint);\r\n    function getTokenIDByName(string calldata tokenName, uint marketID) external view returns (uint);\r\n    function getTokenInfo(uint marketID, uint tokenID) external view returns (TokenInfo memory);\r\n    function getTokenIDPair(address token) external view returns (IDPair memory);\r\n}",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\npragma experimental ABIEncoderV2;\r\n\r\nimport \"@openzeppelin/contracts/token/ERC20/IERC20.sol\";\r\nimport \"./IIdeaToken.sol\";\r\nimport \"./nameVerifiers/IIdeaTokenNameVerifier.sol\";\r\n\r\ninterface IIdeaTokenFactory {\r\n\r\n    struct IDPair {\r\n        bool exists;\r\n        uint marketID;\r\n        uint tokenID;\r\n    }\r\n\r\n    struct TokenInfo {\r\n        bool exists;\r\n        uint id;\r\n        string name;\r\n        IIdeaToken ideaToken;\r\n    }\r\n\r\n    struct MarketDetails {\r\n        bool exists;\r\n        uint id;\r\n        string name;\r\n\r\n        IIdeaTokenNameVerifier nameVerifier;\r\n        uint numTokens;\r\n\r\n        uint baseCost;\r\n        uint priceRise;\r\n        uint tokensPerInterval;\r\n        uint tradingFeeRate;\r\n        uint platformFeeRate;\r\n    }\r\n\r\n    function addMarket(string calldata marketName, address nameVerifier,\r\n                       uint baseCost, uint priceRise, uint tokensPerInterval,\r\n                       uint tradingFeeRate, uint platformFeeRate) external;\r\n\r\n    function addToken(string calldata tokenName, uint marketID) external;\r\n\r\n    function isValidTokenName(string calldata tokenName, uint marketID) external view returns (bool);\r\n    function getMarketIDByName(string calldata marketName) external view returns (uint);\r\n    function getMarketDetailsByID(uint marketID) external view returns (MarketDetails memory);\r\n    function getMarketDetailsByName(string calldata marketName) external view returns (MarketDetails memory);\r\n    function getNumMarkets() external view returns (uint);\r\n    function getTokenIDByName(string calldata tokenName, uint marketID) external view returns (uint);\r\n    function getTokenInfo(uint marketID, uint tokenID) external view returns (TokenInfo memory);\r\n    function getTokenIDPair(address token) external view returns (IDPair memory);\r\n    function setTradingFee(uint marketID, uint tradingFeeRate) external;\r\n    function setPlatformFee(uint marketID, uint platformFeeRate) external;\r\n}",
   "sourcePath": "C:\\Users\\alexa\\Desktop\\ideamarket-contracts\\contracts\\core\\IIdeaTokenFactory.sol",
   "ast": {
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol",
     "exportedSymbols": {
       "IIdeaTokenFactory": [
-        801
+        815
       ]
     },
-    "id": 802,
+    "id": 816,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
@@ -411,8 +447,8 @@
         "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "id": 677,
         "nodeType": "ImportDirective",
-        "scope": 802,
-        "sourceUnit": 10312,
+        "scope": 816,
+        "sourceUnit": 10432,
         "src": "95:56:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -422,7 +458,7 @@
         "file": "./IIdeaToken.sol",
         "id": 678,
         "nodeType": "ImportDirective",
-        "scope": 802,
+        "scope": 816,
         "sourceUnit": 617,
         "src": "153:26:5",
         "symbolAliases": [],
@@ -433,8 +469,8 @@
         "file": "./nameVerifiers/IIdeaTokenNameVerifier.sol",
         "id": 679,
         "nodeType": "ImportDirective",
-        "scope": 802,
-        "sourceUnit": 3076,
+        "scope": 816,
+        "sourceUnit": 3152,
         "src": "181:52:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -446,9 +482,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 801,
+        "id": 815,
         "linearizedBaseContracts": [
-          801
+          815
         ],
         "name": "IIdeaTokenFactory",
         "nodeType": "ContractDefinition",
@@ -544,7 +580,7 @@
             ],
             "name": "IDPair",
             "nodeType": "StructDefinition",
-            "scope": 801,
+            "scope": 815,
             "src": "274:91:5",
             "visibility": "public"
           },
@@ -669,7 +705,7 @@
             ],
             "name": "TokenInfo",
             "nodeType": "StructDefinition",
-            "scope": 801,
+            "scope": 815,
             "src": "373:118:5",
             "visibility": "public"
           },
@@ -773,7 +809,7 @@
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3075",
+                  "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3151",
                   "typeString": "contract IIdeaTokenNameVerifier"
                 },
                 "typeName": {
@@ -781,10 +817,10 @@
                   "id": 702,
                   "name": "IIdeaTokenNameVerifier",
                   "nodeType": "UserDefinedTypeName",
-                  "referencedDeclaration": 3075,
+                  "referencedDeclaration": 3151,
                   "src": "595:22:5",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3075",
+                    "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3151",
                     "typeString": "contract IIdeaTokenNameVerifier"
                   }
                 },
@@ -962,7 +998,7 @@
             ],
             "name": "MarketDetails",
             "nodeType": "StructDefinition",
-            "scope": 801,
+            "scope": 815,
             "src": "499:309:5",
             "visibility": "public"
           },
@@ -1187,7 +1223,7 @@
               "parameters": [],
               "src": "1039:0:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "816:224:5",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -1273,7 +1309,7 @@
               "parameters": [],
               "src": "1116:0:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1048:69:5",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -1388,7 +1424,7 @@
               ],
               "src": "1215:6:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1125:97:5",
             "stateMutability": "view",
             "virtual": false,
@@ -1475,7 +1511,7 @@
               ],
               "src": "1305:6:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1228:84:5",
             "stateMutability": "view",
             "virtual": false,
@@ -1564,7 +1600,7 @@
               ],
               "src": "1385:22:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1318:90:5",
             "stateMutability": "view",
             "virtual": false,
@@ -1653,7 +1689,7 @@
               ],
               "src": "1496:22:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1414:105:5",
             "stateMutability": "view",
             "virtual": false,
@@ -1711,7 +1747,7 @@
               ],
               "src": "1572:6:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1525:54:5",
             "stateMutability": "view",
             "virtual": false,
@@ -1826,7 +1862,7 @@
               ],
               "src": "1675:6:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1585:97:5",
             "stateMutability": "view",
             "virtual": false,
@@ -1943,7 +1979,7 @@
               ],
               "src": "1761:18:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1688:92:5",
             "stateMutability": "view",
             "virtual": false,
@@ -2033,27 +2069,199 @@
               ],
               "src": "1847:15:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1786:77:5",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "a5ffb1e9",
+            "id": 807,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setTradingFee",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 805,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 802,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 807,
+                  "src": "1892:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 801,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1892:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 804,
+                  "mutability": "mutable",
+                  "name": "tradingFeeRate",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 807,
+                  "src": "1907:19:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 803,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1907:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1891:36:5"
+            },
+            "returnParameters": {
+              "id": 806,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1936:0:5"
+            },
+            "scope": 815,
+            "src": "1869:68:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "dc5ea5d9",
+            "id": 814,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setPlatformFee",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 812,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 809,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 814,
+                  "src": "1967:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 808,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1967:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 811,
+                  "mutability": "mutable",
+                  "name": "platformFeeRate",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 814,
+                  "src": "1982:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 810,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1982:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1966:37:5"
+            },
+            "returnParameters": {
+              "id": 813,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2012:0:5"
+            },
+            "scope": 815,
+            "src": "1943:70:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
           }
         ],
-        "scope": 802,
-        "src": "237:1629:5"
+        "scope": 816,
+        "src": "237:1779:5"
       }
     ],
-    "src": "33:1833:5"
+    "src": "33:1983:5"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol",
     "exportedSymbols": {
       "IIdeaTokenFactory": [
-        801
+        815
       ]
     },
-    "id": 802,
+    "id": 816,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
@@ -2082,8 +2290,8 @@
         "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "id": 677,
         "nodeType": "ImportDirective",
-        "scope": 802,
-        "sourceUnit": 10312,
+        "scope": 816,
+        "sourceUnit": 10432,
         "src": "95:56:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2093,7 +2301,7 @@
         "file": "./IIdeaToken.sol",
         "id": 678,
         "nodeType": "ImportDirective",
-        "scope": 802,
+        "scope": 816,
         "sourceUnit": 617,
         "src": "153:26:5",
         "symbolAliases": [],
@@ -2104,8 +2312,8 @@
         "file": "./nameVerifiers/IIdeaTokenNameVerifier.sol",
         "id": 679,
         "nodeType": "ImportDirective",
-        "scope": 802,
-        "sourceUnit": 3076,
+        "scope": 816,
+        "sourceUnit": 3152,
         "src": "181:52:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2117,9 +2325,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 801,
+        "id": 815,
         "linearizedBaseContracts": [
-          801
+          815
         ],
         "name": "IIdeaTokenFactory",
         "nodeType": "ContractDefinition",
@@ -2215,7 +2423,7 @@
             ],
             "name": "IDPair",
             "nodeType": "StructDefinition",
-            "scope": 801,
+            "scope": 815,
             "src": "274:91:5",
             "visibility": "public"
           },
@@ -2340,7 +2548,7 @@
             ],
             "name": "TokenInfo",
             "nodeType": "StructDefinition",
-            "scope": 801,
+            "scope": 815,
             "src": "373:118:5",
             "visibility": "public"
           },
@@ -2444,7 +2652,7 @@
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3075",
+                  "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3151",
                   "typeString": "contract IIdeaTokenNameVerifier"
                 },
                 "typeName": {
@@ -2452,10 +2660,10 @@
                   "id": 702,
                   "name": "IIdeaTokenNameVerifier",
                   "nodeType": "UserDefinedTypeName",
-                  "referencedDeclaration": 3075,
+                  "referencedDeclaration": 3151,
                   "src": "595:22:5",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3075",
+                    "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3151",
                     "typeString": "contract IIdeaTokenNameVerifier"
                   }
                 },
@@ -2633,7 +2841,7 @@
             ],
             "name": "MarketDetails",
             "nodeType": "StructDefinition",
-            "scope": 801,
+            "scope": 815,
             "src": "499:309:5",
             "visibility": "public"
           },
@@ -2858,7 +3066,7 @@
               "parameters": [],
               "src": "1039:0:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "816:224:5",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -2944,7 +3152,7 @@
               "parameters": [],
               "src": "1116:0:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1048:69:5",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -3059,7 +3267,7 @@
               ],
               "src": "1215:6:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1125:97:5",
             "stateMutability": "view",
             "virtual": false,
@@ -3146,7 +3354,7 @@
               ],
               "src": "1305:6:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1228:84:5",
             "stateMutability": "view",
             "virtual": false,
@@ -3235,7 +3443,7 @@
               ],
               "src": "1385:22:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1318:90:5",
             "stateMutability": "view",
             "virtual": false,
@@ -3324,7 +3532,7 @@
               ],
               "src": "1496:22:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1414:105:5",
             "stateMutability": "view",
             "virtual": false,
@@ -3382,7 +3590,7 @@
               ],
               "src": "1572:6:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1525:54:5",
             "stateMutability": "view",
             "virtual": false,
@@ -3497,7 +3705,7 @@
               ],
               "src": "1675:6:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1585:97:5",
             "stateMutability": "view",
             "virtual": false,
@@ -3614,7 +3822,7 @@
               ],
               "src": "1761:18:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1688:92:5",
             "stateMutability": "view",
             "virtual": false,
@@ -3704,18 +3912,190 @@
               ],
               "src": "1847:15:5"
             },
-            "scope": 801,
+            "scope": 815,
             "src": "1786:77:5",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "a5ffb1e9",
+            "id": 807,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setTradingFee",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 805,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 802,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 807,
+                  "src": "1892:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 801,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1892:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 804,
+                  "mutability": "mutable",
+                  "name": "tradingFeeRate",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 807,
+                  "src": "1907:19:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 803,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1907:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1891:36:5"
+            },
+            "returnParameters": {
+              "id": 806,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1936:0:5"
+            },
+            "scope": 815,
+            "src": "1869:68:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "dc5ea5d9",
+            "id": 814,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setPlatformFee",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 812,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 809,
+                  "mutability": "mutable",
+                  "name": "marketID",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 814,
+                  "src": "1967:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 808,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1967:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 811,
+                  "mutability": "mutable",
+                  "name": "platformFeeRate",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 814,
+                  "src": "1982:20:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 810,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1982:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1966:37:5"
+            },
+            "returnParameters": {
+              "id": 813,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2012:0:5"
+            },
+            "scope": 815,
+            "src": "1943:70:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
           }
         ],
-        "scope": 802,
-        "src": "237:1629:5"
+        "scope": 816,
+        "src": "237:1779:5"
       }
     ],
-    "src": "33:1833:5"
+    "src": "33:1983:5"
   },
   "compiler": {
     "name": "solc",
@@ -3723,7 +4103,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-14T09:40:48.540Z",
+  "updatedAt": "2020-10-14T12:08:04.031Z",
   "devdoc": {
     "methods": {}
   },

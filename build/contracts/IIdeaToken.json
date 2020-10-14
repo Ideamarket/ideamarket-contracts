@@ -257,7 +257,7 @@
         "id": 599,
         "nodeType": "ImportDirective",
         "scope": 617,
-        "sourceUnit": 10234,
+        "sourceUnit": 10354,
         "src": "60:55:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -272,10 +272,10 @@
               "id": 600,
               "name": "IERC20",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 10311,
+              "referencedDeclaration": 10431,
               "src": "143:6:3",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IERC20_$10311",
+                "typeIdentifier": "t_contract$_IERC20_$10431",
                 "typeString": "contract IERC20"
               }
             },
@@ -285,7 +285,7 @@
           }
         ],
         "contractDependencies": [
-          10311
+          10431
         ],
         "contractKind": "interface",
         "documentation": null,
@@ -293,7 +293,7 @@
         "id": 616,
         "linearizedBaseContracts": [
           616,
-          10311
+          10431
         ],
         "name": "IIdeaToken",
         "nodeType": "ContractDefinition",
@@ -507,7 +507,7 @@
         "id": 599,
         "nodeType": "ImportDirective",
         "scope": 617,
-        "sourceUnit": 10234,
+        "sourceUnit": 10354,
         "src": "60:55:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -522,10 +522,10 @@
               "id": 600,
               "name": "IERC20",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 10311,
+              "referencedDeclaration": 10431,
               "src": "143:6:3",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IERC20_$10311",
+                "typeIdentifier": "t_contract$_IERC20_$10431",
                 "typeString": "contract IERC20"
               }
             },
@@ -535,7 +535,7 @@
           }
         ],
         "contractDependencies": [
-          10311
+          10431
         ],
         "contractKind": "interface",
         "documentation": null,
@@ -543,7 +543,7 @@
         "id": 616,
         "linearizedBaseContracts": [
           616,
-          10311
+          10431
         ],
         "name": "IIdeaToken",
         "nodeType": "ContractDefinition",
@@ -735,7 +735,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-14T09:40:48.531Z",
+  "updatedAt": "2020-10-14T12:08:04.021Z",
   "devdoc": {
     "methods": {
       "allowance(address,address)": {

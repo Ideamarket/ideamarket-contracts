@@ -15258,12 +15258,12 @@
     "42": {
       "events": {},
       "links": {},
-      "address": "0x8b93B611a92AC8E43B3b32948232426B54d0d32B",
-      "transactionHash": "0x33fe1b2975f2497928970b3d85de0457814cb4603bc7364979b826dba55eafa2"
+      "address": "0xaA73Ed4E980BE49d38a851e01ed64c376B24Ba19",
+      "transactionHash": "0x1592c9d7ffed31a73bbf27e07e39f6ada040ce7110c09275d92fb55587c89223"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-13T12:09:42.173Z",
+  "updatedAt": "2020-10-14T12:16:01.547Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",

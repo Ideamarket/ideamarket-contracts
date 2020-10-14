@@ -3534,12 +3534,12 @@
     "42": {
       "events": {},
       "links": {},
-      "address": "0xb7aDe1E2CC349A76dE9E0a03ceEACBD42157d57A",
-      "transactionHash": "0x090365af43fed274e48d887699ddb8b62a27d6c69e3598a1683eb5d7188fc435"
+      "address": "0x130734bBCD78731BFb8A173Ef81DCaC4E6762e55",
+      "transactionHash": "0x0d516b74fced3749365ead7e60744881b5da1299a7e208f07b1e836e76bbd55e"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-13T13:25:02.651Z",
+  "updatedAt": "2020-10-14T12:17:30.003Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",
