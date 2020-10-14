@@ -380,7 +380,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param factory The address of the IdeaTokenFactory 
      */
-    function setIdeaTokenFactoryAddress(uint factory) external onlyOwner {
+    function setIdeaTokenFactoryAddress(address factory) external onlyOwner {
         require(address(_ideaTokenFactory) == address(0));
         _ideaTokenFactory = IIdeaTokenFactory(factory);
     }
