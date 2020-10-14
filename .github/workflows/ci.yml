@@ -1,9 +1,9 @@
-name: Test contracts
+name: Build, test, lint
 
 on: [ push ]
 
 jobs:
-  test:
+  build-test-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -15,7 +15,9 @@ jobs:
             npm install
             npm install -g truffle
             npm install -g ganache-cli
+            npm install -g eslint
       - name: Run truffle tests and coverage
         run: |
             ganache-cli > /dev/null &
             truffle run coverage
+            eslint .
