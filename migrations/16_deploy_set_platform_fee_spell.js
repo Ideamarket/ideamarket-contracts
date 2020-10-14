@@ -2,16 +2,16 @@ const { externalContractAddresses, saveDeployedAddress, verifyOnEtherscan } = re
 const SetPlatformFeeSpell = artifacts.require('SetPlatformFeeSpell')
 
 module.exports = async function(deployer, network, accounts) {
-    let externalAddresses
+	let externalAddresses
 
-    if(network == 'kovan') {
-        externalAddresses = externalContractAddresses.kovan
-    } else {
-        return
-    }
+	if(network == 'kovan') {
+		externalAddresses = externalContractAddresses.kovan
+	} else {
+		return
+	}
 
-    await deployer.deploy(SetPlatformFeeSpell)
+	await deployer.deploy(SetPlatformFeeSpell)
 
-    await verifyOnEtherscan(network, SetPlatformFeeSpell.address, 'SetPlatformFeeSpell')
-    saveDeployedAddress(network, 'setPlatformFeeSpell', SetPlatformFeeSpell.address)
+	await verifyOnEtherscan(network, SetPlatformFeeSpell.address, 'SetPlatformFeeSpell')
+	saveDeployedAddress(network, 'setPlatformFeeSpell', SetPlatformFeeSpell.address)
 }

@@ -2,16 +2,16 @@ const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress, ver
 const AddMarketSpell = artifacts.require('AddMarketSpell')
 
 module.exports = async function(deployer, network, accounts) {
-    let externalAddresses
+	let externalAddresses
 
-    if(network == 'kovan') {
-        externalAddresses = externalContractAddresses.kovan
-    } else {
-        return
-    }
+	if(network == 'kovan') {
+		externalAddresses = externalContractAddresses.kovan
+	} else {
+		return
+	}
 
-    await deployer.deploy(AddMarketSpell)
+	await deployer.deploy(AddMarketSpell)
 
-    await verifyOnEtherscan(network, AddMarketSpell.address, 'AddMarketSpell')
-    saveDeployedAddress(network, 'addMarketSpell', AddMarketSpell.address)
+	await verifyOnEtherscan(network, AddMarketSpell.address, 'AddMarketSpell')
+	saveDeployedAddress(network, 'addMarketSpell', AddMarketSpell.address)
 }

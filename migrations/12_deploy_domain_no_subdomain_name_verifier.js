@@ -2,16 +2,16 @@ const { externalContractAddresses, saveDeployedAddress, verifyOnEtherscan } = re
 const DomainNoSubdomainNameVerifier = artifacts.require('DomainNoSubdomainNameVerifier')
 
 module.exports = async function(deployer, network, accounts) {
-    let externalAddresses
+	let externalAddresses
 
-    if(network == 'kovan') {
-        externalAddresses = externalContractAddresses.kovan
-    } else {
-        return
-    }
+	if(network == 'kovan') {
+		externalAddresses = externalContractAddresses.kovan
+	} else {
+		return
+	}
 
-    await deployer.deploy(DomainNoSubdomainNameVerifier)
+	await deployer.deploy(DomainNoSubdomainNameVerifier)
 
-    await verifyOnEtherscan(network, DomainNoSubdomainNameVerifier.address, 'DomainNoSubdomainNameVerifier')
-    saveDeployedAddress(network, 'domainNoSubdomainNameVerifier', DomainNoSubdomainNameVerifier.address)
+	await verifyOnEtherscan(network, DomainNoSubdomainNameVerifier.address, 'DomainNoSubdomainNameVerifier')
+	saveDeployedAddress(network, 'domainNoSubdomainNameVerifier', DomainNoSubdomainNameVerifier.address)
 }

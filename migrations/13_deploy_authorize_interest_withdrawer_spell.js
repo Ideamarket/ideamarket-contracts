@@ -2,16 +2,16 @@ const { externalContractAddresses, saveDeployedAddress, verifyOnEtherscan } = re
 const AuthorizeInterestWithdrawerSpell = artifacts.require('AuthorizeInterestWithdrawerSpell')
 
 module.exports = async function(deployer, network, accounts) {
-    let externalAddresses
+	let externalAddresses
 
-    if(network == 'kovan') {
-        externalAddresses = externalContractAddresses.kovan
-    } else {
-        return
-    }
+	if(network == 'kovan') {
+		externalAddresses = externalContractAddresses.kovan
+	} else {
+		return
+	}
 
-    await deployer.deploy(AuthorizeInterestWithdrawerSpell)
+	await deployer.deploy(AuthorizeInterestWithdrawerSpell)
 
-    await verifyOnEtherscan(network, AuthorizeInterestWithdrawerSpell.address, 'AuthorizeInterestWithdrawerSpell')
-    saveDeployedAddress(network, 'authorizeInterestWithdrawerSpell', AuthorizeInterestWithdrawerSpell.address)
+	await verifyOnEtherscan(network, AuthorizeInterestWithdrawerSpell.address, 'AuthorizeInterestWithdrawerSpell')
+	saveDeployedAddress(network, 'authorizeInterestWithdrawerSpell', AuthorizeInterestWithdrawerSpell.address)
 }

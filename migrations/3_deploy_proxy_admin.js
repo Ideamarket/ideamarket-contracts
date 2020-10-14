@@ -3,18 +3,18 @@ const { externalContractAddresses, deploymentParams, saveDeployedAddress, loadDe
 const ProxyAdmin = artifacts.require('ProxyAdmin')
 
 module.exports = async function(deployer, network, accounts) {
-    let externalAddresses
-    let params
+	let externalAddresses
+	let params
 
-    if(network == 'kovan') {
-        externalAddresses = externalContractAddresses.kovan
-        params = deploymentParams.kovan
-    } else {
-        return
-    }
+	if(network == 'kovan') {
+		externalAddresses = externalContractAddresses.kovan
+		params = deploymentParams.kovan
+	} else {
+		return
+	}
 
-    await deployer.deploy(ProxyAdmin, loadDeployedAddress(network, 'dsPauseProxy'))
+	await deployer.deploy(ProxyAdmin, loadDeployedAddress(network, 'dsPauseProxy'))
 
-    await verifyOnEtherscan(network, ProxyAdmin.address, 'ProxyAdmin')
-    saveDeployedAddress(network, 'proxyAdmin', ProxyAdmin.address)
+	await verifyOnEtherscan(network, ProxyAdmin.address, 'ProxyAdmin')
+	saveDeployedAddress(network, 'proxyAdmin', ProxyAdmin.address)
 }

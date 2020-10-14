@@ -2,16 +2,16 @@ const { externalContractAddresses, saveDeployedAddress, verifyOnEtherscan } = re
 const SetTradingFeeSpell = artifacts.require('SetTradingFeeSpell')
 
 module.exports = async function(deployer, network, accounts) {
-    let externalAddresses
+	let externalAddresses
 
-    if(network == 'kovan') {
-        externalAddresses = externalContractAddresses.kovan
-    } else {
-        return
-    }
+	if(network == 'kovan') {
+		externalAddresses = externalContractAddresses.kovan
+	} else {
+		return
+	}
 
-    await deployer.deploy(SetTradingFeeSpell)
+	await deployer.deploy(SetTradingFeeSpell)
 
-    await verifyOnEtherscan(network, SetTradingFeeSpell.address, 'SetTradingFeeSpell')
-    saveDeployedAddress(network, 'setTradingFeeSpell', SetTradingFeeSpell.address)
+	await verifyOnEtherscan(network, SetTradingFeeSpell.address, 'SetTradingFeeSpell')
+	saveDeployedAddress(network, 'setTradingFeeSpell', SetTradingFeeSpell.address)
 }
