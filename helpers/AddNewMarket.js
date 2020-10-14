@@ -1,7 +1,7 @@
+require('dotenv').config({ path: '../.env'})
 const fs = require('fs')
 const shared = require('./shared')
 const Web3 = require('web3')
-const web3 = new Web3()
 
 async function run() {
     const marketName = await shared.getInput('market name')
@@ -20,6 +20,7 @@ async function run() {
 
     // End of input
 
+    const web3 = new Web3('https://' + network + '.infura.io/v3/' + process.env.INFURA_KEY)
     const nameVerifier = shared.loadDeployedAddress(network, nameVerifierName.charAt(0).toLowerCase() + nameVerifierName.slice(1))
     const baseCost = shared.toWei(rawBaseCost)
     const priceRise = shared.toWei(rawPriceRise)
@@ -33,11 +34,14 @@ async function run() {
     const rawTimelockJson = JSON.parse(rawTimelock)
     const timelockAbi = rawTimelockJson.abi
     const timelockAddress = shared.loadDeployedAddress(network, 'dsPause')
+    const timelockContract = new web3.eth.Contract(timelockAbi, timelockAddress)
 
     const rawSpell = fs.readFileSync('../build/contracts/AddMarketSpell.json')
     const rawSpellJson = JSON.parse(rawSpell)
     const spellAbi = rawSpellJson.abi
     const spellAddress = shared.loadDeployedAddress(network, 'addMarketSpell')
+    
+    const tag = await timelockContract.methods.soul(spellAddress).call()
 
     console.log('------------------------------------------------------')
     console.log('market name:', marketName)
@@ -56,7 +60,7 @@ async function run() {
     console.log('')
     await shared.getInput('press enter to continue')
 
-    const spellCall = web3.eth.abi.encodeFunctionCall(
+    const fax = web3.eth.abi.encodeFunctionCall(
         shared.getFunctionABI(spellAbi, 'execute'),
         [
             factoryAddress,
@@ -70,10 +74,13 @@ async function run() {
         ]
     )
 
-    console.log(spellCall)
-
+    console.log('')
+    console.log('To:', timelockAddress)
+    console.log('Param usr:', spellAddress)
+    console.log('Param tag:', tag)
+    console.log('Param fax:', fax)
+    console.log('Param eta:', executionTimestamp.toString())
+    console.log('ABI:', JSON.stringify(timelockAbi))
 }
-
-
 
 run()
