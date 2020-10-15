@@ -47,7 +47,7 @@ contract('core/InterestManagerCompound', async accounts => {
 		assert.isTrue(tenPow18.eq(await cDai.balanceOf(interestManagerCompound.address)))
 	})
 
-	it('invest fails when too few dai', async () => {
+	it('fail invest too few dai', async () => {
 		await expectRevert(
 			interestManagerCompound.invest(tenPow18),
 			'invest: not enough dai'
@@ -70,7 +70,7 @@ contract('core/InterestManagerCompound', async accounts => {
 		assert.isTrue(tenPow18.sub(redeemAmount).eq(await cDai.balanceOf(interestManagerCompound.address)))
 	})
 
-	it('redeem fails when non-admin calls', async () => {
+	it('fail redeem not admin', async () => {
 		await dai.mint(userAccount, tenPow18)
 		await dai.transfer(interestManagerCompound.address, tenPow18)
 		await interestManagerCompound.invest(tenPow18)
@@ -99,11 +99,18 @@ contract('core/InterestManagerCompound', async accounts => {
 		assert.isTrue(zero.eq(await cDai.balanceOf(interestManagerCompound.address)))
 	})
 
-	it('donate fails when too few dai', async () => {
+	it('fail donate donate when too few dai', async () => {
 		await dai.approve(interestManagerCompound.address, tenPow18)
 		await expectRevert(
 			interestManagerCompound.donateInterest(tenPow18),
 			'ERC20: transfer amount exceeds balance'
+		)
+	})
+
+	it('fail donate not enough allowance', async () => {
+		await expectRevert(
+			interestManagerCompound.donateInterest(new BN('100')),
+			'donateInterest: not enough allowance'
 		)
 	})
     

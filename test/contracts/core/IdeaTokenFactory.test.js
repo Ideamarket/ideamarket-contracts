@@ -184,6 +184,22 @@ contract('core/IdeaTokenFactory', async accounts => {
 		)
 	})
 
+	it('fail add token invalid market', async () => {
+		const nameVerifier = await DomainNoSubdomainNameVerifier.new()
+		await ideaTokenFactory.addMarket(
+			marketName,  nameVerifier.address,
+			baseCost, priceRise, tokensPerInterval,
+			tradingFeeRate, platformFeeRate,
+			{ from: adminAccount }
+		)
+
+		await ideaTokenFactory.addToken(tokenName, new BN('1'))
+		await expectRevert(
+			ideaTokenFactory.addToken(tokenName, new BN('2')),
+			'addToken: market does not exist'
+		)
+	})
+
 	it('can set trading fee', async () => {
 		await ideaTokenFactory.addMarket(
 			marketName,  zeroAddress,
@@ -211,6 +227,20 @@ contract('core/IdeaTokenFactory', async accounts => {
 		)
 	})
 
+	it('fail set trading fee invalid market', async () => {
+		await ideaTokenFactory.addMarket(
+			marketName,  zeroAddress,
+			baseCost, priceRise, tokensPerInterval,
+			tradingFeeRate, platformFeeRate,
+			{ from: adminAccount }
+		)
+
+		await expectRevert(
+			ideaTokenFactory.setTradingFee(new BN('2'), new BN('123'), { from: adminAccount }),
+			'setTradingFee: market does not exist'
+		)
+	})
+
 	it('can set platform fee', async () => {
 		await ideaTokenFactory.addMarket(
 			marketName,  zeroAddress,
@@ -235,6 +265,20 @@ contract('core/IdeaTokenFactory', async accounts => {
 		await expectRevert(
 			ideaTokenFactory.setPlatformFee(new BN('1'), new BN('123')),
 			'Ownable: onlyOwner'
+		)
+	})
+
+	it('fail set platform fee invalid market', async () => {
+		await ideaTokenFactory.addMarket(
+			marketName,  zeroAddress,
+			baseCost, priceRise, tokensPerInterval,
+			tradingFeeRate, platformFeeRate,
+			{ from: adminAccount }
+		)
+
+		await expectRevert(
+			ideaTokenFactory.setPlatformFee(new BN('2'), new BN('123'), { from: adminAccount }),
+			'setPlatformFee: market does not exist'
 		)
 	})
 

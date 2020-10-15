@@ -106,4 +106,13 @@ contract('timelock/DSPause', async accounts => {
 			'ds-pause-premature-exec'  
 		)
 	})
+
+	it('cannot disregard delay', async () => {
+		const eta = new BN((parseInt(await time.latest()) + delay - 100).toString())
+		const tag = await dsPause.soul(spell.address)
+		await expectRevert(
+			dsPause.plot(spell.address, tag, [], eta),
+			'ds-pause-delay-not-respected'
+		)
+	})
 })
