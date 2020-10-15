@@ -2,7 +2,10 @@ module.exports = {
 	'env': {
 		'node': true,
 		'commonjs': true,
-		'es2021': true
+		'es2021': true,
+		'jest/globals': true,
+		'mocha': true,
+		'truffle/globals': true
 	},
 	'extends': 'eslint:recommended',
 	'parserOptions': {
@@ -25,5 +28,7 @@ module.exports = {
 			'error',
 			'never'
 		]
-	}
+	},
+	'plugins': ['jest', 'truffle']
+	
 }
