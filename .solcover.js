@@ -19,6 +19,7 @@ module.exports = {
         'proxy/AdminUpgradeabilityProxy.sol',
         'proxy/Proxy.sol',
         'proxy/ProxyAdmin.sol',
-        'proxy/UpgradeabilityProxy.sol'
+        'proxy/UpgradeabilityProxy.sol',
+        'util/Initializable.sol'
     ]
 }
