@@ -15,6 +15,10 @@ module.exports = {
         'test/TestUniswapV2Pair.sol',
         'test/TestUniswapV2Router02.sol',
         'test/TestWETH.sol',
-        'test/UQ112x112.sol'
+        'test/UQ112x112.sol',
+        'proxy/AdminUpgradeabilityProxy.sol',
+        'proxy/Proxy.sol',
+        'proxy/ProxyAdmin.sol',
+        'proxy/UpgradeabilityProxy.sol'
     ]
 }
