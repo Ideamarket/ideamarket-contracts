@@ -29,7 +29,7 @@ contract('spells/SetPlatformFeeSpell', async accounts => {
 		spell = await SetPlatformFeeSpell.new()
 	})
 
-	it.only('can set platform fee', async () => {
+	it('can set platform fee', async () => {
 
 		const factory = await IdeaTokenFactory.new()
 		await factory.initialize(adminAccount, zeroAddress)
