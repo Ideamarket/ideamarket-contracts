@@ -7,7 +7,6 @@ const BN = web3.utils.BN
 contract('spells/SetTimelockDelaySpell', async accounts => {
 
 	let dsPause
-	let dsPauseProxyAddress
 	let spell
 
 	const delay = 86400
@@ -16,7 +15,6 @@ contract('spells/SetTimelockDelaySpell', async accounts => {
 
 	before(async () => {
 		dsPause = await DSPause.new(delay, adminAccount)
-		dsPauseProxyAddress = await dsPause._proxy()
 		spell = await SetTimelockDelaySpell.new()
 	})
 

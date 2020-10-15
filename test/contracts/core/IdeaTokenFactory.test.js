@@ -6,8 +6,6 @@ const BN = web3.utils.BN
 
 contract('core/IdeaTokenFactory', async accounts => {
 
-	const tenPow18 = new BN('10').pow(new BN('18'))
-
 	const tokenName = 'example.com'
 	const marketName = 'testMarket'
 	const baseCost = new BN('1000000000000000000') // 10**18
@@ -15,7 +13,6 @@ contract('core/IdeaTokenFactory', async accounts => {
 	const tokensPerInterval = new BN('100000000000000000000') // 10**20
 	const tradingFeeRate = new BN('100')
 	const platformFeeRate = new BN('50')
-	const feeScale = new BN('10000')
 
 	const userAccount = accounts[0]
 	const adminAccount = accounts[1]

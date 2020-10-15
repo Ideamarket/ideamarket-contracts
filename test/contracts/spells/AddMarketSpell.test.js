@@ -22,7 +22,6 @@ contract('spells/AddMarketSpell', async accounts => {
 	const tokensPerInterval = '1'
 	const tradingFeeRate = '0'
 	const platformFeeRate = '0'
-	const feeScale = '0'
     
 	before(async () => {
 		dsPause = await DSPause.new(delay, adminAccount)
