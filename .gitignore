@@ -4,6 +4,8 @@ node_modules
 # Coverage
 coverage
 coverage.json
+.coverage_artifacts
+.coverage_contracts
 
 # Dotenv
 .env
