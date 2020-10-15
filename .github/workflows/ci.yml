@@ -20,4 +20,6 @@ jobs:
         run: |
             ganache-cli > /dev/null &
             truffle run coverage
+      - name: Run ESLint
+        run: |
             eslint .
