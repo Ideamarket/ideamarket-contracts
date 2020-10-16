@@ -1,6 +1,5 @@
 require('dotenv').config()
 const fs = require('fs')
-const { exec } = require('child_process')
 
 /* eslint-disable-next-line no-undef */
 const AdminUpgradeabilityProxy = artifacts.require('AdminUpgradeabilityProxy')
@@ -52,33 +51,4 @@ module.exports.deployProxy = async function(artifact, deployer, admin, ...args) 
 	await deployer.deploy(AdminUpgradeabilityProxy, logicContract.address, admin, data)
 
 	return [AdminUpgradeabilityProxy.address, logicContract.address]
-}
-
-module.exports.verifyOnEtherscan = async function(network, address, contractName, license = 'MIT') {
-
-	console.log('Waiting 10 seconds before beginning Etherscan verification')
-	// We need this to avoid "Unable to locate ContractCode at 0x..."
-	await new Promise((resolve) => {
-		setTimeout(resolve, 10000)
-	})
-
-	const cmd = `truffle run verify ${contractName}@${address} --network ${network} --license=${license}`
-	await new Promise(resolve => {
-		console.log('Beginning Etherscan verification for contract ' + contractName)
-		exec(cmd, async (error, stdout, stderr) => {
-			if (error) {
-				if(stderr.includes('Unable to locate ContractCode') || stdout.includes('Unable to locate ContractCode')) {
-					console.log('Contract verification failed. Retrying.')
-					await module.exports.verifyOnEtherscan(network, address, contractName, license)
-				} else {
-					console.log('Failed to verify contract ' + contractName + ': ' + error + '\n' + stdout + '\n' + stderr)
-				}
-			} else {
-				console.log('Sucessfully verified contract ' + contractName)
-			}
-
-			// We dont want a failing verification to cancel our migration
-			resolve()
-		})
-	})
 }

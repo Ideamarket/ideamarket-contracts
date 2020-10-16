@@ -1,4 +1,4 @@
-const { externalContractAddresses, deploymentParams, saveDeployedAddress, verifyOnEtherscan } = require('./shared')
+const { externalContractAddresses, deploymentParams, saveDeployedAddress } = require('./shared')
 
 /* eslint-disable-next-line no-undef */
 const DSPause = artifacts.require('DSPause')
@@ -18,8 +18,6 @@ module.exports = async function(deployer, network) {
 	const dsPause = await DSPause.at(DSPause.address)
 	const dsPauseProxyAddress = await dsPause._proxy()
 
-	await verifyOnEtherscan(network, DSPause.address, 'DSPause')
-	await verifyOnEtherscan(network, dsPauseProxyAddress, 'DSPauseProxy')
 	saveDeployedAddress(network, 'dsPause', dsPause.address)
 	saveDeployedAddress(network, 'dsPauseProxy', dsPauseProxyAddress)
 }

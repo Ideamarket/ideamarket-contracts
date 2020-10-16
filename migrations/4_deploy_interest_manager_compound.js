@@ -1,4 +1,4 @@
-const { externalContractAddresses, saveDeployedAddress, deployProxy, loadDeployedAddress, verifyOnEtherscan } = require('./shared')
+const { externalContractAddresses, saveDeployedAddress, deployProxy, loadDeployedAddress } = require('./shared')
 
 /* eslint-disable-next-line no-undef */
 const InterestManagerCompound = artifacts.require('InterestManagerCompound')
@@ -21,8 +21,6 @@ module.exports = async function(deployer, network, accounts) {
 		externalAddresses.comp,
 		externalAddresses.multisig)
 
-	await verifyOnEtherscan(network, proxy, 'AdminUpgradeabilityProxy')
-	await verifyOnEtherscan(network, logic, 'InterestManagerCompound')
 	saveDeployedAddress(network, 'interestManager', proxy)
 	saveDeployedAddress(network, 'interestManagerLogic', logic)
 }

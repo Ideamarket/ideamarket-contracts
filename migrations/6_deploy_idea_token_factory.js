@@ -1,4 +1,4 @@
-const { saveDeployedAddress, loadDeployedAddress, deployProxy, verifyOnEtherscan } = require('./shared')
+const { saveDeployedAddress, loadDeployedAddress, deployProxy } = require('./shared')
 
 /* eslint-disable-next-line no-undef */
 const IdeaTokenFactory = artifacts.require('IdeaTokenFactory')
@@ -15,8 +15,6 @@ module.exports = async function(deployer, network) {
 		loadDeployedAddress(network, 'dsPauseProxy'),
 		loadDeployedAddress(network, 'ideaTokenExchange'))
 
-	await verifyOnEtherscan(network, proxy, 'AdminUpgradeabilityProxy')
-	await verifyOnEtherscan(network, logic, 'IdeaTokenFactory')
 	saveDeployedAddress(network, 'ideaTokenFactory', proxy)
 	saveDeployedAddress(network, 'ideaTokenFactoryLogic', logic)
 }

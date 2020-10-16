@@ -1,4 +1,4 @@
-const { saveDeployedAddress, loadDeployedAddress, verifyOnEtherscan } = require('./shared')
+const { saveDeployedAddress, loadDeployedAddress } = require('./shared')
 
 /* eslint-disable-next-line no-undef */
 const ProxyAdmin = artifacts.require('ProxyAdmin')
@@ -11,6 +11,5 @@ module.exports = async function(deployer, network) {
 
 	await deployer.deploy(ProxyAdmin, loadDeployedAddress(network, 'dsPauseProxy'))
 
-	await verifyOnEtherscan(network, ProxyAdmin.address, 'ProxyAdmin')
 	saveDeployedAddress(network, 'proxyAdmin', ProxyAdmin.address)
 }

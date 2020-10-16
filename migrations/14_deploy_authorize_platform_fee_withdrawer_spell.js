@@ -1,4 +1,4 @@
-const { saveDeployedAddress, verifyOnEtherscan } = require('./shared')
+const { saveDeployedAddress } = require('./shared')
 
 /* eslint-disable-next-line no-undef */
 const AuthorizePlatformFeeWithdrawerSpell = artifacts.require('AuthorizePlatformFeeWithdrawerSpell')
@@ -11,6 +11,5 @@ module.exports = async function(deployer, network) {
 
 	await deployer.deploy(AuthorizePlatformFeeWithdrawerSpell)
 
-	await verifyOnEtherscan(network, AuthorizePlatformFeeWithdrawerSpell.address, 'AuthorizePlatformFeeWithdrawerSpell')
 	saveDeployedAddress(network, 'authorizePlatformFeeWithdrawerSpell', AuthorizePlatformFeeWithdrawerSpell.address)
 }
