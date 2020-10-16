@@ -21,27 +21,27 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"verifyTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":\"IIdeaTokenNameVerifier\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0xaf3c8d02852edc08ac85198fa3d37f3c512dc215a5409992e45cf877c34c172d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1303500e1882260f5f77d8b331184e8e7972e94b3be8ca972ae1de41089bcc9e\",\"dweb:/ipfs/QmVQbjUbaD5iXhQEBQqREE51TibRQREqdDBkQRf1SfxyVr\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"verifyTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Interface for token name verifiers\",\"methods\":{},\"title\":\"IIdeaTokenNameVerifier\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":\"IIdeaTokenNameVerifier\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0x9124b51007226bd7bad5d36d7c28b6af674c52ce70907c6981777756ad7f6678\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9b5b993cb27764e9f11acbdfdae559e65a9ca861e369cfbfb5af3a23dff06fe1\",\"dweb:/ipfs/QmcTN4dp7JjghhM6XFTqMNBVJ3ACHYqdu6V5XbQiHJgseY\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\ninterface IIdeaTokenNameVerifier {\r\n    function verifyTokenName(string calldata name) external pure returns (bool);\r\n}",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\n/**\r\n * @title IIdeaTokenNameVerifier\r\n * @author Alexander Schlindwein\r\n *\r\n * @dev Interface for token name verifiers\r\n */\r\ninterface IIdeaTokenNameVerifier {\r\n    function verifyTokenName(string calldata name) external pure returns (bool);\r\n}",
   "sourcePath": "C:\\Users\\alexa\\Desktop\\ideamarket-contracts\\contracts\\core\\nameVerifiers\\IIdeaTokenNameVerifier.sol",
   "ast": {
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
     "exportedSymbols": {
       "IIdeaTokenNameVerifier": [
-        3151
+        3200
       ]
     },
-    "id": 3152,
+    "id": 3201,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3143,
+        "id": 3191,
         "literals": [
           "solidity",
           "^",
@@ -56,11 +56,16 @@
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "interface",
-        "documentation": null,
+        "documentation": {
+          "id": 3192,
+          "nodeType": "StructuredDocumentation",
+          "src": "60:124:12",
+          "text": " @title IIdeaTokenNameVerifier\n @author Alexander Schlindwein\n @dev Interface for token name verifiers"
+        },
         "fullyImplemented": false,
-        "id": 3151,
+        "id": 3200,
         "linearizedBaseContracts": [
-          3151
+          3200
         ],
         "name": "IIdeaTokenNameVerifier",
         "nodeType": "ContractDefinition",
@@ -69,7 +74,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "4c8bc1c9",
-            "id": 3150,
+            "id": 3199,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -77,18 +82,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3146,
+              "id": 3195,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3145,
+                  "id": 3194,
                   "mutability": "mutable",
                   "name": "name",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3150,
-                  "src": "125:20:12",
+                  "scope": 3199,
+                  "src": "251:20:12",
                   "stateVariable": false,
                   "storageLocation": "calldata",
                   "typeDescriptions": {
@@ -96,10 +101,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3144,
+                    "id": 3193,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "125:6:12",
+                    "src": "251:6:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -109,21 +114,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "124:22:12"
+              "src": "250:22:12"
             },
             "returnParameters": {
-              "id": 3149,
+              "id": 3198,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3148,
+                  "id": 3197,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3150,
-                  "src": "170:4:12",
+                  "scope": 3199,
+                  "src": "296:4:12",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -131,10 +136,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3147,
+                    "id": 3196,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "170:4:12",
+                    "src": "296:4:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -144,34 +149,34 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "169:6:12"
+              "src": "295:6:12"
             },
-            "scope": 3151,
-            "src": "100:76:12",
+            "scope": 3200,
+            "src": "226:76:12",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3152,
-        "src": "60:119:12"
+        "scope": 3201,
+        "src": "186:119:12"
       }
     ],
-    "src": "33:146:12"
+    "src": "33:272:12"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
     "exportedSymbols": {
       "IIdeaTokenNameVerifier": [
-        3151
+        3200
       ]
     },
-    "id": 3152,
+    "id": 3201,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3143,
+        "id": 3191,
         "literals": [
           "solidity",
           "^",
@@ -186,11 +191,16 @@
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "interface",
-        "documentation": null,
+        "documentation": {
+          "id": 3192,
+          "nodeType": "StructuredDocumentation",
+          "src": "60:124:12",
+          "text": " @title IIdeaTokenNameVerifier\n @author Alexander Schlindwein\n @dev Interface for token name verifiers"
+        },
         "fullyImplemented": false,
-        "id": 3151,
+        "id": 3200,
         "linearizedBaseContracts": [
-          3151
+          3200
         ],
         "name": "IIdeaTokenNameVerifier",
         "nodeType": "ContractDefinition",
@@ -199,7 +209,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "4c8bc1c9",
-            "id": 3150,
+            "id": 3199,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -207,18 +217,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3146,
+              "id": 3195,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3145,
+                  "id": 3194,
                   "mutability": "mutable",
                   "name": "name",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3150,
-                  "src": "125:20:12",
+                  "scope": 3199,
+                  "src": "251:20:12",
                   "stateVariable": false,
                   "storageLocation": "calldata",
                   "typeDescriptions": {
@@ -226,10 +236,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3144,
+                    "id": 3193,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "125:6:12",
+                    "src": "251:6:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -239,21 +249,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "124:22:12"
+              "src": "250:22:12"
             },
             "returnParameters": {
-              "id": 3149,
+              "id": 3198,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3148,
+                  "id": 3197,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3150,
-                  "src": "170:4:12",
+                  "scope": 3199,
+                  "src": "296:4:12",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -261,10 +271,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3147,
+                    "id": 3196,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "170:4:12",
+                    "src": "296:4:12",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -274,20 +284,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "169:6:12"
+              "src": "295:6:12"
             },
-            "scope": 3151,
-            "src": "100:76:12",
+            "scope": 3200,
+            "src": "226:76:12",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3152,
-        "src": "60:119:12"
+        "scope": 3201,
+        "src": "186:119:12"
       }
     ],
-    "src": "33:146:12"
+    "src": "33:272:12"
   },
   "compiler": {
     "name": "solc",
@@ -295,9 +305,12 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-14T12:08:04.050Z",
+  "updatedAt": "2020-10-16T11:56:47.772Z",
   "devdoc": {
-    "methods": {}
+    "author": "Alexander Schlindwein",
+    "details": "Interface for token name verifiers",
+    "methods": {},
+    "title": "IIdeaTokenNameVerifier"
   },
   "userdoc": {
     "methods": {}

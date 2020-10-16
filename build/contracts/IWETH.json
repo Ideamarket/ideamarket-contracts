@@ -22,27 +22,27 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"deposit\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"wad\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/weth/IWETH.sol\":\"IWETH\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/weth/IWETH.sol\":{\"keccak256\":\"0x8d605804cb5c833b8a8b62ffe1ff21673a0617cbfb1d1b6427c013699b5d7835\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a10cf0877be02b0339f1d0f8f815500dbf0aa10a181f9ea3cc92be1c5da8799\",\"dweb:/ipfs/QmUiDxHfrh2bbcQx3UY8XQdz1v8iitGC4NcV7cNi1nZAVw\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"deposit\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"wad\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Simplified interface for WETH\",\"methods\":{},\"title\":\"IIdeaToken\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/weth/IWETH.sol\":\"IWETH\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/weth/IWETH.sol\":{\"keccak256\":\"0xff73c58d01702b541cace7836d23307fa1882e20a85abd4c0dbcb49380a83b3c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7d575d48c69b452f7c178388b6b841cd64711fd57656fe5c2c1cce392cb9e754\",\"dweb:/ipfs/QmcYyTneD7qWLuVusG4BY6tpMVoBRFrZKLLinNRr8Cqh2n\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\ninterface IWETH {\r\n    function deposit() external payable;\r\n    function withdraw(uint wad) external;\r\n}",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\n/**\r\n * @title IIdeaToken\r\n * @author Alexander Schlindwein\r\n *\r\n * @dev Simplified interface for WETH\r\n */\r\ninterface IWETH {\r\n    function deposit() external payable;\r\n    function withdraw(uint wad) external;\r\n}",
   "sourcePath": "C:\\Users\\alexa\\Desktop\\ideamarket-contracts\\contracts\\weth\\IWETH.sol",
   "ast": {
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/weth/IWETH.sol",
     "exportedSymbols": {
       "IWETH": [
-        9627
+        9692
       ]
     },
-    "id": 9628,
+    "id": 9693,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 9618,
+        "id": 9682,
         "literals": [
           "solidity",
           "^",
@@ -57,11 +57,16 @@
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "interface",
-        "documentation": null,
+        "documentation": {
+          "id": 9683,
+          "nodeType": "StructuredDocumentation",
+          "src": "60:107:46",
+          "text": " @title IIdeaToken\n @author Alexander Schlindwein\n @dev Simplified interface for WETH"
+        },
         "fullyImplemented": false,
-        "id": 9627,
+        "id": 9692,
         "linearizedBaseContracts": [
-          9627
+          9692
         ],
         "name": "IWETH",
         "nodeType": "ContractDefinition",
@@ -70,7 +75,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "d0e30db0",
-            "id": 9621,
+            "id": 9686,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -78,19 +83,19 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 9619,
+              "id": 9684,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "99:2:46"
+              "src": "208:2:46"
             },
             "returnParameters": {
-              "id": 9620,
+              "id": 9685,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "118:0:46"
+              "src": "227:0:46"
             },
-            "scope": 9627,
-            "src": "83:36:46",
+            "scope": 9692,
+            "src": "192:36:46",
             "stateMutability": "payable",
             "virtual": false,
             "visibility": "external"
@@ -99,7 +104,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "2e1a7d4d",
-            "id": 9626,
+            "id": 9691,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -107,18 +112,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 9624,
+              "id": 9689,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 9623,
+                  "id": 9688,
                   "mutability": "mutable",
                   "name": "wad",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 9626,
-                  "src": "143:8:46",
+                  "scope": 9691,
+                  "src": "252:8:46",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -126,10 +131,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 9622,
+                    "id": 9687,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "143:4:46",
+                    "src": "252:4:46",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -139,40 +144,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "142:10:46"
+              "src": "251:10:46"
             },
             "returnParameters": {
-              "id": 9625,
+              "id": 9690,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "161:0:46"
+              "src": "270:0:46"
             },
-            "scope": 9627,
-            "src": "125:37:46",
+            "scope": 9692,
+            "src": "234:37:46",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 9628,
-        "src": "60:105:46"
+        "scope": 9693,
+        "src": "169:105:46"
       }
     ],
-    "src": "33:132:46"
+    "src": "33:241:46"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/weth/IWETH.sol",
     "exportedSymbols": {
       "IWETH": [
-        9627
+        9692
       ]
     },
-    "id": 9628,
+    "id": 9693,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 9618,
+        "id": 9682,
         "literals": [
           "solidity",
           "^",
@@ -187,11 +192,16 @@
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "interface",
-        "documentation": null,
+        "documentation": {
+          "id": 9683,
+          "nodeType": "StructuredDocumentation",
+          "src": "60:107:46",
+          "text": " @title IIdeaToken\n @author Alexander Schlindwein\n @dev Simplified interface for WETH"
+        },
         "fullyImplemented": false,
-        "id": 9627,
+        "id": 9692,
         "linearizedBaseContracts": [
-          9627
+          9692
         ],
         "name": "IWETH",
         "nodeType": "ContractDefinition",
@@ -200,7 +210,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "d0e30db0",
-            "id": 9621,
+            "id": 9686,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -208,19 +218,19 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 9619,
+              "id": 9684,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "99:2:46"
+              "src": "208:2:46"
             },
             "returnParameters": {
-              "id": 9620,
+              "id": 9685,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "118:0:46"
+              "src": "227:0:46"
             },
-            "scope": 9627,
-            "src": "83:36:46",
+            "scope": 9692,
+            "src": "192:36:46",
             "stateMutability": "payable",
             "virtual": false,
             "visibility": "external"
@@ -229,7 +239,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "2e1a7d4d",
-            "id": 9626,
+            "id": 9691,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -237,18 +247,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 9624,
+              "id": 9689,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 9623,
+                  "id": 9688,
                   "mutability": "mutable",
                   "name": "wad",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 9626,
-                  "src": "143:8:46",
+                  "scope": 9691,
+                  "src": "252:8:46",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -256,10 +266,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 9622,
+                    "id": 9687,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "143:4:46",
+                    "src": "252:4:46",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -269,26 +279,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "142:10:46"
+              "src": "251:10:46"
             },
             "returnParameters": {
-              "id": 9625,
+              "id": 9690,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "161:0:46"
+              "src": "270:0:46"
             },
-            "scope": 9627,
-            "src": "125:37:46",
+            "scope": 9692,
+            "src": "234:37:46",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 9628,
-        "src": "60:105:46"
+        "scope": 9693,
+        "src": "169:105:46"
       }
     ],
-    "src": "33:132:46"
+    "src": "33:241:46"
   },
   "compiler": {
     "name": "solc",
@@ -296,9 +306,12 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-14T12:08:04.251Z",
+  "updatedAt": "2020-10-16T11:56:47.994Z",
   "devdoc": {
-    "methods": {}
+    "author": "Alexander Schlindwein",
+    "details": "Simplified interface for WETH",
+    "methods": {},
+    "title": "IIdeaToken"
   },
   "userdoc": {
     "methods": {}
