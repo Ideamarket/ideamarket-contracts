@@ -47,6 +47,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                     uint platformFeeRate);
 
     event NewToken(uint id, uint marketID, string name, address addr);
+    event NewTradingFee(uint marketID, uint tradingFeeRate);
+    event NewPlatformFee(uint marketID, uint platformFeeRate);
 
     /**
      * @dev Initializes the contract
@@ -244,6 +246,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
         MarketDetails storage marketDetails = _markets[marketID].marketDetails;
         require(marketDetails.exists, "setTradingFee: market does not exist");
         marketDetails.tradingFeeRate = tradingFeeRate;
+        
+        emit NewTradingFee(marketID, tradingFeeRate);
     }
 
     /**
@@ -256,5 +260,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
         MarketDetails storage marketDetails = _markets[marketID].marketDetails;
         require(marketDetails.exists, "setPlatformFee: market does not exist");
         marketDetails.platformFeeRate = platformFeeRate;
+
+        emit NewPlatformFee(marketID, platformFeeRate);
     }
 }
