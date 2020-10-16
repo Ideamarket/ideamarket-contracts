@@ -42,6 +42,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
     event TokensBought(address ideaToken, uint amount, uint rawCost, uint finalCost);
     event TokensSold(address ideaToken, uint amount, uint rawPrice, uint finalPrice);
+    event NewInterestWithdrawer(address ideaToken, address withdrawer);
+    event NewPlatformFeeWithdrawer(uint marketID, address withdrawer);
 
     /**
      * @dev Initializes the contract
@@ -310,6 +312,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     function authorizeInterestWithdrawer(address token, address withdrawer) external override {
         require(msg.sender == _owner || msg.sender == _authorizedInterestWithdrawers[token], "authorizeInterestWithdrawer: not authorized");
         _authorizedInterestWithdrawers[token] = withdrawer;
+
+        emit NewInterestWithdrawer(token, withdrawer);
     }
 
     /**
@@ -350,6 +354,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     function authorizePlatformFeeWithdrawer(uint marketID, address withdrawer) external override {
         require(msg.sender == _owner || msg.sender == _authorizedPlatformFeeWithdrawers[marketID], "authorizePlatformFeeWithdrawer: not authorized");
         _authorizedPlatformFeeWithdrawers[marketID] = withdrawer;
+
+        emit NewPlatformFeeWithdrawer(marketID, withdrawer);
     }
 
     /**
