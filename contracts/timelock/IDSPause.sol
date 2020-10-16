@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.9;
 
+/**
+ * @title IIdeaToken
+ * @author Alexander Schlindwein
+ *
+ * @dev Interface for the timelock
+ */
 interface IDSPause {
     function setOwner(address owner) external;
     function setDelay(uint delay) external;

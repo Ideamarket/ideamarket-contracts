@@ -6,6 +6,12 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./IIdeaToken.sol";
 import "./nameVerifiers/IIdeaTokenNameVerifier.sol";
 
+/**
+ * @title IIdeaTokenFactory
+ * @author Alexander Schlindwein
+ *
+ * @dev Interface for IdeaTokenFactory
+ */
 interface IIdeaTokenFactory {
 
     struct IDPair {

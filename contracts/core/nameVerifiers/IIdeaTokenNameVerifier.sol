@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.9;
 
+/**
+ * @title IIdeaTokenNameVerifier
+ * @author Alexander Schlindwein
+ *
+ * @dev Interface for token name verifiers
+ */
 interface IIdeaTokenNameVerifier {
     function verifyTokenName(string calldata name) external pure returns (bool);
 }
