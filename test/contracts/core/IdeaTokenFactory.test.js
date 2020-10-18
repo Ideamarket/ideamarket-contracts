@@ -99,16 +99,6 @@ contract('core/IdeaTokenFactory', async accounts => {
 			),
 			'addMarket: invalid parameters'
 		)
-
-		await expectRevert(
-			ideaTokenFactory.addMarket(
-				marketName, '0x0000000000000000000000000000000000000000',
-				baseCost, priceRise,
-				tradingFeeRate, platformFeeRate,
-				{ from : adminAccount }
-			),
-			'addMarket: invalid parameters'
-		)
 	})
 
 	it('only admin can add market', async () => {
