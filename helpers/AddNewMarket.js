@@ -8,7 +8,6 @@ async function run() {
 	const nameVerifierName = await shared.getInput('name of name verifier')
 	const rawBaseCost = await shared.getInput('baseCost in dai')
 	const rawPriceRise = await shared.getInput('priceRise in dai')
-	const rawTokensPerInterval = await shared.getInput('tokens per interval')
 	const rawTradingFee = await shared.getInput('trading fee in percent')
 	const rawPlatformFee = await shared.getInput('platform fee in percent')
 
@@ -24,7 +23,6 @@ async function run() {
 	const nameVerifier = shared.loadDeployedAddress(network, nameVerifierName.charAt(0).toLowerCase() + nameVerifierName.slice(1))
 	const baseCost = shared.toWei(rawBaseCost)
 	const priceRise = shared.toWei(rawPriceRise)
-	const tokensPerInterval = shared.toWei(rawTokensPerInterval)
 	const tradingFee = shared.percentageFeeToFeeRate(rawTradingFee, 10000)
 	const platformFee = shared.percentageFeeToFeeRate(rawPlatformFee, 10000)
 
@@ -48,7 +46,6 @@ async function run() {
 	console.log('name verifier address:', nameVerifier)
 	console.log('base cost:', baseCost.toString())
 	console.log('price rise:', priceRise.toString())
-	console.log('tokens per interval:', tokensPerInterval.toString())
 	console.log('trading fee rate:', tradingFee.toString())
 	console.log('platform fee rate:', platformFee.toString())
 	console.log('execution timestamp:', executionTimestamp.toString())
@@ -68,7 +65,6 @@ async function run() {
 			nameVerifier,
 			baseCost.toString(),
 			priceRise.toString(),
-			tokensPerInterval.toString(),
 			tradingFee.toString(),
 			platformFee.toString()
 		]
