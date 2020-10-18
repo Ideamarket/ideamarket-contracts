@@ -83,12 +83,10 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         
         IIdeaToken(ideaToken).burn(msg.sender, amount);
 
-        // TODO: Make this more efficient
+        _interestManager.accrueInterest();
         uint finalRedeemed = _interestManager.redeem(address(this), finalPrice);
-        uint tradingFeeRedeemed = _interestManager.redeem(address(_interestManager), tradingFee);
-        _interestManager.invest(tradingFee);
-        uint platformFeeRedeemed = _interestManager.redeem(address(_interestManager), platformFee);
-        _interestManager.invest(platformFee);
+        uint tradingFeeRedeemed = _interestManager.underlyingToInvestmentToken(tradingFee);
+        uint platformFeeRedeemed = _interestManager.underlyingToInvestmentToken(platformFee);
 
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
         exchangeInfo.invested = exchangeInfo.invested.sub(finalRedeemed.add(tradingFeeRedeemed).add(platformFeeRedeemed));
@@ -187,11 +185,13 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         require(_dai.allowance(msg.sender, address(this)) >= finalCost, "buyTokens: not enough allowance");
         require(_dai.transferFrom(msg.sender, address(_interestManager), finalCost), "buyTokens: dai transfer failed");
         
-        // TODO: Can we do a single invest call? Worried about rounding errors when dividing
+        _interestManager.accrueInterest();
+        _interestManager.invest(finalCost);
+
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
-        exchangeInfo.invested = exchangeInfo.invested.add(_interestManager.invest(rawCost));
-        _tradingFeeInvested = _tradingFeeInvested.add(_interestManager.invest(tradingFee));
-        _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(_interestManager.invest(platformFee));
+        exchangeInfo.invested = exchangeInfo.invested.add(_interestManager.underlyingToInvestmentToken(rawCost));
+        _tradingFeeInvested = _tradingFeeInvested.add(_interestManager.underlyingToInvestmentToken(tradingFee));
+        _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(_interestManager.underlyingToInvestmentToken(platformFee));
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(rawCost);
     
         emit TokensBought(ideaToken, actualAmount, rawCost, finalCost);
@@ -280,9 +280,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      */
     function getInterestPayable(address token) public view returns (uint) {
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
-        return exchangeInfo.invested.mul(_interestManager.getExchangeRate())
-                                    .div(10**18)
-                                    .sub(exchangeInfo.daiInToken);
+        return _interestManager.investmentTokenToUnderlying(exchangeInfo.invested).sub(exchangeInfo.daiInToken);
     }
 
     /**
@@ -324,7 +322,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @return The platform fee available to be paid out
      */
     function getPlatformFeePayable(uint marketID) public view returns (uint) {
-        return _platformFeeInvested[marketID].mul(_interestManager.getExchangeRate()).div(10**18);
+        return _interestManager.investmentTokenToUnderlying(_platformFeeInvested[marketID]);
     }
 
     /**
@@ -360,7 +358,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @return The trading fee available to be paid out
      */
     function getTradingFeePayable() public view returns (uint) {
-        return _tradingFeeInvested.mul(_interestManager.getExchangeRate()).div(10**18);
+        return _interestManager.investmentTokenToUnderlying(_tradingFeeInvested);
     }
 
     /**

@@ -43,7 +43,7 @@ contract TestCDai is ERC20, ICToken {
         require(_dai.allowance(msg.sender, address(this)) >= mintAmount, "cDai mint: not enough allowance");
         require(_dai.transferFrom(msg.sender, address(this), mintAmount), "cDai mint: dai transfer failed");
 
-        uint cDaiAmount = mintAmount.mul(10 ** 18).div(exchangeRateStored());
+        uint cDaiAmount = divScalarByExpTruncate(mintAmount, exchangeRateStored());
         _mint(msg.sender, cDaiAmount);
 
         // Mint some COMP for the msg.sender
@@ -57,7 +57,7 @@ contract TestCDai is ERC20, ICToken {
      * @param redeemAmount The amount of Dai to redeem
      */
     function redeemUnderlying(uint redeemAmount) external override returns (uint) {
-        uint cDaiAmount = redeemAmount.mul(10 ** 18).div(exchangeRateStored());
+        uint cDaiAmount = divScalarByExpTruncate(redeemAmount, exchangeRateStored());
         require(balanceOf(msg.sender) >= cDaiAmount, "cDai redeemUnderlying: not enough balance");
 
         _burn(msg.sender, cDaiAmount);
@@ -77,7 +77,7 @@ contract TestCDai is ERC20, ICToken {
         require(balanceOf(msg.sender) >= redeemAmount, "cDai redeem: not enough balance");
         _burn(msg.sender, redeemAmount);
 
-        uint daiAmount = redeemAmount.mul(_exchangeRate).div(10**18);
+        uint daiAmount = mulScalarTruncate(exchangeRateStored(), redeemAmount);
         uint daiBalance = _dai.balanceOf(address(this));
         if(daiBalance < daiAmount) {
             _dai.mint(address(this), daiAmount - daiBalance);
@@ -102,5 +102,38 @@ contract TestCDai is ERC20, ICToken {
      */
     function exchangeRateStored() public view override returns (uint) {
         return _exchangeRate;
+    }
+
+    // ====================================== COMPOUND MATH ======================================
+    // https://github.com/compound-finance/compound-protocol/blob/master/contracts/Exponential.sol
+    //
+    // Modified to revert instead of returning an error code
+
+    function mulScalarTruncate(uint a, uint scalar) pure internal returns (uint) {
+        uint product = mulScalar(a, scalar);
+        return truncate(product);
+    }
+
+    function mulScalar(uint a, uint scalar) pure internal returns (uint) {
+        return a.mul(scalar);
+    }
+
+    function divScalarByExpTruncate(uint scalar, uint divisor) pure internal returns (uint) {
+        uint fraction = divScalarByExp(scalar, divisor);
+        return truncate(fraction);
+    }
+
+    function divScalarByExp(uint scalar, uint divisor) pure internal returns (uint) {
+        uint numerator = uint(10**18).mul(scalar);
+        return getExp(numerator, divisor);
+    }
+
+    function getExp(uint num, uint denom) pure internal returns (uint) {
+        uint scaledNumerator = num.mul(10**18);
+        return scaledNumerator.div(denom);
+    }
+
+    function truncate(uint num) pure internal returns (uint) {
+        return num / 10**18;
     }
 }

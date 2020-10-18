@@ -14,6 +14,6 @@ interface IInterestManager {
     function donateInterest(uint amount) external;
     function redeemDonated(uint amount) external;
     function accrueInterest() external;
-    function redeemComp() external;
-    function getExchangeRate() external view returns (uint);
+    function underlyingToInvestmentToken(uint underlyingAmount) external view returns (uint);
+    function investmentTokenToUnderlying(uint investmentTokenAmount) external view returns (uint);
 }

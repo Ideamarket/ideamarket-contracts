@@ -137,11 +137,58 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * @dev Returns the exchange rate cDai -> Dai
+     * @dev Converts an amount of underlying tokens to an amount of investment tokens
      *
-     * @return The exchange rate cDai -> Dai
+     * @param underlyingAmount The amount of underlying tokens
+     *
+     * @return The amount of investment tokens
      */
-    function getExchangeRate() external view returns (uint) {
-        return _cDai.exchangeRateStored();
+    function underlyingToInvestmentToken(uint underlyingAmount) external view returns (uint) {
+        return divScalarByExpTruncate(underlyingAmount, _cDai.exchangeRateStored());
     }
+
+    /**
+     * @dev Converts an amount of investment tokens to an amount of underlying tokens
+     *
+     * @param investmentTokenAmount The amount of investment tokens
+     *
+     * @return The amount of underlying tokens
+     */
+    function investmentTokenToUnderlying(uint investmentTokenAmount) external view returns (uint) {
+        return mulScalarTruncate(investmentTokenAmount, _cDai.exchangeRateStored());
+    }
+
+    // ====================================== COMPOUND MATH ======================================
+    // https://github.com/compound-finance/compound-protocol/blob/master/contracts/Exponential.sol
+    //
+    // Modified to revert instead of returning an error code
+
+    function mulScalarTruncate(uint a, uint scalar) pure internal returns (uint) {
+        uint product = mulScalar(a, scalar);
+        return truncate(product);
+    }
+
+    function mulScalar(uint a, uint scalar) pure internal returns (uint) {
+        return a.mul(scalar);
+    }
+
+    function divScalarByExpTruncate(uint scalar, uint divisor) pure internal returns (uint) {
+        uint fraction = divScalarByExp(scalar, divisor);
+        return truncate(fraction);
+    }
+
+    function divScalarByExp(uint scalar, uint divisor) pure internal returns (uint) {
+        uint numerator = uint(10**18).mul(scalar);
+        return getExp(numerator, divisor);
+    }
+
+    function getExp(uint num, uint denom) pure internal returns (uint) {
+        uint scaledNumerator = num.mul(10**18);
+        return scaledNumerator.div(denom);
+    }
+
+    function truncate(uint num) pure internal returns (uint) {
+        return num / 10**18;
+    }
+
 }
