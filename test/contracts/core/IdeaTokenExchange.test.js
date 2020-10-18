@@ -17,9 +17,8 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 	const marketName = 'main'
 	const tokenName = 'test.com'
-	const baseCost = new BN('1000000000000000000') // 10**18
+	const basePrice = new BN('1000000000000000000') // 10**18
 	const priceRise = new BN('100000000000000000') // 10**17
-	const tokensPerInterval = new BN('100000000000000000000') // 10**20
 	const tradingFeeRate = new BN('100')
 	const platformFeeRate = new BN('50')
 	const feeScale = new BN('10000')
@@ -74,9 +73,8 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 		await ideaTokenFactory.addMarket(marketName,
 			domainNoSubdomainNameVerifier.address,
-			baseCost,
+			basePrice,
 			priceRise,
-			tokensPerInterval,
 			tradingFeeRate,
 			platformFeeRate,
 			{from: adminAccount})
@@ -94,8 +92,8 @@ contract('core/IdeaTokenExchange', async accounts => {
 	it('admin is owner', async () => {
 		assert.equal(adminAccount, await ideaTokenExchange.getOwner())
 	})
-  
-	it('can buy and sell 500 tokens with correct interest', async () => {
+  /*
+	it('can buy and sell for 500 dai with correct interest', async () => {
 		const amount = new BN('250').mul(tenPow18)
 		const initialExchangeRate = tenPow18
 		const firstCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
@@ -268,7 +266,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 		await ideaTokenExchange.withdrawTradingFee()
 		assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(finalTradingFee))
 		assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(new BN('0')))
-	})
+	})*/
 
 	it('fail buy/sell - invalid token', async () => {
 		await expectRevert(
@@ -282,20 +280,20 @@ contract('core/IdeaTokenExchange', async accounts => {
 		)
 	})
 
-	it('fail buy/sell - max cost / minPrice', async () => {
+	it.only('fail buy/sell - max cost / minPrice', async () => {
 		const amount = tenPow18
-		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
+		const output = await ideaTokenExchange.getBuyOutput(ideaToken.address, amount)
 
 		await expectRevert(
-			ideaTokenExchange.buyTokens(ideaToken.address, amount, cost.sub(new BN('1')), userAccount),
+			ideaTokenExchange.buyTokens(ideaToken.address, amount, output.add(new BN('1')), userAccount),
 			'buyTokens: cost exceeds maxCost'
 		)
 
-		await dai.mint(userAccount, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, userAccount)
+		await dai.mint(userAccount, amount)
+		await dai.approve(ideaTokenExchange.address, amount)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, output, userAccount)
 
-		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tenPow18)
+		const price = await ideaTokenExchange.getSellOutput(ideaToken.address, output)
 
 		await expectRevert(
 			ideaTokenExchange.sellTokens(ideaToken.address, amount, price.add(new BN('1')), userAccount),
@@ -305,33 +303,11 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 	it('fail buy - not enough allowance', async () => {
 		const amount = tenPow18
-		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
-		await dai.mint(userAccount, cost)
+		await dai.mint(userAccount, amount)
 
 		await expectRevert(
 			ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, userAccount),
 			'buyTokens: not enough allowance'
-		)
-	})
-
-	it('fail buy/sell - not enough tokens', async () => {
-		const amount = tenPow18
-		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
-		await dai.mint(userAccount, cost.sub(new BN('1')))
-		await dai.approve(ideaTokenExchange.address, cost)
-
-		await expectRevert(
-			ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, userAccount),
-			'ERC20: transfer amount exceeds balance'
-		)
-
-		await dai.mint(adminAccount, new BN(cost))
-		await dai.approve(ideaTokenExchange.address, cost, { from: adminAccount })
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, adminAccount, { from: adminAccount })
-
-		await expectRevert(
-			ideaTokenExchange.sellTokens(ideaToken.address, new BN('1'), new BN('0'), userAccount),
-			'sellTokens: not enough tokens'
 		)
 	})
 
@@ -412,9 +388,8 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 	async function getTradingFeeForBuying(token, amount) {
 		const supply = await token.totalSupply()
-		const rawCost = getRawCostForBuyingTokens(baseCost,
+		const rawCost = getRawCostForBuyingTokens(basePrice,
 			priceRise,
-			tokensPerInterval,
 			supply,
 			amount)
 
@@ -423,9 +398,8 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 	async function getTradingFeeForSelling(token, amount) {
 		const supply = await token.totalSupply()
-		const rawPrice = getRawPriceForSellingTokens(baseCost,
+		const rawPrice = getRawPriceForSellingTokens(basePrice,
 			priceRise,
-			tokensPerInterval,
 			supply,
 			amount)
 
@@ -434,9 +408,8 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 	async function getPlatformFeeForBuying(token, amount) {
 		const supply = await token.totalSupply()
-		const rawCost = getRawCostForBuyingTokens(baseCost,
+		const rawCost = getRawCostForBuyingTokens(basePrice,
 			priceRise,
-			tokensPerInterval,
 			supply,
 			amount)
 
@@ -445,9 +418,8 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 	async function getPlatformFeeForSelling(token, amount) {
 		const supply = await token.totalSupply()
-		const rawPrice = getRawPriceForSellingTokens(baseCost,
+		const rawPrice = getRawPriceForSellingTokens(basePrice,
 			priceRise,
-			tokensPerInterval,
 			supply,
 			amount)
 
@@ -456,9 +428,8 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 	async function getCostForBuyingTokens(token, amount) {
 		const supply = await token.totalSupply()
-		const rawCost = getRawCostForBuyingTokens(baseCost,
+		const rawCost = getRawCostForBuyingTokens(basePrice,
 			priceRise,
-			tokensPerInterval,
 			supply,
 			amount)
 
@@ -470,9 +441,8 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 	async function getPriceForSellingTokens(token, amount) {
 		const supply = await token.totalSupply()
-		const rawPrice = getRawPriceForSellingTokens(baseCost,
+		const rawPrice = getRawPriceForSellingTokens(basePrice,
 			priceRise,
-			tokensPerInterval,
 			supply,
 			amount)
 

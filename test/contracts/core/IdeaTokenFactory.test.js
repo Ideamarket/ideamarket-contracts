@@ -8,9 +8,8 @@ contract('core/IdeaTokenFactory', async accounts => {
 
 	const tokenName = 'example.com'
 	const marketName = 'testMarket'
-	const baseCost = new BN('1000000000000000000') // 10**18
+	const basePrice = new BN('1000000000000000000') // 10**18
 	const priceRise = new BN('100000000000000000') // 10**17
-	const tokensPerInterval = new BN('100000000000000000000') // 10**20
 	const tradingFeeRate = new BN('100')
 	const platformFeeRate = new BN('50')
 
@@ -34,7 +33,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.new()
 		await ideaTokenFactory.addMarket(
 			marketName,  nameVerifier.address,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -50,9 +49,8 @@ contract('core/IdeaTokenFactory', async accounts => {
 			marketName,
 			nameVerifier.address,
 			'0', // numTokens
-			baseCost.toString(),
+			basePrice.toString(),
 			priceRise.toString(),
-			tokensPerInterval.toString(),
 			tradingFeeRate.toString(),
 			platformFeeRate.toString()
 		]
@@ -65,7 +63,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.new()
 		await ideaTokenFactory.addMarket(
 			marketName,  nameVerifier.address,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -73,7 +71,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		await expectRevert(
 			ideaTokenFactory.addMarket(
 				marketName,  nameVerifier.address,
-				baseCost, priceRise, tokensPerInterval,
+				basePrice, priceRise,
 				tradingFeeRate, platformFeeRate,
 				{ from: adminAccount }
 			),
@@ -85,7 +83,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		await expectRevert(
 			ideaTokenFactory.addMarket(
 				marketName, '0x0000000000000000000000000000000000000000',
-				new BN('0'), priceRise, tokensPerInterval,
+				new BN('0'), priceRise,
 				tradingFeeRate, platformFeeRate, 
 				{ from : adminAccount }
 			),
@@ -95,7 +93,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		await expectRevert(
 			ideaTokenFactory.addMarket(
 				marketName, '0x0000000000000000000000000000000000000000',
-				baseCost, new BN('0'), tokensPerInterval,
+				basePrice, new BN('0'),
 				tradingFeeRate, platformFeeRate,
 				{ from : adminAccount }
 			),
@@ -105,7 +103,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		await expectRevert(
 			ideaTokenFactory.addMarket(
 				marketName, '0x0000000000000000000000000000000000000000',
-				baseCost, priceRise, new BN('0'),
+				basePrice, priceRise, new BN('0'),
 				tradingFeeRate, platformFeeRate,
 				{ from : adminAccount }
 			),
@@ -117,7 +115,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		await expectRevert(
 			ideaTokenFactory.addMarket(
 				marketName, '0x0000000000000000000000000000000000000000',
-				baseCost, priceRise, tokensPerInterval,
+				basePrice, priceRise,
 				tradingFeeRate, platformFeeRate,
 				{ from: userAccount }
 			),
@@ -129,7 +127,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.new()
 		await ideaTokenFactory.addMarket(
 			marketName,  nameVerifier.address,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -143,9 +141,8 @@ contract('core/IdeaTokenFactory', async accounts => {
 			marketName,
 			nameVerifier.address,
 			'1', // numTokens
-			baseCost.toString(),
+			basePrice.toString(),
 			priceRise.toString(),
-			tokensPerInterval.toString(),
 			tradingFeeRate.toString(),
 			platformFeeRate.toString()
 		]
@@ -157,7 +154,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.new()
 		await ideaTokenFactory.addMarket(
 			marketName,  nameVerifier.address,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -172,7 +169,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.new()
 		await ideaTokenFactory.addMarket(
 			marketName,  nameVerifier.address,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -188,7 +185,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.new()
 		await ideaTokenFactory.addMarket(
 			marketName,  nameVerifier.address,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -203,7 +200,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 	it('can set trading fee', async () => {
 		await ideaTokenFactory.addMarket(
 			marketName,  zeroAddress,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -216,7 +213,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 	it('fail user sets trading fee', async () => {
 		await ideaTokenFactory.addMarket(
 			marketName,  zeroAddress,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -230,7 +227,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 	it('fail set trading fee invalid market', async () => {
 		await ideaTokenFactory.addMarket(
 			marketName,  zeroAddress,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -244,7 +241,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 	it('can set platform fee', async () => {
 		await ideaTokenFactory.addMarket(
 			marketName,  zeroAddress,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -257,7 +254,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 	it('fail user sets platform fee', async () => {
 		await ideaTokenFactory.addMarket(
 			marketName,  zeroAddress,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)
@@ -271,7 +268,7 @@ contract('core/IdeaTokenFactory', async accounts => {
 	it('fail set platform fee invalid market', async () => {
 		await ideaTokenFactory.addMarket(
 			marketName,  zeroAddress,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate,
 			{ from: adminAccount }
 		)

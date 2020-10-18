@@ -21,27 +21,27 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"verifyTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Interface for token name verifiers\",\"methods\":{},\"title\":\"IIdeaTokenNameVerifier\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":\"IIdeaTokenNameVerifier\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0x9124b51007226bd7bad5d36d7c28b6af674c52ce70907c6981777756ad7f6678\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9b5b993cb27764e9f11acbdfdae559e65a9ca861e369cfbfb5af3a23dff06fe1\",\"dweb:/ipfs/QmcTN4dp7JjghhM6XFTqMNBVJ3ACHYqdu6V5XbQiHJgseY\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"verifyTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Interface for token name verifiers\",\"methods\":{},\"title\":\"IIdeaTokenNameVerifier\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":\"IIdeaTokenNameVerifier\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0x9124b51007226bd7bad5d36d7c28b6af674c52ce70907c6981777756ad7f6678\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9b5b993cb27764e9f11acbdfdae559e65a9ca861e369cfbfb5af3a23dff06fe1\",\"dweb:/ipfs/QmcTN4dp7JjghhM6XFTqMNBVJ3ACHYqdu6V5XbQiHJgseY\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\n/**\r\n * @title IIdeaTokenNameVerifier\r\n * @author Alexander Schlindwein\r\n *\r\n * @dev Interface for token name verifiers\r\n */\r\ninterface IIdeaTokenNameVerifier {\r\n    function verifyTokenName(string calldata name) external pure returns (bool);\r\n}",
-  "sourcePath": "C:\\Users\\alexa\\Desktop\\ideamarket-contracts\\contracts\\core\\nameVerifiers\\IIdeaTokenNameVerifier.sol",
+  "sourcePath": "C:\\Users\\Alexander\\Desktop\\ideamarket-contracts\\contracts\\core\\nameVerifiers\\IIdeaTokenNameVerifier.sol",
   "ast": {
-    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
+    "absolutePath": "/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
     "exportedSymbols": {
       "IIdeaTokenNameVerifier": [
-        3200
+        3011
       ]
     },
-    "id": 3201,
+    "id": 3012,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3191,
+        "id": 3002,
         "literals": [
           "solidity",
           "^",
@@ -57,15 +57,15 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 3192,
+          "id": 3003,
           "nodeType": "StructuredDocumentation",
           "src": "60:124:12",
           "text": " @title IIdeaTokenNameVerifier\n @author Alexander Schlindwein\n @dev Interface for token name verifiers"
         },
         "fullyImplemented": false,
-        "id": 3200,
+        "id": 3011,
         "linearizedBaseContracts": [
-          3200
+          3011
         ],
         "name": "IIdeaTokenNameVerifier",
         "nodeType": "ContractDefinition",
@@ -74,7 +74,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "4c8bc1c9",
-            "id": 3199,
+            "id": 3010,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -82,17 +82,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3195,
+              "id": 3006,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3194,
+                  "id": 3005,
                   "mutability": "mutable",
                   "name": "name",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3199,
+                  "scope": 3010,
                   "src": "251:20:12",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -101,7 +101,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3193,
+                    "id": 3004,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "251:6:12",
@@ -117,17 +117,17 @@
               "src": "250:22:12"
             },
             "returnParameters": {
-              "id": 3198,
+              "id": 3009,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3197,
+                  "id": 3008,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3199,
+                  "scope": 3010,
                   "src": "296:4:12",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -136,7 +136,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3196,
+                    "id": 3007,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "296:4:12",
@@ -151,32 +151,32 @@
               ],
               "src": "295:6:12"
             },
-            "scope": 3200,
+            "scope": 3011,
             "src": "226:76:12",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3201,
+        "scope": 3012,
         "src": "186:119:12"
       }
     ],
     "src": "33:272:12"
   },
   "legacyAST": {
-    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
+    "absolutePath": "/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
     "exportedSymbols": {
       "IIdeaTokenNameVerifier": [
-        3200
+        3011
       ]
     },
-    "id": 3201,
+    "id": 3012,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3191,
+        "id": 3002,
         "literals": [
           "solidity",
           "^",
@@ -192,15 +192,15 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 3192,
+          "id": 3003,
           "nodeType": "StructuredDocumentation",
           "src": "60:124:12",
           "text": " @title IIdeaTokenNameVerifier\n @author Alexander Schlindwein\n @dev Interface for token name verifiers"
         },
         "fullyImplemented": false,
-        "id": 3200,
+        "id": 3011,
         "linearizedBaseContracts": [
-          3200
+          3011
         ],
         "name": "IIdeaTokenNameVerifier",
         "nodeType": "ContractDefinition",
@@ -209,7 +209,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "4c8bc1c9",
-            "id": 3199,
+            "id": 3010,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -217,17 +217,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3195,
+              "id": 3006,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3194,
+                  "id": 3005,
                   "mutability": "mutable",
                   "name": "name",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3199,
+                  "scope": 3010,
                   "src": "251:20:12",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -236,7 +236,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3193,
+                    "id": 3004,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "251:6:12",
@@ -252,17 +252,17 @@
               "src": "250:22:12"
             },
             "returnParameters": {
-              "id": 3198,
+              "id": 3009,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3197,
+                  "id": 3008,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3199,
+                  "scope": 3010,
                   "src": "296:4:12",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -271,7 +271,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3196,
+                    "id": 3007,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "296:4:12",
@@ -286,14 +286,14 @@
               ],
               "src": "295:6:12"
             },
-            "scope": 3200,
+            "scope": 3011,
             "src": "226:76:12",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3201,
+        "scope": 3012,
         "src": "186:119:12"
       }
     ],
@@ -304,8 +304,8 @@
     "version": "0.6.9+commit.3e3065ac.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-16T11:56:47.772Z",
+  "schemaVersion": "3.3.0",
+  "updatedAt": "2020-10-18T10:34:42.924Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Interface for token name verifiers",

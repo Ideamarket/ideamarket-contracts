@@ -18,31 +18,30 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function",
-      "constant": true
+      "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"verifyTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains\",\"methods\":{\"verifyTokenName(string)\":{\"details\":\"Verifies whether a string matches the required format\",\"params\":{\"name\":\"The input string (domain name)\"},\"returns\":{\"_0\":\"Bool; True=matches, False=does not match\"}}},\"title\":\"DomainNoSubdomainNameVerifier\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol\":\"DomainNoSubdomainNameVerifier\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol\":{\"keccak256\":\"0x0f393706ecd41fe568877a5d09dac5b4d3a31c3f25a455af5371c6ea531620b9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d840db0961a17430f3554a58537e62e941d86ac886d3e879953b0f2dad0a0a63\",\"dweb:/ipfs/QmdDygHJjV82quoL68kuKQjg2q2uNfTMswA3KtgqFCunMZ\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0x9124b51007226bd7bad5d36d7c28b6af674c52ce70907c6981777756ad7f6678\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9b5b993cb27764e9f11acbdfdae559e65a9ca861e369cfbfb5af3a23dff06fe1\",\"dweb:/ipfs/QmcTN4dp7JjghhM6XFTqMNBVJ3ACHYqdu6V5XbQiHJgseY\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50610377806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c80634c8bc1c914610030575b600080fd5b6100a76004803603602081101561004657600080fd5b810190808035906020019064010000000081111561006357600080fd5b82018360208201111561007557600080fd5b8035906020019184600183028401116401000000008311171561009757600080fd5b90919293919293905050506100c1565b604051808215151515815260200191505060405180910390f35b6000606083838080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050905060008090506000809050600080905060008090505b845181101561032057600085828151811061013857fe5b602001015160f81c60f81b9050603060f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916101580156101a15750603960f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191611155b1580156102075750606160f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916101580156102055750607a60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191611155b155b80156102395750602d60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b801561026b5750602e60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b801561029d5750605f60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b156102b1576000965050505050505061033b565b602e60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614156102fd5783156102f4576000965050505050505061033b565b60019350610312565b831561030c5760019250610311565b600194505b5b508080600101915050610121565b5082801561032b5750815b80156103345750805b9450505050505b9291505056fea264697066735822122012e3e4a788d2a07fe9b84a96e92de7b51bf7e00a4d2d56885fa9e7e94237832064736f6c63430006090033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c80634c8bc1c914610030575b600080fd5b6100a76004803603602081101561004657600080fd5b810190808035906020019064010000000081111561006357600080fd5b82018360208201111561007557600080fd5b8035906020019184600183028401116401000000008311171561009757600080fd5b90919293919293905050506100c1565b604051808215151515815260200191505060405180910390f35b6000606083838080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050905060008090506000809050600080905060008090505b845181101561032057600085828151811061013857fe5b602001015160f81c60f81b9050603060f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916101580156101a15750603960f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191611155b1580156102075750606160f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916101580156102055750607a60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191611155b155b80156102395750602d60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b801561026b5750602e60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b801561029d5750605f60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b156102b1576000965050505050505061033b565b602e60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614156102fd5783156102f4576000965050505050505061033b565b60019350610312565b831561030c5760019250610311565b600194505b5b508080600101915050610121565b5082801561032b5750815b80156103345750805b9450505050505b9291505056fea264697066735822122012e3e4a788d2a07fe9b84a96e92de7b51bf7e00a4d2d56885fa9e7e94237832064736f6c63430006090033",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"verifyTokenName\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains\",\"methods\":{\"verifyTokenName(string)\":{\"details\":\"Verifies whether a string matches the required format\",\"params\":{\"name\":\"The input string (domain name)\"},\"returns\":{\"_0\":\"Bool; True=matches, False=does not match\"}}},\"title\":\"DomainNoSubdomainNameVerifier\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol\":\"DomainNoSubdomainNameVerifier\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol\":{\"keccak256\":\"0x0f393706ecd41fe568877a5d09dac5b4d3a31c3f25a455af5371c6ea531620b9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d840db0961a17430f3554a58537e62e941d86ac886d3e879953b0f2dad0a0a63\",\"dweb:/ipfs/QmdDygHJjV82quoL68kuKQjg2q2uNfTMswA3KtgqFCunMZ\"]},\"/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0x9124b51007226bd7bad5d36d7c28b6af674c52ce70907c6981777756ad7f6678\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9b5b993cb27764e9f11acbdfdae559e65a9ca861e369cfbfb5af3a23dff06fe1\",\"dweb:/ipfs/QmcTN4dp7JjghhM6XFTqMNBVJ3ACHYqdu6V5XbQiHJgseY\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610377806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c80634c8bc1c914610030575b600080fd5b6100a76004803603602081101561004657600080fd5b810190808035906020019064010000000081111561006357600080fd5b82018360208201111561007557600080fd5b8035906020019184600183028401116401000000008311171561009757600080fd5b90919293919293905050506100c1565b604051808215151515815260200191505060405180910390f35b6000606083838080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050905060008090506000809050600080905060008090505b845181101561032057600085828151811061013857fe5b602001015160f81c60f81b9050603060f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916101580156101a15750603960f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191611155b1580156102075750606160f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916101580156102055750607a60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191611155b155b80156102395750602d60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b801561026b5750602e60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b801561029d5750605f60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b156102b1576000965050505050505061033b565b602e60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614156102fd5783156102f4576000965050505050505061033b565b60019350610312565b831561030c5760019250610311565b600194505b5b508080600101915050610121565b5082801561032b5750815b80156103345750805b9450505050505b9291505056fea26469706673582212205d6255e7118752ca3bb2deca830c6d856b7a54fcaeaadc75e2a0e12963ad86fd64736f6c63430006090033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c80634c8bc1c914610030575b600080fd5b6100a76004803603602081101561004657600080fd5b810190808035906020019064010000000081111561006357600080fd5b82018360208201111561007557600080fd5b8035906020019184600183028401116401000000008311171561009757600080fd5b90919293919293905050506100c1565b604051808215151515815260200191505060405180910390f35b6000606083838080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050905060008090506000809050600080905060008090505b845181101561032057600085828151811061013857fe5b602001015160f81c60f81b9050603060f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916101580156101a15750603960f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191611155b1580156102075750606160f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916101580156102055750607a60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191611155b155b80156102395750602d60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b801561026b5750602e60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b801561029d5750605f60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614155b156102b1576000965050505050505061033b565b602e60f81b817effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614156102fd5783156102f4576000965050505050505061033b565b60019350610312565b831561030c5760019250610311565b600194505b5b508080600101915050610121565b5082801561032b5750815b80156103345750805b9450505050505b9291505056fea26469706673582212205d6255e7118752ca3bb2deca830c6d856b7a54fcaeaadc75e2a0e12963ad86fd64736f6c63430006090033",
   "immutableReferences": {},
   "sourceMap": "288:1357:11:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "288:1357:11:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;569:1073;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;648:4;665:14;688:4;;665:28;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;704:14;721:5;704:22;;737:11;751:5;737:19;;767:11;781:5;767:19;;803:6;812:1;803:10;;799:787;819:1;:8;815:1;:12;799:787;;;849:11;863:1;865;863:4;;;;;;;;;;;;;;;;849:18;;896:4;888:12;;:4;:12;;;;;:28;;;;;912:4;904:12;;:4;:12;;;;;888:28;886:31;:89;;;;;954:4;946:12;;:4;:12;;;;;:28;;;;;970:4;962:12;;:4;:12;;;;;946:28;944:31;886:89;:131;;;;;1012:4;1004:12;;:4;:12;;;;1002:15;886:131;:171;;;;;1052:4;1044:12;;:4;:12;;;;1042:15;886:171;:211;;;;;1092:4;1084:12;;:4;:12;;;;1082:15;886:211;882:275;;;1132:5;1125:12;;;;;;;;;;882:275;1186:4;1178:12;;:4;:12;;;;1174:401;;;1219:6;1216:138;;;1329:5;1322:12;;;;;;;;;;1216:138;1381:4;1372:13;;1174:401;;;1430:6;1427:132;;;1470:4;1461:13;;1427:132;;;1535:4;1523:16;;1427:132;1174:401;799:787;829:3;;;;;;;799:787;;;;1605:9;:19;;;;;1618:6;1605:19;:29;;;;;1628:6;1605:29;1598:36;;;;;;569:1073;;;;;:::o",
   "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\nimport \"./IIdeaTokenNameVerifier.sol\";\r\n\r\n/**\r\n * @title DomainNoSubdomainNameVerifier\r\n * @author Alexander Schlindwein\r\n *\r\n * @dev Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains\r\n */\r\ncontract DomainNoSubdomainNameVerifier is IIdeaTokenNameVerifier {\r\n    /**\r\n     * @dev Verifies whether a string matches the required format\r\n     *\r\n     * @param name The input string (domain name)\r\n     *\r\n     * @return Bool; True=matches, False=does not match\r\n     */\r\n    function verifyTokenName(string calldata name) external pure override returns (bool) {\r\n        bytes memory b = bytes(name);\r\n        bool hasDomain = false;\r\n        bool hasDot = false;\r\n        bool hasTLD = false;\r\n\r\n        for(uint i = 0; i < b.length; i++) {\r\n            bytes1 char = b[i];\r\n            if (!(char >= 0x30 && char <= 0x39) && //9-0\r\n                !(char >= 0x61 && char <= 0x7A) && //a-z\r\n                !(char == 0x2D) && //-\r\n                !(char == 0x2E) && //.\r\n                !(char == 0x5F)) {//_\r\n                    return false;\r\n                }\r\n\r\n             if (char == 0x2E) { // .\r\n                if(hasDot) {\r\n                    // There is already a dot -> no subdomains allowed\r\n                    return false;\r\n                }\r\n                hasDot = true;\r\n             } else {\r\n                if(hasDot) {\r\n                    hasTLD = true;\r\n                } else {\r\n                    hasDomain = true;\r\n                }\r\n             }\r\n        }\r\n\r\n        return hasDomain && hasDot && hasTLD;\r\n    }\r\n}\r\n",
-  "sourcePath": "C:/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol",
+  "sourcePath": "C:/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol",
   "ast": {
-    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol",
+    "absolutePath": "/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol",
     "exportedSymbols": {
       "DomainNoSubdomainNameVerifier": [
-        3189
+        3000
       ]
     },
-    "id": 3190,
+    "id": 3001,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3062,
+        "id": 2873,
         "literals": [
           "solidity",
           "^",
@@ -53,12 +52,12 @@
         "src": "33:23:11"
       },
       {
-        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
+        "absolutePath": "/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
         "file": "./IIdeaTokenNameVerifier.sol",
-        "id": 3063,
+        "id": 2874,
         "nodeType": "ImportDirective",
-        "scope": 3190,
-        "sourceUnit": 3201,
+        "scope": 3001,
+        "sourceUnit": 3012,
         "src": "60:38:11",
         "symbolAliases": [],
         "unitAlias": ""
@@ -70,62 +69,62 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 3065,
+              "id": 2876,
               "name": "IIdeaTokenNameVerifier",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3200,
+              "referencedDeclaration": 3011,
               "src": "330:22:11",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3200",
+                "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3011",
                 "typeString": "contract IIdeaTokenNameVerifier"
               }
             },
-            "id": 3066,
+            "id": 2877,
             "nodeType": "InheritanceSpecifier",
             "src": "330:22:11"
           }
         ],
         "contractDependencies": [
-          3200
+          3011
         ],
         "contractKind": "contract",
         "documentation": {
-          "id": 3064,
+          "id": 2875,
           "nodeType": "StructuredDocumentation",
           "src": "102:184:11",
           "text": " @title DomainNoSubdomainNameVerifier\n @author Alexander Schlindwein\n @dev Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains"
         },
         "fullyImplemented": true,
-        "id": 3189,
+        "id": 3000,
         "linearizedBaseContracts": [
-          3189,
-          3200
+          3000,
+          3011
         ],
         "name": "DomainNoSubdomainNameVerifier",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "baseFunctions": [
-              3199
+              3010
             ],
             "body": {
-              "id": 3187,
+              "id": 2998,
               "nodeType": "Block",
               "src": "654:988:11",
               "statements": [
                 {
                   "assignments": [
-                    3076
+                    2887
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 3076,
+                      "id": 2887,
                       "mutability": "mutable",
                       "name": "b",
                       "nodeType": "VariableDeclaration",
                       "overrides": null,
-                      "scope": 3187,
+                      "scope": 2998,
                       "src": "665:14:11",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -134,7 +133,7 @@
                         "typeString": "bytes"
                       },
                       "typeName": {
-                        "id": 3075,
+                        "id": 2886,
                         "name": "bytes",
                         "nodeType": "ElementaryTypeName",
                         "src": "665:5:11",
@@ -147,17 +146,17 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 3081,
+                  "id": 2892,
                   "initialValue": {
                     "argumentTypes": null,
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3079,
+                        "id": 2890,
                         "name": "name",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3069,
+                        "referencedDeclaration": 2880,
                         "src": "688:4:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_calldata_ptr",
@@ -172,7 +171,7 @@
                           "typeString": "string calldata"
                         }
                       ],
-                      "id": 3078,
+                      "id": 2889,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -184,7 +183,7 @@
                         "typeString": "type(bytes storage pointer)"
                       },
                       "typeName": {
-                        "id": 3077,
+                        "id": 2888,
                         "name": "bytes",
                         "nodeType": "ElementaryTypeName",
                         "src": "682:5:11",
@@ -194,7 +193,7 @@
                         }
                       }
                     },
-                    "id": 3080,
+                    "id": 2891,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -214,17 +213,17 @@
                 },
                 {
                   "assignments": [
-                    3083
+                    2894
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 3083,
+                      "id": 2894,
                       "mutability": "mutable",
                       "name": "hasDomain",
                       "nodeType": "VariableDeclaration",
                       "overrides": null,
-                      "scope": 3187,
+                      "scope": 2998,
                       "src": "704:14:11",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -233,7 +232,7 @@
                         "typeString": "bool"
                       },
                       "typeName": {
-                        "id": 3082,
+                        "id": 2893,
                         "name": "bool",
                         "nodeType": "ElementaryTypeName",
                         "src": "704:4:11",
@@ -246,11 +245,11 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 3085,
+                  "id": 2896,
                   "initialValue": {
                     "argumentTypes": null,
                     "hexValue": "66616c7365",
-                    "id": 3084,
+                    "id": 2895,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -270,17 +269,17 @@
                 },
                 {
                   "assignments": [
-                    3087
+                    2898
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 3087,
+                      "id": 2898,
                       "mutability": "mutable",
                       "name": "hasDot",
                       "nodeType": "VariableDeclaration",
                       "overrides": null,
-                      "scope": 3187,
+                      "scope": 2998,
                       "src": "737:11:11",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -289,7 +288,7 @@
                         "typeString": "bool"
                       },
                       "typeName": {
-                        "id": 3086,
+                        "id": 2897,
                         "name": "bool",
                         "nodeType": "ElementaryTypeName",
                         "src": "737:4:11",
@@ -302,11 +301,11 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 3089,
+                  "id": 2900,
                   "initialValue": {
                     "argumentTypes": null,
                     "hexValue": "66616c7365",
-                    "id": 3088,
+                    "id": 2899,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -326,17 +325,17 @@
                 },
                 {
                   "assignments": [
-                    3091
+                    2902
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 3091,
+                      "id": 2902,
                       "mutability": "mutable",
                       "name": "hasTLD",
                       "nodeType": "VariableDeclaration",
                       "overrides": null,
-                      "scope": 3187,
+                      "scope": 2998,
                       "src": "767:11:11",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -345,7 +344,7 @@
                         "typeString": "bool"
                       },
                       "typeName": {
-                        "id": 3090,
+                        "id": 2901,
                         "name": "bool",
                         "nodeType": "ElementaryTypeName",
                         "src": "767:4:11",
@@ -358,11 +357,11 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 3093,
+                  "id": 2904,
                   "initialValue": {
                     "argumentTypes": null,
                     "hexValue": "66616c7365",
-                    "id": 3092,
+                    "id": 2903,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -382,23 +381,23 @@
                 },
                 {
                   "body": {
-                    "id": 3179,
+                    "id": 2990,
                     "nodeType": "Block",
                     "src": "834:752:11",
                     "statements": [
                       {
                         "assignments": [
-                          3106
+                          2917
                         ],
                         "declarations": [
                           {
                             "constant": false,
-                            "id": 3106,
+                            "id": 2917,
                             "mutability": "mutable",
                             "name": "char",
                             "nodeType": "VariableDeclaration",
                             "overrides": null,
-                            "scope": 3179,
+                            "scope": 2990,
                             "src": "849:11:11",
                             "stateVariable": false,
                             "storageLocation": "default",
@@ -407,7 +406,7 @@
                               "typeString": "bytes1"
                             },
                             "typeName": {
-                              "id": 3105,
+                              "id": 2916,
                               "name": "bytes1",
                               "nodeType": "ElementaryTypeName",
                               "src": "849:6:11",
@@ -420,30 +419,30 @@
                             "visibility": "internal"
                           }
                         ],
-                        "id": 3110,
+                        "id": 2921,
                         "initialValue": {
                           "argumentTypes": null,
                           "baseExpression": {
                             "argumentTypes": null,
-                            "id": 3107,
+                            "id": 2918,
                             "name": "b",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3076,
+                            "referencedDeclaration": 2887,
                             "src": "863:1:11",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes_memory_ptr",
                               "typeString": "bytes memory"
                             }
                           },
-                          "id": 3109,
+                          "id": 2920,
                           "indexExpression": {
                             "argumentTypes": null,
-                            "id": 3108,
+                            "id": 2919,
                             "name": "i",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3095,
+                            "referencedDeclaration": 2906,
                             "src": "865:1:11",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -471,7 +470,7 @@
                             "typeIdentifier": "t_bool",
                             "typeString": "bool"
                           },
-                          "id": 3147,
+                          "id": 2958,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -482,7 +481,7 @@
                               "typeIdentifier": "t_bool",
                               "typeString": "bool"
                             },
-                            "id": 3141,
+                            "id": 2952,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -493,7 +492,7 @@
                                 "typeIdentifier": "t_bool",
                                 "typeString": "bool"
                               },
-                              "id": 3135,
+                              "id": 2946,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -504,14 +503,14 @@
                                   "typeIdentifier": "t_bool",
                                   "typeString": "bool"
                                 },
-                                "id": 3129,
+                                "id": 2940,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "leftExpression": {
                                   "argumentTypes": null,
-                                  "id": 3119,
+                                  "id": 2930,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": false,
@@ -529,7 +528,7 @@
                                           "typeIdentifier": "t_bool",
                                           "typeString": "bool"
                                         },
-                                        "id": 3117,
+                                        "id": 2928,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": false,
@@ -540,18 +539,18 @@
                                             "typeIdentifier": "t_bytes1",
                                             "typeString": "bytes1"
                                           },
-                                          "id": 3113,
+                                          "id": 2924,
                                           "isConstant": false,
                                           "isLValue": false,
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "leftExpression": {
                                             "argumentTypes": null,
-                                            "id": 3111,
+                                            "id": 2922,
                                             "name": "char",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 3106,
+                                            "referencedDeclaration": 2917,
                                             "src": "888:4:11",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_bytes1",
@@ -563,7 +562,7 @@
                                           "rightExpression": {
                                             "argumentTypes": null,
                                             "hexValue": "30783330",
-                                            "id": 3112,
+                                            "id": 2923,
                                             "isConstant": false,
                                             "isLValue": false,
                                             "isPure": true,
@@ -592,18 +591,18 @@
                                             "typeIdentifier": "t_bytes1",
                                             "typeString": "bytes1"
                                           },
-                                          "id": 3116,
+                                          "id": 2927,
                                           "isConstant": false,
                                           "isLValue": false,
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "leftExpression": {
                                             "argumentTypes": null,
-                                            "id": 3114,
+                                            "id": 2925,
                                             "name": "char",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 3106,
+                                            "referencedDeclaration": 2917,
                                             "src": "904:4:11",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_bytes1",
@@ -615,7 +614,7 @@
                                           "rightExpression": {
                                             "argumentTypes": null,
                                             "hexValue": "30783339",
-                                            "id": 3115,
+                                            "id": 2926,
                                             "isConstant": false,
                                             "isLValue": false,
                                             "isPure": true,
@@ -643,7 +642,7 @@
                                         }
                                       }
                                     ],
-                                    "id": 3118,
+                                    "id": 2929,
                                     "isConstant": false,
                                     "isInlineArray": false,
                                     "isLValue": false,
@@ -665,7 +664,7 @@
                                 "operator": "&&",
                                 "rightExpression": {
                                   "argumentTypes": null,
-                                  "id": 3128,
+                                  "id": 2939,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": false,
@@ -683,7 +682,7 @@
                                           "typeIdentifier": "t_bool",
                                           "typeString": "bool"
                                         },
-                                        "id": 3126,
+                                        "id": 2937,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": false,
@@ -694,18 +693,18 @@
                                             "typeIdentifier": "t_bytes1",
                                             "typeString": "bytes1"
                                           },
-                                          "id": 3122,
+                                          "id": 2933,
                                           "isConstant": false,
                                           "isLValue": false,
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "leftExpression": {
                                             "argumentTypes": null,
-                                            "id": 3120,
+                                            "id": 2931,
                                             "name": "char",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 3106,
+                                            "referencedDeclaration": 2917,
                                             "src": "946:4:11",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_bytes1",
@@ -717,7 +716,7 @@
                                           "rightExpression": {
                                             "argumentTypes": null,
                                             "hexValue": "30783631",
-                                            "id": 3121,
+                                            "id": 2932,
                                             "isConstant": false,
                                             "isLValue": false,
                                             "isPure": true,
@@ -746,18 +745,18 @@
                                             "typeIdentifier": "t_bytes1",
                                             "typeString": "bytes1"
                                           },
-                                          "id": 3125,
+                                          "id": 2936,
                                           "isConstant": false,
                                           "isLValue": false,
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "leftExpression": {
                                             "argumentTypes": null,
-                                            "id": 3123,
+                                            "id": 2934,
                                             "name": "char",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 3106,
+                                            "referencedDeclaration": 2917,
                                             "src": "962:4:11",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_bytes1",
@@ -769,7 +768,7 @@
                                           "rightExpression": {
                                             "argumentTypes": null,
                                             "hexValue": "30783741",
-                                            "id": 3124,
+                                            "id": 2935,
                                             "isConstant": false,
                                             "isLValue": false,
                                             "isPure": true,
@@ -797,7 +796,7 @@
                                         }
                                       }
                                     ],
-                                    "id": 3127,
+                                    "id": 2938,
                                     "isConstant": false,
                                     "isInlineArray": false,
                                     "isLValue": false,
@@ -825,7 +824,7 @@
                               "operator": "&&",
                               "rightExpression": {
                                 "argumentTypes": null,
-                                "id": 3134,
+                                "id": 2945,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
@@ -843,18 +842,18 @@
                                         "typeIdentifier": "t_bytes1",
                                         "typeString": "bytes1"
                                       },
-                                      "id": 3132,
+                                      "id": 2943,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "leftExpression": {
                                         "argumentTypes": null,
-                                        "id": 3130,
+                                        "id": 2941,
                                         "name": "char",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 3106,
+                                        "referencedDeclaration": 2917,
                                         "src": "1004:4:11",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_bytes1",
@@ -866,7 +865,7 @@
                                       "rightExpression": {
                                         "argumentTypes": null,
                                         "hexValue": "30783244",
-                                        "id": 3131,
+                                        "id": 2942,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": true,
@@ -888,7 +887,7 @@
                                       }
                                     }
                                   ],
-                                  "id": 3133,
+                                  "id": 2944,
                                   "isConstant": false,
                                   "isInlineArray": false,
                                   "isLValue": false,
@@ -916,7 +915,7 @@
                             "operator": "&&",
                             "rightExpression": {
                               "argumentTypes": null,
-                              "id": 3140,
+                              "id": 2951,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -934,18 +933,18 @@
                                       "typeIdentifier": "t_bytes1",
                                       "typeString": "bytes1"
                                     },
-                                    "id": 3138,
+                                    "id": 2949,
                                     "isConstant": false,
                                     "isLValue": false,
                                     "isPure": false,
                                     "lValueRequested": false,
                                     "leftExpression": {
                                       "argumentTypes": null,
-                                      "id": 3136,
+                                      "id": 2947,
                                       "name": "char",
                                       "nodeType": "Identifier",
                                       "overloadedDeclarations": [],
-                                      "referencedDeclaration": 3106,
+                                      "referencedDeclaration": 2917,
                                       "src": "1044:4:11",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_bytes1",
@@ -957,7 +956,7 @@
                                     "rightExpression": {
                                       "argumentTypes": null,
                                       "hexValue": "30783245",
-                                      "id": 3137,
+                                      "id": 2948,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": true,
@@ -979,7 +978,7 @@
                                     }
                                   }
                                 ],
-                                "id": 3139,
+                                "id": 2950,
                                 "isConstant": false,
                                 "isInlineArray": false,
                                 "isLValue": false,
@@ -1007,7 +1006,7 @@
                           "operator": "&&",
                           "rightExpression": {
                             "argumentTypes": null,
-                            "id": 3146,
+                            "id": 2957,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -1025,18 +1024,18 @@
                                     "typeIdentifier": "t_bytes1",
                                     "typeString": "bytes1"
                                   },
-                                  "id": 3144,
+                                  "id": 2955,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "leftExpression": {
                                     "argumentTypes": null,
-                                    "id": 3142,
+                                    "id": 2953,
                                     "name": "char",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 3106,
+                                    "referencedDeclaration": 2917,
                                     "src": "1084:4:11",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_bytes1",
@@ -1048,7 +1047,7 @@
                                   "rightExpression": {
                                     "argumentTypes": null,
                                     "hexValue": "30783546",
-                                    "id": 3143,
+                                    "id": 2954,
                                     "isConstant": false,
                                     "isLValue": false,
                                     "isPure": true,
@@ -1070,7 +1069,7 @@
                                   }
                                 }
                               ],
-                              "id": 3145,
+                              "id": 2956,
                               "isConstant": false,
                               "isInlineArray": false,
                               "isLValue": false,
@@ -1095,11 +1094,11 @@
                           }
                         },
                         "falseBody": null,
-                        "id": 3151,
+                        "id": 2962,
                         "nodeType": "IfStatement",
                         "src": "882:275:11",
                         "trueBody": {
-                          "id": 3150,
+                          "id": 2961,
                           "nodeType": "Block",
                           "src": "1099:58:11",
                           "statements": [
@@ -1107,7 +1106,7 @@
                               "expression": {
                                 "argumentTypes": null,
                                 "hexValue": "66616c7365",
-                                "id": 3148,
+                                "id": 2959,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": true,
@@ -1122,8 +1121,8 @@
                                 },
                                 "value": "false"
                               },
-                              "functionReturnParameters": 3074,
-                              "id": 3149,
+                              "functionReturnParameters": 2885,
+                              "id": 2960,
                               "nodeType": "Return",
                               "src": "1125:12:11"
                             }
@@ -1137,18 +1136,18 @@
                             "typeIdentifier": "t_bytes1",
                             "typeString": "bytes1"
                           },
-                          "id": 3154,
+                          "id": 2965,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
                             "argumentTypes": null,
-                            "id": 3152,
+                            "id": 2963,
                             "name": "char",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3106,
+                            "referencedDeclaration": 2917,
                             "src": "1178:4:11",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes1",
@@ -1160,7 +1159,7 @@
                           "rightExpression": {
                             "argumentTypes": null,
                             "hexValue": "30783245",
-                            "id": 3153,
+                            "id": 2964,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -1182,18 +1181,18 @@
                           }
                         },
                         "falseBody": {
-                          "id": 3177,
+                          "id": 2988,
                           "nodeType": "Block",
                           "src": "1408:167:11",
                           "statements": [
                             {
                               "condition": {
                                 "argumentTypes": null,
-                                "id": 3165,
+                                "id": 2976,
                                 "name": "hasDot",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 3087,
+                                "referencedDeclaration": 2898,
                                 "src": "1430:6:11",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_bool",
@@ -1201,25 +1200,25 @@
                                 }
                               },
                               "falseBody": {
-                                "id": 3175,
+                                "id": 2986,
                                 "nodeType": "Block",
                                 "src": "1500:59:11",
                                 "statements": [
                                   {
                                     "expression": {
                                       "argumentTypes": null,
-                                      "id": 3173,
+                                      "id": 2984,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "leftHandSide": {
                                         "argumentTypes": null,
-                                        "id": 3171,
+                                        "id": 2982,
                                         "name": "hasDomain",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 3083,
+                                        "referencedDeclaration": 2894,
                                         "src": "1523:9:11",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_bool",
@@ -1231,7 +1230,7 @@
                                       "rightHandSide": {
                                         "argumentTypes": null,
                                         "hexValue": "74727565",
-                                        "id": 3172,
+                                        "id": 2983,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": true,
@@ -1252,35 +1251,35 @@
                                         "typeString": "bool"
                                       }
                                     },
-                                    "id": 3174,
+                                    "id": 2985,
                                     "nodeType": "ExpressionStatement",
                                     "src": "1523:16:11"
                                   }
                                 ]
                               },
-                              "id": 3176,
+                              "id": 2987,
                               "nodeType": "IfStatement",
                               "src": "1427:132:11",
                               "trueBody": {
-                                "id": 3170,
+                                "id": 2981,
                                 "nodeType": "Block",
                                 "src": "1438:56:11",
                                 "statements": [
                                   {
                                     "expression": {
                                       "argumentTypes": null,
-                                      "id": 3168,
+                                      "id": 2979,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "leftHandSide": {
                                         "argumentTypes": null,
-                                        "id": 3166,
+                                        "id": 2977,
                                         "name": "hasTLD",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 3091,
+                                        "referencedDeclaration": 2902,
                                         "src": "1461:6:11",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_bool",
@@ -1292,7 +1291,7 @@
                                       "rightHandSide": {
                                         "argumentTypes": null,
                                         "hexValue": "74727565",
-                                        "id": 3167,
+                                        "id": 2978,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": true,
@@ -1313,7 +1312,7 @@
                                         "typeString": "bool"
                                       }
                                     },
-                                    "id": 3169,
+                                    "id": 2980,
                                     "nodeType": "ExpressionStatement",
                                     "src": "1461:13:11"
                                   }
@@ -1322,22 +1321,22 @@
                             }
                           ]
                         },
-                        "id": 3178,
+                        "id": 2989,
                         "nodeType": "IfStatement",
                         "src": "1174:401:11",
                         "trueBody": {
-                          "id": 3164,
+                          "id": 2975,
                           "nodeType": "Block",
                           "src": "1192:210:11",
                           "statements": [
                             {
                               "condition": {
                                 "argumentTypes": null,
-                                "id": 3155,
+                                "id": 2966,
                                 "name": "hasDot",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 3087,
+                                "referencedDeclaration": 2898,
                                 "src": "1219:6:11",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_bool",
@@ -1345,11 +1344,11 @@
                                 }
                               },
                               "falseBody": null,
-                              "id": 3159,
+                              "id": 2970,
                               "nodeType": "IfStatement",
                               "src": "1216:138:11",
                               "trueBody": {
-                                "id": 3158,
+                                "id": 2969,
                                 "nodeType": "Block",
                                 "src": "1227:127:11",
                                 "statements": [
@@ -1357,7 +1356,7 @@
                                     "expression": {
                                       "argumentTypes": null,
                                       "hexValue": "66616c7365",
-                                      "id": 3156,
+                                      "id": 2967,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": true,
@@ -1372,8 +1371,8 @@
                                       },
                                       "value": "false"
                                     },
-                                    "functionReturnParameters": 3074,
-                                    "id": 3157,
+                                    "functionReturnParameters": 2885,
+                                    "id": 2968,
                                     "nodeType": "Return",
                                     "src": "1322:12:11"
                                   }
@@ -1383,18 +1382,18 @@
                             {
                               "expression": {
                                 "argumentTypes": null,
-                                "id": 3162,
+                                "id": 2973,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "leftHandSide": {
                                   "argumentTypes": null,
-                                  "id": 3160,
+                                  "id": 2971,
                                   "name": "hasDot",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 3087,
+                                  "referencedDeclaration": 2898,
                                   "src": "1372:6:11",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_bool",
@@ -1406,7 +1405,7 @@
                                 "rightHandSide": {
                                   "argumentTypes": null,
                                   "hexValue": "74727565",
-                                  "id": 3161,
+                                  "id": 2972,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": true,
@@ -1427,7 +1426,7 @@
                                   "typeString": "bool"
                                 }
                               },
-                              "id": 3163,
+                              "id": 2974,
                               "nodeType": "ExpressionStatement",
                               "src": "1372:13:11"
                             }
@@ -1442,18 +1441,18 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 3101,
+                    "id": 2912,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 3098,
+                      "id": 2909,
                       "name": "i",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3095,
+                      "referencedDeclaration": 2906,
                       "src": "815:1:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -1466,18 +1465,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3099,
+                        "id": 2910,
                         "name": "b",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3076,
+                        "referencedDeclaration": 2887,
                         "src": "819:1:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_memory_ptr",
                           "typeString": "bytes memory"
                         }
                       },
-                      "id": 3100,
+                      "id": 2911,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1497,20 +1496,20 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 3180,
+                  "id": 2991,
                   "initializationExpression": {
                     "assignments": [
-                      3095
+                      2906
                     ],
                     "declarations": [
                       {
                         "constant": false,
-                        "id": 3095,
+                        "id": 2906,
                         "mutability": "mutable",
                         "name": "i",
                         "nodeType": "VariableDeclaration",
                         "overrides": null,
-                        "scope": 3180,
+                        "scope": 2991,
                         "src": "803:6:11",
                         "stateVariable": false,
                         "storageLocation": "default",
@@ -1519,7 +1518,7 @@
                           "typeString": "uint256"
                         },
                         "typeName": {
-                          "id": 3094,
+                          "id": 2905,
                           "name": "uint",
                           "nodeType": "ElementaryTypeName",
                           "src": "803:4:11",
@@ -1532,11 +1531,11 @@
                         "visibility": "internal"
                       }
                     ],
-                    "id": 3097,
+                    "id": 2908,
                     "initialValue": {
                       "argumentTypes": null,
                       "hexValue": "30",
-                      "id": 3096,
+                      "id": 2907,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1557,7 +1556,7 @@
                   "loopExpression": {
                     "expression": {
                       "argumentTypes": null,
-                      "id": 3103,
+                      "id": 2914,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1568,11 +1567,11 @@
                       "src": "829:3:11",
                       "subExpression": {
                         "argumentTypes": null,
-                        "id": 3102,
+                        "id": 2913,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3095,
+                        "referencedDeclaration": 2906,
                         "src": "829:1:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1584,7 +1583,7 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 3104,
+                    "id": 2915,
                     "nodeType": "ExpressionStatement",
                     "src": "829:3:11"
                   },
@@ -1598,7 +1597,7 @@
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     },
-                    "id": 3185,
+                    "id": 2996,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1609,18 +1608,18 @@
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
                       },
-                      "id": 3183,
+                      "id": 2994,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "leftExpression": {
                         "argumentTypes": null,
-                        "id": 3181,
+                        "id": 2992,
                         "name": "hasDomain",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3083,
+                        "referencedDeclaration": 2894,
                         "src": "1605:9:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
@@ -1631,11 +1630,11 @@
                       "operator": "&&",
                       "rightExpression": {
                         "argumentTypes": null,
-                        "id": 3182,
+                        "id": 2993,
                         "name": "hasDot",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3087,
+                        "referencedDeclaration": 2898,
                         "src": "1618:6:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
@@ -1652,11 +1651,11 @@
                     "operator": "&&",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 3184,
+                      "id": 2995,
                       "name": "hasTLD",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3091,
+                      "referencedDeclaration": 2902,
                       "src": "1628:6:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -1669,44 +1668,44 @@
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 3074,
-                  "id": 3186,
+                  "functionReturnParameters": 2885,
+                  "id": 2997,
                   "nodeType": "Return",
                   "src": "1598:36:11"
                 }
               ]
             },
             "documentation": {
-              "id": 3067,
+              "id": 2878,
               "nodeType": "StructuredDocumentation",
               "src": "360:203:11",
               "text": " @dev Verifies whether a string matches the required format\n @param name The input string (domain name)\n @return Bool; True=matches, False=does not match"
             },
             "functionSelector": "4c8bc1c9",
-            "id": 3188,
+            "id": 2999,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "verifyTokenName",
             "nodeType": "FunctionDefinition",
             "overrides": {
-              "id": 3071,
+              "id": 2882,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
               "src": "630:8:11"
             },
             "parameters": {
-              "id": 3070,
+              "id": 2881,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3069,
+                  "id": 2880,
                   "mutability": "mutable",
                   "name": "name",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3188,
+                  "scope": 2999,
                   "src": "594:20:11",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1715,7 +1714,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3068,
+                    "id": 2879,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "594:6:11",
@@ -1731,17 +1730,17 @@
               "src": "593:22:11"
             },
             "returnParameters": {
-              "id": 3074,
+              "id": 2885,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3073,
+                  "id": 2884,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3188,
+                  "scope": 2999,
                   "src": "648:4:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1750,7 +1749,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3072,
+                    "id": 2883,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "648:4:11",
@@ -1765,32 +1764,32 @@
               ],
               "src": "647:6:11"
             },
-            "scope": 3189,
+            "scope": 3000,
             "src": "569:1073:11",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3190,
+        "scope": 3001,
         "src": "288:1357:11"
       }
     ],
     "src": "33:1614:11"
   },
   "legacyAST": {
-    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol",
+    "absolutePath": "/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/DomainNoSubdomainNameVerifier.sol",
     "exportedSymbols": {
       "DomainNoSubdomainNameVerifier": [
-        3189
+        3000
       ]
     },
-    "id": 3190,
+    "id": 3001,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3062,
+        "id": 2873,
         "literals": [
           "solidity",
           "^",
@@ -1801,12 +1800,12 @@
         "src": "33:23:11"
       },
       {
-        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
+        "absolutePath": "/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol",
         "file": "./IIdeaTokenNameVerifier.sol",
-        "id": 3063,
+        "id": 2874,
         "nodeType": "ImportDirective",
-        "scope": 3190,
-        "sourceUnit": 3201,
+        "scope": 3001,
+        "sourceUnit": 3012,
         "src": "60:38:11",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1818,62 +1817,62 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 3065,
+              "id": 2876,
               "name": "IIdeaTokenNameVerifier",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3200,
+              "referencedDeclaration": 3011,
               "src": "330:22:11",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3200",
+                "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3011",
                 "typeString": "contract IIdeaTokenNameVerifier"
               }
             },
-            "id": 3066,
+            "id": 2877,
             "nodeType": "InheritanceSpecifier",
             "src": "330:22:11"
           }
         ],
         "contractDependencies": [
-          3200
+          3011
         ],
         "contractKind": "contract",
         "documentation": {
-          "id": 3064,
+          "id": 2875,
           "nodeType": "StructuredDocumentation",
           "src": "102:184:11",
           "text": " @title DomainNoSubdomainNameVerifier\n @author Alexander Schlindwein\n @dev Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains"
         },
         "fullyImplemented": true,
-        "id": 3189,
+        "id": 3000,
         "linearizedBaseContracts": [
-          3189,
-          3200
+          3000,
+          3011
         ],
         "name": "DomainNoSubdomainNameVerifier",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "baseFunctions": [
-              3199
+              3010
             ],
             "body": {
-              "id": 3187,
+              "id": 2998,
               "nodeType": "Block",
               "src": "654:988:11",
               "statements": [
                 {
                   "assignments": [
-                    3076
+                    2887
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 3076,
+                      "id": 2887,
                       "mutability": "mutable",
                       "name": "b",
                       "nodeType": "VariableDeclaration",
                       "overrides": null,
-                      "scope": 3187,
+                      "scope": 2998,
                       "src": "665:14:11",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -1882,7 +1881,7 @@
                         "typeString": "bytes"
                       },
                       "typeName": {
-                        "id": 3075,
+                        "id": 2886,
                         "name": "bytes",
                         "nodeType": "ElementaryTypeName",
                         "src": "665:5:11",
@@ -1895,17 +1894,17 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 3081,
+                  "id": 2892,
                   "initialValue": {
                     "argumentTypes": null,
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3079,
+                        "id": 2890,
                         "name": "name",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3069,
+                        "referencedDeclaration": 2880,
                         "src": "688:4:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_calldata_ptr",
@@ -1920,7 +1919,7 @@
                           "typeString": "string calldata"
                         }
                       ],
-                      "id": 3078,
+                      "id": 2889,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1932,7 +1931,7 @@
                         "typeString": "type(bytes storage pointer)"
                       },
                       "typeName": {
-                        "id": 3077,
+                        "id": 2888,
                         "name": "bytes",
                         "nodeType": "ElementaryTypeName",
                         "src": "682:5:11",
@@ -1942,7 +1941,7 @@
                         }
                       }
                     },
-                    "id": 3080,
+                    "id": 2891,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1962,17 +1961,17 @@
                 },
                 {
                   "assignments": [
-                    3083
+                    2894
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 3083,
+                      "id": 2894,
                       "mutability": "mutable",
                       "name": "hasDomain",
                       "nodeType": "VariableDeclaration",
                       "overrides": null,
-                      "scope": 3187,
+                      "scope": 2998,
                       "src": "704:14:11",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -1981,7 +1980,7 @@
                         "typeString": "bool"
                       },
                       "typeName": {
-                        "id": 3082,
+                        "id": 2893,
                         "name": "bool",
                         "nodeType": "ElementaryTypeName",
                         "src": "704:4:11",
@@ -1994,11 +1993,11 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 3085,
+                  "id": 2896,
                   "initialValue": {
                     "argumentTypes": null,
                     "hexValue": "66616c7365",
-                    "id": 3084,
+                    "id": 2895,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -2018,17 +2017,17 @@
                 },
                 {
                   "assignments": [
-                    3087
+                    2898
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 3087,
+                      "id": 2898,
                       "mutability": "mutable",
                       "name": "hasDot",
                       "nodeType": "VariableDeclaration",
                       "overrides": null,
-                      "scope": 3187,
+                      "scope": 2998,
                       "src": "737:11:11",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -2037,7 +2036,7 @@
                         "typeString": "bool"
                       },
                       "typeName": {
-                        "id": 3086,
+                        "id": 2897,
                         "name": "bool",
                         "nodeType": "ElementaryTypeName",
                         "src": "737:4:11",
@@ -2050,11 +2049,11 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 3089,
+                  "id": 2900,
                   "initialValue": {
                     "argumentTypes": null,
                     "hexValue": "66616c7365",
-                    "id": 3088,
+                    "id": 2899,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -2074,17 +2073,17 @@
                 },
                 {
                   "assignments": [
-                    3091
+                    2902
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 3091,
+                      "id": 2902,
                       "mutability": "mutable",
                       "name": "hasTLD",
                       "nodeType": "VariableDeclaration",
                       "overrides": null,
-                      "scope": 3187,
+                      "scope": 2998,
                       "src": "767:11:11",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -2093,7 +2092,7 @@
                         "typeString": "bool"
                       },
                       "typeName": {
-                        "id": 3090,
+                        "id": 2901,
                         "name": "bool",
                         "nodeType": "ElementaryTypeName",
                         "src": "767:4:11",
@@ -2106,11 +2105,11 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 3093,
+                  "id": 2904,
                   "initialValue": {
                     "argumentTypes": null,
                     "hexValue": "66616c7365",
-                    "id": 3092,
+                    "id": 2903,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -2130,23 +2129,23 @@
                 },
                 {
                   "body": {
-                    "id": 3179,
+                    "id": 2990,
                     "nodeType": "Block",
                     "src": "834:752:11",
                     "statements": [
                       {
                         "assignments": [
-                          3106
+                          2917
                         ],
                         "declarations": [
                           {
                             "constant": false,
-                            "id": 3106,
+                            "id": 2917,
                             "mutability": "mutable",
                             "name": "char",
                             "nodeType": "VariableDeclaration",
                             "overrides": null,
-                            "scope": 3179,
+                            "scope": 2990,
                             "src": "849:11:11",
                             "stateVariable": false,
                             "storageLocation": "default",
@@ -2155,7 +2154,7 @@
                               "typeString": "bytes1"
                             },
                             "typeName": {
-                              "id": 3105,
+                              "id": 2916,
                               "name": "bytes1",
                               "nodeType": "ElementaryTypeName",
                               "src": "849:6:11",
@@ -2168,30 +2167,30 @@
                             "visibility": "internal"
                           }
                         ],
-                        "id": 3110,
+                        "id": 2921,
                         "initialValue": {
                           "argumentTypes": null,
                           "baseExpression": {
                             "argumentTypes": null,
-                            "id": 3107,
+                            "id": 2918,
                             "name": "b",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3076,
+                            "referencedDeclaration": 2887,
                             "src": "863:1:11",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes_memory_ptr",
                               "typeString": "bytes memory"
                             }
                           },
-                          "id": 3109,
+                          "id": 2920,
                           "indexExpression": {
                             "argumentTypes": null,
-                            "id": 3108,
+                            "id": 2919,
                             "name": "i",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3095,
+                            "referencedDeclaration": 2906,
                             "src": "865:1:11",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -2219,7 +2218,7 @@
                             "typeIdentifier": "t_bool",
                             "typeString": "bool"
                           },
-                          "id": 3147,
+                          "id": 2958,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2230,7 +2229,7 @@
                               "typeIdentifier": "t_bool",
                               "typeString": "bool"
                             },
-                            "id": 3141,
+                            "id": 2952,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2241,7 +2240,7 @@
                                 "typeIdentifier": "t_bool",
                                 "typeString": "bool"
                               },
-                              "id": 3135,
+                              "id": 2946,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -2252,14 +2251,14 @@
                                   "typeIdentifier": "t_bool",
                                   "typeString": "bool"
                                 },
-                                "id": 3129,
+                                "id": 2940,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "leftExpression": {
                                   "argumentTypes": null,
-                                  "id": 3119,
+                                  "id": 2930,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": false,
@@ -2277,7 +2276,7 @@
                                           "typeIdentifier": "t_bool",
                                           "typeString": "bool"
                                         },
-                                        "id": 3117,
+                                        "id": 2928,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": false,
@@ -2288,18 +2287,18 @@
                                             "typeIdentifier": "t_bytes1",
                                             "typeString": "bytes1"
                                           },
-                                          "id": 3113,
+                                          "id": 2924,
                                           "isConstant": false,
                                           "isLValue": false,
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "leftExpression": {
                                             "argumentTypes": null,
-                                            "id": 3111,
+                                            "id": 2922,
                                             "name": "char",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 3106,
+                                            "referencedDeclaration": 2917,
                                             "src": "888:4:11",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_bytes1",
@@ -2311,7 +2310,7 @@
                                           "rightExpression": {
                                             "argumentTypes": null,
                                             "hexValue": "30783330",
-                                            "id": 3112,
+                                            "id": 2923,
                                             "isConstant": false,
                                             "isLValue": false,
                                             "isPure": true,
@@ -2340,18 +2339,18 @@
                                             "typeIdentifier": "t_bytes1",
                                             "typeString": "bytes1"
                                           },
-                                          "id": 3116,
+                                          "id": 2927,
                                           "isConstant": false,
                                           "isLValue": false,
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "leftExpression": {
                                             "argumentTypes": null,
-                                            "id": 3114,
+                                            "id": 2925,
                                             "name": "char",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 3106,
+                                            "referencedDeclaration": 2917,
                                             "src": "904:4:11",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_bytes1",
@@ -2363,7 +2362,7 @@
                                           "rightExpression": {
                                             "argumentTypes": null,
                                             "hexValue": "30783339",
-                                            "id": 3115,
+                                            "id": 2926,
                                             "isConstant": false,
                                             "isLValue": false,
                                             "isPure": true,
@@ -2391,7 +2390,7 @@
                                         }
                                       }
                                     ],
-                                    "id": 3118,
+                                    "id": 2929,
                                     "isConstant": false,
                                     "isInlineArray": false,
                                     "isLValue": false,
@@ -2413,7 +2412,7 @@
                                 "operator": "&&",
                                 "rightExpression": {
                                   "argumentTypes": null,
-                                  "id": 3128,
+                                  "id": 2939,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": false,
@@ -2431,7 +2430,7 @@
                                           "typeIdentifier": "t_bool",
                                           "typeString": "bool"
                                         },
-                                        "id": 3126,
+                                        "id": 2937,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": false,
@@ -2442,18 +2441,18 @@
                                             "typeIdentifier": "t_bytes1",
                                             "typeString": "bytes1"
                                           },
-                                          "id": 3122,
+                                          "id": 2933,
                                           "isConstant": false,
                                           "isLValue": false,
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "leftExpression": {
                                             "argumentTypes": null,
-                                            "id": 3120,
+                                            "id": 2931,
                                             "name": "char",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 3106,
+                                            "referencedDeclaration": 2917,
                                             "src": "946:4:11",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_bytes1",
@@ -2465,7 +2464,7 @@
                                           "rightExpression": {
                                             "argumentTypes": null,
                                             "hexValue": "30783631",
-                                            "id": 3121,
+                                            "id": 2932,
                                             "isConstant": false,
                                             "isLValue": false,
                                             "isPure": true,
@@ -2494,18 +2493,18 @@
                                             "typeIdentifier": "t_bytes1",
                                             "typeString": "bytes1"
                                           },
-                                          "id": 3125,
+                                          "id": 2936,
                                           "isConstant": false,
                                           "isLValue": false,
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "leftExpression": {
                                             "argumentTypes": null,
-                                            "id": 3123,
+                                            "id": 2934,
                                             "name": "char",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 3106,
+                                            "referencedDeclaration": 2917,
                                             "src": "962:4:11",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_bytes1",
@@ -2517,7 +2516,7 @@
                                           "rightExpression": {
                                             "argumentTypes": null,
                                             "hexValue": "30783741",
-                                            "id": 3124,
+                                            "id": 2935,
                                             "isConstant": false,
                                             "isLValue": false,
                                             "isPure": true,
@@ -2545,7 +2544,7 @@
                                         }
                                       }
                                     ],
-                                    "id": 3127,
+                                    "id": 2938,
                                     "isConstant": false,
                                     "isInlineArray": false,
                                     "isLValue": false,
@@ -2573,7 +2572,7 @@
                               "operator": "&&",
                               "rightExpression": {
                                 "argumentTypes": null,
-                                "id": 3134,
+                                "id": 2945,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
@@ -2591,18 +2590,18 @@
                                         "typeIdentifier": "t_bytes1",
                                         "typeString": "bytes1"
                                       },
-                                      "id": 3132,
+                                      "id": 2943,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "leftExpression": {
                                         "argumentTypes": null,
-                                        "id": 3130,
+                                        "id": 2941,
                                         "name": "char",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 3106,
+                                        "referencedDeclaration": 2917,
                                         "src": "1004:4:11",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_bytes1",
@@ -2614,7 +2613,7 @@
                                       "rightExpression": {
                                         "argumentTypes": null,
                                         "hexValue": "30783244",
-                                        "id": 3131,
+                                        "id": 2942,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": true,
@@ -2636,7 +2635,7 @@
                                       }
                                     }
                                   ],
-                                  "id": 3133,
+                                  "id": 2944,
                                   "isConstant": false,
                                   "isInlineArray": false,
                                   "isLValue": false,
@@ -2664,7 +2663,7 @@
                             "operator": "&&",
                             "rightExpression": {
                               "argumentTypes": null,
-                              "id": 3140,
+                              "id": 2951,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -2682,18 +2681,18 @@
                                       "typeIdentifier": "t_bytes1",
                                       "typeString": "bytes1"
                                     },
-                                    "id": 3138,
+                                    "id": 2949,
                                     "isConstant": false,
                                     "isLValue": false,
                                     "isPure": false,
                                     "lValueRequested": false,
                                     "leftExpression": {
                                       "argumentTypes": null,
-                                      "id": 3136,
+                                      "id": 2947,
                                       "name": "char",
                                       "nodeType": "Identifier",
                                       "overloadedDeclarations": [],
-                                      "referencedDeclaration": 3106,
+                                      "referencedDeclaration": 2917,
                                       "src": "1044:4:11",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_bytes1",
@@ -2705,7 +2704,7 @@
                                     "rightExpression": {
                                       "argumentTypes": null,
                                       "hexValue": "30783245",
-                                      "id": 3137,
+                                      "id": 2948,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": true,
@@ -2727,7 +2726,7 @@
                                     }
                                   }
                                 ],
-                                "id": 3139,
+                                "id": 2950,
                                 "isConstant": false,
                                 "isInlineArray": false,
                                 "isLValue": false,
@@ -2755,7 +2754,7 @@
                           "operator": "&&",
                           "rightExpression": {
                             "argumentTypes": null,
-                            "id": 3146,
+                            "id": 2957,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2773,18 +2772,18 @@
                                     "typeIdentifier": "t_bytes1",
                                     "typeString": "bytes1"
                                   },
-                                  "id": 3144,
+                                  "id": 2955,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "leftExpression": {
                                     "argumentTypes": null,
-                                    "id": 3142,
+                                    "id": 2953,
                                     "name": "char",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 3106,
+                                    "referencedDeclaration": 2917,
                                     "src": "1084:4:11",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_bytes1",
@@ -2796,7 +2795,7 @@
                                   "rightExpression": {
                                     "argumentTypes": null,
                                     "hexValue": "30783546",
-                                    "id": 3143,
+                                    "id": 2954,
                                     "isConstant": false,
                                     "isLValue": false,
                                     "isPure": true,
@@ -2818,7 +2817,7 @@
                                   }
                                 }
                               ],
-                              "id": 3145,
+                              "id": 2956,
                               "isConstant": false,
                               "isInlineArray": false,
                               "isLValue": false,
@@ -2843,11 +2842,11 @@
                           }
                         },
                         "falseBody": null,
-                        "id": 3151,
+                        "id": 2962,
                         "nodeType": "IfStatement",
                         "src": "882:275:11",
                         "trueBody": {
-                          "id": 3150,
+                          "id": 2961,
                           "nodeType": "Block",
                           "src": "1099:58:11",
                           "statements": [
@@ -2855,7 +2854,7 @@
                               "expression": {
                                 "argumentTypes": null,
                                 "hexValue": "66616c7365",
-                                "id": 3148,
+                                "id": 2959,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": true,
@@ -2870,8 +2869,8 @@
                                 },
                                 "value": "false"
                               },
-                              "functionReturnParameters": 3074,
-                              "id": 3149,
+                              "functionReturnParameters": 2885,
+                              "id": 2960,
                               "nodeType": "Return",
                               "src": "1125:12:11"
                             }
@@ -2885,18 +2884,18 @@
                             "typeIdentifier": "t_bytes1",
                             "typeString": "bytes1"
                           },
-                          "id": 3154,
+                          "id": 2965,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
                             "argumentTypes": null,
-                            "id": 3152,
+                            "id": 2963,
                             "name": "char",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3106,
+                            "referencedDeclaration": 2917,
                             "src": "1178:4:11",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes1",
@@ -2908,7 +2907,7 @@
                           "rightExpression": {
                             "argumentTypes": null,
                             "hexValue": "30783245",
-                            "id": 3153,
+                            "id": 2964,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -2930,18 +2929,18 @@
                           }
                         },
                         "falseBody": {
-                          "id": 3177,
+                          "id": 2988,
                           "nodeType": "Block",
                           "src": "1408:167:11",
                           "statements": [
                             {
                               "condition": {
                                 "argumentTypes": null,
-                                "id": 3165,
+                                "id": 2976,
                                 "name": "hasDot",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 3087,
+                                "referencedDeclaration": 2898,
                                 "src": "1430:6:11",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_bool",
@@ -2949,25 +2948,25 @@
                                 }
                               },
                               "falseBody": {
-                                "id": 3175,
+                                "id": 2986,
                                 "nodeType": "Block",
                                 "src": "1500:59:11",
                                 "statements": [
                                   {
                                     "expression": {
                                       "argumentTypes": null,
-                                      "id": 3173,
+                                      "id": 2984,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "leftHandSide": {
                                         "argumentTypes": null,
-                                        "id": 3171,
+                                        "id": 2982,
                                         "name": "hasDomain",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 3083,
+                                        "referencedDeclaration": 2894,
                                         "src": "1523:9:11",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_bool",
@@ -2979,7 +2978,7 @@
                                       "rightHandSide": {
                                         "argumentTypes": null,
                                         "hexValue": "74727565",
-                                        "id": 3172,
+                                        "id": 2983,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": true,
@@ -3000,35 +2999,35 @@
                                         "typeString": "bool"
                                       }
                                     },
-                                    "id": 3174,
+                                    "id": 2985,
                                     "nodeType": "ExpressionStatement",
                                     "src": "1523:16:11"
                                   }
                                 ]
                               },
-                              "id": 3176,
+                              "id": 2987,
                               "nodeType": "IfStatement",
                               "src": "1427:132:11",
                               "trueBody": {
-                                "id": 3170,
+                                "id": 2981,
                                 "nodeType": "Block",
                                 "src": "1438:56:11",
                                 "statements": [
                                   {
                                     "expression": {
                                       "argumentTypes": null,
-                                      "id": 3168,
+                                      "id": 2979,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "leftHandSide": {
                                         "argumentTypes": null,
-                                        "id": 3166,
+                                        "id": 2977,
                                         "name": "hasTLD",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 3091,
+                                        "referencedDeclaration": 2902,
                                         "src": "1461:6:11",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_bool",
@@ -3040,7 +3039,7 @@
                                       "rightHandSide": {
                                         "argumentTypes": null,
                                         "hexValue": "74727565",
-                                        "id": 3167,
+                                        "id": 2978,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": true,
@@ -3061,7 +3060,7 @@
                                         "typeString": "bool"
                                       }
                                     },
-                                    "id": 3169,
+                                    "id": 2980,
                                     "nodeType": "ExpressionStatement",
                                     "src": "1461:13:11"
                                   }
@@ -3070,22 +3069,22 @@
                             }
                           ]
                         },
-                        "id": 3178,
+                        "id": 2989,
                         "nodeType": "IfStatement",
                         "src": "1174:401:11",
                         "trueBody": {
-                          "id": 3164,
+                          "id": 2975,
                           "nodeType": "Block",
                           "src": "1192:210:11",
                           "statements": [
                             {
                               "condition": {
                                 "argumentTypes": null,
-                                "id": 3155,
+                                "id": 2966,
                                 "name": "hasDot",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 3087,
+                                "referencedDeclaration": 2898,
                                 "src": "1219:6:11",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_bool",
@@ -3093,11 +3092,11 @@
                                 }
                               },
                               "falseBody": null,
-                              "id": 3159,
+                              "id": 2970,
                               "nodeType": "IfStatement",
                               "src": "1216:138:11",
                               "trueBody": {
-                                "id": 3158,
+                                "id": 2969,
                                 "nodeType": "Block",
                                 "src": "1227:127:11",
                                 "statements": [
@@ -3105,7 +3104,7 @@
                                     "expression": {
                                       "argumentTypes": null,
                                       "hexValue": "66616c7365",
-                                      "id": 3156,
+                                      "id": 2967,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": true,
@@ -3120,8 +3119,8 @@
                                       },
                                       "value": "false"
                                     },
-                                    "functionReturnParameters": 3074,
-                                    "id": 3157,
+                                    "functionReturnParameters": 2885,
+                                    "id": 2968,
                                     "nodeType": "Return",
                                     "src": "1322:12:11"
                                   }
@@ -3131,18 +3130,18 @@
                             {
                               "expression": {
                                 "argumentTypes": null,
-                                "id": 3162,
+                                "id": 2973,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "leftHandSide": {
                                   "argumentTypes": null,
-                                  "id": 3160,
+                                  "id": 2971,
                                   "name": "hasDot",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 3087,
+                                  "referencedDeclaration": 2898,
                                   "src": "1372:6:11",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_bool",
@@ -3154,7 +3153,7 @@
                                 "rightHandSide": {
                                   "argumentTypes": null,
                                   "hexValue": "74727565",
-                                  "id": 3161,
+                                  "id": 2972,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": true,
@@ -3175,7 +3174,7 @@
                                   "typeString": "bool"
                                 }
                               },
-                              "id": 3163,
+                              "id": 2974,
                               "nodeType": "ExpressionStatement",
                               "src": "1372:13:11"
                             }
@@ -3190,18 +3189,18 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 3101,
+                    "id": 2912,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 3098,
+                      "id": 2909,
                       "name": "i",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3095,
+                      "referencedDeclaration": 2906,
                       "src": "815:1:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -3214,18 +3213,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 3099,
+                        "id": 2910,
                         "name": "b",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3076,
+                        "referencedDeclaration": 2887,
                         "src": "819:1:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_memory_ptr",
                           "typeString": "bytes memory"
                         }
                       },
-                      "id": 3100,
+                      "id": 2911,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3245,20 +3244,20 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 3180,
+                  "id": 2991,
                   "initializationExpression": {
                     "assignments": [
-                      3095
+                      2906
                     ],
                     "declarations": [
                       {
                         "constant": false,
-                        "id": 3095,
+                        "id": 2906,
                         "mutability": "mutable",
                         "name": "i",
                         "nodeType": "VariableDeclaration",
                         "overrides": null,
-                        "scope": 3180,
+                        "scope": 2991,
                         "src": "803:6:11",
                         "stateVariable": false,
                         "storageLocation": "default",
@@ -3267,7 +3266,7 @@
                           "typeString": "uint256"
                         },
                         "typeName": {
-                          "id": 3094,
+                          "id": 2905,
                           "name": "uint",
                           "nodeType": "ElementaryTypeName",
                           "src": "803:4:11",
@@ -3280,11 +3279,11 @@
                         "visibility": "internal"
                       }
                     ],
-                    "id": 3097,
+                    "id": 2908,
                     "initialValue": {
                       "argumentTypes": null,
                       "hexValue": "30",
-                      "id": 3096,
+                      "id": 2907,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -3305,7 +3304,7 @@
                   "loopExpression": {
                     "expression": {
                       "argumentTypes": null,
-                      "id": 3103,
+                      "id": 2914,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3316,11 +3315,11 @@
                       "src": "829:3:11",
                       "subExpression": {
                         "argumentTypes": null,
-                        "id": 3102,
+                        "id": 2913,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3095,
+                        "referencedDeclaration": 2906,
                         "src": "829:1:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -3332,7 +3331,7 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 3104,
+                    "id": 2915,
                     "nodeType": "ExpressionStatement",
                     "src": "829:3:11"
                   },
@@ -3346,7 +3345,7 @@
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     },
-                    "id": 3185,
+                    "id": 2996,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3357,18 +3356,18 @@
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
                       },
-                      "id": 3183,
+                      "id": 2994,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "leftExpression": {
                         "argumentTypes": null,
-                        "id": 3181,
+                        "id": 2992,
                         "name": "hasDomain",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3083,
+                        "referencedDeclaration": 2894,
                         "src": "1605:9:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
@@ -3379,11 +3378,11 @@
                       "operator": "&&",
                       "rightExpression": {
                         "argumentTypes": null,
-                        "id": 3182,
+                        "id": 2993,
                         "name": "hasDot",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3087,
+                        "referencedDeclaration": 2898,
                         "src": "1618:6:11",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
@@ -3400,11 +3399,11 @@
                     "operator": "&&",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 3184,
+                      "id": 2995,
                       "name": "hasTLD",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3091,
+                      "referencedDeclaration": 2902,
                       "src": "1628:6:11",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -3417,44 +3416,44 @@
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 3074,
-                  "id": 3186,
+                  "functionReturnParameters": 2885,
+                  "id": 2997,
                   "nodeType": "Return",
                   "src": "1598:36:11"
                 }
               ]
             },
             "documentation": {
-              "id": 3067,
+              "id": 2878,
               "nodeType": "StructuredDocumentation",
               "src": "360:203:11",
               "text": " @dev Verifies whether a string matches the required format\n @param name The input string (domain name)\n @return Bool; True=matches, False=does not match"
             },
             "functionSelector": "4c8bc1c9",
-            "id": 3188,
+            "id": 2999,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "verifyTokenName",
             "nodeType": "FunctionDefinition",
             "overrides": {
-              "id": 3071,
+              "id": 2882,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
               "src": "630:8:11"
             },
             "parameters": {
-              "id": 3070,
+              "id": 2881,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3069,
+                  "id": 2880,
                   "mutability": "mutable",
                   "name": "name",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3188,
+                  "scope": 2999,
                   "src": "594:20:11",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -3463,7 +3462,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3068,
+                    "id": 2879,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "594:6:11",
@@ -3479,17 +3478,17 @@
               "src": "593:22:11"
             },
             "returnParameters": {
-              "id": 3074,
+              "id": 2885,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3073,
+                  "id": 2884,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3188,
+                  "scope": 2999,
                   "src": "648:4:11",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3498,7 +3497,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 3072,
+                    "id": 2883,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "648:4:11",
@@ -3513,14 +3512,14 @@
               ],
               "src": "647:6:11"
             },
-            "scope": 3189,
+            "scope": 3000,
             "src": "569:1073:11",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3190,
+        "scope": 3001,
         "src": "288:1357:11"
       }
     ],
@@ -3538,9 +3537,8 @@
       "transactionHash": "0x3548931fb2db4007f9c59db2707e7b2b01fcbce742f5e5246b253d48a21477fd"
     }
   },
-  "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-16T11:46:02.856Z",
-  "networkType": "ethereum",
+  "schemaVersion": "3.3.0",
+  "updatedAt": "2020-10-18T10:34:42.916Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains",

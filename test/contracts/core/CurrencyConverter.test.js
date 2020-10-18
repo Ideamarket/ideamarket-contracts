@@ -23,9 +23,8 @@ contract('core/CurrencyConverter', async accounts => {
 
 	const marketName = 'main'
 	const tokenName = 'test.com'
-	const baseCost = new BN('1000000000000000000') // 10**18
+	const basePrice = new BN('1000000000000000000') // 10**18
 	const priceRise = new BN('100000000000000000') // 10**17
-	const tokensPerInterval = new BN('100000000000000000000') // 10**20
 	const tradingFeeRate = new BN('100')
 	const platformFeeRate = new BN('50')
 
@@ -97,9 +96,8 @@ contract('core/CurrencyConverter', async accounts => {
 
 		await ideaTokenFactory.addMarket(marketName,
 			domainNoSubdomainNameVerifier.address,
-			baseCost,
+			basePrice,
 			priceRise,
-			tokensPerInterval,
 			tradingFeeRate,
 			platformFeeRate,
 			{from: adminAccount})

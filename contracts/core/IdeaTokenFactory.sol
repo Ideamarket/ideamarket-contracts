@@ -40,9 +40,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
 
     event NewMarket(uint id,
                     string name,
-                    uint baseCost,
+                    uint basePrice,
                     uint priceRise,
-                    uint tokensPerInterval,
                     uint tradingFeeRate,
                     uint platformFeeRate);
 
@@ -65,17 +64,16 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
 
      * @param marketName The name of the market
      * @param nameVerifier The address of the name verifier
-     * @param baseCost: The initial cost in Dai per IdeaToken in the first interval
+     * @param basePrice: The initial cost in Dai per IdeaToken in the first interval
      * @param priceRise: The price rise in Dai per IdeaToken per completed interval
-     * @param tokensPerInterval: The amount of IdeaTokens in each interval
      * @param tradingFeeRate: The trading fee rate
      * @param platformFeeRate: The platform fee rate
      */
     function addMarket(string calldata marketName, address nameVerifier,
-                       uint baseCost, uint priceRise, uint tokensPerInterval,
+                       uint basePrice, uint priceRise,
                        uint tradingFeeRate, uint platformFeeRate) external override onlyOwner {
         require(_marketIDs[marketName] == 0, "addMarket: market exists already");
-        require(baseCost > 0 && priceRise > 0 && tokensPerInterval > 0, "addMarket: invalid parameters");
+        require(basePrice > 0 && priceRise > 0, "addMarket: invalid parameters");
 
         uint marketID = ++_numMarkets;
         MarketInfo memory marketInfo = MarketInfo({
@@ -85,9 +83,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                 name: marketName,
                 nameVerifier: IIdeaTokenNameVerifier(nameVerifier),
                 numTokens: 0,
-                baseCost: baseCost,
+                basePrice: basePrice,
                 priceRise: priceRise,
-                tokensPerInterval: tokensPerInterval,
                 tradingFeeRate: tradingFeeRate,
                 platformFeeRate: platformFeeRate
             })
@@ -98,9 +95,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
 
         emit NewMarket(marketID,
                        marketName,
-                       baseCost,
+                       basePrice,
                        priceRise,
-                       tokensPerInterval, 
                        tradingFeeRate,
                        platformFeeRate);
     }

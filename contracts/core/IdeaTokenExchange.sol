@@ -40,8 +40,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     IInterestManager _interestManager;
     IERC20 _dai;
 
-    event TokensBought(address ideaToken, uint amount, uint rawCost, uint finalCost);
-    event TokensSold(address ideaToken, uint amount, uint rawPrice, uint finalPrice);
+    event TokensBought(address ideaToken, uint amount, uint price, uint tradingFee, uint platformFee);
+    event TokensSold(address ideaToken, uint amount, uint price, uint tradingFee, uint platformFee);
     event NewInterestWithdrawer(address ideaToken, address withdrawer);
     event NewPlatformFeeWithdrawer(uint marketID, address withdrawer);
 
@@ -67,24 +67,24 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @dev Burns IdeaTokens in exchange for Dai
      *
      * @param ideaToken The IdeaToken to sell
-     * @param amount The amount of IdeaTokens to sell
-     * @param minPrice The minimum allowed price in Dai for selling `amount` IdeaTokens
+     * @param tokenAmount The amount of IdeaTokens to sell
+     * @param minOutput The minimum output in Dai
      * @param recipient The recipient of the redeemed Dai
      */
-    function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
+    function sellTokens(address ideaToken, uint tokenAmount, uint minOutput, address recipient) external override {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "sellTokens: token does not exist");
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
-        (uint finalPrice, uint rawPrice, uint tradingFee, uint platformFee) = getPricesForSellingTokens(ideaToken, amount);
+        (uint output, uint tradingFee, uint platformFee) = getSellOutputAndFees(ideaToken, tokenAmount);
 
-        require(finalPrice >= minPrice, "sellTokens: price subceeds min price");
-        require(IIdeaToken(ideaToken).balanceOf(msg.sender) >= amount, "sellTokens: not enough tokens");
+        require(output >= minOutput, "sellTokens: price subceeds min price");
+        require(IIdeaToken(ideaToken).balanceOf(msg.sender) >= tokenAmount, "sellTokens: not enough tokens");
         
-        IIdeaToken(ideaToken).burn(msg.sender, amount);
+        IIdeaToken(ideaToken).burn(msg.sender, tokenAmount);
 
         // TODO: Make this more efficient
-        uint finalRedeemed = _interestManager.redeem(address(this), finalPrice);
+        uint finalRedeemed = _interestManager.redeem(address(this), output);
         uint tradingFeeRedeemed = _interestManager.redeem(address(_interestManager), tradingFee);
         _interestManager.invest(tradingFee);
         uint platformFeeRedeemed = _interestManager.redeem(address(_interestManager), platformFee);
@@ -94,86 +94,80 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         exchangeInfo.invested = exchangeInfo.invested.sub(finalRedeemed.add(tradingFeeRedeemed).add(platformFeeRedeemed));
         _tradingFeeInvested = _tradingFeeInvested.add(tradingFeeRedeemed);
         _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(platformFeeRedeemed);
-        exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(rawPrice);
+        exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(output.add(tradingFee).add(platformFee));
     
-        emit TokensSold(ideaToken, amount, rawPrice, finalPrice);
-        _dai.transfer(recipient, finalPrice);
+        emit TokensSold(ideaToken, tokenAmount, output, tradingFee, platformFee);
+        _dai.transfer(recipient, output);
     }
 
     /**
-     * @dev Returns the price for selling IdeaTokens
+     * @dev Returns the amount of Dai receivable by selling a given amount of IdeaTokens
      *
      * @param ideaToken The IdeaToken to sell
-     * @param amount The amount of IdeaTokens to sell
+     * @param tokenAmount The amount of IdeaTokens to sell
      *
-     * @return The price in Dai for selling `amount` IdeaTokens
+     * @return The amount of Dai receivable by selling a given amount of IdeaTokens
      */
-    function getPriceForSellingTokens(address ideaToken, uint amount) external view override returns (uint) {
-        (uint finalCost, , , ) = getPricesForSellingTokens(ideaToken, amount);
-        return finalCost;
+    function getSellOutput(address ideaToken, uint tokenAmount) external view override returns (uint) {
+        (uint output, , ) = getSellOutputAndFees(ideaToken, tokenAmount);
+        return output;
     }
 
     /**
-     * @dev Calculates each price related to selling tokens
+     * @dev Calculates output and fees related to selling tokens
      *
      * @param ideaToken The IdeaToken to sell
-     * @param amount The amount of IdeaTokens to sell
+     * @param tokenAmount The amount of IdeaTokens to sell
      *
-     * @return Final cost, raw cost and trading fee
+     * @return Output, trading fee, platform fee
      */
-    function getPricesForSellingTokens(address ideaToken, uint amount) internal view returns (uint, uint, uint, uint) {
+    function getSellOutputAndFees(address ideaToken, uint tokenAmount) internal view returns (uint, uint, uint) {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
-        uint rawPrice = getRawPriceForSellingTokens(marketDetails.baseCost,
-                                                    marketDetails.priceRise,
-                                                    marketDetails.tokensPerInterval,
-                                                    IERC20(ideaToken).totalSupply(),
-                                                    amount);
-        uint tradingFee = rawPrice.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
-        uint platformFee = rawPrice.mul(marketDetails.platformFeeRate).div(FEE_SCALE);
-        uint finalCost = rawPrice.sub(tradingFee).sub(platformFee);
+        uint rawOutput = getRawSellOutput(marketDetails.basePrice,
+                                          marketDetails.priceRise,
+                                          tokenAmount);
 
-        return (finalCost, rawPrice, tradingFee, platformFee);
+        uint tradingFee = rawOutput.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
+        uint platformFee = rawOutput.mul(marketDetails.platformFeeRate).div(FEE_SCALE);
+        uint remaining = rawOutput.sub(tradingFee).sub(platformFee);
+    
+        return (remaining, tradingFee, platformFee);
     }
 
     /**
-     * @dev Returns the price for selling IdeaTokens without any fees applied
+     * @dev Returns the amount of Dai receivable for selling a given amount of IdeaTokens without any fees applied
      *
-     * @param b The baseCost of the token
-     * @param r The priceRise of the token
-     * @param t The amount of tokens per interval
-     * @param supply The current total supply of the token
-     * @param amount The amount of IdeaTokens to sell
+     * @param basePrice The base price of the token
+     * @param priceRise The price rise of the token
+     * @param tokenAmount The amount IdeaTokens to sell
      *
-     * @return Returns the price for selling `amount` IdeaTokens without any fees applied
+     * @return The amount of Dai receivable for selling a given amount of IdeaTokens without any fees applied
      */
-    function getRawPriceForSellingTokens(uint b, uint r, uint t, uint supply, uint amount) internal pure returns (uint) {
-        uint costForSupply = getCostFromZeroSupply(b, r, t, supply);
-        uint costForSupplyMinusAmount = getCostFromZeroSupply(b, r, t, supply.sub(amount));
-
-        uint rawPrice = costForSupply.sub(costForSupplyMinusAmount);
-        return rawPrice;
+    function getRawSellOutput(uint basePrice, uint priceRise, uint tokenAmount) internal pure returns (uint) {
+        return basePrice.add(priceRise.mul(tokenAmount).div(10**18));
     }
 
     /**
      * @dev Mints IdeaTokens in exchange for Dai
      *
      * @param ideaToken The IdeaToken to buy
-     * @param amount The amount of IdeaTokens to buy
-     * @param maxCost The maximum allowed cost in Dai to buy `amount` IdeaTokens
+     * @param daiAmount The amount of Dai to spend
+     * @param minOutput The minimum output in IdeaTokens
      * @param recipient The recipient of the bought IdeaTokens
      */
-    function buyTokens(address ideaToken, uint amount, uint maxCost, address recipient) external override {
+    function buyTokens(address ideaToken, uint daiAmount, uint minOutput, address recipient) external override {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "buyTokens: token does not exist");
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
-        (uint finalCost, uint rawCost, uint tradingFee, uint platformFee) = getCostsForBuyingTokens(ideaToken, amount);
+        (uint output, uint tradingFee, uint platformFee) = getBuyOutputAndFees(ideaToken, daiAmount);
+        uint rawCost = daiAmount.sub(tradingFee).sub(platformFee);
 
-        require(finalCost <= maxCost, "buyTokens: cost exceeds maxCost");
-        require(_dai.allowance(msg.sender, address(this)) >= finalCost, "buyTokens: not enough allowance");
-        require(_dai.transferFrom(msg.sender, address(_interestManager), finalCost), "buyTokens: dai transfer failed");
+        require(output >= minOutput, "buyTokens: slippage");
+        require(_dai.allowance(msg.sender, address(this)) >= daiAmount, "buyTokens: not enough allowance");
+        require(_dai.transferFrom(msg.sender, address(_interestManager), daiAmount), "buyTokens: dai transfer failed");
         
         // TODO: Can we do a single invest call? Worried about rounding errors when dividing
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
@@ -182,93 +176,57 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(_interestManager.invest(platformFee));
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(rawCost);
     
-        emit TokensBought(ideaToken, amount, rawCost, finalCost);
-        IIdeaToken(ideaToken).mint(recipient, amount);
+        emit TokensBought(ideaToken, output, daiAmount, tradingFee, platformFee);
+        IIdeaToken(ideaToken).mint(recipient, output);
     }
 
     /**
-     * @dev Returns the cost for buying IdeaTokens
+     * @dev Returns the amount of IdeaTokens purchasable for a given amount of Dai
      *
      * @param ideaToken The IdeaToken to buy
-     * @param amount The amount of IdeaTokens to buy
+     * @param daiAmount The amount of Dai to spend
      *
-     * @return The cost in Dai for buying `amount` IdeaTokens
+     * @return The amount of IdeaTokens purchasable for a given amount of Dai
      */
-    function getCostForBuyingTokens(address ideaToken, uint amount) external view override returns (uint) {
-        (uint finalCost, , , ) = getCostsForBuyingTokens(ideaToken, amount);
-        return finalCost;
+    function getBuyOutput(address ideaToken, uint daiAmount) external view override returns (uint) {
+        (uint output, , ) = getBuyOutputAndFees(ideaToken, daiAmount);
+        return output;
     }
 
     /**
-     * @dev Calculates each cost related to buying tokens
+     * @dev Calculates output and fees related to buying tokens
      *
      * @param ideaToken The IdeaToken to buy
-     * @param amount The amount of IdeaTokens to buy
+     * @param daiAmount The amount of Dai to spend
      *
-     * @return Final cost, raw cost and trading fee
+     * @return Output, trading fee, platform fee
      */
-    function getCostsForBuyingTokens(address ideaToken, uint amount) internal view returns (uint, uint, uint, uint) {
+    function getBuyOutputAndFees(address ideaToken, uint daiAmount) internal view returns (uint, uint, uint) {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
-        uint rawCost = getRawCostForBuyingTokens(marketDetails.baseCost,
-                                                 marketDetails.priceRise,
-                                                 marketDetails.tokensPerInterval,
-                                                 IERC20(ideaToken).totalSupply(),
-                                                 amount);
-        uint tradingFee = rawCost.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
-        uint platformFee = rawCost.mul(marketDetails.platformFeeRate).div(FEE_SCALE);
-        uint finalCost = rawCost.add(tradingFee).add(platformFee);
+        uint tradingFee = daiAmount.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
+        uint platformFee = daiAmount.mul(marketDetails.platformFeeRate).div(FEE_SCALE);
+        uint remaining = daiAmount.sub(tradingFee).sub(platformFee);
 
-        return (finalCost, rawCost, tradingFee, platformFee);
+        uint output = getRawBuyOutput(marketDetails.basePrice,
+                                      marketDetails.priceRise,
+                                      remaining);
+
+        return (output, tradingFee, platformFee);
     }
 
     /**
-     * @dev Returns the cost for buying IdeaTokens without any fees applied
+     * @dev Returns the amount of purchasable IdeaTokens for a given amount of Dai without any fees applied
      *
-     * @param b The baseCost of the token
-     * @param r The priceRise of the token
-     * @param t The amount of tokens per interval
-     * @param supply The current total supply of the token
-     * @param amount The amount of IdeaTokens to buy
+     * @param basePrice The base price of the token
+     * @param priceRise The price rise of the token
+     * @param daiAmount The amount of Dai to spend
      *
-     * @return The cost for buying `amount` IdeaTokens without any fees applied
+     * @return The amount of purchasable IdeaTokens for a given amount of Dai without any fees applied
      */
-    function getRawCostForBuyingTokens(uint b, uint r, uint t, uint supply, uint amount) internal pure returns (uint) {
-        uint costForSupply = getCostFromZeroSupply(b, r, t, supply);
-        uint costForSupplyPlusAmount = getCostFromZeroSupply(b, r, t, supply.add(amount));
-
-        uint rawCost = costForSupplyPlusAmount.sub(costForSupply);
-        return rawCost;
-    }
-
-    /**
-     * @dev Returns the cost for buying IdeaTokens without any fees applied from 0 supply
-     *
-     * @param b The baseCost of the token
-     * @param r The priceRise of the token
-     * @param t The amount of tokens per interval
-     * @param amount The amount of IdeaTokens to buy
-     *
-     * @return The cost for buying `amount` IdeaTokens without any fees applied from 0 supply
-     */
-    function getCostFromZeroSupply(uint b, uint r, uint t, uint amount) internal pure returns (uint) {
-        uint n = amount.div(t);
-        return getCostForCompletedIntervals(b, r, t, n).add(amount.sub(n.mul(t)).mul(b.add(n.mul(r)))).div(10**18);
-    }
-
-    /**
-     * @dev Returns the cost for completed intervals from 0 supply
-     *
-     * @param b The baseCost of the token
-     * @param r The priceRise of the token
-     * @param t The amount of tokens per interval
-     * @param n The amount of completed intervals
-     *
-     * @return Returns the cost for `n` completed intervals from 0 supply
-     */
-    function getCostForCompletedIntervals(uint b, uint r, uint t, uint n) internal pure returns (uint) {
-        return n.mul(t).mul(b.sub(r)).add(r.mul(t).mul(n.mul(n.add(1)).div(2)));
+    function getRawBuyOutput(uint basePrice, uint priceRise, uint daiAmount) internal pure returns (uint) {
+        return daiAmount.sub(basePrice).mul(10**18).div(priceRise);
     }
 
     /**

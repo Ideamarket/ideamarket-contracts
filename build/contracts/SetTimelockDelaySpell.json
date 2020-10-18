@@ -20,27 +20,27 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"dsPause\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"delay\",\"type\":\"uint256\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Spell to set the timelock delay\",\"methods\":{\"execute(address,uint256)\":{\"details\":\"Sets the timelock delay\",\"params\":{\"delay\":\"The new delay in seconds\",\"dsPause\":\"The address of the timelock\"}}},\"title\":\"SetTimelockDelaySpell\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockDelaySpell.sol\":\"SetTimelockDelaySpell\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockDelaySpell.sol\":{\"keccak256\":\"0xc5ca75a10790136919fbcfc171490f86dc6f4d025379b952b4171dc5525cd09d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://dd319f3da361ebe61334a9596cf0fa1fa6d810c68570797f9b54cd3c0c2ac924\",\"dweb:/ipfs/QmUz6x5DoXa1SwmEn9TkodrDNT4T8PkYK7Zz99ZEaBpxhW\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol\":{\"keccak256\":\"0x89e5b1131b2905e82ba10bbf60fd75d95a473e2ae18e045d950113be38d47ce9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://17e849d95db79cc4301d333e5fc0273bc220208cd4024f97b3d79fdc2e113f5e\",\"dweb:/ipfs/QmY5ekpRe7ZQgejNyeyuJ21ozyCzVgTnMKWpv9qDUmmB7P\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5061011b806100206000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80633b89bb8614602d575b600080fd5b607660048036036040811015604157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506078565b005b8173ffffffffffffffffffffffffffffffffffffffff1663e177246e826040518263ffffffff1660e01b815260040180828152602001915050600060405180830381600087803b15801560ca57600080fd5b505af115801560dd573d6000803e3d6000fd5b50505050505056fea2646970667358221220174e8ea0ad47163299f793bdfaf492f7b3126e14f8016be77c2dd0252ad4b04664736f6c63430006090033",
-  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c80633b89bb8614602d575b600080fd5b607660048036036040811015604157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506078565b005b8173ffffffffffffffffffffffffffffffffffffffff1663e177246e826040518263ffffffff1660e01b815260040180828152602001915050600060405180830381600087803b15801560ca57600080fd5b505af115801560dd573d6000803e3d6000fd5b50505050505056fea2646970667358221220174e8ea0ad47163299f793bdfaf492f7b3126e14f8016be77c2dd0252ad4b04664736f6c63430006090033",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"dsPause\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"delay\",\"type\":\"uint256\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Spell to set the timelock delay\",\"methods\":{\"execute(address,uint256)\":{\"details\":\"Sets the timelock delay\",\"params\":{\"delay\":\"The new delay in seconds\",\"dsPause\":\"The address of the timelock\"}}},\"title\":\"SetTimelockDelaySpell\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/spells/SetTimelockDelaySpell.sol\":\"SetTimelockDelaySpell\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/spells/SetTimelockDelaySpell.sol\":{\"keccak256\":\"0xc5ca75a10790136919fbcfc171490f86dc6f4d025379b952b4171dc5525cd09d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://dd319f3da361ebe61334a9596cf0fa1fa6d810c68570797f9b54cd3c0c2ac924\",\"dweb:/ipfs/QmUz6x5DoXa1SwmEn9TkodrDNT4T8PkYK7Zz99ZEaBpxhW\"]},\"/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol\":{\"keccak256\":\"0x89e5b1131b2905e82ba10bbf60fd75d95a473e2ae18e045d950113be38d47ce9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://17e849d95db79cc4301d333e5fc0273bc220208cd4024f97b3d79fdc2e113f5e\",\"dweb:/ipfs/QmY5ekpRe7ZQgejNyeyuJ21ozyCzVgTnMKWpv9qDUmmB7P\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061011b806100206000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80633b89bb8614602d575b600080fd5b607660048036036040811015604157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506078565b005b8173ffffffffffffffffffffffffffffffffffffffff1663e177246e826040518263ffffffff1660e01b815260040180828152602001915050600060405180830381600087803b15801560ca57600080fd5b505af115801560dd573d6000803e3d6000fd5b50505050505056fea2646970667358221220ae0f9839cf017316d127ac999c518c6eff3317f91bc6cfb02f60211e356e08de64736f6c63430006090033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c80633b89bb8614602d575b600080fd5b607660048036036040811015604157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506078565b005b8173ffffffffffffffffffffffffffffffffffffffff1663e177246e826040518263ffffffff1660e01b815260040180828152602001915050600060405180830381600087803b15801560ca57600080fd5b505af115801560dd573d6000803e3d6000fd5b50505050505056fea2646970667358221220ae0f9839cf017316d127ac999c518c6eff3317f91bc6cfb02f60211e356e08de64736f6c63430006090033",
   "immutableReferences": {},
   "sourceMap": "220:310:22:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "220:310:22:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;420:107;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;495:7;486:26;;;513:5;486:33;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;420:107;;:::o",
   "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\nimport \"../timelock/IDSPause.sol\";\r\n\r\n/**\r\n * @title SetTimelockDelaySpell\r\n * @author Alexander Schlindwein\r\n *\r\n * @dev Spell to set the timelock delay\r\n */\r\ncontract SetTimelockDelaySpell {\r\n\r\n    /**\r\n     * @dev Sets the timelock delay\r\n     *\r\n     * @param dsPause The address of the timelock\r\n     * @param delay The new delay in seconds\r\n     */\r\n    function execute(address dsPause, uint delay) external {\r\n        IDSPause(dsPause).setDelay(delay);\r\n    }\r\n}",
-  "sourcePath": "C:/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockDelaySpell.sol",
+  "sourcePath": "C:/Users/Alexander/Desktop/ideamarket-contracts/contracts/spells/SetTimelockDelaySpell.sol",
   "ast": {
-    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockDelaySpell.sol",
+    "absolutePath": "/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/spells/SetTimelockDelaySpell.sol",
     "exportedSymbols": {
       "SetTimelockDelaySpell": [
-        3862
+        3670
       ]
     },
-    "id": 3863,
+    "id": 3671,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3843,
+        "id": 3651,
         "literals": [
           "solidity",
           "^",
@@ -51,12 +51,12 @@
         "src": "33:23:22"
       },
       {
-        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol",
+        "absolutePath": "/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol",
         "file": "../timelock/IDSPause.sol",
-        "id": 3844,
+        "id": 3652,
         "nodeType": "ImportDirective",
-        "scope": 3863,
-        "sourceUnit": 9256,
+        "scope": 3671,
+        "sourceUnit": 9064,
         "src": "60:34:22",
         "symbolAliases": [],
         "unitAlias": ""
@@ -67,22 +67,22 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 3845,
+          "id": 3653,
           "nodeType": "StructuredDocumentation",
           "src": "98:120:22",
           "text": " @title SetTimelockDelaySpell\n @author Alexander Schlindwein\n @dev Spell to set the timelock delay"
         },
         "fullyImplemented": true,
-        "id": 3862,
+        "id": 3670,
         "linearizedBaseContracts": [
-          3862
+          3670
         ],
         "name": "SetTimelockDelaySpell",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3860,
+              "id": 3668,
               "nodeType": "Block",
               "src": "475:52:22",
               "statements": [
@@ -92,11 +92,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3857,
+                        "id": 3665,
                         "name": "delay",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3850,
+                        "referencedDeclaration": 3658,
                         "src": "513:5:22",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -116,11 +116,11 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 3854,
+                            "id": 3662,
                             "name": "dsPause",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3848,
+                            "referencedDeclaration": 3656,
                             "src": "495:7:22",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -135,18 +135,18 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 3853,
+                          "id": 3661,
                           "name": "IDSPause",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 9255,
+                          "referencedDeclaration": 9063,
                           "src": "486:8:22",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_IDSPause_$9255_$",
+                            "typeIdentifier": "t_type$_t_contract$_IDSPause_$9063_$",
                             "typeString": "type(contract IDSPause)"
                           }
                         },
-                        "id": 3855,
+                        "id": 3663,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -157,25 +157,25 @@
                         "src": "486:17:22",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IDSPause_$9255",
+                          "typeIdentifier": "t_contract$_IDSPause_$9063",
                           "typeString": "contract IDSPause"
                         }
                       },
-                      "id": 3856,
+                      "id": 3664,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "setDelay",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9212,
+                      "referencedDeclaration": 9020,
                       "src": "486:26:22",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
                         "typeString": "function (uint256) external"
                       }
                     },
-                    "id": 3858,
+                    "id": 3666,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -190,20 +190,20 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3859,
+                  "id": 3667,
                   "nodeType": "ExpressionStatement",
                   "src": "486:33:22"
                 }
               ]
             },
             "documentation": {
-              "id": 3846,
+              "id": 3654,
               "nodeType": "StructuredDocumentation",
               "src": "260:154:22",
               "text": " @dev Sets the timelock delay\n @param dsPause The address of the timelock\n @param delay The new delay in seconds"
             },
             "functionSelector": "3b89bb86",
-            "id": 3861,
+            "id": 3669,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -211,17 +211,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3851,
+              "id": 3659,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3848,
+                  "id": 3656,
                   "mutability": "mutable",
                   "name": "dsPause",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3861,
+                  "scope": 3669,
                   "src": "437:15:22",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -230,7 +230,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3847,
+                    "id": 3655,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "437:7:22",
@@ -245,12 +245,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3850,
+                  "id": 3658,
                   "mutability": "mutable",
                   "name": "delay",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3861,
+                  "scope": 3669,
                   "src": "454:10:22",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -259,7 +259,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3849,
+                    "id": 3657,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "454:4:22",
@@ -275,37 +275,37 @@
               "src": "436:29:22"
             },
             "returnParameters": {
-              "id": 3852,
+              "id": 3660,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "475:0:22"
             },
-            "scope": 3862,
+            "scope": 3670,
             "src": "420:107:22",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3863,
+        "scope": 3671,
         "src": "220:310:22"
       }
     ],
     "src": "33:497:22"
   },
   "legacyAST": {
-    "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockDelaySpell.sol",
+    "absolutePath": "/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/spells/SetTimelockDelaySpell.sol",
     "exportedSymbols": {
       "SetTimelockDelaySpell": [
-        3862
+        3670
       ]
     },
-    "id": 3863,
+    "id": 3671,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3843,
+        "id": 3651,
         "literals": [
           "solidity",
           "^",
@@ -316,12 +316,12 @@
         "src": "33:23:22"
       },
       {
-        "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol",
+        "absolutePath": "/C/Users/Alexander/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol",
         "file": "../timelock/IDSPause.sol",
-        "id": 3844,
+        "id": 3652,
         "nodeType": "ImportDirective",
-        "scope": 3863,
-        "sourceUnit": 9256,
+        "scope": 3671,
+        "sourceUnit": 9064,
         "src": "60:34:22",
         "symbolAliases": [],
         "unitAlias": ""
@@ -332,22 +332,22 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 3845,
+          "id": 3653,
           "nodeType": "StructuredDocumentation",
           "src": "98:120:22",
           "text": " @title SetTimelockDelaySpell\n @author Alexander Schlindwein\n @dev Spell to set the timelock delay"
         },
         "fullyImplemented": true,
-        "id": 3862,
+        "id": 3670,
         "linearizedBaseContracts": [
-          3862
+          3670
         ],
         "name": "SetTimelockDelaySpell",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3860,
+              "id": 3668,
               "nodeType": "Block",
               "src": "475:52:22",
               "statements": [
@@ -357,11 +357,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3857,
+                        "id": 3665,
                         "name": "delay",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3850,
+                        "referencedDeclaration": 3658,
                         "src": "513:5:22",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -381,11 +381,11 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 3854,
+                            "id": 3662,
                             "name": "dsPause",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3848,
+                            "referencedDeclaration": 3656,
                             "src": "495:7:22",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -400,18 +400,18 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 3853,
+                          "id": 3661,
                           "name": "IDSPause",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 9255,
+                          "referencedDeclaration": 9063,
                           "src": "486:8:22",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_IDSPause_$9255_$",
+                            "typeIdentifier": "t_type$_t_contract$_IDSPause_$9063_$",
                             "typeString": "type(contract IDSPause)"
                           }
                         },
-                        "id": 3855,
+                        "id": 3663,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -422,25 +422,25 @@
                         "src": "486:17:22",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IDSPause_$9255",
+                          "typeIdentifier": "t_contract$_IDSPause_$9063",
                           "typeString": "contract IDSPause"
                         }
                       },
-                      "id": 3856,
+                      "id": 3664,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "setDelay",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9212,
+                      "referencedDeclaration": 9020,
                       "src": "486:26:22",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
                         "typeString": "function (uint256) external"
                       }
                     },
-                    "id": 3858,
+                    "id": 3666,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -455,20 +455,20 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3859,
+                  "id": 3667,
                   "nodeType": "ExpressionStatement",
                   "src": "486:33:22"
                 }
               ]
             },
             "documentation": {
-              "id": 3846,
+              "id": 3654,
               "nodeType": "StructuredDocumentation",
               "src": "260:154:22",
               "text": " @dev Sets the timelock delay\n @param dsPause The address of the timelock\n @param delay The new delay in seconds"
             },
             "functionSelector": "3b89bb86",
-            "id": 3861,
+            "id": 3669,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -476,17 +476,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3851,
+              "id": 3659,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3848,
+                  "id": 3656,
                   "mutability": "mutable",
                   "name": "dsPause",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3861,
+                  "scope": 3669,
                   "src": "437:15:22",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -495,7 +495,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3847,
+                    "id": 3655,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "437:7:22",
@@ -510,12 +510,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3850,
+                  "id": 3658,
                   "mutability": "mutable",
                   "name": "delay",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3861,
+                  "scope": 3669,
                   "src": "454:10:22",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -524,7 +524,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3849,
+                    "id": 3657,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "454:4:22",
@@ -540,19 +540,19 @@
               "src": "436:29:22"
             },
             "returnParameters": {
-              "id": 3852,
+              "id": 3660,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "475:0:22"
             },
-            "scope": 3862,
+            "scope": 3670,
             "src": "420:107:22",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3863,
+        "scope": 3671,
         "src": "220:310:22"
       }
     ],
@@ -563,8 +563,8 @@
     "version": "0.6.9+commit.3e3065ac.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-16T10:17:52.478Z",
+  "schemaVersion": "3.3.0",
+  "updatedAt": "2020-10-18T10:34:42.992Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Spell to set the timelock delay",

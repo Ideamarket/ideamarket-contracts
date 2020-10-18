@@ -17,9 +17,8 @@ contract('spells/AddMarketSpell', async accounts => {
 
 	const marketName = 'SOME_MARKET'
 	const nameVerifierAddress = zeroAddress
-	const baseCost = '1'
+	const basePrice = '1'
 	const priceRise = '1'
-	const tokensPerInterval = '1'
 	const tradingFeeRate = '0'
 	const platformFeeRate = '0'
     
@@ -38,7 +37,7 @@ contract('spells/AddMarketSpell', async accounts => {
 
 		// For some reason web3 doesnt want BNs here
 		const fax = spell.contract.methods.execute(factory.address, marketName, nameVerifierAddress,
-			baseCost, priceRise, tokensPerInterval,
+			basePrice, priceRise,
 			tradingFeeRate, platformFeeRate).encodeABI()
 
 		await dsPause.plot(spell.address, tag, fax, eta)
@@ -55,9 +54,8 @@ contract('spells/AddMarketSpell', async accounts => {
 			marketName,
 			nameVerifierAddress,
 			'0', // numTokens
-			baseCost,
+			basePrice,
 			priceRise,
-			tokensPerInterval,
 			tradingFeeRate,
 			platformFeeRate
 		]
