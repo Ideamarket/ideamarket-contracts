@@ -30,6 +30,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 	const interestReceiverAccount = accounts[3]
 	const platformFeeReceiverAccount = accounts[4]
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const someAddress = '0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5' // random addr from etherscan
 
 	let domainNoSubdomainNameVerifier
 	let dai
@@ -108,7 +109,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 		await dai.mint(userAccount, firstCost)
 		await dai.approve(ideaTokenExchange.address, firstCost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, firstCost, userAccount)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, firstCost, userAccount)
 
 		assert.isTrue((await dai.balanceOf(userAccount)).eq(new BN('0')))
 		assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount))
@@ -136,7 +137,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 		await dai.mint(userAccount, secondCost)
 		await dai.approve(ideaTokenExchange.address, secondCost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, secondCost, userAccount)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, secondCost, userAccount)
 
 		assert.isTrue((await dai.balanceOf(userAccount)).eq(new BN('0')))
 		assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount.add(amount)))
@@ -270,9 +271,25 @@ contract('core/IdeaTokenExchange', async accounts => {
 		assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(new BN('0')))
 	})
 
+	it('can fallback on buy', async () => {
+		const amount = tenPow18
+		const tooHighAmount = amount.mul(new BN('2'))
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
+
+		await dai.mint(userAccount, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+
+		await expectRevert(
+			ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, tooHighAmount, cost, userAccount),
+			'buyTokens: slippage too high'
+		)
+
+		await ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, amount, cost, userAccount)
+	})
+
 	it('fail buy/sell - invalid token', async () => {
 		await expectRevert(
-			ideaTokenExchange.buyTokens(zeroAddress, tenPow18, tenPow18, userAccount),
+			ideaTokenExchange.buyTokens(zeroAddress, tenPow18, tenPow18, tenPow18, userAccount),
 			'buyTokens: token does not exist'
 		)
 
@@ -287,13 +304,13 @@ contract('core/IdeaTokenExchange', async accounts => {
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
 
 		await expectRevert(
-			ideaTokenExchange.buyTokens(ideaToken.address, amount, cost.sub(new BN('1')), userAccount),
-			'buyTokens: cost exceeds maxCost'
+			ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost.sub(new BN('1')), userAccount),
+			'buyTokens: slippage too high'
 		)
 
 		await dai.mint(userAccount, cost)
 		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, userAccount)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount)
 
 		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tenPow18)
 
@@ -309,7 +326,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 		await dai.mint(userAccount, cost)
 
 		await expectRevert(
-			ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, userAccount),
+			ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount),
 			'buyTokens: not enough allowance'
 		)
 	})
@@ -321,13 +338,13 @@ contract('core/IdeaTokenExchange', async accounts => {
 		await dai.approve(ideaTokenExchange.address, cost)
 
 		await expectRevert(
-			ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, userAccount),
+			ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount),
 			'ERC20: transfer amount exceeds balance'
 		)
 
 		await dai.mint(adminAccount, new BN(cost))
 		await dai.approve(ideaTokenExchange.address, cost, { from: adminAccount })
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, cost, adminAccount, { from: adminAccount })
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, adminAccount, { from: adminAccount })
 
 		await expectRevert(
 			ideaTokenExchange.sellTokens(ideaToken.address, new BN('1'), new BN('0'), userAccount),
@@ -384,6 +401,46 @@ contract('core/IdeaTokenExchange', async accounts => {
 		await expectRevert(
 			ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, platformFeeReceiverAccount),
 			'authorizePlatformFeeWithdrawer: not authorized'
+		)
+	})
+
+	it('can set factory address on init', async () => {
+		const exchange = await IdeaTokenExchange.new()
+		await exchange.initialize(adminAccount,
+			tradingFeeAccount,
+			interestManagerCompound.address,
+			dai.address,
+			{from: adminAccount})
+
+		await exchange.setIdeaTokenFactoryAddress(someAddress, { from: adminAccount })
+	})
+
+	it('fail only owner can set factory address', async () => {
+		const exchange = await IdeaTokenExchange.new()
+		await exchange.initialize(adminAccount,
+			tradingFeeAccount,
+			interestManagerCompound.address,
+			dai.address,
+			{from: adminAccount})
+
+		await expectRevert(
+			exchange.setIdeaTokenFactoryAddress(someAddress),
+			'Ownable: onlyOwner'
+		)
+	})
+
+	it('fail cannot set factory address twice', async () => {
+		const exchange = await IdeaTokenExchange.new()
+		await exchange.initialize(adminAccount,
+			tradingFeeAccount,
+			interestManagerCompound.address,
+			dai.address,
+			{from: adminAccount})
+
+		await exchange.setIdeaTokenFactoryAddress(someAddress, { from: adminAccount })
+
+		await expectRevert.unspecified(
+			exchange.setIdeaTokenFactoryAddress(someAddress,{ from: adminAccount })
 		)
 	})
 

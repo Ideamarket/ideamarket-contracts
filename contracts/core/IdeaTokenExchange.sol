@@ -161,17 +161,30 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param ideaToken The IdeaToken to buy
      * @param amount The amount of IdeaTokens to buy
-     * @param maxCost The maximum allowed cost in Dai to buy `amount` IdeaTokens
+     * @param fallbackAmount The fallback amount to buy in case the price changed
+     * @param cost The maximum allowed cost in Dai
      * @param recipient The recipient of the bought IdeaTokens
      */
-    function buyTokens(address ideaToken, uint amount, uint maxCost, address recipient) external override {
+    function buyTokens(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external override {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "buyTokens: token does not exist");
         IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
-        (uint finalCost, uint rawCost, uint tradingFee, uint platformFee) = getCostsForBuyingTokens(ideaToken, amount);
+        uint actualAmount = amount;
+        uint finalCost;
+        uint rawCost;
+        uint tradingFee;
+        uint platformFee;
+        (finalCost, rawCost, tradingFee, platformFee) = getCostsForBuyingTokens(ideaToken, actualAmount);
 
-        require(finalCost <= maxCost, "buyTokens: cost exceeds maxCost");
+        if(finalCost > cost) {
+            actualAmount = fallbackAmount;
+            (finalCost, rawCost, tradingFee, platformFee) = getCostsForBuyingTokens(ideaToken, actualAmount);
+    
+            require(finalCost <= cost, "buyTokens: slippage too high");
+        }
+
+        
         require(_dai.allowance(msg.sender, address(this)) >= finalCost, "buyTokens: not enough allowance");
         require(_dai.transferFrom(msg.sender, address(_interestManager), finalCost), "buyTokens: dai transfer failed");
         
@@ -182,8 +195,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(_interestManager.invest(platformFee));
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(rawCost);
     
-        emit TokensBought(ideaToken, amount, rawCost, finalCost);
-        IIdeaToken(ideaToken).mint(recipient, amount);
+        emit TokensBought(ideaToken, actualAmount, rawCost, finalCost);
+        IIdeaToken(ideaToken).mint(recipient, actualAmount);
     }
 
     /**

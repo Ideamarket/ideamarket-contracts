@@ -41,13 +41,15 @@ contract CurrencyConverter {
      * @param inputCurrency The address of the input currency. 0x0 means ETH
      * @param ideaToken The address of the IdeaToken to buy
      * @param amount The amount of IdeaTokens to buy
-     * @param maxCost The maximum cost in inputCurrency for the purchase
+     * @param fallbackAmount The fallback amount to buy in case the price changed
+     * @param cost The maximum allowed cost in inputCurrency
      * @param recipient The recipient of the IdeaTokens
      */
     function buyTokens(address inputCurrency,
                        address ideaToken,
                        uint amount,
-                       uint maxCost,
+                       uint fallbackAmount,
+                       uint cost,
                        address recipient) external payable {
         require((msg.value == 0 && inputCurrency != address(0)) ||
                 (msg.value != 0 && inputCurrency == address(0)), "buyTokens: input either eth or tokens");
@@ -60,10 +62,17 @@ contract CurrencyConverter {
         }
         path[1] = address(_dai);
 
-        uint cost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, amount);
-        uint requiredInput = _uniswapV2Router02.getAmountsIn(cost, path)[0];
+        uint actualAmount = amount;
+        uint costToBuy = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, actualAmount);
+        uint requiredInput = _uniswapV2Router02.getAmountsIn(costToBuy, path)[0];
 
-        require(requiredInput <= maxCost, "buyTokens: cost too high");
+        if(requiredInput > cost) {
+            actualAmount = fallbackAmount;
+            costToBuy = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, actualAmount);
+            requiredInput = _uniswapV2Router02.getAmountsIn(costToBuy, path)[0];
+        }
+
+        require(requiredInput <= cost, "buyTokens: slippage too high");
         
         if(inputCurrency == address(0)) {
             _weth.deposit{value: requiredInput}();
@@ -76,14 +85,14 @@ contract CurrencyConverter {
         }
 
         _uniswapV2Router02.swapExactTokensForTokensSupportingFeeOnTransferTokens(requiredInput,
-                                                                                 cost,
+                                                                                 costToBuy,
                                                                                  path,
                                                                                  address(this),
                                                                                  now + 1);
 
-        require(_dai.approve(address(_ideaTokenExchange), cost), "buyTokens: failed to approve exchange");
+        require(_dai.approve(address(_ideaTokenExchange), costToBuy), "buyTokens: failed to approve exchange");
 
-        _ideaTokenExchange.buyTokens(ideaToken, amount, cost, recipient);
+        _ideaTokenExchange.buyTokens(ideaToken, actualAmount, actualAmount, costToBuy, recipient);
 
         if(inputCurrency == address(0)) {
             msg.sender.transfer(address(this).balance);
@@ -116,7 +125,7 @@ contract CurrencyConverter {
         uint price = _ideaTokenExchange.getPriceForSellingTokens(ideaToken, amount);
         uint output = _uniswapV2Router02.getAmountsOut(price, path)[1];
 
-        require(output >= minPrice, "sellTokens: price too low");
+        require(output >= minPrice, "sellTokens: slippage too high");
 
         require(IERC20(ideaToken).allowance(msg.sender, address(this)) >= amount, "sellTokens: not enough allowance");
         require(IERC20(ideaToken).transferFrom(msg.sender, address(this), amount), "sellTokens: idea token transfer failed");

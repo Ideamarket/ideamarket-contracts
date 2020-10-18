@@ -159,6 +159,7 @@ contract('core/CurrencyConverter', async accounts => {
 		await currencyConverter.buyTokens(zeroAddress,
 			ideaToken.address,
 			ideaTokenAmount,
+			ideaTokenAmount,
 			requiredInputForCost,
 			userAccount,
 			{ value: requiredInputForCost })
@@ -190,6 +191,7 @@ contract('core/CurrencyConverter', async accounts => {
 		await weth.approve(currencyConverter.address, requiredInputForCost)
 		await currencyConverter.buyTokens(weth.address,
 			ideaToken.address,
+			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
 			userAccount)
@@ -226,6 +228,7 @@ contract('core/CurrencyConverter', async accounts => {
 		await currencyConverter.buyTokens(someToken.address,
 			ideaToken.address,
 			ideaTokenAmount,
+			ideaTokenAmount,
 			requiredInputForCost,
 			userAccount)
         
@@ -260,9 +263,10 @@ contract('core/CurrencyConverter', async accounts => {
 			currencyConverter.buyTokens(someToken.address,
 				ideaToken.address,
 				ideaTokenAmount,
+				ideaTokenAmount,
 				requiredInputForCost.sub(new BN('1')),
 				userAccount),
-			'buyTokens: cost too high')
+			'buyTokens: slippage too high')
 	})
 
 	it('fail sell price too low', async () => {
@@ -275,6 +279,7 @@ contract('core/CurrencyConverter', async accounts => {
 		await someToken.approve(currencyConverter.address, requiredInputForCost)
 		await currencyConverter.buyTokens(someToken.address,
 			ideaToken.address,
+			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
 			userAccount)
@@ -294,7 +299,7 @@ contract('core/CurrencyConverter', async accounts => {
 				tokenBalanceAfterBuy,
 				outputFromSell.add(new BN('1')),
 				userAccount),
-			'sellTokens: price too low')
+			'sellTokens: slippage too high')
 	})
 
 })
