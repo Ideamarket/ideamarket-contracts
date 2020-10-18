@@ -19,7 +19,6 @@ contract('spells/SetTradingFeeSpell', async accounts => {
 	const nameVerifierAddress = zeroAddress
 	const baseCost = '1'
 	const priceRise = '1'
-	const tokensPerInterval = '1'
 	const tradingFeeRate = '2'
 	const platformFeeRate = '3'
     
@@ -39,7 +38,6 @@ contract('spells/SetTradingFeeSpell', async accounts => {
 			nameVerifierAddress,
 			baseCost,
 			priceRise,
-			tokensPerInterval,
 			tradingFeeRate,
 			platformFeeRate)
 

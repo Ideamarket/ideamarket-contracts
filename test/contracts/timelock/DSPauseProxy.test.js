@@ -6,7 +6,7 @@ const AddMarketSpell = artifacts.require('AddMarketSpell')
 
 const BN = web3.utils.BN
 
-contract('timelock/DSPause', async accounts => {
+contract('timelock/DSPauseProxy', async accounts => {
 
 	let dsPause
 	let dsPauseProxy
@@ -31,7 +31,7 @@ contract('timelock/DSPause', async accounts => {
 		const tag = await dsPause.soul(spell.address)
     
 		const fax = spell.contract.methods.execute(zeroAddress, 'SOME_MARKET', zeroAddress, // zero for factory addr
-			'1', '1', '1',
+			'1', '1',
 			'0', '0').encodeABI()
 
 		await dsPause.plot(spell.address, tag, fax, eta)

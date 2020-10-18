@@ -19,16 +19,15 @@ contract AddMarketSpell {
      * @param nameVerifier The address of the name verifier
      * @param baseCost The base cost
      * @param priceRise The price rise
-     * @param tokensPerInterval The tokens per interval
      * @param tradingFeeRate The trading fee
      * @param platformFeeRate The platform fee
      */
     function execute(address factory, string calldata marketName, address nameVerifier,
-                     uint baseCost, uint priceRise, uint tokensPerInterval,
+                     uint baseCost, uint priceRise,
                      uint tradingFeeRate, uint platformFeeRate) external {
 
         IIdeaTokenFactory(factory).addMarket(marketName, nameVerifier,
-                                              baseCost, priceRise, tokensPerInterval,
+                                              baseCost, priceRise,
                                               tradingFeeRate, platformFeeRate);
     }
 }

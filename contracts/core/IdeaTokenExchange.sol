@@ -127,9 +127,9 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
         uint rawPrice = getRawPriceForSellingTokens(marketDetails.baseCost,
                                                     marketDetails.priceRise,
-                                                    marketDetails.tokensPerInterval,
                                                     IERC20(ideaToken).totalSupply(),
                                                     amount);
+
         uint tradingFee = rawPrice.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
         uint platformFee = rawPrice.mul(marketDetails.platformFeeRate).div(FEE_SCALE);
         uint finalCost = rawPrice.sub(tradingFee).sub(platformFee);
@@ -138,22 +138,21 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the price for selling IdeaTokens without any fees applied
+     * @dev Returns the price for selling tokens without any fees applied
      *
      * @param b The baseCost of the token
      * @param r The priceRise of the token
-     * @param t The amount of tokens per interval
      * @param supply The current total supply of the token
      * @param amount The amount of IdeaTokens to sell
      *
-     * @return Returns the price for selling `amount` IdeaTokens without any fees applied
+     * @return The price selling `amount` IdeaTokens without any fees applied
      */
-    function getRawPriceForSellingTokens(uint b, uint r, uint t, uint supply, uint amount) internal pure returns (uint) {
-        uint costForSupply = getCostFromZeroSupply(b, r, t, supply);
-        uint costForSupplyMinusAmount = getCostFromZeroSupply(b, r, t, supply.sub(amount));
-
-        uint rawPrice = costForSupply.sub(costForSupplyMinusAmount);
-        return rawPrice;
+    function getRawPriceForSellingTokens(uint b, uint r, uint supply, uint amount) internal pure returns (uint) {
+        uint priceAtSupply = b.add(r.mul(supply).div(10**18));
+        uint priceAtSupplyMinusAmount = b.add(r.mul(supply.sub(amount)).div(10**18));
+        uint average = priceAtSupply.add(priceAtSupplyMinusAmount).div(2);
+    
+        return average.mul(amount).div(10**18);
     }
 
     /**
@@ -226,9 +225,9 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
         uint rawCost = getRawCostForBuyingTokens(marketDetails.baseCost,
                                                  marketDetails.priceRise,
-                                                 marketDetails.tokensPerInterval,
                                                  IERC20(ideaToken).totalSupply(),
                                                  amount);
+
         uint tradingFee = rawCost.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
         uint platformFee = rawCost.mul(marketDetails.platformFeeRate).div(FEE_SCALE);
         uint finalCost = rawCost.add(tradingFee).add(platformFee);
@@ -237,51 +236,21 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the cost for buying IdeaTokens without any fees applied
+     * @dev Returns the cost for buying tokens without any fees applied
      *
      * @param b The baseCost of the token
      * @param r The priceRise of the token
-     * @param t The amount of tokens per interval
      * @param supply The current total supply of the token
      * @param amount The amount of IdeaTokens to buy
      *
-     * @return The cost for buying `amount` IdeaTokens without any fees applied
+     * @return The cost buying `amount` IdeaTokens without any fees applied
      */
-    function getRawCostForBuyingTokens(uint b, uint r, uint t, uint supply, uint amount) internal pure returns (uint) {
-        uint costForSupply = getCostFromZeroSupply(b, r, t, supply);
-        uint costForSupplyPlusAmount = getCostFromZeroSupply(b, r, t, supply.add(amount));
+    function getRawCostForBuyingTokens(uint b, uint r, uint supply, uint amount) internal pure returns (uint) {
+        uint priceAtSupply = b.add(r.mul(supply).div(10**18));
+        uint priceAtSupplyPlusAmount = b.add(r.mul(supply.add(amount)).div(10**18));
+        uint average = priceAtSupply.add(priceAtSupplyPlusAmount).div(2);
 
-        uint rawCost = costForSupplyPlusAmount.sub(costForSupply);
-        return rawCost;
-    }
-
-    /**
-     * @dev Returns the cost for buying IdeaTokens without any fees applied from 0 supply
-     *
-     * @param b The baseCost of the token
-     * @param r The priceRise of the token
-     * @param t The amount of tokens per interval
-     * @param amount The amount of IdeaTokens to buy
-     *
-     * @return The cost for buying `amount` IdeaTokens without any fees applied from 0 supply
-     */
-    function getCostFromZeroSupply(uint b, uint r, uint t, uint amount) internal pure returns (uint) {
-        uint n = amount.div(t);
-        return getCostForCompletedIntervals(b, r, t, n).add(amount.sub(n.mul(t)).mul(b.add(n.mul(r)))).div(10**18);
-    }
-
-    /**
-     * @dev Returns the cost for completed intervals from 0 supply
-     *
-     * @param b The baseCost of the token
-     * @param r The priceRise of the token
-     * @param t The amount of tokens per interval
-     * @param n The amount of completed intervals
-     *
-     * @return Returns the cost for `n` completed intervals from 0 supply
-     */
-    function getCostForCompletedIntervals(uint b, uint r, uint t, uint n) internal pure returns (uint) {
-        return n.mul(t).mul(b.sub(r)).add(r.mul(t).mul(n.mul(n.add(1)).div(2)));
+        return average.mul(amount).div(10**18);
     }
 
     /**

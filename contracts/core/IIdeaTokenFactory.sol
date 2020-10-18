@@ -37,13 +37,12 @@ interface IIdeaTokenFactory {
 
         uint baseCost;
         uint priceRise;
-        uint tokensPerInterval;
         uint tradingFeeRate;
         uint platformFeeRate;
     }
 
     function addMarket(string calldata marketName, address nameVerifier,
-                       uint baseCost, uint priceRise, uint tokensPerInterval,
+                       uint baseCost, uint priceRise,
                        uint tradingFeeRate, uint platformFeeRate) external;
 
     function addToken(string calldata tokenName, uint marketID) external;
