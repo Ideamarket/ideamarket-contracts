@@ -42,9 +42,14 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
     event TokensBought(address ideaToken, uint amount, uint rawCost, uint finalCost);
     event TokensSold(address ideaToken, uint amount, uint rawPrice, uint finalPrice);
+
     event NewInterestWithdrawer(address ideaToken, address withdrawer);
     event NewPlatformFeeWithdrawer(uint marketID, address withdrawer);
 
+    event DaiInvested(address ideaToken, uint daiInToken, uint investmentToken);
+    event TradingFeeInvested(uint investmentToken);
+    event PlatformFeeInvested(uint marketID, uint investmentToken);
+    
     /**
      * @dev Initializes the contract
      *
@@ -95,6 +100,9 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(rawPrice);
     
         emit TokensSold(ideaToken, amount, rawPrice, finalPrice);
+        emit DaiInvested(ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested);
+        emit TradingFeeInvested(_tradingFeeInvested);
+        emit PlatformFeeInvested(marketDetails.id, _platformFeeInvested[marketDetails.id]);
         _dai.transfer(recipient, finalPrice);
     }
 
@@ -195,6 +203,9 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(rawCost);
     
         emit TokensBought(ideaToken, actualAmount, rawCost, finalCost);
+        emit DaiInvested(ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested);
+        emit TradingFeeInvested(_tradingFeeInvested);
+        emit PlatformFeeInvested(marketDetails.id, _platformFeeInvested[marketDetails.id]);
         IIdeaToken(ideaToken).mint(recipient, actualAmount);
     }
 
@@ -269,6 +280,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
         exchangeInfo.invested = exchangeInfo.invested.sub(_interestManager.redeem(msg.sender, interestPayable));
+
+        emit DaiInvested(token, exchangeInfo.daiInToken, exchangeInfo.invested);
     }
 
     /**
@@ -312,6 +325,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
         _platformFeeInvested[marketID] = 0;
         _interestManager.redeem(msg.sender, platformFeePayable);
+
+        emit PlatformFeeInvested(marketID, 0);
     }
 
     /**
@@ -350,6 +365,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         uint redeem = _tradingFeeInvested;
         _tradingFeeInvested = 0;
         _interestManager.redeemInvestmentToken(_tradingFeeRecipient, redeem);
+
+        emit TradingFeeInvested(0);
     }
 
     /**
