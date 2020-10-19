@@ -233,15 +233,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol",
     "exportedSymbols": {
       "IIdeaToken": [
-        617
+        651
       ]
     },
-    "id": 618,
+    "id": 652,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 598,
+        "id": 632,
         "literals": [
           "solidity",
           "^",
@@ -254,10 +254,10 @@
       {
         "absolutePath": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
         "file": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "id": 599,
+        "id": 633,
         "nodeType": "ImportDirective",
-        "scope": 618,
-        "sourceUnit": 10419,
+        "scope": 652,
+        "sourceUnit": 10725,
         "src": "60:55:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -269,36 +269,36 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 601,
+              "id": 635,
               "name": "IERC20",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 10496,
+              "referencedDeclaration": 10802,
               "src": "282:6:3",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IERC20_$10496",
+                "typeIdentifier": "t_contract$_IERC20_$10802",
                 "typeString": "contract IERC20"
               }
             },
-            "id": 602,
+            "id": 636,
             "nodeType": "InheritanceSpecifier",
             "src": "282:6:3"
           }
         ],
         "contractDependencies": [
-          10496
+          10802
         ],
         "contractKind": "interface",
         "documentation": {
-          "id": 600,
+          "id": 634,
           "nodeType": "StructuredDocumentation",
           "src": "119:137:3",
           "text": " @title IIdeaToken\n @author Alexander Schlindwein\n @dev Interface for IdeaTokens. Extends ERC20 with mint and burn."
         },
         "fullyImplemented": false,
-        "id": 617,
+        "id": 651,
         "linearizedBaseContracts": [
-          617,
-          10496
+          651,
+          10802
         ],
         "name": "IIdeaToken",
         "nodeType": "ContractDefinition",
@@ -307,7 +307,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "40c10f19",
-            "id": 609,
+            "id": 643,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -315,17 +315,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 607,
+              "id": 641,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 604,
+                  "id": 638,
                   "mutability": "mutable",
                   "name": "account",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 609,
+                  "scope": 643,
                   "src": "310:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -334,7 +334,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 603,
+                    "id": 637,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "310:7:3",
@@ -349,12 +349,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 606,
+                  "id": 640,
                   "mutability": "mutable",
                   "name": "amount",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 609,
+                  "scope": 643,
                   "src": "327:14:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -363,7 +363,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 605,
+                    "id": 639,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "327:7:3",
@@ -379,12 +379,12 @@
               "src": "309:33:3"
             },
             "returnParameters": {
-              "id": 608,
+              "id": 642,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "351:0:3"
             },
-            "scope": 617,
+            "scope": 651,
             "src": "296:56:3",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -394,7 +394,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "9dc29fac",
-            "id": 616,
+            "id": 650,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -402,17 +402,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 614,
+              "id": 648,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 611,
+                  "id": 645,
                   "mutability": "mutable",
                   "name": "account",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 616,
+                  "scope": 650,
                   "src": "372:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -421,7 +421,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 610,
+                    "id": 644,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "372:7:3",
@@ -436,12 +436,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 613,
+                  "id": 647,
                   "mutability": "mutable",
                   "name": "amount",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 616,
+                  "scope": 650,
                   "src": "389:14:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -450,7 +450,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 612,
+                    "id": 646,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "389:7:3",
@@ -466,19 +466,19 @@
               "src": "371:33:3"
             },
             "returnParameters": {
-              "id": 615,
+              "id": 649,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "413:0:3"
             },
-            "scope": 617,
+            "scope": 651,
             "src": "358:56:3",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 618,
+        "scope": 652,
         "src": "258:159:3"
       }
     ],
@@ -488,15 +488,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol",
     "exportedSymbols": {
       "IIdeaToken": [
-        617
+        651
       ]
     },
-    "id": 618,
+    "id": 652,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 598,
+        "id": 632,
         "literals": [
           "solidity",
           "^",
@@ -509,10 +509,10 @@
       {
         "absolutePath": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
         "file": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "id": 599,
+        "id": 633,
         "nodeType": "ImportDirective",
-        "scope": 618,
-        "sourceUnit": 10419,
+        "scope": 652,
+        "sourceUnit": 10725,
         "src": "60:55:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -524,36 +524,36 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 601,
+              "id": 635,
               "name": "IERC20",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 10496,
+              "referencedDeclaration": 10802,
               "src": "282:6:3",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IERC20_$10496",
+                "typeIdentifier": "t_contract$_IERC20_$10802",
                 "typeString": "contract IERC20"
               }
             },
-            "id": 602,
+            "id": 636,
             "nodeType": "InheritanceSpecifier",
             "src": "282:6:3"
           }
         ],
         "contractDependencies": [
-          10496
+          10802
         ],
         "contractKind": "interface",
         "documentation": {
-          "id": 600,
+          "id": 634,
           "nodeType": "StructuredDocumentation",
           "src": "119:137:3",
           "text": " @title IIdeaToken\n @author Alexander Schlindwein\n @dev Interface for IdeaTokens. Extends ERC20 with mint and burn."
         },
         "fullyImplemented": false,
-        "id": 617,
+        "id": 651,
         "linearizedBaseContracts": [
-          617,
-          10496
+          651,
+          10802
         ],
         "name": "IIdeaToken",
         "nodeType": "ContractDefinition",
@@ -562,7 +562,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "40c10f19",
-            "id": 609,
+            "id": 643,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -570,17 +570,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 607,
+              "id": 641,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 604,
+                  "id": 638,
                   "mutability": "mutable",
                   "name": "account",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 609,
+                  "scope": 643,
                   "src": "310:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -589,7 +589,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 603,
+                    "id": 637,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "310:7:3",
@@ -604,12 +604,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 606,
+                  "id": 640,
                   "mutability": "mutable",
                   "name": "amount",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 609,
+                  "scope": 643,
                   "src": "327:14:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -618,7 +618,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 605,
+                    "id": 639,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "327:7:3",
@@ -634,12 +634,12 @@
               "src": "309:33:3"
             },
             "returnParameters": {
-              "id": 608,
+              "id": 642,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "351:0:3"
             },
-            "scope": 617,
+            "scope": 651,
             "src": "296:56:3",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -649,7 +649,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "9dc29fac",
-            "id": 616,
+            "id": 650,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -657,17 +657,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 614,
+              "id": 648,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 611,
+                  "id": 645,
                   "mutability": "mutable",
                   "name": "account",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 616,
+                  "scope": 650,
                   "src": "372:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -676,7 +676,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 610,
+                    "id": 644,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "372:7:3",
@@ -691,12 +691,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 613,
+                  "id": 647,
                   "mutability": "mutable",
                   "name": "amount",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 616,
+                  "scope": 650,
                   "src": "389:14:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -705,7 +705,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 612,
+                    "id": 646,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "389:7:3",
@@ -721,19 +721,19 @@
               "src": "371:33:3"
             },
             "returnParameters": {
-              "id": 615,
+              "id": 649,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "413:0:3"
             },
-            "scope": 617,
+            "scope": 651,
             "src": "358:56:3",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 618,
+        "scope": 652,
         "src": "258:159:3"
       }
     ],
@@ -745,7 +745,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-16T11:56:47.742Z",
+  "updatedAt": "2020-10-19T07:58:03.994Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Interface for IdeaTokens. Extends ERC20 with mint and burn.",

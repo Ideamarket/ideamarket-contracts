@@ -25,9 +25,9 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"factory\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Spell to set the platform fee for a market\",\"methods\":{\"execute(address,uint256,uint256)\":{\"details\":\"Sets the platform fee for a market\",\"params\":{\"factory\":\"The address of the IdeaTokenFactory\",\"marketID\":\"The market for which to set the platform fee\",\"platformFeeRate\":\"The platform fee\"}}},\"title\":\"SetPlatformFeeSpell\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetPlatformFeeSpell.sol\":\"SetPlatformFeeSpell\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol\":{\"keccak256\":\"0x6f7580affb29d8404d303bad5125a491cac0b56867e1b7662df55c9a03bb9c0c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fbc3c9661445a722c0af0a57a1d3bbac2f469ff9d68fcd9a86d4e7b990e12d12\",\"dweb:/ipfs/QmbbD61NbPeHYiyVH1Vq8Nyit9Ze8UEWPkvzGVbZKgbGZX\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol\":{\"keccak256\":\"0x4896d526350b6c62e4b1226689abf79601b7e06b9af84ff21e54d1fe30238366\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a1d772a03ec6d949f7a02e470f98f30f8eab5b0a3caed0663d2fdd174dfdd0d5\",\"dweb:/ipfs/QmR1HRnGTdYw2J4NRqJ1oDKAhr6fYYc4ijfAX8badXTWdk\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0x9124b51007226bd7bad5d36d7c28b6af674c52ce70907c6981777756ad7f6678\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9b5b993cb27764e9f11acbdfdae559e65a9ca861e369cfbfb5af3a23dff06fe1\",\"dweb:/ipfs/QmcTN4dp7JjghhM6XFTqMNBVJ3ACHYqdu6V5XbQiHJgseY\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetPlatformFeeSpell.sol\":{\"keccak256\":\"0xb6b108becb8281686f9df8140ad67656fa612957aba2bcf87a671b31a6f220cc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://279806d0dec32707b2c48f21aeaf0ac5de1fa615f8ce05fc71f4e73df6ae3fc5\",\"dweb:/ipfs/QmNTmDosMPa73W2NgdSfLzj8Jyuyk7VosHHDQvKbP3NiQ2\"]},\"@openzeppelin/contracts/GSN/Context.sol\":{\"keccak256\":\"0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a\",\"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5\",\"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV\"]},\"@openzeppelin/contracts/token/ERC20/ERC20.sol\":{\"keccak256\":\"0xf204d98eef08edacf5a02a2af1516ea4febdb6aba7a1ae5ac8deb6e568fd3dbb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c4dea62bffbd180772a6cfe7cb90e3a045c52d6b502bdb2fdff83193da42d8d0\",\"dweb:/ipfs/QmW8qGZ5nngajmv5Aamdrpkeuq7S5YCVaR7rtcqNekKHtK\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x5c26b39d26f7ed489e555d955dcd3e01872972e71fdd1528e93ec164e4f23385\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://efdc632af6960cf865dbc113665ea1f5b90eab75cc40ec062b2f6ae6da582017\",\"dweb:/ipfs/QmfAZFDuG62vxmAN9DnXApv7e7PMzPqi4RkqqZHLMSQiY5\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0xdfb4f812600ba4ce6738c35584ceb8c9433472583051b48ba5b1f66cb758a498\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df02dffe1c1de089d9b4f6192f0dcf464526f2230f420b3deec4645e0cdd2bff\",\"dweb:/ipfs/QmcqXGAU3KJqwrgUVoGJ2W8osomhSJ4R5kdsRpbuW3fELS\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5061012e806100206000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063c52ab77814602d575b600080fd5b608060048036036060811015604157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001909291905050506082565b005b8273ffffffffffffffffffffffffffffffffffffffff1663dc5ea5d983836040518363ffffffff1660e01b81526004018083815260200182815260200192505050600060405180830381600087803b15801560dc57600080fd5b505af115801560ef573d6000803e3d6000fd5b5050505050505056fea2646970667358221220617f117999be232a42d73fccb3c1cffca9a5c445d57ae8522b193635661fe04264736f6c63430006090033",
-  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c8063c52ab77814602d575b600080fd5b608060048036036060811015604157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001909291905050506082565b005b8273ffffffffffffffffffffffffffffffffffffffff1663dc5ea5d983836040518363ffffffff1660e01b81526004018083815260200182815260200192505050600060405180830381600087803b15801560dc57600080fd5b505af115801560ef573d6000803e3d6000fd5b5050505050505056fea2646970667358221220617f117999be232a42d73fccb3c1cffca9a5c445d57ae8522b193635661fe04264736f6c63430006090033",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"factory\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"marketID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Spell to set the platform fee for a market\",\"methods\":{\"execute(address,uint256,uint256)\":{\"details\":\"Sets the platform fee for a market\",\"params\":{\"factory\":\"The address of the IdeaTokenFactory\",\"marketID\":\"The market for which to set the platform fee\",\"platformFeeRate\":\"The platform fee\"}}},\"title\":\"SetPlatformFeeSpell\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetPlatformFeeSpell.sol\":\"SetPlatformFeeSpell\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol\":{\"keccak256\":\"0x6f7580affb29d8404d303bad5125a491cac0b56867e1b7662df55c9a03bb9c0c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fbc3c9661445a722c0af0a57a1d3bbac2f469ff9d68fcd9a86d4e7b990e12d12\",\"dweb:/ipfs/QmbbD61NbPeHYiyVH1Vq8Nyit9Ze8UEWPkvzGVbZKgbGZX\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol\":{\"keccak256\":\"0x8c5dd03c3ea82000fa1fa02f63f58955df9b445959e30b563a3ebf6940392a9b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4e4b0c75fc1222a1fb184d16227204a1095cb7bb681afdc6a903bae8d392b056\",\"dweb:/ipfs/QmRzHjY4f97mtsf8j4iD8U9KtBkd4CH7qfrcx6QBvenMYU\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0x9124b51007226bd7bad5d36d7c28b6af674c52ce70907c6981777756ad7f6678\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9b5b993cb27764e9f11acbdfdae559e65a9ca861e369cfbfb5af3a23dff06fe1\",\"dweb:/ipfs/QmcTN4dp7JjghhM6XFTqMNBVJ3ACHYqdu6V5XbQiHJgseY\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetPlatformFeeSpell.sol\":{\"keccak256\":\"0xb6b108becb8281686f9df8140ad67656fa612957aba2bcf87a671b31a6f220cc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://279806d0dec32707b2c48f21aeaf0ac5de1fa615f8ce05fc71f4e73df6ae3fc5\",\"dweb:/ipfs/QmNTmDosMPa73W2NgdSfLzj8Jyuyk7VosHHDQvKbP3NiQ2\"]},\"@openzeppelin/contracts/GSN/Context.sol\":{\"keccak256\":\"0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a\",\"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5\",\"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV\"]},\"@openzeppelin/contracts/token/ERC20/ERC20.sol\":{\"keccak256\":\"0xf204d98eef08edacf5a02a2af1516ea4febdb6aba7a1ae5ac8deb6e568fd3dbb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c4dea62bffbd180772a6cfe7cb90e3a045c52d6b502bdb2fdff83193da42d8d0\",\"dweb:/ipfs/QmW8qGZ5nngajmv5Aamdrpkeuq7S5YCVaR7rtcqNekKHtK\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x5c26b39d26f7ed489e555d955dcd3e01872972e71fdd1528e93ec164e4f23385\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://efdc632af6960cf865dbc113665ea1f5b90eab75cc40ec062b2f6ae6da582017\",\"dweb:/ipfs/QmfAZFDuG62vxmAN9DnXApv7e7PMzPqi4RkqqZHLMSQiY5\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0xdfb4f812600ba4ce6738c35584ceb8c9433472583051b48ba5b1f66cb758a498\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df02dffe1c1de089d9b4f6192f0dcf464526f2230f420b3deec4645e0cdd2bff\",\"dweb:/ipfs/QmcqXGAU3KJqwrgUVoGJ2W8osomhSJ4R5kdsRpbuW3fELS\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061012e806100206000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063c52ab77814602d575b600080fd5b608060048036036060811015604157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001909291905050506082565b005b8273ffffffffffffffffffffffffffffffffffffffff1663dc5ea5d983836040518363ffffffff1660e01b81526004018083815260200182815260200192505050600060405180830381600087803b15801560dc57600080fd5b505af115801560ef573d6000803e3d6000fd5b5050505050505056fea26469706673582212209e559f3f0816e48ec240ccdf41b38d704ea4366377ab5b8d9d4adaa5abfc439064736f6c63430006090033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c8063c52ab77814602d575b600080fd5b608060048036036060811015604157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001909291905050506082565b005b8273ffffffffffffffffffffffffffffffffffffffff1663dc5ea5d983836040518363ffffffff1660e01b81526004018083815260200182815260200192505050600060405180830381600087803b15801560dc57600080fd5b505af115801560ef573d6000803e3d6000fd5b5050505050505056fea26469706673582212209e559f3f0816e48ec240ccdf41b38d704ea4366377ab5b8d9d4adaa5abfc439064736f6c63430006090033",
   "immutableReferences": {},
   "sourceMap": "234:458:20:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "234:458:20:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;522:167;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;631:7;613:41;;;655:8;665:15;613:68;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;522:167;;;:::o",
@@ -37,15 +37,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetPlatformFeeSpell.sol",
     "exportedSymbols": {
       "SetPlatformFeeSpell": [
-        3820
+        4018
       ]
     },
-    "id": 3821,
+    "id": 4019,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3798,
+        "id": 3996,
         "literals": [
           "solidity",
           "^",
@@ -58,10 +58,10 @@
       {
         "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol",
         "file": "../core/IIdeaTokenFactory.sol",
-        "id": 3799,
+        "id": 3997,
         "nodeType": "ImportDirective",
-        "scope": 3821,
-        "sourceUnit": 819,
+        "scope": 4019,
+        "sourceUnit": 851,
         "src": "60:39:20",
         "symbolAliases": [],
         "unitAlias": ""
@@ -72,22 +72,22 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 3800,
+          "id": 3998,
           "nodeType": "StructuredDocumentation",
           "src": "103:129:20",
           "text": " @title SetPlatformFeeSpell\n @author Alexander Schlindwein\n @dev Spell to set the platform fee for a market"
         },
         "fullyImplemented": true,
-        "id": 3820,
+        "id": 4018,
         "linearizedBaseContracts": [
-          3820
+          4018
         ],
         "name": "SetPlatformFeeSpell",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3818,
+              "id": 4016,
               "nodeType": "Block",
               "src": "602:87:20",
               "statements": [
@@ -97,11 +97,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3814,
+                        "id": 4012,
                         "name": "marketID",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3805,
+                        "referencedDeclaration": 4003,
                         "src": "655:8:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -110,11 +110,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3815,
+                        "id": 4013,
                         "name": "platformFeeRate",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3807,
+                        "referencedDeclaration": 4005,
                         "src": "665:15:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -138,11 +138,11 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 3811,
+                            "id": 4009,
                             "name": "factory",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3803,
+                            "referencedDeclaration": 4001,
                             "src": "631:7:20",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -157,18 +157,18 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 3810,
+                          "id": 4008,
                           "name": "IIdeaTokenFactory",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 818,
+                          "referencedDeclaration": 850,
                           "src": "613:17:20",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_IIdeaTokenFactory_$818_$",
+                            "typeIdentifier": "t_type$_t_contract$_IIdeaTokenFactory_$850_$",
                             "typeString": "type(contract IIdeaTokenFactory)"
                           }
                         },
-                        "id": 3812,
+                        "id": 4010,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -179,25 +179,25 @@
                         "src": "613:26:20",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IIdeaTokenFactory_$818",
+                          "typeIdentifier": "t_contract$_IIdeaTokenFactory_$850",
                           "typeString": "contract IIdeaTokenFactory"
                         }
                       },
-                      "id": 3813,
+                      "id": 4011,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "setPlatformFee",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 817,
+                      "referencedDeclaration": 849,
                       "src": "613:41:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$__$",
                         "typeString": "function (uint256,uint256) external"
                       }
                     },
-                    "id": 3816,
+                    "id": 4014,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -212,20 +212,20 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3817,
+                  "id": 4015,
                   "nodeType": "ExpressionStatement",
                   "src": "613:68:20"
                 }
               ]
             },
             "documentation": {
-              "id": 3801,
+              "id": 3999,
               "nodeType": "StructuredDocumentation",
               "src": "272:244:20",
               "text": " @dev Sets the platform fee for a market\n @param factory The address of the IdeaTokenFactory\n @param marketID The market for which to set the platform fee\n @param platformFeeRate The platform fee"
             },
             "functionSelector": "c52ab778",
-            "id": 3819,
+            "id": 4017,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -233,17 +233,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3808,
+              "id": 4006,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3803,
+                  "id": 4001,
                   "mutability": "mutable",
                   "name": "factory",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3819,
+                  "scope": 4017,
                   "src": "539:15:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -252,7 +252,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3802,
+                    "id": 4000,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "539:7:20",
@@ -267,12 +267,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3805,
+                  "id": 4003,
                   "mutability": "mutable",
                   "name": "marketID",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3819,
+                  "scope": 4017,
                   "src": "556:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -281,7 +281,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3804,
+                    "id": 4002,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "556:4:20",
@@ -295,12 +295,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3807,
+                  "id": 4005,
                   "mutability": "mutable",
                   "name": "platformFeeRate",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3819,
+                  "scope": 4017,
                   "src": "571:20:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -309,7 +309,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3806,
+                    "id": 4004,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "571:4:20",
@@ -325,19 +325,19 @@
               "src": "538:54:20"
             },
             "returnParameters": {
-              "id": 3809,
+              "id": 4007,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "602:0:20"
             },
-            "scope": 3820,
+            "scope": 4018,
             "src": "522:167:20",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3821,
+        "scope": 4019,
         "src": "234:458:20"
       }
     ],
@@ -347,15 +347,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetPlatformFeeSpell.sol",
     "exportedSymbols": {
       "SetPlatformFeeSpell": [
-        3820
+        4018
       ]
     },
-    "id": 3821,
+    "id": 4019,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3798,
+        "id": 3996,
         "literals": [
           "solidity",
           "^",
@@ -368,10 +368,10 @@
       {
         "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol",
         "file": "../core/IIdeaTokenFactory.sol",
-        "id": 3799,
+        "id": 3997,
         "nodeType": "ImportDirective",
-        "scope": 3821,
-        "sourceUnit": 819,
+        "scope": 4019,
+        "sourceUnit": 851,
         "src": "60:39:20",
         "symbolAliases": [],
         "unitAlias": ""
@@ -382,22 +382,22 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 3800,
+          "id": 3998,
           "nodeType": "StructuredDocumentation",
           "src": "103:129:20",
           "text": " @title SetPlatformFeeSpell\n @author Alexander Schlindwein\n @dev Spell to set the platform fee for a market"
         },
         "fullyImplemented": true,
-        "id": 3820,
+        "id": 4018,
         "linearizedBaseContracts": [
-          3820
+          4018
         ],
         "name": "SetPlatformFeeSpell",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3818,
+              "id": 4016,
               "nodeType": "Block",
               "src": "602:87:20",
               "statements": [
@@ -407,11 +407,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3814,
+                        "id": 4012,
                         "name": "marketID",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3805,
+                        "referencedDeclaration": 4003,
                         "src": "655:8:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -420,11 +420,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3815,
+                        "id": 4013,
                         "name": "platformFeeRate",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3807,
+                        "referencedDeclaration": 4005,
                         "src": "665:15:20",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -448,11 +448,11 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 3811,
+                            "id": 4009,
                             "name": "factory",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3803,
+                            "referencedDeclaration": 4001,
                             "src": "631:7:20",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -467,18 +467,18 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 3810,
+                          "id": 4008,
                           "name": "IIdeaTokenFactory",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 818,
+                          "referencedDeclaration": 850,
                           "src": "613:17:20",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_IIdeaTokenFactory_$818_$",
+                            "typeIdentifier": "t_type$_t_contract$_IIdeaTokenFactory_$850_$",
                             "typeString": "type(contract IIdeaTokenFactory)"
                           }
                         },
-                        "id": 3812,
+                        "id": 4010,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -489,25 +489,25 @@
                         "src": "613:26:20",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IIdeaTokenFactory_$818",
+                          "typeIdentifier": "t_contract$_IIdeaTokenFactory_$850",
                           "typeString": "contract IIdeaTokenFactory"
                         }
                       },
-                      "id": 3813,
+                      "id": 4011,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "setPlatformFee",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 817,
+                      "referencedDeclaration": 849,
                       "src": "613:41:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$__$",
                         "typeString": "function (uint256,uint256) external"
                       }
                     },
-                    "id": 3816,
+                    "id": 4014,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -522,20 +522,20 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3817,
+                  "id": 4015,
                   "nodeType": "ExpressionStatement",
                   "src": "613:68:20"
                 }
               ]
             },
             "documentation": {
-              "id": 3801,
+              "id": 3999,
               "nodeType": "StructuredDocumentation",
               "src": "272:244:20",
               "text": " @dev Sets the platform fee for a market\n @param factory The address of the IdeaTokenFactory\n @param marketID The market for which to set the platform fee\n @param platformFeeRate The platform fee"
             },
             "functionSelector": "c52ab778",
-            "id": 3819,
+            "id": 4017,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -543,17 +543,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3808,
+              "id": 4006,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3803,
+                  "id": 4001,
                   "mutability": "mutable",
                   "name": "factory",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3819,
+                  "scope": 4017,
                   "src": "539:15:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -562,7 +562,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3802,
+                    "id": 4000,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "539:7:20",
@@ -577,12 +577,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3805,
+                  "id": 4003,
                   "mutability": "mutable",
                   "name": "marketID",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3819,
+                  "scope": 4017,
                   "src": "556:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -591,7 +591,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3804,
+                    "id": 4002,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "556:4:20",
@@ -605,12 +605,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3807,
+                  "id": 4005,
                   "mutability": "mutable",
                   "name": "platformFeeRate",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3819,
+                  "scope": 4017,
                   "src": "571:20:20",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -619,7 +619,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3806,
+                    "id": 4004,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "571:4:20",
@@ -635,19 +635,19 @@
               "src": "538:54:20"
             },
             "returnParameters": {
-              "id": 3809,
+              "id": 4007,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "602:0:20"
             },
-            "scope": 3820,
+            "scope": 4018,
             "src": "522:167:20",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3821,
+        "scope": 4019,
         "src": "234:458:20"
       }
     ],
@@ -661,12 +661,12 @@
     "42": {
       "events": {},
       "links": {},
-      "address": "0x1c15118335Fb81C071B4976b6C2f2297Fa70ca89",
-      "transactionHash": "0x715689a9b367dc94184a38f8d494b8185d9dfe58908a48944b1042f43f3aa933"
+      "address": "0x9CccE5980b1f70759491011a385B6a60E53c2B62",
+      "transactionHash": "0x5b96d3f337cd7ae248fdcfbe082387576ff14345b499b7beaf0c40818ea29352"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-16T11:57:10.232Z",
+  "updatedAt": "2020-10-19T08:02:51.079Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",

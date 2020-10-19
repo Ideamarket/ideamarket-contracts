@@ -30,11 +30,6 @@
         },
         {
           "internalType": "uint256",
-          "name": "tokensPerInterval",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
           "name": "tradingFeeRate",
           "type": "uint256"
         },
@@ -50,27 +45,27 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"factory\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerInterval\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Spell to add a market\",\"methods\":{\"execute(address,string,address,uint256,uint256,uint256,uint256,uint256)\":{\"details\":\"Adds a market to the factory\",\"params\":{\"baseCost\":\"The base cost\",\"factory\":\"The address of the IdeaTokenFactory\",\"marketName\":\"The name of the market\",\"nameVerifier\":\"The address of the name verifier\",\"platformFeeRate\":\"The platform fee\",\"priceRise\":\"The price rise\",\"tokensPerInterval\":\"The tokens per interval\",\"tradingFeeRate\":\"The trading fee\"}}},\"title\":\"AddMarketSpell\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AddMarketSpell.sol\":\"AddMarketSpell\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol\":{\"keccak256\":\"0x6f7580affb29d8404d303bad5125a491cac0b56867e1b7662df55c9a03bb9c0c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fbc3c9661445a722c0af0a57a1d3bbac2f469ff9d68fcd9a86d4e7b990e12d12\",\"dweb:/ipfs/QmbbD61NbPeHYiyVH1Vq8Nyit9Ze8UEWPkvzGVbZKgbGZX\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol\":{\"keccak256\":\"0x4896d526350b6c62e4b1226689abf79601b7e06b9af84ff21e54d1fe30238366\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a1d772a03ec6d949f7a02e470f98f30f8eab5b0a3caed0663d2fdd174dfdd0d5\",\"dweb:/ipfs/QmR1HRnGTdYw2J4NRqJ1oDKAhr6fYYc4ijfAX8badXTWdk\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0x9124b51007226bd7bad5d36d7c28b6af674c52ce70907c6981777756ad7f6678\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9b5b993cb27764e9f11acbdfdae559e65a9ca861e369cfbfb5af3a23dff06fe1\",\"dweb:/ipfs/QmcTN4dp7JjghhM6XFTqMNBVJ3ACHYqdu6V5XbQiHJgseY\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AddMarketSpell.sol\":{\"keccak256\":\"0x6a84ee86c3ec8d8eb22eece913c0c9126d665191fd4b29d8543bbd9a45eb6edd\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f7655ad2b7a0d36e7070cd0f186ba3170f1b4d9b3de47487ae65ea8b6286819f\",\"dweb:/ipfs/QmaHsxNnTQRWsFv4k3bgwUVUVusedCLL3Qveg2gfKprkhe\"]},\"@openzeppelin/contracts/GSN/Context.sol\":{\"keccak256\":\"0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a\",\"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5\",\"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV\"]},\"@openzeppelin/contracts/token/ERC20/ERC20.sol\":{\"keccak256\":\"0xf204d98eef08edacf5a02a2af1516ea4febdb6aba7a1ae5ac8deb6e568fd3dbb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c4dea62bffbd180772a6cfe7cb90e3a045c52d6b502bdb2fdff83193da42d8d0\",\"dweb:/ipfs/QmW8qGZ5nngajmv5Aamdrpkeuq7S5YCVaR7rtcqNekKHtK\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x5c26b39d26f7ed489e555d955dcd3e01872972e71fdd1528e93ec164e4f23385\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://efdc632af6960cf865dbc113665ea1f5b90eab75cc40ec062b2f6ae6da582017\",\"dweb:/ipfs/QmfAZFDuG62vxmAN9DnXApv7e7PMzPqi4RkqqZHLMSQiY5\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0xdfb4f812600ba4ce6738c35584ceb8c9433472583051b48ba5b1f66cb758a498\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df02dffe1c1de089d9b4f6192f0dcf464526f2230f420b3deec4645e0cdd2bff\",\"dweb:/ipfs/QmcqXGAU3KJqwrgUVoGJ2W8osomhSJ4R5kdsRpbuW3fELS\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50610250806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063c565d94714610030575b600080fd5b61011a600480360361010081101561004757600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019064010000000081111561008457600080fd5b82018360208201111561009657600080fd5b803590602001918460018302840111640100000000831117156100b857600080fd5b9091929391929390803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291908035906020019092919080359060200190929190803590602001909291908035906020019092919050505061011c565b005b8873ffffffffffffffffffffffffffffffffffffffff16636de84a9e89898989898989896040518963ffffffff1660e01b815260040180806020018873ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200187815260200186815260200185815260200184815260200183815260200182810382528a8a82818152602001925080828437600081840152601f19601f8201169050808301925050509950505050505050505050600060405180830381600087803b1580156101f757600080fd5b505af115801561020b573d6000803e3d6000fd5b5050505050505050505050505056fea2646970667358221220888219cd495f143bccb5a46fdfde2792dc68e2d9452e684f650999a6ddc6985364736f6c63430006090033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063c565d94714610030575b600080fd5b61011a600480360361010081101561004757600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019064010000000081111561008457600080fd5b82018360208201111561009657600080fd5b803590602001918460018302840111640100000000831117156100b857600080fd5b9091929391929390803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291908035906020019092919080359060200190929190803590602001909291908035906020019092919050505061011c565b005b8873ffffffffffffffffffffffffffffffffffffffff16636de84a9e89898989898989896040518963ffffffff1660e01b815260040180806020018873ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200187815260200186815260200185815260200184815260200183815260200182810382528a8a82818152602001925080828437600081840152601f19601f8201169050808301925050509950505050505050505050600060405180830381600087803b1580156101f757600080fd5b505af115801561020b573d6000803e3d6000fd5b5050505050505050505050505056fea2646970667358221220888219cd495f143bccb5a46fdfde2792dc68e2d9452e684f650999a6ddc6985364736f6c63430006090033",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"factory\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"marketName\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"nameVerifier\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"baseCost\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"priceRise\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tradingFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"platformFeeRate\",\"type\":\"uint256\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Alexander Schlindwein\",\"details\":\"Spell to add a market\",\"methods\":{\"execute(address,string,address,uint256,uint256,uint256,uint256)\":{\"details\":\"Adds a market to the factory\",\"params\":{\"baseCost\":\"The base cost\",\"factory\":\"The address of the IdeaTokenFactory\",\"marketName\":\"The name of the market\",\"nameVerifier\":\"The address of the name verifier\",\"platformFeeRate\":\"The platform fee\",\"priceRise\":\"The price rise\",\"tradingFeeRate\":\"The trading fee\"}}},\"title\":\"AddMarketSpell\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AddMarketSpell.sol\":\"AddMarketSpell\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaToken.sol\":{\"keccak256\":\"0x6f7580affb29d8404d303bad5125a491cac0b56867e1b7662df55c9a03bb9c0c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fbc3c9661445a722c0af0a57a1d3bbac2f469ff9d68fcd9a86d4e7b990e12d12\",\"dweb:/ipfs/QmbbD61NbPeHYiyVH1Vq8Nyit9Ze8UEWPkvzGVbZKgbGZX\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol\":{\"keccak256\":\"0x8c5dd03c3ea82000fa1fa02f63f58955df9b445959e30b563a3ebf6940392a9b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4e4b0c75fc1222a1fb184d16227204a1095cb7bb681afdc6a903bae8d392b056\",\"dweb:/ipfs/QmRzHjY4f97mtsf8j4iD8U9KtBkd4CH7qfrcx6QBvenMYU\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/nameVerifiers/IIdeaTokenNameVerifier.sol\":{\"keccak256\":\"0x9124b51007226bd7bad5d36d7c28b6af674c52ce70907c6981777756ad7f6678\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9b5b993cb27764e9f11acbdfdae559e65a9ca861e369cfbfb5af3a23dff06fe1\",\"dweb:/ipfs/QmcTN4dp7JjghhM6XFTqMNBVJ3ACHYqdu6V5XbQiHJgseY\"]},\"/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AddMarketSpell.sol\":{\"keccak256\":\"0xa1bc5ed80b2a25c8cb79e911036c5aa278d5f5544d810dd19f148688b35693c0\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://505b38f68545c35950b97e82f9a36ad2b36aa58608dafbc44d79ef97c8d62a86\",\"dweb:/ipfs/QmVbbFJcj9Kkzr5YhsR8aohcuvPZ9G97bftjDBPCEEkkW2\"]},\"@openzeppelin/contracts/GSN/Context.sol\":{\"keccak256\":\"0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a\",\"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5\",\"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV\"]},\"@openzeppelin/contracts/token/ERC20/ERC20.sol\":{\"keccak256\":\"0xf204d98eef08edacf5a02a2af1516ea4febdb6aba7a1ae5ac8deb6e568fd3dbb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c4dea62bffbd180772a6cfe7cb90e3a045c52d6b502bdb2fdff83193da42d8d0\",\"dweb:/ipfs/QmW8qGZ5nngajmv5Aamdrpkeuq7S5YCVaR7rtcqNekKHtK\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x5c26b39d26f7ed489e555d955dcd3e01872972e71fdd1528e93ec164e4f23385\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://efdc632af6960cf865dbc113665ea1f5b90eab75cc40ec062b2f6ae6da582017\",\"dweb:/ipfs/QmfAZFDuG62vxmAN9DnXApv7e7PMzPqi4RkqqZHLMSQiY5\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0xdfb4f812600ba4ce6738c35584ceb8c9433472583051b48ba5b1f66cb758a498\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df02dffe1c1de089d9b4f6192f0dcf464526f2230f420b3deec4645e0cdd2bff\",\"dweb:/ipfs/QmcqXGAU3KJqwrgUVoGJ2W8osomhSJ4R5kdsRpbuW3fELS\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061023c806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063d7ed25d614610030575b600080fd5b61010f600480360360e081101561004657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019064010000000081111561008357600080fd5b82018360208201111561009557600080fd5b803590602001918460018302840111640100000000831117156100b757600080fd5b9091929391929390803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001909291908035906020019092919080359060200190929190505050610111565b005b8773ffffffffffffffffffffffffffffffffffffffff16638a768a9b888888888888886040518863ffffffff1660e01b815260040180806020018773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018681526020018581526020018481526020018381526020018281038252898982818152602001925080828437600081840152601f19601f82011690508083019250505098505050505050505050600060405180830381600087803b1580156101e457600080fd5b505af11580156101f8573d6000803e3d6000fd5b50505050505050505050505056fea26469706673582212207502ba6f9c7bc4750a6ca14b4957812f694dfbf5d84cce7043702a37e8ff240f64736f6c63430006090033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063d7ed25d614610030575b600080fd5b61010f600480360360e081101561004657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019064010000000081111561008357600080fd5b82018360208201111561009557600080fd5b803590602001918460018302840111640100000000831117156100b757600080fd5b9091929391929390803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001909291908035906020019092919080359060200190929190505050610111565b005b8773ffffffffffffffffffffffffffffffffffffffff16638a768a9b888888888888886040518863ffffffff1660e01b815260040180806020018773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018681526020018581526020018481526020018381526020018281038252898982818152602001925080828437600081840152601f19601f82011690508083019250505098505050505050505050600060405180830381600087803b1580156101e457600080fd5b505af11580156101f8573d6000803e3d6000fd5b50505050505050505050505056fea26469706673582212207502ba6f9c7bc4750a6ca14b4957812f694dfbf5d84cce7043702a37e8ff240f64736f6c63430006090033",
   "immutableReferences": {},
-  "sourceMap": "208:987:17:-:0;;;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "208:987:17:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;707:485;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;973:7;955:36;;;992:10;;1004:12;1065:8;1075:9;1086:17;1152:14;1168:15;955:229;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;707:485;;;;;;;;;:::o",
-  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\nimport \"../core/IIdeaTokenFactory.sol\";\r\n\r\n/**\r\n * @title AddMarketSpell\r\n * @author Alexander Schlindwein\r\n *\r\n * @dev Spell to add a market\r\n */\r\ncontract AddMarketSpell {\r\n\r\n    /**\r\n     * @dev Adds a market to the factory\r\n     *\r\n     * @param factory The address of the IdeaTokenFactory\r\n     * @param marketName The name of the market\r\n     * @param nameVerifier The address of the name verifier\r\n     * @param baseCost The base cost\r\n     * @param priceRise The price rise\r\n     * @param tokensPerInterval The tokens per interval\r\n     * @param tradingFeeRate The trading fee\r\n     * @param platformFeeRate The platform fee\r\n     */\r\n    function execute(address factory, string calldata marketName, address nameVerifier,\r\n                     uint baseCost, uint priceRise, uint tokensPerInterval,\r\n                     uint tradingFeeRate, uint platformFeeRate) external {\r\n\r\n        IIdeaTokenFactory(factory).addMarket(marketName, nameVerifier,\r\n                                              baseCost, priceRise, tokensPerInterval,\r\n                                              tradingFeeRate, platformFeeRate);\r\n    }\r\n}",
+  "sourceMap": "208:887:17:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "208:887:17:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;650:442;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;892:7;874:36;;;911:10;;923:12;984:8;994:9;1052:14;1068:15;874:210;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;650:442;;;;;;;;:::o",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.6.9;\r\n\r\nimport \"../core/IIdeaTokenFactory.sol\";\r\n\r\n/**\r\n * @title AddMarketSpell\r\n * @author Alexander Schlindwein\r\n *\r\n * @dev Spell to add a market\r\n */\r\ncontract AddMarketSpell {\r\n\r\n    /**\r\n     * @dev Adds a market to the factory\r\n     *\r\n     * @param factory The address of the IdeaTokenFactory\r\n     * @param marketName The name of the market\r\n     * @param nameVerifier The address of the name verifier\r\n     * @param baseCost The base cost\r\n     * @param priceRise The price rise\r\n     * @param tradingFeeRate The trading fee\r\n     * @param platformFeeRate The platform fee\r\n     */\r\n    function execute(address factory, string calldata marketName, address nameVerifier,\r\n                     uint baseCost, uint priceRise,\r\n                     uint tradingFeeRate, uint platformFeeRate) external {\r\n\r\n        IIdeaTokenFactory(factory).addMarket(marketName, nameVerifier,\r\n                                              baseCost, priceRise,\r\n                                              tradingFeeRate, platformFeeRate);\r\n    }\r\n}",
   "sourcePath": "C:/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AddMarketSpell.sol",
   "ast": {
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AddMarketSpell.sol",
     "exportedSymbols": {
       "AddMarketSpell": [
-        3748
+        3946
       ]
     },
-    "id": 3749,
+    "id": 3947,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3711,
+        "id": 3912,
         "literals": [
           "solidity",
           "^",
@@ -83,10 +78,10 @@
       {
         "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol",
         "file": "../core/IIdeaTokenFactory.sol",
-        "id": 3712,
+        "id": 3913,
         "nodeType": "ImportDirective",
-        "scope": 3749,
-        "sourceUnit": 819,
+        "scope": 3947,
+        "sourceUnit": 851,
         "src": "60:39:17",
         "symbolAliases": [],
         "unitAlias": ""
@@ -97,24 +92,24 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 3713,
+          "id": 3914,
           "nodeType": "StructuredDocumentation",
           "src": "103:103:17",
           "text": " @title AddMarketSpell\n @author Alexander Schlindwein\n @dev Spell to add a market"
         },
         "fullyImplemented": true,
-        "id": 3748,
+        "id": 3946,
         "linearizedBaseContracts": [
-          3748
+          3946
         ],
         "name": "AddMarketSpell",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3746,
+              "id": 3944,
               "nodeType": "Block",
-              "src": "942:250:17",
+              "src": "861:231:17",
               "statements": [
                 {
                   "expression": {
@@ -122,12 +117,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3737,
+                        "id": 3936,
                         "name": "marketName",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3718,
-                        "src": "992:10:17",
+                        "referencedDeclaration": 3919,
+                        "src": "911:10:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_calldata_ptr",
                           "typeString": "string calldata"
@@ -135,12 +130,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3738,
+                        "id": 3937,
                         "name": "nameVerifier",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3720,
-                        "src": "1004:12:17",
+                        "referencedDeclaration": 3921,
+                        "src": "923:12:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -148,12 +143,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3739,
+                        "id": 3938,
                         "name": "baseCost",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3722,
-                        "src": "1065:8:17",
+                        "referencedDeclaration": 3923,
+                        "src": "984:8:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -161,12 +156,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3740,
+                        "id": 3939,
                         "name": "priceRise",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3724,
-                        "src": "1075:9:17",
+                        "referencedDeclaration": 3925,
+                        "src": "994:9:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -174,25 +169,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3741,
-                        "name": "tokensPerInterval",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 3726,
-                        "src": "1086:17:17",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
-                        }
-                      },
-                      {
-                        "argumentTypes": null,
-                        "id": 3742,
+                        "id": 3940,
                         "name": "tradingFeeRate",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3728,
-                        "src": "1152:14:17",
+                        "referencedDeclaration": 3927,
+                        "src": "1052:14:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -200,12 +182,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3743,
+                        "id": 3941,
                         "name": "platformFeeRate",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3730,
-                        "src": "1168:15:17",
+                        "referencedDeclaration": 3929,
+                        "src": "1068:15:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -237,10 +219,6 @@
                         {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
-                        },
-                        {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
                         }
                       ],
                       "expression": {
@@ -248,12 +226,12 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 3734,
+                            "id": 3933,
                             "name": "factory",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3716,
-                            "src": "973:7:17",
+                            "referencedDeclaration": 3917,
+                            "src": "892:7:17",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
                               "typeString": "address"
@@ -267,18 +245,18 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 3733,
+                          "id": 3932,
                           "name": "IIdeaTokenFactory",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 818,
-                          "src": "955:17:17",
+                          "referencedDeclaration": 850,
+                          "src": "874:17:17",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_IIdeaTokenFactory_$818_$",
+                            "typeIdentifier": "t_type$_t_contract$_IIdeaTokenFactory_$850_$",
                             "typeString": "type(contract IIdeaTokenFactory)"
                           }
                         },
-                        "id": 3735,
+                        "id": 3934,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -286,28 +264,28 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "955:26:17",
+                        "src": "874:26:17",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IIdeaTokenFactory_$818",
+                          "typeIdentifier": "t_contract$_IIdeaTokenFactory_$850",
                           "typeString": "contract IIdeaTokenFactory"
                         }
                       },
-                      "id": 3736,
+                      "id": 3935,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "addMarket",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 736,
-                      "src": "955:36:17",
+                      "referencedDeclaration": 768,
+                      "src": "874:36:17",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_external_nonpayable$_t_string_memory_ptr_$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_uint256_$_t_uint256_$returns$__$",
-                        "typeString": "function (string memory,address,uint256,uint256,uint256,uint256,uint256) external"
+                        "typeIdentifier": "t_function_external_nonpayable$_t_string_memory_ptr_$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (string memory,address,uint256,uint256,uint256,uint256) external"
                       }
                     },
-                    "id": 3744,
+                    "id": 3942,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -315,27 +293,27 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "955:229:17",
+                    "src": "874:210:17",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3745,
+                  "id": 3943,
                   "nodeType": "ExpressionStatement",
-                  "src": "955:229:17"
+                  "src": "874:210:17"
                 }
               ]
             },
             "documentation": {
-              "id": 3714,
+              "id": 3915,
               "nodeType": "StructuredDocumentation",
-              "src": "241:460:17",
-              "text": " @dev Adds a market to the factory\n @param factory The address of the IdeaTokenFactory\n @param marketName The name of the market\n @param nameVerifier The address of the name verifier\n @param baseCost The base cost\n @param priceRise The price rise\n @param tokensPerInterval The tokens per interval\n @param tradingFeeRate The trading fee\n @param platformFeeRate The platform fee"
+              "src": "241:403:17",
+              "text": " @dev Adds a market to the factory\n @param factory The address of the IdeaTokenFactory\n @param marketName The name of the market\n @param nameVerifier The address of the name verifier\n @param baseCost The base cost\n @param priceRise The price rise\n @param tradingFeeRate The trading fee\n @param platformFeeRate The platform fee"
             },
-            "functionSelector": "c565d947",
-            "id": 3747,
+            "functionSelector": "d7ed25d6",
+            "id": 3945,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -343,18 +321,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3731,
+              "id": 3930,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3716,
+                  "id": 3917,
                   "mutability": "mutable",
                   "name": "factory",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "724:15:17",
+                  "scope": 3945,
+                  "src": "667:15:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -362,10 +340,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3715,
+                    "id": 3916,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "724:7:17",
+                    "src": "667:7:17",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -377,13 +355,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3718,
+                  "id": 3919,
                   "mutability": "mutable",
                   "name": "marketName",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "741:26:17",
+                  "scope": 3945,
+                  "src": "684:26:17",
                   "stateVariable": false,
                   "storageLocation": "calldata",
                   "typeDescriptions": {
@@ -391,10 +369,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3717,
+                    "id": 3918,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "741:6:17",
+                    "src": "684:6:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -405,13 +383,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3720,
+                  "id": 3921,
                   "mutability": "mutable",
                   "name": "nameVerifier",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "769:20:17",
+                  "scope": 3945,
+                  "src": "712:20:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -419,10 +397,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3719,
+                    "id": 3920,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "769:7:17",
+                    "src": "712:7:17",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -434,13 +412,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3722,
+                  "id": 3923,
                   "mutability": "mutable",
                   "name": "baseCost",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "813:13:17",
+                  "scope": 3945,
+                  "src": "756:13:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -448,10 +426,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3721,
+                    "id": 3922,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "813:4:17",
+                    "src": "756:4:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -462,13 +440,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3724,
+                  "id": 3925,
                   "mutability": "mutable",
                   "name": "priceRise",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "828:14:17",
+                  "scope": 3945,
+                  "src": "771:14:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -476,10 +454,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3723,
+                    "id": 3924,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "828:4:17",
+                    "src": "771:4:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -490,41 +468,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3726,
-                  "mutability": "mutable",
-                  "name": "tokensPerInterval",
-                  "nodeType": "VariableDeclaration",
-                  "overrides": null,
-                  "scope": 3747,
-                  "src": "844:22:17",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 3725,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "844:4:17",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 3728,
+                  "id": 3927,
                   "mutability": "mutable",
                   "name": "tradingFeeRate",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "890:19:17",
+                  "scope": 3945,
+                  "src": "809:19:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -532,10 +482,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3727,
+                    "id": 3926,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "890:4:17",
+                    "src": "809:4:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -546,13 +496,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3730,
+                  "id": 3929,
                   "mutability": "mutable",
                   "name": "platformFeeRate",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "911:20:17",
+                  "scope": 3945,
+                  "src": "830:20:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -560,10 +510,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3729,
+                    "id": 3928,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "911:4:17",
+                    "src": "830:4:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -573,40 +523,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "723:209:17"
+              "src": "666:185:17"
             },
             "returnParameters": {
-              "id": 3732,
+              "id": 3931,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "942:0:17"
+              "src": "861:0:17"
             },
-            "scope": 3748,
-            "src": "707:485:17",
+            "scope": 3946,
+            "src": "650:442:17",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3749,
-        "src": "208:987:17"
+        "scope": 3947,
+        "src": "208:887:17"
       }
     ],
-    "src": "33:1162:17"
+    "src": "33:1062:17"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AddMarketSpell.sol",
     "exportedSymbols": {
       "AddMarketSpell": [
-        3748
+        3946
       ]
     },
-    "id": 3749,
+    "id": 3947,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3711,
+        "id": 3912,
         "literals": [
           "solidity",
           "^",
@@ -619,10 +569,10 @@
       {
         "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenFactory.sol",
         "file": "../core/IIdeaTokenFactory.sol",
-        "id": 3712,
+        "id": 3913,
         "nodeType": "ImportDirective",
-        "scope": 3749,
-        "sourceUnit": 819,
+        "scope": 3947,
+        "sourceUnit": 851,
         "src": "60:39:17",
         "symbolAliases": [],
         "unitAlias": ""
@@ -633,24 +583,24 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 3713,
+          "id": 3914,
           "nodeType": "StructuredDocumentation",
           "src": "103:103:17",
           "text": " @title AddMarketSpell\n @author Alexander Schlindwein\n @dev Spell to add a market"
         },
         "fullyImplemented": true,
-        "id": 3748,
+        "id": 3946,
         "linearizedBaseContracts": [
-          3748
+          3946
         ],
         "name": "AddMarketSpell",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3746,
+              "id": 3944,
               "nodeType": "Block",
-              "src": "942:250:17",
+              "src": "861:231:17",
               "statements": [
                 {
                   "expression": {
@@ -658,12 +608,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3737,
+                        "id": 3936,
                         "name": "marketName",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3718,
-                        "src": "992:10:17",
+                        "referencedDeclaration": 3919,
+                        "src": "911:10:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_calldata_ptr",
                           "typeString": "string calldata"
@@ -671,12 +621,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3738,
+                        "id": 3937,
                         "name": "nameVerifier",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3720,
-                        "src": "1004:12:17",
+                        "referencedDeclaration": 3921,
+                        "src": "923:12:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -684,12 +634,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3739,
+                        "id": 3938,
                         "name": "baseCost",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3722,
-                        "src": "1065:8:17",
+                        "referencedDeclaration": 3923,
+                        "src": "984:8:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -697,12 +647,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3740,
+                        "id": 3939,
                         "name": "priceRise",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3724,
-                        "src": "1075:9:17",
+                        "referencedDeclaration": 3925,
+                        "src": "994:9:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -710,25 +660,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3741,
-                        "name": "tokensPerInterval",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 3726,
-                        "src": "1086:17:17",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
-                        }
-                      },
-                      {
-                        "argumentTypes": null,
-                        "id": 3742,
+                        "id": 3940,
                         "name": "tradingFeeRate",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3728,
-                        "src": "1152:14:17",
+                        "referencedDeclaration": 3927,
+                        "src": "1052:14:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -736,12 +673,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3743,
+                        "id": 3941,
                         "name": "platformFeeRate",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3730,
-                        "src": "1168:15:17",
+                        "referencedDeclaration": 3929,
+                        "src": "1068:15:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -773,10 +710,6 @@
                         {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
-                        },
-                        {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
                         }
                       ],
                       "expression": {
@@ -784,12 +717,12 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 3734,
+                            "id": 3933,
                             "name": "factory",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3716,
-                            "src": "973:7:17",
+                            "referencedDeclaration": 3917,
+                            "src": "892:7:17",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
                               "typeString": "address"
@@ -803,18 +736,18 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 3733,
+                          "id": 3932,
                           "name": "IIdeaTokenFactory",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 818,
-                          "src": "955:17:17",
+                          "referencedDeclaration": 850,
+                          "src": "874:17:17",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_IIdeaTokenFactory_$818_$",
+                            "typeIdentifier": "t_type$_t_contract$_IIdeaTokenFactory_$850_$",
                             "typeString": "type(contract IIdeaTokenFactory)"
                           }
                         },
-                        "id": 3735,
+                        "id": 3934,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -822,28 +755,28 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "955:26:17",
+                        "src": "874:26:17",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IIdeaTokenFactory_$818",
+                          "typeIdentifier": "t_contract$_IIdeaTokenFactory_$850",
                           "typeString": "contract IIdeaTokenFactory"
                         }
                       },
-                      "id": 3736,
+                      "id": 3935,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "addMarket",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 736,
-                      "src": "955:36:17",
+                      "referencedDeclaration": 768,
+                      "src": "874:36:17",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_external_nonpayable$_t_string_memory_ptr_$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_uint256_$_t_uint256_$returns$__$",
-                        "typeString": "function (string memory,address,uint256,uint256,uint256,uint256,uint256) external"
+                        "typeIdentifier": "t_function_external_nonpayable$_t_string_memory_ptr_$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (string memory,address,uint256,uint256,uint256,uint256) external"
                       }
                     },
-                    "id": 3744,
+                    "id": 3942,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -851,27 +784,27 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "955:229:17",
+                    "src": "874:210:17",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3745,
+                  "id": 3943,
                   "nodeType": "ExpressionStatement",
-                  "src": "955:229:17"
+                  "src": "874:210:17"
                 }
               ]
             },
             "documentation": {
-              "id": 3714,
+              "id": 3915,
               "nodeType": "StructuredDocumentation",
-              "src": "241:460:17",
-              "text": " @dev Adds a market to the factory\n @param factory The address of the IdeaTokenFactory\n @param marketName The name of the market\n @param nameVerifier The address of the name verifier\n @param baseCost The base cost\n @param priceRise The price rise\n @param tokensPerInterval The tokens per interval\n @param tradingFeeRate The trading fee\n @param platformFeeRate The platform fee"
+              "src": "241:403:17",
+              "text": " @dev Adds a market to the factory\n @param factory The address of the IdeaTokenFactory\n @param marketName The name of the market\n @param nameVerifier The address of the name verifier\n @param baseCost The base cost\n @param priceRise The price rise\n @param tradingFeeRate The trading fee\n @param platformFeeRate The platform fee"
             },
-            "functionSelector": "c565d947",
-            "id": 3747,
+            "functionSelector": "d7ed25d6",
+            "id": 3945,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -879,18 +812,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3731,
+              "id": 3930,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3716,
+                  "id": 3917,
                   "mutability": "mutable",
                   "name": "factory",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "724:15:17",
+                  "scope": 3945,
+                  "src": "667:15:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -898,10 +831,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3715,
+                    "id": 3916,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "724:7:17",
+                    "src": "667:7:17",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -913,13 +846,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3718,
+                  "id": 3919,
                   "mutability": "mutable",
                   "name": "marketName",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "741:26:17",
+                  "scope": 3945,
+                  "src": "684:26:17",
                   "stateVariable": false,
                   "storageLocation": "calldata",
                   "typeDescriptions": {
@@ -927,10 +860,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 3717,
+                    "id": 3918,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "741:6:17",
+                    "src": "684:6:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -941,13 +874,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3720,
+                  "id": 3921,
                   "mutability": "mutable",
                   "name": "nameVerifier",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "769:20:17",
+                  "scope": 3945,
+                  "src": "712:20:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -955,10 +888,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3719,
+                    "id": 3920,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "769:7:17",
+                    "src": "712:7:17",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -970,13 +903,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3722,
+                  "id": 3923,
                   "mutability": "mutable",
                   "name": "baseCost",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "813:13:17",
+                  "scope": 3945,
+                  "src": "756:13:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -984,10 +917,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3721,
+                    "id": 3922,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "813:4:17",
+                    "src": "756:4:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -998,13 +931,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3724,
+                  "id": 3925,
                   "mutability": "mutable",
                   "name": "priceRise",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "828:14:17",
+                  "scope": 3945,
+                  "src": "771:14:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1012,10 +945,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3723,
+                    "id": 3924,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "828:4:17",
+                    "src": "771:4:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1026,41 +959,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3726,
-                  "mutability": "mutable",
-                  "name": "tokensPerInterval",
-                  "nodeType": "VariableDeclaration",
-                  "overrides": null,
-                  "scope": 3747,
-                  "src": "844:22:17",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 3725,
-                    "name": "uint",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "844:4:17",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                },
-                {
-                  "constant": false,
-                  "id": 3728,
+                  "id": 3927,
                   "mutability": "mutable",
                   "name": "tradingFeeRate",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "890:19:17",
+                  "scope": 3945,
+                  "src": "809:19:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1068,10 +973,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3727,
+                    "id": 3926,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "890:4:17",
+                    "src": "809:4:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1082,13 +987,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3730,
+                  "id": 3929,
                   "mutability": "mutable",
                   "name": "platformFeeRate",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3747,
-                  "src": "911:20:17",
+                  "scope": 3945,
+                  "src": "830:20:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1096,10 +1001,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3729,
+                    "id": 3928,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "911:4:17",
+                    "src": "830:4:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1109,26 +1014,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "723:209:17"
+              "src": "666:185:17"
             },
             "returnParameters": {
-              "id": 3732,
+              "id": 3931,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "942:0:17"
+              "src": "861:0:17"
             },
-            "scope": 3748,
-            "src": "707:485:17",
+            "scope": 3946,
+            "src": "650:442:17",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3749,
-        "src": "208:987:17"
+        "scope": 3947,
+        "src": "208:887:17"
       }
     ],
-    "src": "33:1162:17"
+    "src": "33:1062:17"
   },
   "compiler": {
     "name": "solc",
@@ -1138,18 +1043,18 @@
     "42": {
       "events": {},
       "links": {},
-      "address": "0x0D87F6584FD78c6d908AE45d2319A3D5Fb09c46B",
-      "transactionHash": "0x223304b751d73de0f2e646299e55a3bc04dba447ea59b2dec2b104848680c0b8"
+      "address": "0xb7d6E2E9b534Cf08F03Bd64C65C988fd7Ca76075",
+      "transactionHash": "0x15d4d32a0da46d15033afc8e70e3ce6a88db29d93e7bcd9a694dd5d26f4fef5d"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-16T11:45:42.149Z",
+  "updatedAt": "2020-10-19T08:01:43.262Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Spell to add a market",
     "methods": {
-      "execute(address,string,address,uint256,uint256,uint256,uint256,uint256)": {
+      "execute(address,string,address,uint256,uint256,uint256,uint256)": {
         "details": "Adds a market to the factory",
         "params": {
           "baseCost": "The base cost",
@@ -1158,7 +1063,6 @@
           "nameVerifier": "The address of the name verifier",
           "platformFeeRate": "The platform fee",
           "priceRise": "The price rise",
-          "tokensPerInterval": "The tokens per interval",
           "tradingFeeRate": "The trading fee"
         }
       }
