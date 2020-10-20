@@ -16191,12 +16191,12 @@
     "42": {
       "events": {},
       "links": {},
-      "address": "0x9c72A4741b65e208C8D94738C10B87EC0315a075",
-      "transactionHash": "0xf5032660d98ef9731333b40d1bf496a84fe3579eec2e5a09d9d57228e6a60d52"
+      "address": "0xb93274dd6Ed7e7c9818F3bF53A4cA1A4655a08B4",
+      "transactionHash": "0x49d97bfe24e199acf4dd736672748d1569360b2679bece308e2e6eaf04e4393a"
     }
   },
-  "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-19T08:01:30.770Z",
+  "schemaVersion": "3.3.1",
+  "updatedAt": "2020-10-20T11:28:26.384Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",

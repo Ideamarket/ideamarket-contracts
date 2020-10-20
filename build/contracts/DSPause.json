@@ -8068,12 +8068,12 @@
     "42": {
       "events": {},
       "links": {},
-      "address": "0x59d8F9c8702E4181e692CEf1e0C05Cd69b6E7FEb",
-      "transactionHash": "0xd4288c91e51c3ebf97321a01eb8c1f3a3ec1178c9f6528f91ab8e95beb36e9d0"
+      "address": "0xF53f1814dF57Eae82501d60B636907aD2E3a520b",
+      "transactionHash": "0x39dd2659fd931e68511b50a476df06c8e63c4e2bea0196db2a51c5f425df2fda"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-19T07:58:34.419Z",
+  "updatedAt": "2020-10-20T11:24:22.291Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

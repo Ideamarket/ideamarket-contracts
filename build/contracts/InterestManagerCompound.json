@@ -15632,12 +15632,12 @@
         }
       },
       "links": {},
-      "address": "0xc107be2e26b401deBc2582308a6eD4A4cDC268A7",
-      "transactionHash": "0xd261599f85a3cd04c6faf2d68b95da4c93651252b9b40ccee79692cd45e4d51f"
+      "address": "0x4452E7e88D45dA40c67d10B53B83ee58C76884e9",
+      "transactionHash": "0xc09621bb514ee01969f0aea01a42fed9fa3a7c58612a57ef3f98b49af86c9b47"
     }
   },
-  "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-19T08:00:43.197Z",
+  "schemaVersion": "3.3.1",
+  "updatedAt": "2020-10-20T11:27:49.431Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",

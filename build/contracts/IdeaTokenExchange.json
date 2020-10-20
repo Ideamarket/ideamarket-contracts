@@ -34361,12 +34361,12 @@
         }
       },
       "links": {},
-      "address": "0xA97aab32d747A31Be5db2d34E88AB1Dab4a7B3a9",
-      "transactionHash": "0x421b36e6bc0b7c3caa1f056e24c9441016d6c7cbbc794312d4f9f553a54d43e8"
+      "address": "0xB7804b181318BFA5BceC01146eE343B74e9950De",
+      "transactionHash": "0x3b3beda6be7974c4f86f4bbc59176157f9374c4c1f3954b2f6222edf2d5901ca"
     }
   },
-  "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-19T08:01:10.835Z",
+  "schemaVersion": "3.3.1",
+  "updatedAt": "2020-10-20T11:28:14.253Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",

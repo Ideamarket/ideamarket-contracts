@@ -665,12 +665,12 @@
     "42": {
       "events": {},
       "links": {},
-      "address": "0x1771A52Ffde34A246F77846C0f1521982F420716",
-      "transactionHash": "0xa5512a9f6a40bf8a40e9ebaac05dd0a180b241a36ad8475f8e64b2a8063390f8"
+      "address": "0x32C493da7f5B9E3FCe566394730f9A9b1D8EC30f",
+      "transactionHash": "0x89ef98ef0141fc9c9293cfa6135c9bb0dcb4e94c45bf3c1005a52aa977239255"
     }
   },
-  "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-19T08:02:15.224Z",
+  "schemaVersion": "3.3.1",
+  "updatedAt": "2020-10-20T11:29:10.412Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",
