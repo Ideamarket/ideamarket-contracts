@@ -21,7 +21,7 @@ module.exports.externalContractAddresses = {
 	}
 }
 
-module.exports.saveDeployedAddress = function (network, contract, address) {
+module.exports.saveDeployedAddress = function(network, contract, address) {
 	let addresses = {}
 	const path = 'deployed/deployed-' + network + '.json'
 	if(fs.existsSync(path)) {
@@ -33,7 +33,19 @@ module.exports.saveDeployedAddress = function (network, contract, address) {
 	fs.writeFileSync(path, JSON.stringify(addresses, undefined, 4))
 }
 
-module.exports.loadDeployedAddress = function (network, contract) {
+module.exports.saveDeployedABI = function(network, contract, abi) {
+	let abis = {}
+	const path = 'deployed/abis-' + network + '.json'
+	if(fs.existsSync(path)) {
+		const raw = fs.readFileSync(path)
+		abis = JSON.parse(raw)
+	}
+
+	abis[contract] = abi
+	fs.writeFileSync(path, JSON.stringify(abis))
+}
+
+module.exports.loadDeployedAddress = function(network, contract) {
 	const path = 'deployed/deployed-' + network + '.json'
 	const raw = fs.readFileSync(path)
 	const addresses = JSON.parse(raw)

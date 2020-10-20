@@ -1,7 +1,8 @@
-const { externalContractAddresses, deploymentParams, saveDeployedAddress } = require('./shared')
+const { externalContractAddresses, deploymentParams, saveDeployedAddress, saveDeployedABI } = require('./shared')
 
 /* eslint-disable-next-line no-undef */
 const DSPause = artifacts.require('DSPause')
+const DSPauseProxy = artifacts.require('DSPauseProxy')
 
 module.exports = async function(deployer, network) {
 	let externalAddresses
@@ -19,5 +20,8 @@ module.exports = async function(deployer, network) {
 	const dsPauseProxyAddress = await dsPause._proxy()
 
 	saveDeployedAddress(network, 'dsPause', dsPause.address)
+	saveDeployedABI(network, 'dsPause', DSPause.abi)
+
 	saveDeployedAddress(network, 'dsPauseProxy', dsPauseProxyAddress)
+	saveDeployedABI(network, 'dsPauseProxy', DSPauseProxy.abi)
 }

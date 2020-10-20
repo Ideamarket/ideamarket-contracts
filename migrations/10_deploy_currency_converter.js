@@ -1,4 +1,4 @@
-const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress } = require('./shared')
+const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress, saveDeployedABI } = require('./shared')
 
 /* eslint-disable-next-line no-undef */
 const CurrencyConverter = artifacts.require('CurrencyConverter')
@@ -19,4 +19,5 @@ module.exports = async function(deployer, network) {
 		externalAddresses.weth)
 
 	saveDeployedAddress(network, 'currencyConverter', CurrencyConverter.address)
+	saveDeployedABI(network, 'currencyConverter', CurrencyConverter.abi)
 }

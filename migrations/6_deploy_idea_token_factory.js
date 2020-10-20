@@ -1,4 +1,4 @@
-const { saveDeployedAddress, loadDeployedAddress, deployProxy } = require('./shared')
+const { saveDeployedAddress, loadDeployedAddress, deployProxy, saveDeployedABI } = require('./shared')
 
 /* eslint-disable-next-line no-undef */
 const IdeaTokenFactory = artifacts.require('IdeaTokenFactory')
@@ -16,5 +16,6 @@ module.exports = async function(deployer, network) {
 		loadDeployedAddress(network, 'ideaTokenExchange'))
 
 	saveDeployedAddress(network, 'ideaTokenFactory', proxy)
+	saveDeployedABI(network, 'ideaTokenFactory', IdeaTokenFactory.abi)
 	saveDeployedAddress(network, 'ideaTokenFactoryLogic', logic)
 }

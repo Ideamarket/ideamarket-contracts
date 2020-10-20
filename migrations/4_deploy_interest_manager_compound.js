@@ -1,4 +1,4 @@
-const { externalContractAddresses, saveDeployedAddress, deployProxy, loadDeployedAddress } = require('./shared')
+const { externalContractAddresses, saveDeployedAddress, deployProxy, loadDeployedAddress, saveDeployedABI } = require('./shared')
 
 /* eslint-disable-next-line no-undef */
 const InterestManagerCompound = artifacts.require('InterestManagerCompound')
@@ -22,5 +22,6 @@ module.exports = async function(deployer, network, accounts) {
 		externalAddresses.multisig)
 
 	saveDeployedAddress(network, 'interestManager', proxy)
+	saveDeployedABI(network, 'interestManager', InterestManagerCompound.abi)
 	saveDeployedAddress(network, 'interestManagerLogic', logic)
 }
