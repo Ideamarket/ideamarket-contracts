@@ -88,6 +88,7 @@ contract('core/CurrencyConverter', async accounts => {
 			{from: adminAccount})
 
 		await ideaTokenExchange.initialize(adminAccount,
+			adminAccount,
 			tradingFeeAccount,
 			interestManagerCompound.address,
 			dai.address,

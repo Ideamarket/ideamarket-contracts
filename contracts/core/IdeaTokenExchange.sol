@@ -27,6 +27,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
     uint constant private FEE_SCALE = 10000;
 
+    address _authorizer;
     uint _tradingFeeInvested; // The amount of "investment tokens" for the collected trading fee, e.g. cDai
     address _tradingFeeRecipient;
 
@@ -59,10 +60,12 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param dai The address of Dai
      */
     function initialize(address owner,
+                        address authorizer,
                         address tradingFeeRecipient,
                         address interestManager,
                         address dai) external initializer {
         setOwnerInternal(owner);
+        _authorizer = authorizer;
         _tradingFeeRecipient = tradingFeeRecipient;
         _interestManager = IInterestManager(interestManager);
         _dai = IERC20(dai);
@@ -303,7 +306,12 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param withdrawer The address to be authorized
      */
     function authorizeInterestWithdrawer(address token, address withdrawer) external override {
-        require(msg.sender == _owner || msg.sender == _authorizedInterestWithdrawers[token], "authorizeInterestWithdrawer: not authorized");
+        address current = _authorizedInterestWithdrawers[token];
+
+        require((current == address(0) && (msg.sender == _owner || msg.sender == _authorizer)) ||
+                (current != address(0) && (msg.sender == _owner || msg.sender == _authorizedInterestWithdrawers[token])),
+                "authorizeInterestWithdrawer: not authorized");
+
         _authorizedInterestWithdrawers[token] = withdrawer;
 
         emit NewInterestWithdrawer(token, withdrawer);
@@ -347,7 +355,12 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param withdrawer The address to be authorized
      */
     function authorizePlatformFeeWithdrawer(uint marketID, address withdrawer) external override {
-        require(msg.sender == _owner || msg.sender == _authorizedPlatformFeeWithdrawers[marketID], "authorizePlatformFeeWithdrawer: not authorized");
+        address current = _authorizedPlatformFeeWithdrawers[marketID];
+
+        require((current == address(0) && (msg.sender == _owner || msg.sender == _authorizer)) ||
+                (current != address(0) && (msg.sender == _owner || msg.sender == _authorizedPlatformFeeWithdrawers[marketID])),
+                "authorizePlatformFeeWithdrawer: not authorized");
+        
         _authorizedPlatformFeeWithdrawers[marketID] = withdrawer;
 
         emit NewPlatformFeeWithdrawer(marketID, withdrawer);
@@ -376,6 +389,15 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      */
     function getTradingFeePayable() public view returns (uint) {
         return _interestManager.investmentTokenToUnderlying(_tradingFeeInvested);
+    }
+
+    /**
+     * @dev Sets the authorizer address
+     *
+     * @param authorizer The new authorizer address
+     */
+    function setAuthorizer(address authorizer) external onlyOwner {
+        _authorizer = authorizer;
     }
 
     /**

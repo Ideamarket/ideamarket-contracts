@@ -25,9 +25,10 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 	const userAccount = accounts[0]
 	const adminAccount = accounts[1]
-	const tradingFeeAccount = accounts[2]
-	const interestReceiverAccount = accounts[3]
-	const platformFeeReceiverAccount = accounts[4]
+	const authorizerAccount = accounts[2]
+	const tradingFeeAccount = accounts[3]
+	const interestReceiverAccount = accounts[4]
+	const platformFeeReceiverAccount = accounts[5]
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
 	const someAddress = '0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5' // random addr from etherscan
 
@@ -66,6 +67,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 			{from: adminAccount})
 
 		await ideaTokenExchange.initialize(adminAccount,
+			authorizerAccount,
 			tradingFeeAccount,
 			interestManagerCompound.address,
 			dai.address,
@@ -412,6 +414,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 	it('can set factory address on init', async () => {
 		const exchange = await IdeaTokenExchange.new()
 		await exchange.initialize(adminAccount,
+			zeroAddress,
 			tradingFeeAccount,
 			interestManagerCompound.address,
 			dai.address,
@@ -423,6 +426,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 	it('fail only owner can set factory address', async () => {
 		const exchange = await IdeaTokenExchange.new()
 		await exchange.initialize(adminAccount,
+			zeroAddress,
 			tradingFeeAccount,
 			interestManagerCompound.address,
 			dai.address,
@@ -437,6 +441,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 	it('fail cannot set factory address twice', async () => {
 		const exchange = await IdeaTokenExchange.new()
 		await exchange.initialize(adminAccount,
+			zeroAddress,
 			tradingFeeAccount,
 			interestManagerCompound.address,
 			dai.address,
@@ -448,6 +453,62 @@ contract('core/IdeaTokenExchange', async accounts => {
 			exchange.setIdeaTokenFactoryAddress(someAddress,{ from: adminAccount })
 		)
 	})
+
+	it('admin can set authorizer', async () => {
+		await ideaTokenExchange.setAuthorizer(zeroAddress, { from: adminAccount })
+	})
+
+	it('fail user cannot set authorizer', async () => {
+		await expectRevert(
+			ideaTokenExchange.setAuthorizer(zeroAddress),
+			'Ownable: onlyOwner'
+		)
+	})
+
+	it('authorizer can set interest withdrawer', async () => {
+		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: authorizerAccount })
+	})
+
+	it('interest withdrawer can set new interest withdrawer', async () => {
+		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, tradingFeeAccount, { from: authorizerAccount })
+		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: tradingFeeAccount })
+	})
+
+	it('fail authorizer cannot set interest withdrawer twice', async () => {
+		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: authorizerAccount })
+		await expectRevert(
+			ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: authorizerAccount }),
+			'authorizeInterestWithdrawer: not authorized'
+		)
+	})
+
+	it('admin can set interest withdrawer twice', async () => {
+		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: adminAccount })
+		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: adminAccount })
+	})
+
+	it('authorizer can set platform fee withdrawer', async () => {
+		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: authorizerAccount })
+	})
+
+	it('platform fee withdrawer can set new platform fee withdrawer', async () => {
+		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, tradingFeeAccount, { from: authorizerAccount })
+		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: tradingFeeAccount })
+	})
+
+	it('fail authorizer cannot set platform fee withdrawer twice', async () => {
+		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: authorizerAccount })
+		await expectRevert(
+			ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: authorizerAccount }),
+			'authorizePlatformFeeWithdrawer: not authorized'
+		)
+	})
+
+	it('admin can set platform fee withdrawer twice', async () => {
+		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: adminAccount })
+		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: adminAccount })
+	})
+
 
 	function getRawCostForBuyingTokens(b, r, supply, amount) {
 		const priceAtSupply = b.add(r.mul(supply).div(tenPow18))
