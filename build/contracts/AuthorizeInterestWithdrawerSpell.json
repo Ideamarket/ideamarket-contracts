@@ -37,15 +37,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AuthorizeInterestWithdrawerSpell.sol",
     "exportedSymbols": {
       "AuthorizeInterestWithdrawerSpell": [
-        3970
+        4059
       ]
     },
-    "id": 3971,
+    "id": 4060,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3948,
+        "id": 4037,
         "literals": [
           "solidity",
           "^",
@@ -58,9 +58,9 @@
       {
         "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenExchange.sol",
         "file": "../core/IIdeaTokenExchange.sol",
-        "id": 3949,
+        "id": 4038,
         "nodeType": "ImportDirective",
-        "scope": 3971,
+        "scope": 4060,
         "sourceUnit": 712,
         "src": "60:40:18",
         "symbolAliases": [],
@@ -72,22 +72,22 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 3950,
+          "id": 4039,
           "nodeType": "StructuredDocumentation",
           "src": "104:141:18",
           "text": " @title AuthorizeInterestWithdrawerSpell\n @author Alexander Schlindwein\n @dev Spell to authorize an interest withdrawer"
         },
         "fullyImplemented": true,
-        "id": 3970,
+        "id": 4059,
         "linearizedBaseContracts": [
-          3970
+          4059
         ],
         "name": "AuthorizeInterestWithdrawerSpell",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3968,
+              "id": 4057,
               "nodeType": "Block",
               "src": "697:98:18",
               "statements": [
@@ -97,11 +97,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3964,
+                        "id": 4053,
                         "name": "ideaToken",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3955,
+                        "referencedDeclaration": 4044,
                         "src": "765:9:18",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -110,11 +110,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3965,
+                        "id": 4054,
                         "name": "withdrawer",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3957,
+                        "referencedDeclaration": 4046,
                         "src": "776:10:18",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -138,11 +138,11 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 3961,
+                            "id": 4050,
                             "name": "exchange",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3953,
+                            "referencedDeclaration": 4042,
                             "src": "727:8:18",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -157,7 +157,7 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 3960,
+                          "id": 4049,
                           "name": "IIdeaTokenExchange",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
@@ -168,7 +168,7 @@
                             "typeString": "type(contract IIdeaTokenExchange)"
                           }
                         },
-                        "id": 3962,
+                        "id": 4051,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -183,7 +183,7 @@
                           "typeString": "contract IIdeaTokenExchange"
                         }
                       },
-                      "id": 3963,
+                      "id": 4052,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -197,7 +197,7 @@
                         "typeString": "function (address,address) external"
                       }
                     },
-                    "id": 3966,
+                    "id": 4055,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -212,20 +212,20 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3967,
+                  "id": 4056,
                   "nodeType": "ExpressionStatement",
                   "src": "708:79:18"
                 }
               ]
             },
             "documentation": {
-              "id": 3951,
+              "id": 4040,
               "nodeType": "StructuredDocumentation",
               "src": "298:310:18",
               "text": " @dev Authorizes an address to withdraw interest for an IdeaToken\n @param exchange The address of the IdeaTokenExchange\n @param ideaToken The address of the IdeaToken for which to authorize an interest withdrawer\n @param withdrawer The address of the withdrawer"
             },
             "functionSelector": "e65add95",
-            "id": 3969,
+            "id": 4058,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -233,17 +233,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3958,
+              "id": 4047,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3953,
+                  "id": 4042,
                   "mutability": "mutable",
                   "name": "exchange",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3969,
+                  "scope": 4058,
                   "src": "631:16:18",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -252,7 +252,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3952,
+                    "id": 4041,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "631:7:18",
@@ -267,12 +267,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3955,
+                  "id": 4044,
                   "mutability": "mutable",
                   "name": "ideaToken",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3969,
+                  "scope": 4058,
                   "src": "649:17:18",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -281,7 +281,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3954,
+                    "id": 4043,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "649:7:18",
@@ -296,12 +296,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3957,
+                  "id": 4046,
                   "mutability": "mutable",
                   "name": "withdrawer",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3969,
+                  "scope": 4058,
                   "src": "668:18:18",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -310,7 +310,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3956,
+                    "id": 4045,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "668:7:18",
@@ -327,19 +327,19 @@
               "src": "630:57:18"
             },
             "returnParameters": {
-              "id": 3959,
+              "id": 4048,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "697:0:18"
             },
-            "scope": 3970,
+            "scope": 4059,
             "src": "614:181:18",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3971,
+        "scope": 4060,
         "src": "247:551:18"
       }
     ],
@@ -349,15 +349,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/AuthorizeInterestWithdrawerSpell.sol",
     "exportedSymbols": {
       "AuthorizeInterestWithdrawerSpell": [
-        3970
+        4059
       ]
     },
-    "id": 3971,
+    "id": 4060,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3948,
+        "id": 4037,
         "literals": [
           "solidity",
           "^",
@@ -370,9 +370,9 @@
       {
         "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/core/IIdeaTokenExchange.sol",
         "file": "../core/IIdeaTokenExchange.sol",
-        "id": 3949,
+        "id": 4038,
         "nodeType": "ImportDirective",
-        "scope": 3971,
+        "scope": 4060,
         "sourceUnit": 712,
         "src": "60:40:18",
         "symbolAliases": [],
@@ -384,22 +384,22 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 3950,
+          "id": 4039,
           "nodeType": "StructuredDocumentation",
           "src": "104:141:18",
           "text": " @title AuthorizeInterestWithdrawerSpell\n @author Alexander Schlindwein\n @dev Spell to authorize an interest withdrawer"
         },
         "fullyImplemented": true,
-        "id": 3970,
+        "id": 4059,
         "linearizedBaseContracts": [
-          3970
+          4059
         ],
         "name": "AuthorizeInterestWithdrawerSpell",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3968,
+              "id": 4057,
               "nodeType": "Block",
               "src": "697:98:18",
               "statements": [
@@ -409,11 +409,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3964,
+                        "id": 4053,
                         "name": "ideaToken",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3955,
+                        "referencedDeclaration": 4044,
                         "src": "765:9:18",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -422,11 +422,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 3965,
+                        "id": 4054,
                         "name": "withdrawer",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3957,
+                        "referencedDeclaration": 4046,
                         "src": "776:10:18",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -450,11 +450,11 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 3961,
+                            "id": 4050,
                             "name": "exchange",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3953,
+                            "referencedDeclaration": 4042,
                             "src": "727:8:18",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -469,7 +469,7 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 3960,
+                          "id": 4049,
                           "name": "IIdeaTokenExchange",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
@@ -480,7 +480,7 @@
                             "typeString": "type(contract IIdeaTokenExchange)"
                           }
                         },
-                        "id": 3962,
+                        "id": 4051,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -495,7 +495,7 @@
                           "typeString": "contract IIdeaTokenExchange"
                         }
                       },
-                      "id": 3963,
+                      "id": 4052,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -509,7 +509,7 @@
                         "typeString": "function (address,address) external"
                       }
                     },
-                    "id": 3966,
+                    "id": 4055,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -524,20 +524,20 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3967,
+                  "id": 4056,
                   "nodeType": "ExpressionStatement",
                   "src": "708:79:18"
                 }
               ]
             },
             "documentation": {
-              "id": 3951,
+              "id": 4040,
               "nodeType": "StructuredDocumentation",
               "src": "298:310:18",
               "text": " @dev Authorizes an address to withdraw interest for an IdeaToken\n @param exchange The address of the IdeaTokenExchange\n @param ideaToken The address of the IdeaToken for which to authorize an interest withdrawer\n @param withdrawer The address of the withdrawer"
             },
             "functionSelector": "e65add95",
-            "id": 3969,
+            "id": 4058,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -545,17 +545,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3958,
+              "id": 4047,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3953,
+                  "id": 4042,
                   "mutability": "mutable",
                   "name": "exchange",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3969,
+                  "scope": 4058,
                   "src": "631:16:18",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -564,7 +564,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3952,
+                    "id": 4041,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "631:7:18",
@@ -579,12 +579,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3955,
+                  "id": 4044,
                   "mutability": "mutable",
                   "name": "ideaToken",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3969,
+                  "scope": 4058,
                   "src": "649:17:18",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -593,7 +593,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3954,
+                    "id": 4043,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "649:7:18",
@@ -608,12 +608,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3957,
+                  "id": 4046,
                   "mutability": "mutable",
                   "name": "withdrawer",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3969,
+                  "scope": 4058,
                   "src": "668:18:18",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -622,7 +622,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3956,
+                    "id": 4045,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "668:7:18",
@@ -639,19 +639,19 @@
               "src": "630:57:18"
             },
             "returnParameters": {
-              "id": 3959,
+              "id": 4048,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "697:0:18"
             },
-            "scope": 3970,
+            "scope": 4059,
             "src": "614:181:18",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3971,
+        "scope": 4060,
         "src": "247:551:18"
       }
     ],
@@ -665,12 +665,12 @@
     "42": {
       "events": {},
       "links": {},
-      "address": "0x32C493da7f5B9E3FCe566394730f9A9b1D8EC30f",
-      "transactionHash": "0x89ef98ef0141fc9c9293cfa6135c9bb0dcb4e94c45bf3c1005a52aa977239255"
+      "address": "0xa25b7A4a818E6EA9382f8166ecBCcA5620BEdE95",
+      "transactionHash": "0xb23db3578850171d4830fa84cbf0810b5361a352b2188db3ec570651910dd951"
     }
   },
   "schemaVersion": "3.3.1",
-  "updatedAt": "2020-10-20T11:29:10.412Z",
+  "updatedAt": "2020-10-21T09:55:23.291Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Alexander Schlindwein",

@@ -304,7 +304,7 @@
         "id": 39,
         "nodeType": "ImportDirective",
         "scope": 75,
-        "sourceUnit": 10803,
+        "sourceUnit": 10892,
         "src": "60:56:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -319,10 +319,10 @@
               "id": 41,
               "name": "IERC20",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 10802,
+              "referencedDeclaration": 10891,
               "src": "262:6:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IERC20_$10802",
+                "typeIdentifier": "t_contract$_IERC20_$10891",
                 "typeString": "contract IERC20"
               }
             },
@@ -332,7 +332,7 @@
           }
         ],
         "contractDependencies": [
-          10802
+          10891
         ],
         "contractKind": "interface",
         "documentation": {
@@ -345,7 +345,7 @@
         "id": 74,
         "linearizedBaseContracts": [
           74,
-          10802
+          10891
         ],
         "name": "ICToken",
         "nodeType": "ContractDefinition",
@@ -762,7 +762,7 @@
         "id": 39,
         "nodeType": "ImportDirective",
         "scope": 75,
-        "sourceUnit": 10803,
+        "sourceUnit": 10892,
         "src": "60:56:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -777,10 +777,10 @@
               "id": 41,
               "name": "IERC20",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 10802,
+              "referencedDeclaration": 10891,
               "src": "262:6:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IERC20_$10802",
+                "typeIdentifier": "t_contract$_IERC20_$10891",
                 "typeString": "contract IERC20"
               }
             },
@@ -790,7 +790,7 @@
           }
         ],
         "contractDependencies": [
-          10802
+          10891
         ],
         "contractKind": "interface",
         "documentation": {
@@ -803,7 +803,7 @@
         "id": 74,
         "linearizedBaseContracts": [
           74,
-          10802
+          10891
         ],
         "name": "ICToken",
         "nodeType": "ContractDefinition",
@@ -1198,7 +1198,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.1",
-  "updatedAt": "2020-10-20T11:25:53.052Z",
+  "updatedAt": "2020-10-21T09:51:09.697Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "A simplified interface for Compound's cToken",

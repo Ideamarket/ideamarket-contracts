@@ -32,15 +32,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockAdminSpell.sol",
     "exportedSymbols": {
       "SetTimelockAdminSpell": [
-        3841
+        4128
       ]
     },
-    "id": 3842,
+    "id": 4129,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3822,
+        "id": 4109,
         "literals": [
           "solidity",
           "^",
@@ -53,10 +53,10 @@
       {
         "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol",
         "file": "../timelock/IDSPause.sol",
-        "id": 3823,
+        "id": 4110,
         "nodeType": "ImportDirective",
-        "scope": 3842,
-        "sourceUnit": 9256,
+        "scope": 4129,
+        "sourceUnit": 9651,
         "src": "60:34:21",
         "symbolAliases": [],
         "unitAlias": ""
@@ -67,22 +67,22 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 3824,
+          "id": 4111,
           "nodeType": "StructuredDocumentation",
           "src": "98:127:21",
           "text": " @title SetTimelockAdminSpell\n @author Alexander Schlindwein\n @dev Spell to set the admin of the timelock"
         },
         "fullyImplemented": true,
-        "id": 3841,
+        "id": 4128,
         "linearizedBaseContracts": [
-          3841
+          4128
         ],
         "name": "SetTimelockAdminSpell",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3839,
+              "id": 4126,
               "nodeType": "Block",
               "src": "489:52:21",
               "statements": [
@@ -92,11 +92,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3836,
+                        "id": 4123,
                         "name": "owner",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3829,
+                        "referencedDeclaration": 4116,
                         "src": "527:5:21",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -116,11 +116,11 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 3833,
+                            "id": 4120,
                             "name": "dsPause",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3827,
+                            "referencedDeclaration": 4114,
                             "src": "509:7:21",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -135,18 +135,18 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 3832,
+                          "id": 4119,
                           "name": "IDSPause",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 9255,
+                          "referencedDeclaration": 9650,
                           "src": "500:8:21",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_IDSPause_$9255_$",
+                            "typeIdentifier": "t_type$_t_contract$_IDSPause_$9650_$",
                             "typeString": "type(contract IDSPause)"
                           }
                         },
-                        "id": 3834,
+                        "id": 4121,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -157,25 +157,25 @@
                         "src": "500:17:21",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IDSPause_$9255",
+                          "typeIdentifier": "t_contract$_IDSPause_$9650",
                           "typeString": "contract IDSPause"
                         }
                       },
-                      "id": 3835,
+                      "id": 4122,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "setOwner",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9207,
+                      "referencedDeclaration": 9602,
                       "src": "500:26:21",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address) external"
                       }
                     },
-                    "id": 3837,
+                    "id": 4124,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -190,20 +190,20 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3838,
+                  "id": 4125,
                   "nodeType": "ExpressionStatement",
                   "src": "500:33:21"
                 }
               ]
             },
             "documentation": {
-              "id": 3825,
+              "id": 4112,
               "nodeType": "StructuredDocumentation",
               "src": "267:158:21",
               "text": " @dev Sets the timelock admin\n @param dsPause The address of the timelock\n @param owner The address of the new admin"
             },
             "functionSelector": "d80aea15",
-            "id": 3840,
+            "id": 4127,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -211,17 +211,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3830,
+              "id": 4117,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3827,
+                  "id": 4114,
                   "mutability": "mutable",
                   "name": "dsPause",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3840,
+                  "scope": 4127,
                   "src": "448:15:21",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -230,7 +230,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3826,
+                    "id": 4113,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "448:7:21",
@@ -245,12 +245,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3829,
+                  "id": 4116,
                   "mutability": "mutable",
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3840,
+                  "scope": 4127,
                   "src": "465:13:21",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -259,7 +259,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3828,
+                    "id": 4115,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "465:7:21",
@@ -276,19 +276,19 @@
               "src": "447:32:21"
             },
             "returnParameters": {
-              "id": 3831,
+              "id": 4118,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "489:0:21"
             },
-            "scope": 3841,
+            "scope": 4128,
             "src": "431:110:21",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3842,
+        "scope": 4129,
         "src": "227:317:21"
       }
     ],
@@ -298,15 +298,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/spells/SetTimelockAdminSpell.sol",
     "exportedSymbols": {
       "SetTimelockAdminSpell": [
-        3841
+        4128
       ]
     },
-    "id": 3842,
+    "id": 4129,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3822,
+        "id": 4109,
         "literals": [
           "solidity",
           "^",
@@ -319,10 +319,10 @@
       {
         "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/timelock/IDSPause.sol",
         "file": "../timelock/IDSPause.sol",
-        "id": 3823,
+        "id": 4110,
         "nodeType": "ImportDirective",
-        "scope": 3842,
-        "sourceUnit": 9256,
+        "scope": 4129,
+        "sourceUnit": 9651,
         "src": "60:34:21",
         "symbolAliases": [],
         "unitAlias": ""
@@ -333,22 +333,22 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "documentation": {
-          "id": 3824,
+          "id": 4111,
           "nodeType": "StructuredDocumentation",
           "src": "98:127:21",
           "text": " @title SetTimelockAdminSpell\n @author Alexander Schlindwein\n @dev Spell to set the admin of the timelock"
         },
         "fullyImplemented": true,
-        "id": 3841,
+        "id": 4128,
         "linearizedBaseContracts": [
-          3841
+          4128
         ],
         "name": "SetTimelockAdminSpell",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 3839,
+              "id": 4126,
               "nodeType": "Block",
               "src": "489:52:21",
               "statements": [
@@ -358,11 +358,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 3836,
+                        "id": 4123,
                         "name": "owner",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3829,
+                        "referencedDeclaration": 4116,
                         "src": "527:5:21",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -382,11 +382,11 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 3833,
+                            "id": 4120,
                             "name": "dsPause",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 3827,
+                            "referencedDeclaration": 4114,
                             "src": "509:7:21",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -401,18 +401,18 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 3832,
+                          "id": 4119,
                           "name": "IDSPause",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 9255,
+                          "referencedDeclaration": 9650,
                           "src": "500:8:21",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_IDSPause_$9255_$",
+                            "typeIdentifier": "t_type$_t_contract$_IDSPause_$9650_$",
                             "typeString": "type(contract IDSPause)"
                           }
                         },
-                        "id": 3834,
+                        "id": 4121,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -423,25 +423,25 @@
                         "src": "500:17:21",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IDSPause_$9255",
+                          "typeIdentifier": "t_contract$_IDSPause_$9650",
                           "typeString": "contract IDSPause"
                         }
                       },
-                      "id": 3835,
+                      "id": 4122,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "setOwner",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9207,
+                      "referencedDeclaration": 9602,
                       "src": "500:26:21",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address) external"
                       }
                     },
-                    "id": 3837,
+                    "id": 4124,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -456,20 +456,20 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 3838,
+                  "id": 4125,
                   "nodeType": "ExpressionStatement",
                   "src": "500:33:21"
                 }
               ]
             },
             "documentation": {
-              "id": 3825,
+              "id": 4112,
               "nodeType": "StructuredDocumentation",
               "src": "267:158:21",
               "text": " @dev Sets the timelock admin\n @param dsPause The address of the timelock\n @param owner The address of the new admin"
             },
             "functionSelector": "d80aea15",
-            "id": 3840,
+            "id": 4127,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -477,17 +477,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 3830,
+              "id": 4117,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3827,
+                  "id": 4114,
                   "mutability": "mutable",
                   "name": "dsPause",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3840,
+                  "scope": 4127,
                   "src": "448:15:21",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -496,7 +496,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3826,
+                    "id": 4113,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "448:7:21",
@@ -511,12 +511,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3829,
+                  "id": 4116,
                   "mutability": "mutable",
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 3840,
+                  "scope": 4127,
                   "src": "465:13:21",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -525,7 +525,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3828,
+                    "id": 4115,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "465:7:21",
@@ -542,19 +542,19 @@
               "src": "447:32:21"
             },
             "returnParameters": {
-              "id": 3831,
+              "id": 4118,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "489:0:21"
             },
-            "scope": 3841,
+            "scope": 4128,
             "src": "431:110:21",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3842,
+        "scope": 4129,
         "src": "227:317:21"
       }
     ],
@@ -565,8 +565,8 @@
     "version": "0.6.9+commit.3e3065ac.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-16T10:17:52.474Z",
+  "schemaVersion": "3.3.1",
+  "updatedAt": "2020-10-21T09:10:32.154Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Spell to set the admin of the timelock",

@@ -1703,7 +1703,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.1",
-  "updatedAt": "2020-10-20T11:25:53.060Z",
+  "updatedAt": "2020-10-21T09:51:09.706Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Interface for IdeaTokenExchange",

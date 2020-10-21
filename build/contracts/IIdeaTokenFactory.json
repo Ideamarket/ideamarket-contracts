@@ -433,7 +433,7 @@
         "id": 715,
         "nodeType": "ImportDirective",
         "scope": 851,
-        "sourceUnit": 10803,
+        "sourceUnit": 10892,
         "src": "95:56:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -455,7 +455,7 @@
         "id": 717,
         "nodeType": "ImportDirective",
         "scope": 851,
-        "sourceUnit": 3402,
+        "sourceUnit": 3491,
         "src": "181:52:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -799,7 +799,7 @@
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3401",
+                  "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3490",
                   "typeString": "contract IIdeaTokenNameVerifier"
                 },
                 "typeName": {
@@ -807,10 +807,10 @@
                   "id": 741,
                   "name": "IIdeaTokenNameVerifier",
                   "nodeType": "UserDefinedTypeName",
-                  "referencedDeclaration": 3401,
+                  "referencedDeclaration": 3490,
                   "src": "712:22:5",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3401",
+                    "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3490",
                     "typeString": "contract IIdeaTokenNameVerifier"
                   }
                 },
@@ -2225,7 +2225,7 @@
         "id": 715,
         "nodeType": "ImportDirective",
         "scope": 851,
-        "sourceUnit": 10803,
+        "sourceUnit": 10892,
         "src": "95:56:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2247,7 +2247,7 @@
         "id": 717,
         "nodeType": "ImportDirective",
         "scope": 851,
-        "sourceUnit": 3402,
+        "sourceUnit": 3491,
         "src": "181:52:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -2591,7 +2591,7 @@
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3401",
+                  "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3490",
                   "typeString": "contract IIdeaTokenNameVerifier"
                 },
                 "typeName": {
@@ -2599,10 +2599,10 @@
                   "id": 741,
                   "name": "IIdeaTokenNameVerifier",
                   "nodeType": "UserDefinedTypeName",
-                  "referencedDeclaration": 3401,
+                  "referencedDeclaration": 3490,
                   "src": "712:22:5",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3401",
+                    "typeIdentifier": "t_contract$_IIdeaTokenNameVerifier_$3490",
                     "typeString": "contract IIdeaTokenNameVerifier"
                   }
                 },
@@ -3986,7 +3986,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.1",
-  "updatedAt": "2020-10-20T11:25:53.065Z",
+  "updatedAt": "2020-10-21T09:51:09.712Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Interface for IdeaTokenFactory",

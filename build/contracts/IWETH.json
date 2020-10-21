@@ -34,15 +34,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/weth/IWETH.sol",
     "exportedSymbols": {
       "IWETH": [
-        9998
+        10087
       ]
     },
-    "id": 9999,
+    "id": 10088,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 9988,
+        "id": 10077,
         "literals": [
           "solidity",
           "^",
@@ -58,15 +58,15 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 9989,
+          "id": 10078,
           "nodeType": "StructuredDocumentation",
           "src": "60:107:46",
           "text": " @title IIdeaToken\n @author Alexander Schlindwein\n @dev Simplified interface for WETH"
         },
         "fullyImplemented": false,
-        "id": 9998,
+        "id": 10087,
         "linearizedBaseContracts": [
-          9998
+          10087
         ],
         "name": "IWETH",
         "nodeType": "ContractDefinition",
@@ -75,7 +75,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "d0e30db0",
-            "id": 9992,
+            "id": 10081,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -83,18 +83,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 9990,
+              "id": 10079,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "208:2:46"
             },
             "returnParameters": {
-              "id": 9991,
+              "id": 10080,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "227:0:46"
             },
-            "scope": 9998,
+            "scope": 10087,
             "src": "192:36:46",
             "stateMutability": "payable",
             "virtual": false,
@@ -104,7 +104,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "2e1a7d4d",
-            "id": 9997,
+            "id": 10086,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -112,17 +112,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 9995,
+              "id": 10084,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 9994,
+                  "id": 10083,
                   "mutability": "mutable",
                   "name": "wad",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 9997,
+                  "scope": 10086,
                   "src": "252:8:46",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -131,7 +131,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 9993,
+                    "id": 10082,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "252:4:46",
@@ -147,19 +147,19 @@
               "src": "251:10:46"
             },
             "returnParameters": {
-              "id": 9996,
+              "id": 10085,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "270:0:46"
             },
-            "scope": 9998,
+            "scope": 10087,
             "src": "234:37:46",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 9999,
+        "scope": 10088,
         "src": "169:105:46"
       }
     ],
@@ -169,15 +169,15 @@
     "absolutePath": "/C/Users/alexa/Desktop/ideamarket-contracts/contracts/weth/IWETH.sol",
     "exportedSymbols": {
       "IWETH": [
-        9998
+        10087
       ]
     },
-    "id": 9999,
+    "id": 10088,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 9988,
+        "id": 10077,
         "literals": [
           "solidity",
           "^",
@@ -193,15 +193,15 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 9989,
+          "id": 10078,
           "nodeType": "StructuredDocumentation",
           "src": "60:107:46",
           "text": " @title IIdeaToken\n @author Alexander Schlindwein\n @dev Simplified interface for WETH"
         },
         "fullyImplemented": false,
-        "id": 9998,
+        "id": 10087,
         "linearizedBaseContracts": [
-          9998
+          10087
         ],
         "name": "IWETH",
         "nodeType": "ContractDefinition",
@@ -210,7 +210,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "d0e30db0",
-            "id": 9992,
+            "id": 10081,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -218,18 +218,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 9990,
+              "id": 10079,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "208:2:46"
             },
             "returnParameters": {
-              "id": 9991,
+              "id": 10080,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "227:0:46"
             },
-            "scope": 9998,
+            "scope": 10087,
             "src": "192:36:46",
             "stateMutability": "payable",
             "virtual": false,
@@ -239,7 +239,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "2e1a7d4d",
-            "id": 9997,
+            "id": 10086,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -247,17 +247,17 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 9995,
+              "id": 10084,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 9994,
+                  "id": 10083,
                   "mutability": "mutable",
                   "name": "wad",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 9997,
+                  "scope": 10086,
                   "src": "252:8:46",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -266,7 +266,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 9993,
+                    "id": 10082,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "252:4:46",
@@ -282,19 +282,19 @@
               "src": "251:10:46"
             },
             "returnParameters": {
-              "id": 9996,
+              "id": 10085,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "270:0:46"
             },
-            "scope": 9998,
+            "scope": 10087,
             "src": "234:37:46",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 9999,
+        "scope": 10088,
         "src": "169:105:46"
       }
     ],
@@ -306,7 +306,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.1",
-  "updatedAt": "2020-10-20T11:25:53.266Z",
+  "updatedAt": "2020-10-21T09:51:09.926Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Simplified interface for WETH",

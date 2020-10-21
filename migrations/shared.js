@@ -13,6 +13,7 @@ module.exports.deploymentParams = {
 module.exports.externalContractAddresses = {
 	'kovan': {
 		'multisig': '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
+		'authorizer': '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
 		'dai': '0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa',
 		'cDai': '0xF0d0EB522cfa50B716B3b1604C4F0fA6f04376AD',
 		'comp': '0x61460874a7196d6a22D1eE4922473664b3E95270',

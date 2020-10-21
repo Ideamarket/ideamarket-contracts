@@ -1526,7 +1526,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.1",
-  "updatedAt": "2020-10-20T11:25:53.071Z",
+  "updatedAt": "2020-10-21T09:51:09.717Z",
   "devdoc": {
     "author": "Alexander Schlindwein",
     "details": "Interface for InterestManager",
