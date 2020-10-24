@@ -44,7 +44,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     event NewInterestWithdrawer(address ideaToken, address withdrawer);
     event NewPlatformFeeWithdrawer(uint marketID, address withdrawer);
 
-    event InvestedState(uint marketID, address ideaToken, uint dai, uint daiInvested, uint tradingFeeInvested, uint platformFeeInvested);
+    event InvestedState(uint marketID, address ideaToken, uint daiInToken, uint daiInvested, uint tradingFeeInvested, uint platformFeeInvested);
     event DaiRedeemed(address ideaToken, uint investmentToken);
     event TradingFeeRedeemed();
     event PlatformFeeRedeemed(uint marketID);
