@@ -41,15 +41,13 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     IInterestManager _interestManager;
     IERC20 _dai;
 
-    event TokensBought(address ideaToken, uint amount, uint rawCost, uint finalCost);
-    event TokensSold(address ideaToken, uint amount, uint rawPrice, uint finalPrice);
-
     event NewInterestWithdrawer(address ideaToken, address withdrawer);
     event NewPlatformFeeWithdrawer(uint marketID, address withdrawer);
 
-    event DaiInvested(address ideaToken, uint daiInToken, uint investmentToken);
-    event TradingFeeInvested(uint investmentToken);
-    event PlatformFeeInvested(uint marketID, uint investmentToken);
+    event InvestedState(uint marketID, address ideaToken, uint dai, uint daiInvested, uint tradingFeeInvested, uint platformFeeInvested);
+    event DaiRedeemed(address ideaToken, uint investmentToken);
+    event TradingFeeRedeemed();
+    event PlatformFeeRedeemed(uint marketID);
     
     /**
      * @dev Initializes the contract
@@ -80,9 +78,13 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param recipient The recipient of the redeemed Dai
      */
     function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
+
+        uint marketID;
+        {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "sellTokens: token does not exist");
-        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
+        marketID = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID).id;
+        }
 
         (uint finalPrice, uint rawPrice, uint tradingFee, uint platformFee) = getPricesForSellingTokens(ideaToken, amount);
 
@@ -92,22 +94,22 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         IIdeaToken(ideaToken).burn(msg.sender, amount);
 
         _interestManager.accrueInterest();
+        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
+        {
         uint finalRedeemed = _interestManager.redeem(address(this), finalPrice);
         uint tradingFeeRedeemed = _interestManager.underlyingToInvestmentToken(tradingFee);
         uint platformFeeRedeemed = _interestManager.underlyingToInvestmentToken(platformFee);
 
-        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
         exchangeInfo.invested = exchangeInfo.invested.sub(finalRedeemed.add(tradingFeeRedeemed).add(platformFeeRedeemed));
         _tradingFeeInvested = _tradingFeeInvested.add(tradingFeeRedeemed);
-        _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(platformFeeRedeemed);
+        _platformFeeInvested[marketID] = _platformFeeInvested[marketID].add(platformFeeRedeemed);
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(rawPrice);
-    
-        emit TokensSold(ideaToken, amount, rawPrice, finalPrice);
-        emit DaiInvested(ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested);
-        emit TradingFeeInvested(_tradingFeeInvested);
-        emit PlatformFeeInvested(marketDetails.id, _platformFeeInvested[marketDetails.id]);
+        }
+
+        emit InvestedState(marketID, ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested, _tradingFeeInvested, _platformFeeInvested[marketID]);
         _dai.transfer(recipient, finalPrice);
     }
+
 
     /**
      * @dev Returns the price for selling IdeaTokens
@@ -174,9 +176,12 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param recipient The recipient of the bought IdeaTokens
      */
     function buyTokens(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external override {
+        uint marketID;
+        {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "buyTokens: token does not exist");
-        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
+        marketID = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID).id;
+        }
 
         uint actualAmount = amount;
         uint finalCost;
@@ -202,13 +207,10 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
         exchangeInfo.invested = exchangeInfo.invested.add(_interestManager.underlyingToInvestmentToken(rawCost));
         _tradingFeeInvested = _tradingFeeInvested.add(_interestManager.underlyingToInvestmentToken(tradingFee));
-        _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(_interestManager.underlyingToInvestmentToken(platformFee));
+        _platformFeeInvested[marketID] = _platformFeeInvested[marketID].add(_interestManager.underlyingToInvestmentToken(platformFee));
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(rawCost);
     
-        emit TokensBought(ideaToken, actualAmount, rawCost, finalCost);
-        emit DaiInvested(ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested);
-        emit TradingFeeInvested(_tradingFeeInvested);
-        emit PlatformFeeInvested(marketDetails.id, _platformFeeInvested[marketDetails.id]);
+        emit InvestedState(marketID, ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested, _tradingFeeInvested, _platformFeeInvested[marketID]);
         IIdeaToken(ideaToken).mint(recipient, actualAmount);
     }
 
@@ -284,7 +286,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
         exchangeInfo.invested = exchangeInfo.invested.sub(_interestManager.redeem(msg.sender, interestPayable));
 
-        emit DaiInvested(token, exchangeInfo.daiInToken, exchangeInfo.invested);
+        emit DaiRedeemed(token, exchangeInfo.invested);
     }
 
     /**
@@ -334,7 +336,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _platformFeeInvested[marketID] = 0;
         _interestManager.redeem(msg.sender, platformFeePayable);
 
-        emit PlatformFeeInvested(marketID, 0);
+        emit PlatformFeeRedeemed(marketID);
     }
 
     /**
@@ -379,7 +381,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _tradingFeeInvested = 0;
         _interestManager.redeemInvestmentToken(_tradingFeeRecipient, redeem);
 
-        emit TradingFeeInvested(0);
+        emit TradingFeeRedeemed();
     }
 
     /**
