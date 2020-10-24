@@ -44,7 +44,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     event NewInterestWithdrawer(address ideaToken, address withdrawer);
     event NewPlatformFeeWithdrawer(uint marketID, address withdrawer);
 
-    event InvestedState(uint marketID, address ideaToken, uint daiInToken, uint daiInvested, uint tradingFeeInvested, uint platformFeeInvested);
+    event InvestedState(uint marketID, address ideaToken, uint daiInToken, uint daiInvested, uint tradingFeeInvested, uint platformFeeInvested, uint volume);
     event DaiRedeemed(address ideaToken, uint investmentToken);
     event TradingFeeRedeemed();
     event PlatformFeeRedeemed(uint marketID);
@@ -106,7 +106,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(rawPrice);
         }
 
-        emit InvestedState(marketID, ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested, _tradingFeeInvested, _platformFeeInvested[marketID]);
+        emit InvestedState(marketID, ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested, _tradingFeeInvested, _platformFeeInvested[marketID], rawPrice);
         _dai.transfer(recipient, finalPrice);
     }
 
@@ -210,7 +210,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _platformFeeInvested[marketID] = _platformFeeInvested[marketID].add(_interestManager.underlyingToInvestmentToken(platformFee));
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(rawCost);
     
-        emit InvestedState(marketID, ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested, _tradingFeeInvested, _platformFeeInvested[marketID]);
+        emit InvestedState(marketID, ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested, _tradingFeeInvested, _platformFeeInvested[marketID], finalCost);
         IIdeaToken(ideaToken).mint(recipient, actualAmount);
     }
 
