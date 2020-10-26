@@ -1,33 +1,44 @@
 const { time } = require('@openzeppelin/test-helpers')
-const DSPause = artifacts.require('DSPause')
-const SetTimelockDelaySpell = artifacts.require('SetTimelockDelaySpell')
+const { expect } = require('chai')
+const { BigNumber } = require('ethers')
+const { ethers } = require('hardhat')
 
-const BN = web3.utils.BN
+describe('spells/SetTimelockDelaySpell', () => {
 
-contract('spells/SetTimelockDelaySpell', async accounts => {
+	let DSPause
+	let SetTimelockDelaySpell
 
 	let dsPause
 	let spell
 
 	const delay = 86400
 	const newDelay = delay * 2
-	const adminAccount = accounts[0]
+	let adminAccount
 
 	before(async () => {
-		dsPause = await DSPause.new(delay, adminAccount)
-		spell = await SetTimelockDelaySpell.new()
+		const accounts = await ethers.getSigners()
+		adminAccount = accounts[0]
+
+		DSPause = await ethers.getContractFactory('DSPause')
+		SetTimelockDelaySpell = await ethers.getContractFactory('SetTimelockDelaySpell')
+
+		dsPause = await DSPause.deploy(delay, adminAccount.address)
+		await dsPause.deployed()
+	
+		spell = await SetTimelockDelaySpell.deploy()
+		await spell.deployed()
 	})
 
 	it('can set new delay', async () => {
-		const eta = new BN((parseInt(await time.latest()) + delay + 100).toString())
+		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
 		const tag = await dsPause.soul(spell.address)
 
-		const fax = spell.contract.methods.execute(dsPause.address, newDelay).encodeABI()
+		const fax = spell.interface.encodeFunctionData('execute', [dsPause.address, newDelay])
 
 		await dsPause.plot(spell.address, tag, fax, eta)
-		await time.increaseTo(eta.add(new BN('1')))
+		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
 		await dsPause.exec(spell.address, tag, fax, eta)
 
-		assert.isTrue((await dsPause._delay()).eq(new BN(newDelay)))
+		expect((await dsPause._delay()).eq(BigNumber.from(newDelay))).to.be.true
 	})
 })
