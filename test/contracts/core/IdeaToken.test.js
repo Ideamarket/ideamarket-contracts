@@ -1,78 +1,79 @@
-const { expectRevert } = require('@openzeppelin/test-helpers')
-const IdeaToken = artifacts.require('IdeaToken')
+const { expect } = require('chai')
+const { BigNumber } = require('ethers')
+const { ethers } = require('hardhat')
 
-const BN = web3.utils.BN
+describe('core/IdeaToken', () => {
 
-contract('core/IdeaToken', async accounts => {
+	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
 
-	const tenPow18 = new BN('10').pow(new BN('18'))
-
-	const userAccount = accounts[0]
-	const otherUserAccount = accounts[1]
-	const adminAccount = accounts[2]
+	let IdeaToken
+	let userAccount
+	let otherUserAccount
+	let adminAccount
 
 	let ideaToken
 
+	before(async () => {
+		IdeaToken = await ethers.getContractFactory('IdeaToken')
+		const accounts = await ethers.getSigners()
+		userAccount = accounts[0]
+		otherUserAccount = accounts[1]
+		adminAccount = accounts[2]
+	})
+
 	beforeEach(async () => {
-		ideaToken = await IdeaToken.new('name', 'symbol', { from: adminAccount })
+		ideaToken = await IdeaToken.connect(adminAccount).deploy('name', 'symbol')
+		await ideaToken.deployed()
 	})
 
 	it('admin is owner', async () => {
-		assert.equal(adminAccount, await ideaToken.getOwner())
+		expect(adminAccount.address).to.equal(await ideaToken.getOwner())
 	})
 
 	it('admin can mint tokens', async () => {
-		await ideaToken.mint(userAccount, tenPow18, { from: adminAccount })
-		assert.isTrue(tenPow18.eq(await ideaToken.balanceOf(userAccount)))
+		await ideaToken.connect(adminAccount).mint(userAccount.address, tenPow18)
+		expect(tenPow18.eq(await ideaToken.balanceOf(userAccount.address))).to.be.true
 	})
 
 	it('admin can burn tokens', async () => {
-		await ideaToken.mint(userAccount, tenPow18, { from: adminAccount })
-		assert.isTrue(tenPow18.eq(await ideaToken.balanceOf(userAccount)))
-		await ideaToken.burn(userAccount, tenPow18, { from: adminAccount })
-		assert.isTrue(new BN('0').eq(await ideaToken.balanceOf(userAccount)))
+		await ideaToken.connect(adminAccount).mint(userAccount.address, tenPow18)
+		expect(tenPow18.eq(await ideaToken.balanceOf(userAccount.address))).to.be.true
+		await ideaToken.connect(adminAccount).burn(userAccount.address, tenPow18)
+		expect(BigNumber.from('0').eq(await ideaToken.balanceOf(userAccount.address))).to.be.true
 	})
 
 	it('normal user cannot mint tokens', async () => {
-		await expectRevert(
-			ideaToken.mint(userAccount, tenPow18, { from: userAccount }),
-			'Ownable: onlyOwner'
-		)
+		await expect(ideaToken.connect(userAccount).mint(userAccount.address, tenPow18)).to.be.revertedWith('Ownable: onlyOwner')
 	})
 
 	it('normal user cannot burn tokens', async () => {
-		await ideaToken.mint(userAccount, tenPow18, { from: adminAccount })
-		assert.isTrue(tenPow18.eq(await ideaToken.balanceOf(userAccount)))
-		await expectRevert(
-			ideaToken.burn(userAccount, tenPow18, { from: userAccount }),
-			'Ownable: onlyOwner'
-		)
+		await ideaToken.connect(adminAccount).mint(userAccount.address, tenPow18)
+		expect(tenPow18.eq(await ideaToken.balanceOf(userAccount.address))).to.be.true
+		await expect(ideaToken.connect(userAccount).burn(userAccount.address, tenPow18)).to.be.revertedWith('Ownable: onlyOwner')
 	})
 
 	it('user can transfer tokens', async () => {
-		await ideaToken.mint(userAccount, tenPow18, { from: adminAccount })
-		assert.isTrue(tenPow18.eq(await ideaToken.balanceOf(userAccount)))
-		await ideaToken.transfer(otherUserAccount, tenPow18)
-		assert.isTrue(new BN('0').eq(await ideaToken.balanceOf(userAccount)))
-		assert.isTrue(tenPow18.eq(await ideaToken.balanceOf(otherUserAccount)))
+		await ideaToken.connect(adminAccount).mint(userAccount.address, tenPow18)
+		expect(tenPow18.eq(await ideaToken.balanceOf(userAccount.address))).to.be.true
+		await ideaToken.connect(userAccount).transfer(otherUserAccount.address, tenPow18)
+		expect(BigNumber.from('0').eq(await ideaToken.balanceOf(userAccount.address))).to.be.true
+		expect(tenPow18.eq(await ideaToken.balanceOf(otherUserAccount.address))).to.be.true
 	})
 
 	it('user can approve other user', async () => {
-		await ideaToken.mint(userAccount, tenPow18, { from: adminAccount })
-		assert.isTrue(tenPow18.eq(await ideaToken.balanceOf(userAccount)))
-		await ideaToken.approve(otherUserAccount, tenPow18)
-		assert.isTrue(tenPow18.eq(await ideaToken.allowance(userAccount, otherUserAccount)))
-		await ideaToken.transferFrom(userAccount, otherUserAccount, tenPow18, { from: otherUserAccount })
-		assert.isTrue(new BN('0').eq(await ideaToken.balanceOf(userAccount)))
-		assert.isTrue(tenPow18.eq(await ideaToken.balanceOf(otherUserAccount)))
+		await ideaToken.connect(adminAccount).mint(userAccount.address, tenPow18)
+		expect(tenPow18.eq(await ideaToken.balanceOf(userAccount.address))).to.be.true
+		await ideaToken.connect(userAccount).approve(otherUserAccount.address, tenPow18)
+		expect(tenPow18.eq(await ideaToken.allowance(userAccount.address, otherUserAccount.address))).to.be.true
+		await ideaToken.connect(otherUserAccount).transferFrom(userAccount.address, otherUserAccount.address, tenPow18)
+		expect(BigNumber.from('0').eq(await ideaToken.balanceOf(userAccount.address))).to.be.true
+		expect(tenPow18.eq(await ideaToken.balanceOf(otherUserAccount.address))).to.be.true
 	})
 
 	it('user can transfer other users tokens', async () => {
-		await ideaToken.mint(userAccount, tenPow18, { from: adminAccount })
-		assert.isTrue(tenPow18.eq(await ideaToken.balanceOf(userAccount)))
-		await expectRevert(
-			ideaToken.transferFrom(userAccount, otherUserAccount, tenPow18, { from: otherUserAccount }),
-			'ERC20: transfer amount exceeds allowance'
-		)
+		await ideaToken.connect(adminAccount).mint(userAccount.address, tenPow18)
+		expect(tenPow18.eq(await ideaToken.balanceOf(userAccount.address))).to.be.true
+		await expect(
+			ideaToken.connect(otherUserAccount).transferFrom(userAccount.address, otherUserAccount.address	, tenPow18)).to.be.revertedWith('ERC20: transfer amount exceeds allowance')
 	})
 })
