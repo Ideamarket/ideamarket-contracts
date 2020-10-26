@@ -29,6 +29,7 @@
     "ethereum-waffle": "^3.1.2",
     "ethers": "^5.0.19",
     "hardhat": "^2.0.1",
+    "prettier": "2.1.2",
     "solidity-coverage": "^0.7.11"
   },
   "dependencies": {

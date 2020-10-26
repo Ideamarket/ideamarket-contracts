@@ -1,16 +1,15 @@
-const { saveDeployedAddress, saveDeployedABI } = require('./shared')
+const { saveDeployedAddress, saveDeployedABI } = require("./shared")
 
 /* eslint-disable-next-line no-undef */
-const AddMarketSpell = artifacts.require('AddMarketSpell')
+const AddMarketSpell = artifacts.require("AddMarketSpell")
 
-module.exports = async function(deployer, network) {
+module.exports = async function (deployer, network) {
+  if (network != "kovan") {
+    return
+  }
 
-	if(network != 'kovan') {
-		return
-	}
+  await deployer.deploy(AddMarketSpell)
 
-	await deployer.deploy(AddMarketSpell)
-
-	saveDeployedAddress(network, 'addMarketSpell', AddMarketSpell.address)
-	saveDeployedABI(network, 'addMarketSpell', AddMarketSpell.abi)
+  saveDeployedAddress(network, "addMarketSpell", AddMarketSpell.address)
+  saveDeployedABI(network, "addMarketSpell", AddMarketSpell.abi)
 }

@@ -1,23 +1,30 @@
-const { externalContractAddresses, saveDeployedAddress, loadDeployedAddress, saveDeployedABI } = require('./shared')
+const {
+  externalContractAddresses,
+  saveDeployedAddress,
+  loadDeployedAddress,
+  saveDeployedABI,
+} = require("./shared")
 
 /* eslint-disable-next-line no-undef */
-const CurrencyConverter = artifacts.require('CurrencyConverter')
+const CurrencyConverter = artifacts.require("CurrencyConverter")
 
-module.exports = async function(deployer, network) {
-	let externalAddresses
+module.exports = async function (deployer, network) {
+  let externalAddresses
 
-	if(network == 'kovan') {
-		externalAddresses = externalContractAddresses.kovan
-	} else {
-		return
-	}
+  if (network == "kovan") {
+    externalAddresses = externalContractAddresses.kovan
+  } else {
+    return
+  }
 
-	await deployer.deploy(CurrencyConverter,
-		loadDeployedAddress(network, 'ideaTokenExchange'),
-		externalAddresses.dai,
-		externalAddresses.uniswapV2Router02,
-		externalAddresses.weth)
+  await deployer.deploy(
+    CurrencyConverter,
+    loadDeployedAddress(network, "ideaTokenExchange"),
+    externalAddresses.dai,
+    externalAddresses.uniswapV2Router02,
+    externalAddresses.weth
+  )
 
-	saveDeployedAddress(network, 'currencyConverter', CurrencyConverter.address)
-	saveDeployedABI(network, 'currencyConverter', CurrencyConverter.abi)
+  saveDeployedAddress(network, "currencyConverter", CurrencyConverter.address)
+  saveDeployedABI(network, "currencyConverter", CurrencyConverter.abi)
 }
