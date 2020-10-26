@@ -1,58 +1,61 @@
-const DomainNoSubdomainNameVerifier = artifacts.require('DomainNoSubdomainNameVerifier')
+const { expect } = require("chai")
 
-contract('nameVerifiers/DomainNoSubdomainNameVerifier', async () => {
+describe('nameVerifiers/DomainNoSubdomainNameVerifier', () => {
 
+	let DomainNoSubdomainNameVerifier
 	let nameVerifier
     
 	before(async () => {
-		nameVerifier = await DomainNoSubdomainNameVerifier.new()
+		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
+		nameVerifier = await DomainNoSubdomainNameVerifier.deploy()
+		await nameVerifier.deployed()
 	})
 
 	it('test.com', async () => {
-		assert.isTrue(await nameVerifier.verifyTokenName('test.com'))
+		expect(await nameVerifier.verifyTokenName('test.com')).to.be.true
 	})
 
 	it('abcdefghijklmnopqrstuvwxyz_1234567-89.com', async () => {
-		assert.isTrue(await nameVerifier.verifyTokenName('abcdefghijklmnopqrstuvwxyz_1234567-89.com'))
+		expect(await nameVerifier.verifyTokenName('abcdefghijklmnopqrstuvwxyz_1234567-89.com')).to.be.true
 	})
 
 	it('test.com (with trailing whitespace)', async () => {
-		assert.isFalse(await nameVerifier.verifyTokenName('test.com '))
+		expect(await nameVerifier.verifyTokenName('test.com ')).to.be.false
 	})
 
 	it('test.com (with leading whitespace)', async () => {
-		assert.isFalse(await nameVerifier.verifyTokenName(' test.com'))
+		expect(await nameVerifier.verifyTokenName(' test.com')).to.be.false
 	})
 
 	it('test.com (with leading and trailing whitespace)', async () => {
-		assert.isFalse(await nameVerifier.verifyTokenName(' test.com '))
+		expect(await nameVerifier.verifyTokenName(' test.com ')).to.be.false
 	})
 
 	it('test (no dot and TLD)', async () => {
-		assert.isFalse(await nameVerifier.verifyTokenName('test'))
+		expect(await nameVerifier.verifyTokenName('test')).to.be.false
 	})
 
 	it('test. (no TLD)', async () => {
-		assert.isFalse(await nameVerifier.verifyTokenName('test.'))
+		expect(await nameVerifier.verifyTokenName('test.')).to.be.false
 	})
 
 	it('. (dot only)', async () => {
-		assert.isFalse(await nameVerifier.verifyTokenName('.'))
+		expect(await nameVerifier.verifyTokenName('.')).to.be.false
 	})
 
 	it('.com (no domain)', async () => {
-		assert.isFalse(await nameVerifier.verifyTokenName('.com'))
+		expect(await nameVerifier.verifyTokenName('.com')).to.be.false
 	})
 
 	it('test..com (double dots)', async () => {
-		assert.isFalse(await nameVerifier.verifyTokenName('test..com'))
+		expect(await nameVerifier.verifyTokenName('test..com')).to.be.false
 	})
 
 	it('example.test.com (subdomain)', async () => {
-		assert.isFalse(await nameVerifier.verifyTokenName('example.test.com'))
+		expect(await nameVerifier.verifyTokenName('example.test.com')).to.be.false
 	})
 
 	it('test!.com (invalid character)', async () => {
-		assert.isFalse(await nameVerifier.verifyTokenName('test!.com'))
+		expect(await nameVerifier.verifyTokenName('test!.com')).to.be.false
 	})
 })
