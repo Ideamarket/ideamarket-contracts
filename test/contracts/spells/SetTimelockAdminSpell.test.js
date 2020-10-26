@@ -1,33 +1,45 @@
 const { time } = require('@openzeppelin/test-helpers')
-const DSPause = artifacts.require('DSPause')
-const SetTimelockAdminSpell = artifacts.require('SetTimelockAdminSpell')
+const { expect } = require('chai')
+const { BigNumber } = require('ethers')
+const { ethers } = require('hardhat')
 
-const BN = web3.utils.BN
+describe('spells/SetTimelockAdminSpell', () => {
 
-contract('spells/SetTimelockAdminSpell', async accounts => {
+	let DSPause
+	let SetTimelockAdminSpell
 
 	let dsPause
 	let spell
 
 	const delay = 86400
-	const adminAccount = accounts[0]
-	const newAdminAccount = accounts[1]
+	let adminAccount
+	let newAdminAccount
 
 	before(async () => {
-		dsPause = await DSPause.new(delay, adminAccount)
-		spell = await SetTimelockAdminSpell.new()
+		const accounts = await ethers.getSigners()
+		adminAccount = accounts[0]
+		newAdminAccount = accounts[1]
+
+		DSPause = await ethers.getContractFactory('DSPause')
+		SetTimelockAdminSpell = await ethers.getContractFactory('SetTimelockAdminSpell')
+
+		dsPause = await DSPause.deploy(delay, adminAccount.address)
+		await dsPause.deployed()
+	
+		spell = await SetTimelockAdminSpell.deploy()
+		await spell.deployed()
 	})
 
 	it('can set new admin', async () => {
-		const eta = new BN((parseInt(await time.latest()) + delay + 100).toString())
+		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
 		const tag = await dsPause.soul(spell.address)
 
-		const fax = spell.contract.methods.execute(dsPause.address, newAdminAccount).encodeABI()
+		const fax = spell.interface.encodeFunctionData('execute', [dsPause.address, newAdminAccount.address])
 
 		await dsPause.plot(spell.address, tag, fax, eta)
-		await time.increaseTo(eta.add(new BN('1')))
+		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
 		await dsPause.exec(spell.address, tag, fax, eta)
 
-		assert.isTrue((await dsPause._owner()).toString() == newAdminAccount)
+		expect((await dsPause._owner()).toString()).to.be.equal(newAdminAccount.address)
 	})
 })
