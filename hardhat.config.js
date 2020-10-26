@@ -6,8 +6,8 @@ module.exports = {
   networks: {
     hardhat: {},
     kovan: {
-      url: `https://kovan.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: [process.env.KOVAN_PRIVATE_KEY],
+      url: `https://kovan.infura.io/v3/${process.env.INFURA_KEY ? process.env.INFURA_KEY : ''}`,
+      accounts: (process.env.KOVAN_PRIVATE_KEY ? [process.env.KOVAN_PRIVATE_KEY] : [])
     },
   },
   solidity: {
