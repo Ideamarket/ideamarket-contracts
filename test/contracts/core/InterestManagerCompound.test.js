@@ -1,138 +1,146 @@
-const { expectRevert } = require('@openzeppelin/test-helpers')
-const InterestManagerCompound = artifacts.require('InterestManagerCompound')
-const TestCDai = artifacts.require('TestCDai')
-const TestERC20 = artifacts.require('TestERC20')
+const { time } = require('@openzeppelin/test-helpers')
+const { expect } = require('chai')
+const { BigNumber } = require('ethers')
+const { ethers } = require('hardhat')
 
-const BN = web3.utils.BN
+describe('core/InterestManagerCompound', () => {
 
-contract('core/InterestManagerCompound', async accounts => {
+	let InterestManagerCompound
+	let TestCDai
+	let TestERC20
 
-	const zero = new BN('0')
-	const tenPow18 = new BN('10').pow(new BN('18'))
+	const zero = BigNumber.from('0')
+	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
 
-	const userAccount = accounts[0]
-	const adminAccount = accounts[1]
-	const compRecipient = accounts[2]
+	let userAccount
+	let adminAccount
+	let compRecipient
 
 	let interestManagerCompound
 	let cDai
 	let dai
 	let comp
 
+	before(async () => {
+		const accounts = await ethers.getSigners()
+		userAccount = accounts[0]
+		adminAccount = accounts[1]
+		compRecipient = accounts[2]
+
+		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
+		TestCDai = await ethers.getContractFactory('TestCDai')
+		TestERC20 = await ethers.getContractFactory('TestERC20')
+	})
+
 	beforeEach(async () => {
-		dai = await TestERC20.new('DAI', 'DAI')
-		comp = await TestERC20.new('COMP', 'COMP')
-		cDai = await TestCDai.new(dai.address, comp.address)
+		dai = await TestERC20.deploy('DAI', 'DAI')
+		await dai.deployed()
+
+		comp = await TestERC20.deploy('COMP', 'COMP')
+		await comp.deployed()
+
+		cDai = await TestCDai.deploy(dai.address, comp.address)
+		await cDai.deployed()
 		await cDai.setExchangeRate(tenPow18)
-		interestManagerCompound = await InterestManagerCompound.new()
+
+		interestManagerCompound = await InterestManagerCompound.deploy()
+		await interestManagerCompound.deployed()
 		await interestManagerCompound.initialize(
-			adminAccount,
+			adminAccount.address,
 			dai.address,
 			cDai.address,
 			comp.address,
-			compRecipient
+			compRecipient.address
 		)
 	})
 
 	it('admin is owner', async () => {
-		assert.equal(adminAccount, await interestManagerCompound.getOwner())
+		expect(adminAccount.address).to.equal(await interestManagerCompound.getOwner())
 	})
 
 	it('can invest', async () => {
-		await dai.mint(userAccount, tenPow18)
+		await dai.mint(userAccount.address, tenPow18)
 		await dai.transfer(interestManagerCompound.address, tenPow18)
 		await interestManagerCompound.invest(tenPow18)
-		assert.isTrue(zero.eq(await dai.balanceOf(userAccount)))
-		assert.isTrue(tenPow18.eq(await dai.balanceOf(cDai.address)))
-		assert.isTrue(tenPow18.eq(await cDai.balanceOf(interestManagerCompound.address)))
+		expect(zero.eq(await dai.balanceOf(userAccount.address))).to.be.true
+		expect(tenPow18.eq(await dai.balanceOf(cDai.address))).to.be.true
+		expect(tenPow18.eq(await cDai.balanceOf(interestManagerCompound.address))).to.be.true
 	})
 
 	it('fail invest too few dai', async () => {
-		await expectRevert(
-			interestManagerCompound.invest(tenPow18),
-			'invest: not enough dai'
-		)
+		await expect(
+			interestManagerCompound.invest(tenPow18)).to.be.revertedWith('invest: not enough dai')
 	})
 
 	it('can redeem', async () => {
-		await dai.mint(userAccount, tenPow18)
+		await dai.mint(userAccount.address, tenPow18)
 		await dai.transfer(interestManagerCompound.address, tenPow18)
 		await interestManagerCompound.invest(tenPow18)
 
-		const redeemAmount = tenPow18.div(new BN('2'))
-		await interestManagerCompound.redeem(
-			adminAccount,
-			redeemAmount,
-			{ from: adminAccount }
+		const redeemAmount = tenPow18.div(BigNumber.from('2'))
+		await interestManagerCompound.connect(adminAccount).redeem(
+			adminAccount.address,
+			redeemAmount
 		)
 
-		assert.isTrue(redeemAmount.eq(await dai.balanceOf(adminAccount)))
-		assert.isTrue(tenPow18.sub(redeemAmount).eq(await cDai.balanceOf(interestManagerCompound.address)))
+		expect(redeemAmount.eq(await dai.balanceOf(adminAccount.address))).to.be.true
+		expect(tenPow18.sub(redeemAmount).eq(await cDai.balanceOf(interestManagerCompound.address))).to.be.true
 	})
 
 	it('fail redeem not admin', async () => {
-		await dai.mint(userAccount, tenPow18)
+		await dai.mint(userAccount.address, tenPow18)
 		await dai.transfer(interestManagerCompound.address, tenPow18)
 		await interestManagerCompound.invest(tenPow18)
 
-		const redeemAmount = tenPow18.div(new BN('2'))
-		await expectRevert(
+		const redeemAmount = tenPow18.div(BigNumber.from('2'))
+		await expect(
 			interestManagerCompound.redeem(
-				adminAccount,
+				adminAccount.address,
 				redeemAmount
-			),
-			'Ownable: onlyOwner'
-		)
+			)).to.be.revertedWith('Ownable: onlyOwner')
 	})
 
 	it('can donate interest and redeem donated dai', async () => {
-		await dai.mint(userAccount, tenPow18)
+		await dai.mint(userAccount.address, tenPow18)
 		await dai.approve(interestManagerCompound.address, tenPow18)
 		await interestManagerCompound.donateInterest(tenPow18)
-		assert.isTrue(zero.eq(await dai.balanceOf(userAccount)))
-		assert.isTrue(tenPow18.eq(await dai.balanceOf(cDai.address)))
-		assert.isTrue(tenPow18.eq(await cDai.balanceOf(interestManagerCompound.address)))
+		expect(zero.eq(await dai.balanceOf(userAccount.address))).to.be.true
+		expect(tenPow18.eq(await dai.balanceOf(cDai.address))).to.be.true
+		expect(tenPow18.eq(await cDai.balanceOf(interestManagerCompound.address))).to.be.true
 
 		await interestManagerCompound.redeemDonated(tenPow18)
-		assert.isTrue(tenPow18.eq(await dai.balanceOf(userAccount)))
-		assert.isTrue(zero.eq(await dai.balanceOf(cDai.address)))
-		assert.isTrue(zero.eq(await cDai.balanceOf(interestManagerCompound.address)))
+		expect(tenPow18.eq(await dai.balanceOf(userAccount.address))).to.be.true
+		expect(zero.eq(await dai.balanceOf(cDai.address))).to.be.true
+		expect(zero.eq(await cDai.balanceOf(interestManagerCompound.address))).to.be.true
 	})
 
 	it('fail donate donate when too few dai', async () => {
 		await dai.approve(interestManagerCompound.address, tenPow18)
-		await expectRevert(
-			interestManagerCompound.donateInterest(tenPow18),
-			'ERC20: transfer amount exceeds balance'
-		)
+		await expect(interestManagerCompound.donateInterest(tenPow18)).to.be.revertedWith('ERC20: transfer amount exceeds balance')
 	})
 
 	it('fail donate not enough allowance', async () => {
-		await expectRevert(
-			interestManagerCompound.donateInterest(new BN('100')),
-			'donateInterest: not enough allowance'
-		)
+		await expect(
+			interestManagerCompound.donateInterest(BigNumber.from('100'))).to.be.revertedWith('donateInterest: not enough allowance')
 	})
     
 	it('cannot redeem more than donated', async () => {
-		await dai.mint(userAccount, tenPow18)
+		await dai.mint(userAccount.address, tenPow18)
 		await dai.approve(interestManagerCompound.address, tenPow18)
 		await interestManagerCompound.donateInterest(tenPow18)
 
-		await expectRevert(
-			interestManagerCompound.redeemDonated(tenPow18.mul(new BN('2'))),
-			'redeemDonated: not enough donated'
-		)
+		await expect(
+			interestManagerCompound.redeemDonated(tenPow18.mul(BigNumber.from('2')))).to.be.revertedWith('redeemDonated: not enough donated')
 	})
 
 	it('can withdraw COMP', async () => {
-		await dai.mint(userAccount, tenPow18)
+		await dai.mint(userAccount.address, tenPow18)
 		await dai.approve(interestManagerCompound.address, tenPow18)
 		await interestManagerCompound.donateInterest(tenPow18)
 
 		const compBalance = await comp.balanceOf(interestManagerCompound.address)
 		await interestManagerCompound.withdrawComp()
-		assert.isTrue((await comp.balanceOf(interestManagerCompound.address)).eq(new BN('0')))
-		assert.isTrue((await comp.balanceOf(compRecipient)).eq(compBalance))
+		expect((await comp.balanceOf(interestManagerCompound.address)).eq(BigNumber.from('0'))).to.be.true
+		expect((await comp.balanceOf(compRecipient.address)).eq(compBalance)).to.be.true
 	})
 })
