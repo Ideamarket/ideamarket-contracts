@@ -1,9 +1,9 @@
-name: Build, test, lint
+name: Build, test, coverage
 
 on: [ push ]
 
 jobs:
-  build-test-lint:
+  build-test-coverage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,13 +13,6 @@ jobs:
       - name: Install dependencies
         run: |
             npm install
-            npm install -g truffle
-            npm install -g ganache-cli
-            npm install -g eslint
-      - name: Run truffle tests and coverage
+      - name: Run tests
         run: |
-            ganache-cli > /dev/null &
-            truffle run coverage
-      - name: Run ESLint
-        run: |
-            eslint .
+            npx hardhat test
