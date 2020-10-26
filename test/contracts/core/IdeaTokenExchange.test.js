@@ -1,34 +1,36 @@
-const { expectRevert } = require('@openzeppelin/test-helpers')
+const { time } = require('@openzeppelin/test-helpers')
+const { expect } = require('chai')
+const { BigNumber } = require('ethers')
+const { ethers } = require('hardhat')
 
-const DomainNoSubdomainNameVerifier = artifacts.require('DomainNoSubdomainNameVerifier')
-const TestERC20 = artifacts.require('TestERC20')
-const TestCDai = artifacts.require('TestCDai')
-const InterestManagerCompound = artifacts.require('InterestManagerCompound')
-const IdeaTokenFactory = artifacts.require('IdeaTokenFactory')
-const IdeaTokenExchange = artifacts.require('IdeaTokenExchange')
-const IdeaToken = artifacts.require('IdeaToken')
 
-const BN = web3.utils.BN
+describe('core/IdeaTokenExchange', () => {
 
-contract('core/IdeaTokenExchange', async accounts => {
+	let DomainNoSubdomainNameVerifier
+	let TestERC20
+	let TestCDai
+	let InterestManagerCompound
+	let IdeaTokenFactory
+	let IdeaTokenExchange
+	let IdeaToken
 
-	const tenPow17 = new BN('10').pow(new BN('17'))
-	const tenPow18 = new BN('10').pow(new BN('18'))
+	const tenPow17 = BigNumber.from('10').pow(BigNumber.from('17'))
+	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
 
 	const marketName = 'main'
 	const tokenName = 'test.com'
-	const baseCost = new BN('1000000000000000000') // 10**18
-	const priceRise = new BN('100000000000000000') // 10**17
-	const tradingFeeRate = new BN('100')
-	const platformFeeRate = new BN('50')
-	const feeScale = new BN('10000')
+	const baseCost = BigNumber.from('1000000000000000000') // 10**18
+	const priceRise = BigNumber.from('100000000000000000') // 10**17
+	const tradingFeeRate = BigNumber.from('100')
+	const platformFeeRate = BigNumber.from('50')
+	const feeScale = BigNumber.from('10000')
 
-	const userAccount = accounts[0]
-	const adminAccount = accounts[1]
-	const authorizerAccount = accounts[2]
-	const tradingFeeAccount = accounts[3]
-	const interestReceiverAccount = accounts[4]
-	const platformFeeReceiverAccount = accounts[5]
+	let userAccount
+	let adminAccount
+	let authorizerAccount
+	let tradingFeeAccount
+	let interestReceiverAccount
+	let platformFeeReceiverAccount
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
 	const someAddress = '0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5' // random addr from etherscan
 
@@ -44,43 +46,70 @@ contract('core/IdeaTokenExchange', async accounts => {
 	let tokenID
 	let ideaToken
 
+	before(async () => {
+		const accounts = await ethers.getSigners()
+		userAccount = accounts[0]
+		adminAccount = accounts[1]
+		authorizerAccount = accounts[2]
+		tradingFeeAccount = accounts[3]
+		interestReceiverAccount = accounts[4]
+		platformFeeReceiverAccount = accounts[5]
+
+		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
+		TestERC20 = await ethers.getContractFactory('TestERC20')
+		TestCDai = await ethers.getContractFactory('TestCDai')
+		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
+		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactory')
+		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchange')
+		IdeaToken = await ethers.getContractFactory('IdeaToken')		
+	})
+
 	beforeEach(async () => {
         
-		domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.new()
-		dai = await TestERC20.new('DAI', 'DAI')
-		comp = await TestERC20.new('COMP', 'COMP')
-		cDai = await TestCDai.new(dai.address, comp.address)
-		await cDai.setExchangeRate(tenPow18)
-		interestManagerCompound = await InterestManagerCompound.new()
-		ideaTokenFactory = await IdeaTokenFactory.new()
-		ideaTokenExchange = await IdeaTokenExchange.new()
+		domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.deploy()
+		await domainNoSubdomainNameVerifier.deployed()
 
-		await interestManagerCompound.initialize(ideaTokenExchange.address,
+		dai = await TestERC20.deploy('DAI', 'DAI')
+		await dai.deployed()
+
+		comp = await TestERC20.deploy('COMP', 'COMP')
+		await comp.deployed()
+
+		cDai = await TestCDai.deploy(dai.address, comp.address)
+		await cDai.deployed()
+		await cDai.setExchangeRate(tenPow18)
+
+		interestManagerCompound = await InterestManagerCompound.deploy()
+		await interestManagerCompound.deployed()
+
+		ideaTokenFactory = await IdeaTokenFactory.deploy()
+		await ideaTokenFactory.deployed()
+
+		ideaTokenExchange = await IdeaTokenExchange.deploy()
+		await ideaTokenExchange.deployed()
+
+		await interestManagerCompound.connect(adminAccount).initialize(ideaTokenExchange.address,
 			dai.address,
 			cDai.address,
 			comp.address,
-			zeroAddress,
-			{from: adminAccount})
+			zeroAddress)
 
-		await ideaTokenFactory.initialize(adminAccount,
-			ideaTokenExchange.address,
-			{from: adminAccount})
+		await ideaTokenFactory.connect(adminAccount).initialize(adminAccount.address,
+			ideaTokenExchange.address)
 
-		await ideaTokenExchange.initialize(adminAccount,
-			authorizerAccount,
-			tradingFeeAccount,
+		await ideaTokenExchange.connect(adminAccount).initialize(adminAccount.address,
+			authorizerAccount.address,
+			tradingFeeAccount.address,
 			interestManagerCompound.address,
-			dai.address,
-			{from: adminAccount})
-		await ideaTokenExchange.setIdeaTokenFactoryAddress(ideaTokenFactory.address, { from: adminAccount })
+			dai.address)
+		await ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address)
 
-		await ideaTokenFactory.addMarket(marketName,
+		await ideaTokenFactory.connect(adminAccount).addMarket(marketName,
 			domainNoSubdomainNameVerifier.address,
 			baseCost,
 			priceRise,
 			tradingFeeRate,
-			platformFeeRate,
-			{from: adminAccount})
+			platformFeeRate)
 
 		marketID = await ideaTokenFactory.getMarketIDByName(marketName)
 
@@ -88,16 +117,15 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 		tokenID = await ideaTokenFactory.getTokenIDByName(tokenName, marketID)
 
-		ideaToken = await IdeaToken.at((await ideaTokenFactory.getTokenInfo(marketID, tokenID)).ideaToken)
-
+		ideaToken = new ethers.Contract((await ideaTokenFactory.getTokenInfo(marketID, tokenID)).ideaToken, IdeaToken.interface, IdeaToken.signer)
 	})
 
 	it('admin is owner', async () => {
-		assert.equal(adminAccount, await ideaTokenExchange.getOwner())
+		expect(adminAccount.address).to.be.equal(await ideaTokenExchange.getOwner())
 	})
   
 	it('can buy and sell 500 tokens with correct interest', async () => {
-		const amount = new BN('250').mul(tenPow18)
+		const amount = BigNumber.from('250').mul(tenPow18)
 		const initialExchangeRate = tenPow18
 		const firstCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
 		const firstTradingFee = await getTradingFeeForBuying(ideaToken, amount)
@@ -105,18 +133,18 @@ contract('core/IdeaTokenExchange', async accounts => {
 		const firstPlatformFee = await getPlatformFeeForBuying(ideaToken, amount)
 		const firstPlatformFeeInvested = firstPlatformFee.mul(tenPow18).div(initialExchangeRate)
 		const firstRawCost = firstCost.sub(firstTradingFee).sub(firstPlatformFee)
-		assert.isTrue(firstCost.eq(await getCostForBuyingTokens(ideaToken, amount)))
+		expect(firstCost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
 
-		await dai.mint(userAccount, firstCost)
+		await dai.mint(userAccount.address, firstCost)
 		await dai.approve(ideaTokenExchange.address, firstCost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, firstCost, userAccount)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, firstCost, userAccount.address)
 
-		assert.isTrue((await dai.balanceOf(userAccount)).eq(new BN('0')))
-		assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount))
-		assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(firstTradingFeeInvested.mul(initialExchangeRate).div(tenPow18)))
-		assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested.mul(initialExchangeRate).div(tenPow18)))
+		expect((await dai.balanceOf(userAccount.address)).eq(BigNumber.from('0'))).to.be.true
+		expect((await ideaToken.balanceOf(userAccount.address)).eq(amount)).to.be.true
+		expect((await ideaTokenExchange.getTradingFeePayable()).eq(firstTradingFeeInvested.mul(initialExchangeRate).div(tenPow18))).to.be.true
+		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested.mul(initialExchangeRate).div(tenPow18))).to.be.true
 
-		assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(new BN('0')))
+		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(BigNumber.from('0'))).to.be.true
 		const firstExchangeRate = tenPow18.add(tenPow17) // 1.1
 		await cDai.setExchangeRate(firstExchangeRate)
 
@@ -125,7 +153,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 			.div(tenPow18)
 			.sub(firstRawCost)
 
-		assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable))
+		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable)).to.be.true
 
 		const secondCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
 		const secondTradingFee = await getTradingFeeForBuying(ideaToken, amount)
@@ -133,25 +161,25 @@ contract('core/IdeaTokenExchange', async accounts => {
 		const secondPlatformFee = await getPlatformFeeForBuying(ideaToken, amount)
 		const secondPlatformFeeInvested = secondPlatformFee.mul(tenPow18).div(firstExchangeRate)
 		const secondRawCost = secondCost.sub(secondTradingFee).sub(secondPlatformFee)
-		assert.isTrue(secondCost.eq(await getCostForBuyingTokens(ideaToken, amount)))
+		expect(secondCost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
 
-		await dai.mint(userAccount, secondCost)
+		await dai.mint(userAccount.address, secondCost)
 		await dai.approve(ideaTokenExchange.address, secondCost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, secondCost, userAccount)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, secondCost, userAccount.address)
 
-		assert.isTrue((await dai.balanceOf(userAccount)).eq(new BN('0')))
-		assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount.add(amount)))
-		assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(firstTradingFeeInvested
+		expect((await dai.balanceOf(userAccount.address)).eq(BigNumber.from('0'))).to.be.true
+		expect((await ideaToken.balanceOf(userAccount.address)).eq(amount.add(amount))).to.be.true
+		expect((await ideaTokenExchange.getTradingFeePayable()).eq(firstTradingFeeInvested
 			.add(secondTradingFeeInvested)
 			.mul(firstExchangeRate)
-			.div(tenPow18)))
-		assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested
+			.div(tenPow18))).to.be.true
+		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested
 			.add(secondPlatformFeeInvested)
 			.mul(firstExchangeRate)
-			.div(tenPow18)))
+			.div(tenPow18))).to.be.true
 
-		assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable))
-		const secondExchangeRate = tenPow18.add(tenPow17.mul(new BN('2'))) // 1.2
+		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable)).to.be.true
+		const secondExchangeRate = tenPow18.add(tenPow17.mul(BigNumber.from('2'))) // 1.2
 		await cDai.setExchangeRate(secondExchangeRate)
 
 		const secondInterestPayable = firstRawCost
@@ -160,33 +188,33 @@ contract('core/IdeaTokenExchange', async accounts => {
 			.div(tenPow18)
 			.sub(firstRawCost.add(secondRawCost))
         
-		assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(secondInterestPayable))
-
+		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(secondInterestPayable)).to.be.true
+				
 		const firstPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
 		const thirdTradingFee = await getTradingFeeForSelling(ideaToken, amount)
 		const thirdTradingFeeInvested = thirdTradingFee.mul(tenPow18).div(secondExchangeRate)
 		const thirdPlatformFee = await getPlatformFeeForSelling(ideaToken, amount)
 		const thirdPlatformFeeInvested = thirdPlatformFee.mul(tenPow18).div(secondExchangeRate)
 		const firstRawPrice = firstPrice.add(thirdTradingFee).add(thirdPlatformFee)
-		assert.isTrue(firstPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
+		expect(firstPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
 
-		await ideaTokenExchange.sellTokens(ideaToken.address, amount, firstPrice, userAccount)
+		await ideaTokenExchange.sellTokens(ideaToken.address, amount, firstPrice, userAccount.address)
 
-		assert.isTrue((await dai.balanceOf(userAccount)).eq(firstPrice))
-		assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(amount))
-		assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(firstTradingFeeInvested
+		expect((await dai.balanceOf(userAccount.address)).eq(firstPrice)).to.be.true
+		expect((await ideaToken.balanceOf(userAccount.address)).eq(amount))
+		expect((await ideaTokenExchange.getTradingFeePayable()).eq(firstTradingFeeInvested
 			.add(secondTradingFeeInvested)
 			.add(thirdTradingFeeInvested)
 			.mul(secondExchangeRate)
-			.div(tenPow18)))
-		assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested
+			.div(tenPow18))).to.be.true
+		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested
 			.add(secondPlatformFeeInvested)
 			.add(thirdPlatformFeeInvested)
 			.mul(secondExchangeRate)
-			.div(tenPow18)))
+			.div(tenPow18))).to.be.true
 		// TODO: Minor rounding error
 		// assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(secondInterestPayable))
-		const thirdExchangeRate = tenPow18.add(tenPow17.mul(new BN('3'))) // 1.3
+		const thirdExchangeRate = tenPow18.add(tenPow17.mul(BigNumber.from('3'))) // 1.3
 		await cDai.setExchangeRate(thirdExchangeRate)
 
 		/* eslint-disable-next-line no-unused-vars*/
@@ -198,35 +226,35 @@ contract('core/IdeaTokenExchange', async accounts => {
 
 		// TODO: Minor rounding error
 		//assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable))
-
+			
 		const secondPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
 		const fourthTradingFee = await getTradingFeeForSelling(ideaToken, amount)
 		const fourthTradingFeeInvested = fourthTradingFee.mul(tenPow18).div(thirdExchangeRate)
 		const fourthPlatformFee = await getPlatformFeeForSelling(ideaToken, amount)
 		const fourthPlatformFeeInvested = fourthPlatformFee.mul(tenPow18).div(thirdExchangeRate)
 		const secondRawPrice = secondPrice.add(fourthTradingFee).add(fourthPlatformFee)
-		assert.isTrue(secondPrice.eq(await getPriceForSellingTokens(ideaToken, amount)))
+		expect(secondPrice.eq(await getPriceForSellingTokens(ideaToken, amount))).to.be.true
 
-		await ideaTokenExchange.sellTokens(ideaToken.address, amount, secondPrice, userAccount)
+		await ideaTokenExchange.sellTokens(ideaToken.address, amount, secondPrice, userAccount.address)
 
-		assert.isTrue((await dai.balanceOf(userAccount)).eq(firstPrice.add(secondPrice)))
-		assert.isTrue((await ideaToken.balanceOf(userAccount)).eq(new BN('0')))
-		assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(firstTradingFeeInvested
+		expect((await dai.balanceOf(userAccount.address)).eq(firstPrice.add(secondPrice))).to.be.true
+		expect((await ideaToken.balanceOf(userAccount.address)).eq(BigNumber.from('0'))).to.be.true
+		expect((await ideaTokenExchange.getTradingFeePayable()).eq(firstTradingFeeInvested
 			.add(secondTradingFeeInvested)
 			.add(thirdTradingFeeInvested)
 			.add(fourthTradingFeeInvested)
 			.mul(thirdExchangeRate)
-			.div(tenPow18)))
-		assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested
+			.div(tenPow18))).to.be.true
+		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(firstPlatformFeeInvested
 			.add(secondPlatformFeeInvested)
 			.add(thirdPlatformFeeInvested)
 			.add(fourthPlatformFeeInvested)
 			.mul(thirdExchangeRate)
-			.div(tenPow18)))
+			.div(tenPow18))).to.be.true
 	
 		// TODO: Minor rounding error
 		// assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable))
-		const fourthExchangeRate = tenPow18.add(tenPow17.mul(new BN('4'))) // 1.4
+		const fourthExchangeRate = tenPow18.add(tenPow17.mul(BigNumber.from('4'))) // 1.4
 		await cDai.setExchangeRate(fourthExchangeRate)
 
 		/* eslint-disable-next-line no-unused-vars*/
@@ -247,7 +275,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 			.mul(fourthExchangeRate)
 			.div(tenPow18)
 
-		assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(finalPlatformFee))
+		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(finalPlatformFee)).to.be.true
 
 		const finalTradingFee = firstTradingFeeInvested
 			.add(secondTradingFeeInvested)
@@ -256,264 +284,213 @@ contract('core/IdeaTokenExchange', async accounts => {
 			.mul(fourthExchangeRate)
 			.div(tenPow18)
 
-		assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(finalTradingFee))
+		expect((await ideaTokenExchange.getTradingFeePayable()).eq(finalTradingFee)).to.be.true
     
-		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID,
-			platformFeeReceiverAccount,
-			{ from: adminAccount })
+		await ideaTokenExchange.connect(adminAccount).authorizePlatformFeeWithdrawer(marketID,
+			platformFeeReceiverAccount.address)
 
-		await ideaTokenExchange.withdrawPlatformFee(marketID, { from: platformFeeReceiverAccount })
-		assert.isTrue((await dai.balanceOf(platformFeeReceiverAccount)).eq(finalPlatformFee))
+		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformFee(marketID)
+		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(finalPlatformFee)).to.be.true
 
-		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address,
-			interestReceiverAccount,
-			{ from: adminAccount })
+		await ideaTokenExchange.connect(adminAccount).authorizeInterestWithdrawer(ideaToken.address,
+			interestReceiverAccount.address)
 
-		await ideaTokenExchange.withdrawInterest(ideaToken.address, { from: interestReceiverAccount })
+		await ideaTokenExchange.connect(interestReceiverAccount).withdrawInterest(ideaToken.address)
 		// TODO: Minor rounding error
-		// assert.isTrue((await dai.balanceOf(interestReceiverAccount)).eq(fourthInterestPayable))
+		// expect((await dai.balanceOf(interestReceiverAccount)).eq(fourthInterestPayable))
 
 		await ideaTokenExchange.withdrawTradingFee()
-		assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(finalTradingFee))
-		assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(new BN('0')))
+		expect((await dai.balanceOf(tradingFeeAccount.address)).eq(finalTradingFee)).to.be.true
+		expect((await ideaTokenExchange.getTradingFeePayable()).eq(BigNumber.from('0'))).to.be.true
 	})
 
 	it('can fallback on buy', async () => {
 		const amount = tenPow18
-		const tooHighAmount = amount.mul(new BN('2'))
+		const tooHighAmount = amount.mul(BigNumber.from('2'))
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
 
-		await dai.mint(userAccount, cost)
+		await dai.mint(userAccount.address, cost)
 		await dai.approve(ideaTokenExchange.address, cost)
 
-		await expectRevert(
-			ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, tooHighAmount, cost, userAccount),
-			'buyTokens: slippage too high'
-		)
-
-		await ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, amount, cost, userAccount)
+		await expect(ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, tooHighAmount, cost, userAccount.address)).to.be.revertedWith('buyTokens: slippage too high')
+		await ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, amount, cost, userAccount.address)
 	})
 
 	it('fail buy/sell - invalid token', async () => {
-		await expectRevert(
-			ideaTokenExchange.buyTokens(zeroAddress, tenPow18, tenPow18, tenPow18, userAccount),
-			'buyTokens: token does not exist'
-		)
-
-		await expectRevert(
-			ideaTokenExchange.sellTokens(zeroAddress, tenPow18, tenPow18, userAccount),
-			'sellTokens: token does not exist'
-		)
+		await expect(ideaTokenExchange.buyTokens(zeroAddress, tenPow18, tenPow18, tenPow18, userAccount.address)).to.be.revertedWith('buyTokens: token does not exist')
+		await expect(ideaTokenExchange.sellTokens(zeroAddress, tenPow18, tenPow18, userAccount.address)).to.be.revertedWith('sellTokens: token does not exist')
 	})
 
 	it('fail buy/sell - max cost / minPrice', async () => {
 		const amount = tenPow18
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
 
-		await expectRevert(
-			ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost.sub(new BN('1')), userAccount),
-			'buyTokens: slippage too high'
-		)
+		await expect(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost.sub(BigNumber.from('1')), userAccount.address)).to.be.revertedWith('buyTokens: slippage too high')
 
-		await dai.mint(userAccount, cost)
+		await dai.mint(userAccount.address, cost)
 		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
 
 		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tenPow18)
 
-		await expectRevert(
-			ideaTokenExchange.sellTokens(ideaToken.address, amount, price.add(new BN('1')), userAccount),
-			'sellTokens: price subceeds min price'
-		)
+		await expect(ideaTokenExchange.sellTokens(ideaToken.address, amount, price.add(BigNumber.from('1')), userAccount.address)).to.be.revertedWith('sellTokens: price subceeds min price')
 	})
 
 	it('fail buy - not enough allowance', async () => {
 		const amount = tenPow18
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
-		await dai.mint(userAccount, cost)
+		await dai.mint(userAccount.address, cost)
 
-		await expectRevert(
-			ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount),
-			'buyTokens: not enough allowance'
-		)
+		await expect(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)).to.be.revertedWith('buyTokens: not enough allowance')
 	})
 
 	it('fail buy/sell - not enough tokens', async () => {
 		const amount = tenPow18
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
-		await dai.mint(userAccount, cost.sub(new BN('1')))
+		await dai.mint(userAccount.address, cost.sub(BigNumber.from('1')))
 		await dai.approve(ideaTokenExchange.address, cost)
 
-		await expectRevert(
-			ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount),
-			'ERC20: transfer amount exceeds balance'
-		)
+		await expect(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)).to.be.revertedWith('ERC20: transfer amount exceeds balance')
 
-		await dai.mint(adminAccount, new BN(cost))
-		await dai.approve(ideaTokenExchange.address, cost, { from: adminAccount })
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, adminAccount, { from: adminAccount })
+		await dai.mint(adminAccount.address, cost)
+		await dai.connect(adminAccount).approve(ideaTokenExchange.address, cost)
+		await ideaTokenExchange.connect(adminAccount).buyTokens(ideaToken.address, amount, amount, cost, adminAccount.address)
 
-		await expectRevert(
-			ideaTokenExchange.sellTokens(ideaToken.address, new BN('1'), new BN('0'), userAccount),
-			'sellTokens: not enough tokens'
-		)
+		await expect(ideaTokenExchange.sellTokens(ideaToken.address, BigNumber.from('1'), BigNumber.from('0'), userAccount.address)).to.be.revertedWith('sellTokens: not enough tokens')
 	})
 
 	it('no trading fee available', async () => {
-		assert.isTrue((await ideaTokenExchange.getTradingFeePayable()).eq(new BN('0')))
+		expect((await ideaTokenExchange.getTradingFeePayable()).eq(BigNumber.from('0'))).to.be.true
 		await ideaTokenExchange.withdrawTradingFee()
-		assert.isTrue((await dai.balanceOf(tradingFeeAccount)).eq(new BN('0')))
+		expect((await dai.balanceOf(tradingFeeAccount.address)).eq(BigNumber.from('0'))).to.be.true
 	})
 
 	it('no platform fee available', async () => {
-		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID,
-			platformFeeReceiverAccount,
-			{ from: adminAccount })
-		assert.isTrue((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(new BN('0')))
-		await ideaTokenExchange.withdrawPlatformFee(marketID, { from: platformFeeReceiverAccount })
-		assert.isTrue((await dai.balanceOf(platformFeeReceiverAccount)).eq(new BN('0')))
+		await ideaTokenExchange.connect(adminAccount).authorizePlatformFeeWithdrawer(marketID,
+			platformFeeReceiverAccount.address)
+
+		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(BigNumber.from('0'))).to.be.true
+		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformFee(marketID)
+		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(BigNumber.from('0'))).to.be.true
 	})
 
 	it('no interest available', async () => {
-		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address,
-			interestReceiverAccount,
-			{ from: adminAccount })
-		assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(new BN('0')))
-		await ideaTokenExchange.withdrawInterest(ideaToken.address, { from: interestReceiverAccount })
-		assert.isTrue((await dai.balanceOf(interestReceiverAccount)).eq(new BN('0')))
+		await ideaTokenExchange.connect(adminAccount).authorizeInterestWithdrawer(ideaToken.address,
+			interestReceiverAccount.address)
+		
+		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(BigNumber.from('0'))).to.be.true
+		await ideaTokenExchange.connect(interestReceiverAccount).withdrawInterest(ideaToken.address)
+		expect((await dai.balanceOf(interestReceiverAccount.address)).eq(BigNumber.from('0'))).to.be.true
 	})
 
 	it('fail authorize interest withdrawer not authorized', async () => {
-		await expectRevert(
-			ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, interestReceiverAccount),
-			'authorizeInterestWithdrawer: not authorized'
-		)
+		await expect(ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, interestReceiverAccount.address)).to.be.revertedWith('authorizeInterestWithdrawer: not authorized')
 	})
 
 	it('fail withdraw interest not authorized', async () => {
-		await expectRevert(
-			ideaTokenExchange.withdrawInterest(ideaToken.address),
-			'withdrawInterest: not authorized'
-		)
+		await expect(ideaTokenExchange.withdrawInterest(ideaToken.address)).to.be.revertedWith('withdrawInterest: not authorized')
 	})
 
 	it('fail withdraw platform fee not authorized', async () => {
-		await expectRevert(
-			ideaTokenExchange.withdrawPlatformFee(marketID),
-			'withdrawPlatformFee: not authorized'
-		)
+		await expect(ideaTokenExchange.withdrawPlatformFee(marketID)).to.be.revertedWith('withdrawPlatformFee: not authorized')
 	})
 
 	it('fail authorize platform fee withdrawer not authorized', async () => {
-		await expectRevert(
-			ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, platformFeeReceiverAccount),
-			'authorizePlatformFeeWithdrawer: not authorized'
-		)
+		await expect(ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, platformFeeReceiverAccount.address)).to.be.revertedWith('authorizePlatformFeeWithdrawer: not authorized')
 	})
 
 	it('can set factory address on init', async () => {
-		const exchange = await IdeaTokenExchange.new()
-		await exchange.initialize(adminAccount,
-			zeroAddress,
-			tradingFeeAccount,
-			interestManagerCompound.address,
-			dai.address,
-			{from: adminAccount})
+		const exchange = await IdeaTokenExchange.deploy()
+		await exchange.deployed()
 
-		await exchange.setIdeaTokenFactoryAddress(someAddress, { from: adminAccount })
+		await exchange.connect(adminAccount).initialize(adminAccount.address,
+			zeroAddress,
+			tradingFeeAccount.address,
+			interestManagerCompound.address,
+			dai.address)
+
+		await exchange.connect(adminAccount).setIdeaTokenFactoryAddress(someAddress)
 	})
 
 	it('fail only owner can set factory address', async () => {
-		const exchange = await IdeaTokenExchange.new()
-		await exchange.initialize(adminAccount,
-			zeroAddress,
-			tradingFeeAccount,
-			interestManagerCompound.address,
-			dai.address,
-			{from: adminAccount})
+		const exchange = await IdeaTokenExchange.deploy()
+		await exchange.deployed()
 
-		await expectRevert(
-			exchange.setIdeaTokenFactoryAddress(someAddress),
-			'Ownable: onlyOwner'
-		)
+		await exchange.connect(adminAccount).initialize(adminAccount.address,
+			zeroAddress,
+			tradingFeeAccount.address,
+			interestManagerCompound.address,
+			dai.address)
+
+		await expect(exchange.setIdeaTokenFactoryAddress(someAddress)).to.be.revertedWith('Ownable: onlyOwner')
 	})
 
 	it('fail cannot set factory address twice', async () => {
-		const exchange = await IdeaTokenExchange.new()
-		await exchange.initialize(adminAccount,
+		const exchange = await IdeaTokenExchange.deploy()
+		await exchange.deployed()
+
+		await exchange.connect(adminAccount).initialize(adminAccount.address,
 			zeroAddress,
-			tradingFeeAccount,
+			tradingFeeAccount.address,
 			interestManagerCompound.address,
-			dai.address,
-			{from: adminAccount})
+			dai.address)
 
-		await exchange.setIdeaTokenFactoryAddress(someAddress, { from: adminAccount })
+		await exchange.connect(adminAccount).setIdeaTokenFactoryAddress(someAddress)
 
-		await expectRevert.unspecified(
-			exchange.setIdeaTokenFactoryAddress(someAddress,{ from: adminAccount })
-		)
+		await expect(exchange.connect(adminAccount).setIdeaTokenFactoryAddress(someAddress)).to.be.reverted
 	})
 
 	it('admin can set authorizer', async () => {
-		await ideaTokenExchange.setAuthorizer(zeroAddress, { from: adminAccount })
+		await ideaTokenExchange.connect(adminAccount).setAuthorizer(zeroAddress)
 	})
 
 	it('fail user cannot set authorizer', async () => {
-		await expectRevert(
-			ideaTokenExchange.setAuthorizer(zeroAddress),
-			'Ownable: onlyOwner'
-		)
+		await expect(ideaTokenExchange.setAuthorizer(zeroAddress)).to.be.revertedWith('Ownable: onlyOwner')
 	})
 
 	it('authorizer can set interest withdrawer', async () => {
-		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: authorizerAccount })
+		await ideaTokenExchange.connect(authorizerAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
 	})
 
 	it('interest withdrawer can set new interest withdrawer', async () => {
-		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, tradingFeeAccount, { from: authorizerAccount })
-		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: tradingFeeAccount })
+		await ideaTokenExchange.connect(authorizerAccount).authorizeInterestWithdrawer(ideaToken.address, tradingFeeAccount.address)
+		await ideaTokenExchange.connect(tradingFeeAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
 	})
 
 	it('fail authorizer cannot set interest withdrawer twice', async () => {
-		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: authorizerAccount })
-		await expectRevert(
-			ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: authorizerAccount }),
-			'authorizeInterestWithdrawer: not authorized'
-		)
+		await ideaTokenExchange.connect(authorizerAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
+		await expect(ideaTokenExchange.connect(authorizerAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)).to.be.revertedWith('authorizeInterestWithdrawer: not authorized')
 	})
 
 	it('admin can set interest withdrawer twice', async () => {
-		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: adminAccount })
-		await ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, someAddress, { from: adminAccount })
+		await ideaTokenExchange.connect(adminAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
+		await ideaTokenExchange.connect(adminAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
 	})
 
 	it('authorizer can set platform fee withdrawer', async () => {
-		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: authorizerAccount })
+		await ideaTokenExchange.connect(authorizerAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
 	})
 
 	it('platform fee withdrawer can set new platform fee withdrawer', async () => {
-		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, tradingFeeAccount, { from: authorizerAccount })
-		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: tradingFeeAccount })
+		await ideaTokenExchange.connect(authorizerAccount).authorizePlatformFeeWithdrawer(marketID, tradingFeeAccount.address)
+		await ideaTokenExchange.connect(tradingFeeAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
 	})
 
 	it('fail authorizer cannot set platform fee withdrawer twice', async () => {
-		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: authorizerAccount })
-		await expectRevert(
-			ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: authorizerAccount }),
-			'authorizePlatformFeeWithdrawer: not authorized'
-		)
+		await ideaTokenExchange.connect(authorizerAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
+		await expect(ideaTokenExchange.connect(authorizerAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)).to.be.revertedWith('authorizePlatformFeeWithdrawer: not authorized')
 	})
 
 	it('admin can set platform fee withdrawer twice', async () => {
-		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: adminAccount })
-		await ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, someAddress, { from: adminAccount })
+		await ideaTokenExchange.connect(adminAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
+		await ideaTokenExchange.connect(adminAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
 	})
 
 
 	function getRawCostForBuyingTokens(b, r, supply, amount) {
 		const priceAtSupply = b.add(r.mul(supply).div(tenPow18))
 		const priceAtSupplyPlusAmount = b.add(r.mul(supply.add(amount)).div(tenPow18))
-		const average = priceAtSupply.add(priceAtSupplyPlusAmount).div(new BN('2'))
+		const average = priceAtSupply.add(priceAtSupplyPlusAmount).div(BigNumber.from('2'))
 
 		return average.mul(amount).div(tenPow18)
 	}
@@ -521,7 +498,7 @@ contract('core/IdeaTokenExchange', async accounts => {
 	function getRawPriceForSellingTokens(b, r, supply, amount) {
 		const priceAtSupply = b.add(r.mul(supply).div(tenPow18))
 		const priceAtSupplyPlusAmount = b.add(r.mul(supply.sub(amount)).div(tenPow18))
-		const average = priceAtSupply.add(priceAtSupplyPlusAmount).div(new BN('2'))
+		const average = priceAtSupply.add(priceAtSupplyPlusAmount).div(BigNumber.from('2'))
 
 		return average.mul(amount).div(tenPow18)
 	}
