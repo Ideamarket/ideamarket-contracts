@@ -1,11 +1,13 @@
 const { time } = require('@openzeppelin/test-helpers')
-const DSPause = artifacts.require('DSPause')
-const SetPlatformFeeSpell = artifacts.require('SetPlatformFeeSpell')
-const IdeaTokenFactory = artifacts.require('IdeaTokenFactory')
+const { expect } = require('chai')
+const { BigNumber } = require('ethers')
+const { ethers } = require('hardhat')
 
-const BN = web3.utils.BN
+describe('spells/SetPlatformFeeSpell', () => {
 
-contract('spells/SetPlatformFeeSpell', async accounts => {
+	let DSPause
+	let SetPlatformFeeSpell
+	let IdeaTokenFactory
 
 	let dsPause
 	let dsPauseProxyAddress
@@ -13,7 +15,7 @@ contract('spells/SetPlatformFeeSpell', async accounts => {
 
 	const delay = 86400
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
-	const adminAccount = accounts[0]
+	let adminAccount
 
 	const marketName = 'SOME_MARKET'
 	const nameVerifierAddress = zeroAddress
@@ -23,15 +25,26 @@ contract('spells/SetPlatformFeeSpell', async accounts => {
 	const platformFeeRate = '3'
     
 	before(async () => {
-		dsPause = await DSPause.new(delay, adminAccount)
+		const accounts = await ethers.getSigners()
+		adminAccount = accounts[0]
+
+		DSPause = await ethers.getContractFactory('DSPause')
+		SetPlatformFeeSpell = await ethers.getContractFactory('SetPlatformFeeSpell')
+		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactory')
+
+		dsPause = await DSPause.deploy(delay, adminAccount.address)
+		await dsPause.deployed()
 		dsPauseProxyAddress = await dsPause._proxy()
-		spell = await SetPlatformFeeSpell.new()
+		
+		spell = await SetPlatformFeeSpell.deploy()
+		await spell.deployed()
 	})
 
 	it('can set platform fee', async () => {
 
-		const factory = await IdeaTokenFactory.new()
-		await factory.initialize(adminAccount, zeroAddress)
+		const factory = await IdeaTokenFactory.deploy()
+		await factory.deployed()
+		await factory.initialize(adminAccount.address, zeroAddress)
 
 		await factory.addMarket(
 			marketName,
@@ -43,17 +56,17 @@ contract('spells/SetPlatformFeeSpell', async accounts => {
 
 		await factory.setOwner(dsPauseProxyAddress)
 
-		const eta = new BN((parseInt(await time.latest()) + delay + 100).toString())
+		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
 		const tag = await dsPause.soul(spell.address)
 
-		const fax = spell.contract.methods.execute(factory.address, '1', '123').encodeABI()
+		const fax = spell.interface.encodeFunctionData('execute', [factory.address, BigNumber.from('1'), BigNumber.from('123')])
 
 		await dsPause.plot(spell.address, tag, fax, eta)
-		await time.increaseTo(eta.add(new BN('1')))
+		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
 		await dsPause.exec(spell.address, tag, fax, eta)
         
-		const tradingFee = new BN((await factory.getMarketDetailsByID(new BN('1'))).platformFeeRate)
+		const tradingFee = ((await factory.getMarketDetailsByID(BigNumber.from('1'))).platformFeeRate)
 
-		assert.isTrue(tradingFee.eq(new BN('123')))
+		expect(tradingFee.eq(BigNumber.from('123'))).to.be.true
 	})
 })

@@ -1,11 +1,12 @@
 const { time } = require('@openzeppelin/test-helpers')
-const DSPause = artifacts.require('DSPause')
-const IdeaTokenExchange = artifacts.require('IdeaTokenExchange')
-const AuthorizeInterestWithdrawerSpell = artifacts.require('AuthorizeInterestWithdrawerSpell')
+const { BigNumber } = require('ethers')
+const { ethers } = require('hardhat')
 
-const BN = web3.utils.BN
+describe('spells/AuthorizeInterestWithdrawerSpell', () => {
 
-contract('spells/AuthorizeInterestWithdrawerSpell', async accounts => {
+	let DSPause
+	let IdeaTokenExchange
+	let AuthorizeInterestWithdrawerSpell
 
 	let dsPause
 	let dsPauseProxyAddress
@@ -14,31 +15,43 @@ contract('spells/AuthorizeInterestWithdrawerSpell', async accounts => {
 
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
 	const delay = 86400
-	const adminAccount = accounts[0]
-	const withdrawer = accounts[1]
+	let adminAccount
+	let withdrawer
 
 	before(async () => {
-		dsPause = await DSPause.new(delay, adminAccount)
-		dsPauseProxyAddress = await dsPause._proxy()
-		spell = await AuthorizeInterestWithdrawerSpell.new()
-		ideaTokenExchange = await IdeaTokenExchange.new()
 
-		await ideaTokenExchange.initialize(dsPauseProxyAddress,
+		const accounts = await ethers.getSigners()
+		adminAccount = accounts[0]
+		withdrawer = accounts[1]
+
+		DSPause = await ethers.getContractFactory('DSPause')
+		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchange')
+		AuthorizeInterestWithdrawerSpell = await ethers.getContractFactory('AuthorizeInterestWithdrawerSpell')
+
+		dsPause = await DSPause.deploy(delay, adminAccount.address)
+		await dsPause.deployed()
+		dsPauseProxyAddress = await dsPause._proxy()
+
+		spell = await AuthorizeInterestWithdrawerSpell.deploy()
+		await spell.deployed()
+
+		ideaTokenExchange = await IdeaTokenExchange.deploy()
+		await ideaTokenExchange.deployed()
+
+		await ideaTokenExchange.connect(adminAccount).initialize(dsPauseProxyAddress,
 			zeroAddress,
 			zeroAddress,
 			zeroAddress,
-			zeroAddress,
-			{ from: adminAccount })
+			zeroAddress)
 	})
 
 	it('can set new interest withdrawer', async () => {
-		const eta = new BN((parseInt(await time.latest()) + delay + 100).toString())
+		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
 		const tag = await dsPause.soul(spell.address)
-
-		const fax = spell.contract.methods.execute(ideaTokenExchange.address, zeroAddress, withdrawer).encodeABI()
+		const fax = spell.interface.encodeFunctionData('execute', [ideaTokenExchange.address, zeroAddress, withdrawer.address])
 
 		await dsPause.plot(spell.address, tag, fax, eta)
-		await time.increaseTo(eta.add(new BN('1')))
+		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
 		await dsPause.exec(spell.address, tag, fax, eta)
 	})
 })

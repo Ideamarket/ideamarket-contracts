@@ -1,11 +1,12 @@
 const { time } = require('@openzeppelin/test-helpers')
-const DSPause = artifacts.require('DSPause')
-const IdeaTokenExchange = artifacts.require('IdeaTokenExchange')
-const AuthorizePlatformFeeWithdrawerSpell = artifacts.require('AuthorizePlatformFeeWithdrawerSpell')
+const { BigNumber } = require('ethers')
+const { ethers } = require('hardhat')
 
-const BN = web3.utils.BN
+describe('spells/AuthorizePlatformFeeWithdrawer', () => {
 
-contract('spells/AuthorizePlatformFeeWithdrawerSpell', async accounts => {
+	let DSPause
+	let IdeaTokenExchange
+	let AuthorizePlatformFeeWithdrawerSpell
 
 	let dsPause
 	let dsPauseProxyAddress
@@ -14,31 +15,43 @@ contract('spells/AuthorizePlatformFeeWithdrawerSpell', async accounts => {
 
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
 	const delay = 86400
-	const adminAccount = accounts[0]
-	const withdrawer = accounts[1]
+	let adminAccount
+	let withdrawer
 
 	before(async () => {
-		dsPause = await DSPause.new(delay, adminAccount)
-		dsPauseProxyAddress = await dsPause._proxy()
-		spell = await AuthorizePlatformFeeWithdrawerSpell.new()
-		ideaTokenExchange = await IdeaTokenExchange.new()
 
-		await ideaTokenExchange.initialize(dsPauseProxyAddress,
+		const accounts = await ethers.getSigners()
+		adminAccount = accounts[0]
+		withdrawer = accounts[1]
+
+		DSPause = await ethers.getContractFactory('DSPause')
+		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchange')
+		AuthorizePlatformFeeWithdrawerSpell = await ethers.getContractFactory('AuthorizePlatformFeeWithdrawerSpell')
+
+		dsPause = await DSPause.deploy(delay, adminAccount.address)
+		await dsPause.deployed()
+		dsPauseProxyAddress = await dsPause._proxy()
+
+		spell = await AuthorizePlatformFeeWithdrawerSpell.deploy()
+		await spell.deployed()
+
+		ideaTokenExchange = await IdeaTokenExchange.deploy()
+		await ideaTokenExchange.deployed()
+
+		await ideaTokenExchange.connect(adminAccount).initialize(dsPauseProxyAddress,
 			zeroAddress,
 			zeroAddress,
 			zeroAddress,
-			zeroAddress,
-			{ from: adminAccount })
+			zeroAddress)
 	})
 
-	it('can set new platform fee withdrawer', async () => {
-		const eta = new BN((parseInt(await time.latest()) + delay + 100).toString())
+	it('can set new platform feee withdrawer', async () => {
+		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
 		const tag = await dsPause.soul(spell.address)
-
-		const fax = spell.contract.methods.execute(ideaTokenExchange.address, '1', withdrawer).encodeABI()
+		const fax = spell.interface.encodeFunctionData('execute', [ideaTokenExchange.address, BigNumber.from('1'), withdrawer.address])
 
 		await dsPause.plot(spell.address, tag, fax, eta)
-		await time.increaseTo(eta.add(new BN('1')))
+		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
 		await dsPause.exec(spell.address, tag, fax, eta)
 	})
 })
