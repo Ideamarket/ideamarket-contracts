@@ -1,6 +1,7 @@
 const { time } = require('@openzeppelin/test-helpers')
-const { expect } = require("chai")
+const { expect } = require('chai')
 const { BigNumber } = require('ethers')
+const { ethers } = require('hardhat')
 
 describe('spells/AddMarketSpell', () => {
 
@@ -18,10 +19,10 @@ describe('spells/AddMarketSpell', () => {
 
 	const marketName = 'SOME_MARKET'
 	const nameVerifierAddress = zeroAddress
-	const baseCost = '1'
-	const priceRise = '1'
-	const tradingFeeRate = '0'
-	const platformFeeRate = '0'
+	const baseCost = BigNumber.from('1')
+	const priceRise = BigNumber.from('1')
+	const tradingFeeRate = BigNumber.from('0')
+	const platformFeeRate = BigNumber.from('0')
     
 	before(async () => {
 		const accounts = await ethers.getSigners()
@@ -40,41 +41,31 @@ describe('spells/AddMarketSpell', () => {
 	})
 
 	it('can add new market', async () => {
-		console.log(await time.latest())
-		console.log('D')
-		const eta = new BigNumber((parseInt(await time.latest()) + delay + 100).toString())
-		console.log('E')
+		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
 		const tag = await dsPause.soul(spell.address)
-		console.log('F')
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
 		await factory.initialize(dsPauseProxyAddress, zeroAddress)
 
-		// For some reason web3 doesnt want BNs here
-		const fax = spell.contract.methods.execute(factory.address, marketName, nameVerifierAddress,
-			baseCost, priceRise,
-			tradingFeeRate, platformFeeRate).encodeABI()
+		const fax = spell.interface.encodeFunctionData('execute', [factory.address, marketName, nameVerifierAddress, baseCost, priceRise, tradingFeeRate, platformFeeRate])
 
 		await dsPause.plot(spell.address, tag, fax, eta)
-		await time.increaseTo(eta.add(new BigNumer('1')))
+		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
 		await dsPause.exec(spell.address, tag, fax, eta)
 
-		assert.isTrue(new BigNumer('1').eq(await factory.getNumMarkets()))
-		assert.isTrue(new BigNumer('1').eq(await factory.getMarketIDByName(marketName)))
+		expect(BigNumber.from('1').eq(await factory.getNumMarkets())).to.be.true
+		expect(BigNumber.from('1').eq(await factory.getMarketIDByName(marketName))).to.be.true
         
-		const marketDetails = await factory.getMarketDetailsByID(new BN('1'))
-		const expectedMarketDetails = [
-			true, // exists
-			'1', // id
-			marketName,
-			nameVerifierAddress,
-			'0', // numTokens
-			baseCost,
-			priceRise,
-			tradingFeeRate,
-			platformFeeRate
-		]
+		const marketDetails = await factory.getMarketDetailsByID(BigNumber.from('1'))
 
-		assert.deepEqual(marketDetails, expectedMarketDetails)
+		expect(marketDetails.exists).to.be.true
+		expect(marketDetails.id.eq(BigNumber.from('1'))).to.be.true
+		expect(marketDetails.name).to.be.equal(marketName)
+		expect(marketDetails.nameVerifier).to.be.equal(nameVerifierAddress)
+		expect(marketDetails.numTokens.eq(BigNumber.from('0'))).to.be.true
+		expect(marketDetails.baseCost.eq(baseCost)).to.be.true
+		expect(marketDetails.priceRise.eq(priceRise)).to.be.true
+		expect(marketDetails.tradingFeeRate.eq(tradingFeeRate)).to.be.true
+		expect(marketDetails.platformFeeRate.eq(platformFeeRate)).to.be.true
 	})
 })
