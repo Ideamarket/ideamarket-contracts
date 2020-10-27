@@ -1,78 +1,68 @@
-const { time } = require("@openzeppelin/test-helpers")
-const { expect } = require("chai")
-const { BigNumber } = require("ethers")
-const { ethers } = require("hardhat")
+const { time } = require('@openzeppelin/test-helpers')
+const { expect } = require('chai')
+const { BigNumber } = require('ethers')
+const { ethers } = require('hardhat')
 
-describe("spells/SetPlatformFeeSpell", () => {
-  let DSPause
-  let SetPlatformFeeSpell
-  let IdeaTokenFactory
+describe('spells/SetPlatformFeeSpell', () => {
+	let DSPause
+	let SetPlatformFeeSpell
+	let IdeaTokenFactory
 
-  let dsPause
-  let dsPauseProxyAddress
-  let spell
+	let dsPause
+	let dsPauseProxyAddress
+	let spell
 
-  const delay = 86400
-  const zeroAddress = "0x0000000000000000000000000000000000000000"
-  let adminAccount
+	const delay = 86400
+	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	let adminAccount
 
-  const marketName = "SOME_MARKET"
-  const nameVerifierAddress = zeroAddress
-  const baseCost = "1"
-  const priceRise = "1"
-  const tradingFeeRate = "2"
-  const platformFeeRate = "3"
+	const marketName = 'SOME_MARKET'
+	const nameVerifierAddress = zeroAddress
+	const baseCost = '1'
+	const priceRise = '1'
+	const tradingFeeRate = '2'
+	const platformFeeRate = '3'
 
-  before(async () => {
-    const accounts = await ethers.getSigners()
-    adminAccount = accounts[0]
+	before(async () => {
+		const accounts = await ethers.getSigners()
+		adminAccount = accounts[0]
 
-    DSPause = await ethers.getContractFactory("DSPause")
-    SetPlatformFeeSpell = await ethers.getContractFactory("SetPlatformFeeSpell")
-    IdeaTokenFactory = await ethers.getContractFactory("IdeaTokenFactory")
+		DSPause = await ethers.getContractFactory('DSPause')
+		SetPlatformFeeSpell = await ethers.getContractFactory('SetPlatformFeeSpell')
+		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactory')
 
-    dsPause = await DSPause.deploy(delay, adminAccount.address)
-    await dsPause.deployed()
-    dsPauseProxyAddress = await dsPause._proxy()
+		dsPause = await DSPause.deploy(delay, adminAccount.address)
+		await dsPause.deployed()
+		dsPauseProxyAddress = await dsPause._proxy()
 
-    spell = await SetPlatformFeeSpell.deploy()
-    await spell.deployed()
-  })
+		spell = await SetPlatformFeeSpell.deploy()
+		await spell.deployed()
+	})
 
-  it("can set platform fee", async () => {
-    const factory = await IdeaTokenFactory.deploy()
-    await factory.deployed()
-    await factory.initialize(adminAccount.address, zeroAddress)
+	it('can set platform fee', async () => {
+		const factory = await IdeaTokenFactory.deploy()
+		await factory.deployed()
+		await factory.initialize(adminAccount.address, zeroAddress)
 
-    await factory.addMarket(
-      marketName,
-      nameVerifierAddress,
-      baseCost,
-      priceRise,
-      tradingFeeRate,
-      platformFeeRate
-    )
+		await factory.addMarket(marketName, nameVerifierAddress, baseCost, priceRise, tradingFeeRate, platformFeeRate)
 
-    await factory.setOwner(dsPauseProxyAddress)
+		await factory.setOwner(dsPauseProxyAddress)
 
-    const eta = BigNumber.from(
-      (parseInt(await time.latest()) + delay + 100).toString()
-    )
-    const tag = await dsPause.soul(spell.address)
+		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
+		const tag = await dsPause.soul(spell.address)
 
-    const fax = spell.interface.encodeFunctionData("execute", [
-      factory.address,
-      BigNumber.from("1"),
-      BigNumber.from("123"),
-    ])
+		const fax = spell.interface.encodeFunctionData('execute', [
+			factory.address,
+			BigNumber.from('1'),
+			BigNumber.from('123'),
+		])
 
-    await dsPause.plot(spell.address, tag, fax, eta)
-    await time.increaseTo(eta.add(BigNumber.from("1")).toString())
-    await dsPause.exec(spell.address, tag, fax, eta)
+		await dsPause.plot(spell.address, tag, fax, eta)
+		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
+		await dsPause.exec(spell.address, tag, fax, eta)
 
-    const tradingFee = (await factory.getMarketDetailsByID(BigNumber.from("1")))
-      .platformFeeRate
+		const tradingFee = (await factory.getMarketDetailsByID(BigNumber.from('1'))).platformFeeRate
 
-    expect(tradingFee.eq(BigNumber.from("123"))).to.be.true
-  })
+		expect(tradingFee.eq(BigNumber.from('123'))).to.be.true
+	})
 })
