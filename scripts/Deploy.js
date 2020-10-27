@@ -4,7 +4,7 @@ const fs = require('fs')
 const allDeploymentParams = {
 	kovan: {
 		timelockDelay: '1',
-		gasPrice: 1000000000, // 1 gwei
+		gasPrice: 10000000000, // 10 gwei
 	},
 }
 
