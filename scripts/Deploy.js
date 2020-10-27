@@ -1,4 +1,4 @@
-const { run, ethers } = require('hardhat')
+const { run, ethers, artifacts } = require('hardhat')
 const fs = require('fs')
 
 const allDeploymentParams = {
@@ -44,16 +44,16 @@ async function main() {
 	const dsPause = await deployContract('DSPause', deploymentParams.timelockDelay, externalContractAdresses.multisig)
 	const dsPauseProxyAddress = await dsPause._proxy()
 	saveDeployedAddress(networkName, 'dsPause', dsPause.address)
-	saveDeployedABI(networkName, 'dsPause', dsPause.interface.fragments)
+	saveDeployedABI(networkName, 'dsPause', artifacts.require('DSPause').abi)
 	saveDeployedAddress(networkName, 'dsPauseProxy', dsPauseProxyAddress)
-	saveDeployedABI(networkName, 'dsPauseProxy', (await ethers.getContractFactory('DSPauseProxy')).interface.fragments)
+	saveDeployedABI(networkName, 'dsPauseProxy', artifacts.require('DSPauseProxy').abi)
 	console.log('')
 
 	console.log('2. Deploy ProxyAdmin')
 	console.log('==============================================')
 	const proxyAdmin = await deployContract('ProxyAdmin', dsPauseProxyAddress)
 	saveDeployedAddress(networkName, 'proxyAdmin', proxyAdmin.address)
-	saveDeployedABI(networkName, 'proxyAdmin', proxyAdmin.interface.fragments)
+	saveDeployedABI(networkName, 'proxyAdmin', artifacts.require('ProxyAdmin').abi)
 	console.log('')
 
 	console.log('3. Deploy InterestManagerCompound')
@@ -69,7 +69,7 @@ async function main() {
 	)
 
 	saveDeployedAddress(networkName, 'interestManager', interestManagerCompoundProxy.address)
-	saveDeployedABI(networkName, 'interestManager', interestManagerCompoundLogic.interface.fragments)
+	saveDeployedABI(networkName, 'interestManager', artifacts.require('InterestManagerCompound').abi)
 	saveDeployedAddress(networkName, 'interestManagerLogic', interestManagerCompoundLogic.address)
 	console.log('')
 
@@ -86,7 +86,7 @@ async function main() {
 	)
 
 	saveDeployedAddress(networkName, 'ideaTokenExchange', ideaTokenExchangeProxy.address)
-	saveDeployedABI(networkName, 'ideaTokenExchange', ideaTokenExchangeLogic.interface.fragments)
+	saveDeployedABI(networkName, 'ideaTokenExchange', artifacts.require('IdeaTokenExchange').abi)
 	saveDeployedAddress(networkName, 'ideaTokenExchangeLogic', ideaTokenExchangeLogic.address)
 	console.log('')
 
@@ -99,7 +99,7 @@ async function main() {
 		ideaTokenExchangeProxy.address
 	)
 	saveDeployedAddress(networkName, 'ideaTokenFactory', ideaTokenFactoryProxy.address)
-	saveDeployedABI(networkName, 'ideaTokenFactory', ideaTokenFactoryLogic.interface.fragments)
+	saveDeployedABI(networkName, 'ideaTokenFactory', artifacts.require('IdeaTokenFactory').abi)
 	saveDeployedAddress(networkName, 'ideaTokenFactoryLogic', ideaTokenFactoryLogic.address)
 	console.log('')
 
@@ -140,21 +140,21 @@ async function main() {
 		externalContractAdresses.weth
 	)
 	saveDeployedAddress(networkName, 'currencyConverter', currencyConverter.address)
-	saveDeployedABI(networkName, 'currencyConverter', currencyConverter.interface.fragments)
+	saveDeployedABI(networkName, 'currencyConverter', artifacts.require('CurrencyConverter').abi)
 	console.log('')
 
 	console.log('10. Deploy AddMarketSpell')
 	console.log('==============================================')
 	const addMarketSpell = await deployContract('AddMarketSpell')
 	saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
-	saveDeployedABI(networkName, 'addMarketSpell', addMarketSpell.interface.fragments)
+	saveDeployedABI(networkName, 'addMarketSpell', artifacts.require('AddMarketSpell').abi)
 	console.log('')
 
 	console.log('11. Deploy DomainNoSubdomainNameVerifier')
 	console.log('==============================================')
 	const domainNoSubdomainNameVerifier = await deployContract('DomainNoSubdomainNameVerifier')
 	saveDeployedAddress(networkName, 'domainNoSubdomainNameVerifier', domainNoSubdomainNameVerifier.address)
-	saveDeployedABI(networkName, 'domainNoSubdomainNameVerifier', domainNoSubdomainNameVerifier.interface.fragments)
+	saveDeployedABI(networkName, 'domainNoSubdomainNameVerifier', artifacts.require('DomainNoSubdomainNameVerifier').abi)
 	console.log('')
 
 	console.log('12. Deploy AuthorizeInterestWithdrawerSpell')
@@ -164,7 +164,7 @@ async function main() {
 	saveDeployedABI(
 		networkName,
 		'authorizeInterestWithdrawerSpell',
-		authorizeInterestWithdrawerSpell.interface.fragments
+		artifacts.require('AuthorizeInterestWithdrawerSpell').abi
 	)
 	console.log('')
 
@@ -175,7 +175,7 @@ async function main() {
 	saveDeployedABI(
 		networkName,
 		'authorizePlatformFeeWithdrawerSpell',
-		authorizePlatformFeeWithdrawerSpell.interface.fragments
+		artifacts.require('AuthorizePlatformFeeWithdrawerSpell').abi
 	)
 	console.log('')
 
@@ -183,14 +183,14 @@ async function main() {
 	console.log('==============================================')
 	const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
 	saveDeployedAddress(networkName, 'setTradingFeeSpell', setTradingFeeSpell.address)
-	saveDeployedABI(networkName, 'setTradingFeeSpell', setTradingFeeSpell.interface.fragments)
+	saveDeployedABI(networkName, 'setTradingFeeSpell', artifacts.require('SetTradingFeeSpell').abi)
 	console.log('')
 
 	console.log('15. Deploy SetPlatformFeeSpell')
 	console.log('==============================================')
 	const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
 	saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
-	saveDeployedABI(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.interface.fragments)
+	saveDeployedABI(networkName, 'setPlatformFeeSpell', artifacts.require('SetPlatformFeeSpell').abi)
 	console.log('')
 }
 
