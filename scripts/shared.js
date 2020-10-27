@@ -1,13 +1,10 @@
 const fs = require('fs')
+const { BigNumber } = require('ethers')
 const prompt = require('prompt')
 const moment = require('moment')
-const Web3 = require('web3')
-const web3 = new Web3()
 
-// web3 bn cannot handle floats
-const BigNumber = require('bignumber.js')
-const tenPow18 = BigNumber('10').exponentiatedBy('18')
-const BN = web3.utils.BN
+const BN = require('bignumber.js')
+const tenPow18 = BN('10').exponentiatedBy(BN('18'))
 
 module.exports.getInput = async function (q) {
 	return new Promise((resolve, reject) => {
@@ -21,26 +18,26 @@ module.exports.getInput = async function (q) {
 }
 
 module.exports.percentageFeeToFeeRate = function (rawFee, scale) {
-	return new BN(BigNumber(rawFee).dividedBy('100.0').multipliedBy(scale).toFixed(0))
+	return BigNumber.from(BN(rawFee).dividedBy('100.0').multipliedBy(scale).toFixed(0))
 }
 
 module.exports.toWei = function (num) {
-	return new BN(BigNumber(num).multipliedBy(tenPow18).toFixed(0))
+	return BigNumber.from(BN(num).multipliedBy(tenPow18).toFixed(0))
 }
 
 module.exports.unixTimestampFromDateString = function (dateString) {
-	return new BN(moment.utc(dateString, 'DD-MM-YYYY HH:mm:ss').unix().toString())
+	return BigNumber.from(moment.utc(dateString, 'DD-MM-YYYY HH:mm:ss').unix().toString())
 }
 
 module.exports.loadDeployedAddress = function (network, contract) {
-	const path = '../deployed/deployed-' + network + '.json'
+	const path = 'deployed/deployed-' + network + '.json'
 	const raw = fs.readFileSync(path)
 	const addresses = JSON.parse(raw)
 	return addresses[contract]
 }
 
 module.exports.loadABI = function (artifact) {
-	const raw = fs.readFileSync('../build/contracts/' + artifact + '.json')
+	const raw = fs.readFileSync('build/contracts/' + artifact + '.json')
 	const rawJson = JSON.parse(raw)
 	return rawJson.abi
 }
