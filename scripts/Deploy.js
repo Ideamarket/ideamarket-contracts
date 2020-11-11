@@ -42,10 +42,14 @@ async function main() {
 	const STAGE = 1
 
 	let dsPauseProxyAddress
-	if(STAGE <= 1) {
+	if (STAGE <= 1) {
 		console.log('1. Deploy Timelock')
 		console.log('==============================================')
-		const dsPause = await deployContract('DSPause', deploymentParams.timelockDelay, externalContractAdresses.multisig)
+		const dsPause = await deployContract(
+			'DSPause',
+			deploymentParams.timelockDelay,
+			externalContractAdresses.multisig
+		)
 		dsPauseProxyAddress = await dsPause._proxy()
 		saveDeployedAddress(networkName, 'dsPause', dsPause.address)
 		saveDeployedABI(networkName, 'dsPause', artifacts.readArtifactSync('DSPause').abi)
@@ -55,9 +59,9 @@ async function main() {
 	} else {
 		dsPauseProxyAddress = loadDeployedAddress(networkName, 'dsPauseProxy')
 	}
-	
+
 	let proxyAdminAddress
-	if(STAGE <= 2) {
+	if (STAGE <= 2) {
 		console.log('2. Deploy ProxyAdmin')
 		console.log('==============================================')
 		proxyAdminAddress = (await deployContract('ProxyAdmin', dsPauseProxyAddress)).address
@@ -67,9 +71,9 @@ async function main() {
 	} else {
 		proxyAdminAddress = loadDeployedAddress(networkName, 'proxyAdmin')
 	}
-	
+
 	let interestManagerCompoundProxyAddress
-	if(STAGE <= 3) {
+	if (STAGE <= 3) {
 		console.log('3. Deploy InterestManagerCompound')
 		console.log('==============================================')
 		const [interestManagerCompoundProxy, interestManagerCompoundLogic] = await deployProxyContract(
@@ -90,9 +94,9 @@ async function main() {
 	} else {
 		interestManagerCompoundProxyAddress = loadDeployedAddress(networkName, 'interestManager')
 	}
-	
+
 	let ideaTokenExchangeProxyAddress
-	if(STAGE <= 4) {
+	if (STAGE <= 4) {
 		console.log('4. Deploy IdeaTokenExchange')
 		console.log('==============================================')
 		const [ideaTokenExchangeProxy, ideaTokenExchangeLogic] = await deployProxyContract(
@@ -113,9 +117,9 @@ async function main() {
 	} else {
 		ideaTokenExchangeProxyAddress = loadDeployedAddress(networkName, 'ideaTokenExchange')
 	}
-	
+
 	let ideaTokenFactoryProxyAddress
-	if(STAGE <= 5) {
+	if (STAGE <= 5) {
 		console.log('5. Deploy IdeaTokenFactory')
 		console.log('==============================================')
 		const [ideaTokenFactoryProxy, ideaTokenFactoryLogic] = await deployProxyContract(
@@ -134,7 +138,7 @@ async function main() {
 		ideaTokenFactoryProxyAddress = loadDeployedAddress(networkName, 'ideaTokenFactory')
 	}
 
-	if(STAGE <= 6) {
+	if (STAGE <= 6) {
 		console.log('6. Set InterestManagerCompound owner')
 		console.log('==============================================')
 		const interestManagerCompound = new ethers.Contract(
@@ -146,7 +150,7 @@ async function main() {
 		console.log('')
 	}
 
-	if(STAGE <= 7) {
+	if (STAGE <= 7) {
 		console.log('7. Set IdeaTokenFactory address')
 		console.log('==============================================')
 		const ideaTokenExchange = new ethers.Contract(
@@ -160,7 +164,7 @@ async function main() {
 		console.log('')
 	}
 
-	if(STAGE <= 8) {
+	if (STAGE <= 8) {
 		console.log('8. Set IdeaTokenExchange owner')
 		console.log('==============================================')
 		const ideaTokenExchange = new ethers.Contract(
@@ -172,7 +176,7 @@ async function main() {
 		console.log('')
 	}
 
-	if(STAGE <= 9) {
+	if (STAGE <= 9) {
 		console.log('9. Deploy CurrencyConverter')
 		console.log('==============================================')
 		const currencyConverter = await deployContract(
@@ -187,7 +191,7 @@ async function main() {
 		console.log('')
 	}
 
-	if(STAGE <= 10) {
+	if (STAGE <= 10) {
 		console.log('10. Deploy AddMarketSpell')
 		console.log('==============================================')
 		const addMarketSpell = await deployContract('AddMarketSpell')
@@ -196,16 +200,20 @@ async function main() {
 		console.log('')
 	}
 
-	if(STAGE <= 11) {
+	if (STAGE <= 11) {
 		console.log('11. Deploy DomainNoSubdomainNameVerifier')
 		console.log('==============================================')
 		const domainNoSubdomainNameVerifier = await deployContract('DomainNoSubdomainNameVerifier')
 		saveDeployedAddress(networkName, 'domainNoSubdomainNameVerifier', domainNoSubdomainNameVerifier.address)
-		saveDeployedABI(networkName, 'domainNoSubdomainNameVerifier', artifacts.readArtifactSync('DomainNoSubdomainNameVerifier').abi)
+		saveDeployedABI(
+			networkName,
+			'domainNoSubdomainNameVerifier',
+			artifacts.readArtifactSync('DomainNoSubdomainNameVerifier').abi
+		)
 		console.log('')
 	}
-	
-	if(STAGE <= 12) {
+
+	if (STAGE <= 12) {
 		console.log('12. Deploy AuthorizeInterestWithdrawerSpell')
 		console.log('==============================================')
 		const authorizeInterestWithdrawerSpell = await deployContract('AuthorizeInterestWithdrawerSpell')
@@ -217,12 +225,16 @@ async function main() {
 		)
 		console.log('')
 	}
-	
-	if(STAGE <= 13) {
+
+	if (STAGE <= 13) {
 		console.log('13. Deploy AuthorizePlatformFeeWithdrawerSpell')
 		console.log('==============================================')
 		const authorizePlatformFeeWithdrawerSpell = await deployContract('AuthorizePlatformFeeWithdrawerSpell')
-		saveDeployedAddress(networkName, 'authorizePlatformFeeWithdrawerSpell', authorizePlatformFeeWithdrawerSpell.address)
+		saveDeployedAddress(
+			networkName,
+			'authorizePlatformFeeWithdrawerSpell',
+			authorizePlatformFeeWithdrawerSpell.address
+		)
 		saveDeployedABI(
 			networkName,
 			'authorizePlatformFeeWithdrawerSpell',
@@ -230,8 +242,8 @@ async function main() {
 		)
 		console.log('')
 	}
-	
-	if(STAGE <= 14) {
+
+	if (STAGE <= 14) {
 		console.log('14. Deploy SetTradingFeeSpell')
 		console.log('==============================================')
 		const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
@@ -239,15 +251,15 @@ async function main() {
 		saveDeployedABI(networkName, 'setTradingFeeSpell', artifacts.readArtifactSync('SetTradingFeeSpell').abi)
 		console.log('')
 	}
-	
-	if(STAGE <= 15) {
+
+	if (STAGE <= 15) {
 		console.log('15. Deploy SetPlatformFeeSpell')
 		console.log('==============================================')
 		const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
 		saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
 		saveDeployedABI(networkName, 'setPlatformFeeSpell', artifacts.readArtifactSync('SetPlatformFeeSpell').abi)
 		console.log('')
-	}	
+	}
 }
 
 async function deployProxyContract(name, admin, ...params) {
@@ -270,13 +282,13 @@ async function deployContract(name, ...params) {
 function loadDeployedAddress(network, contract) {
 	const path = 'deployed/deployed-' + network + '.json'
 	if (!fs.existsSync(path)) {
-		throw new Error('Deployed file does not exist')	
+		throw new Error('Deployed file does not exist')
 	}
 
 	const raw = fs.readFileSync(path)
 	const addresses = JSON.parse(raw)
 
-	if(!addresses || !addresses[contract]) {
+	if (!addresses || !addresses[contract]) {
 		throw new Error(`Address for contract ${contract} does not exist`)
 	}
 
