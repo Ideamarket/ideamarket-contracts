@@ -43,7 +43,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                     uint baseCost,
                     uint priceRise,
                     uint tradingFeeRate,
-                    uint platformFeeRate);
+                    uint platformFeeRate,
+                    address nameVerifier);
 
     event NewToken(uint id, uint marketID, string name, address addr);
     event NewTradingFee(uint marketID, uint tradingFeeRate);
@@ -98,7 +99,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                        baseCost,
                        priceRise,
                        tradingFeeRate,
-                       platformFeeRate);
+                       platformFeeRate,
+                       nameVerifier);
     }
 
     /**
