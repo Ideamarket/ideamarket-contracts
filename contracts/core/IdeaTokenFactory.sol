@@ -114,7 +114,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
         require(marketInfo.marketDetails.exists, "addToken: market does not exist");
         require(isValidTokenName(tokenName, marketID), "addToken: name verification failed");
 
-        address ideaTokenAddress = address(new IdeaToken(tokenName, "IDT"));
+        address ideaTokenAddress = address(new IdeaToken(string(abi.encodePacked(marketInfo.marketDetails.name, ": ", tokenName)), "IDT"));
         IIdeaToken ideaToken = IIdeaToken(ideaTokenAddress);
         Ownable(ideaTokenAddress).setOwner(_ideaTokenExchange);
 

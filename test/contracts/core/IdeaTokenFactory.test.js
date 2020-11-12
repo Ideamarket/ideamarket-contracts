@@ -5,6 +5,7 @@ const { ethers } = require('hardhat')
 describe('core/IdeaTokenFactory', () => {
 	let DomainNoSubdomainNameVerifier
 	let IdeaTokenFactory
+	let IdeaToken
 
 	const tokenName = 'example.com'
 	const marketName = 'testMarket'
@@ -28,6 +29,7 @@ describe('core/IdeaTokenFactory', () => {
 
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactory')
+		IdeaToken = await ethers.getContractFactory('IdeaToken')
 	})
 
 	beforeEach(async () => {
@@ -131,7 +133,7 @@ describe('core/IdeaTokenFactory', () => {
 		).to.be.revertedWith('Ownable: onlyOwner')
 	})
 
-	it('can add token', async () => {
+	it.only('can add token', async () => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await nameVerifier.deployed()
 		await ideaTokenFactory
@@ -151,6 +153,14 @@ describe('core/IdeaTokenFactory', () => {
 		expect(marketDetails.priceRise.eq(priceRise)).to.be.true
 		expect(marketDetails.tradingFeeRate.eq(tradingFeeRate)).to.be.true
 		expect(marketDetails.platformFeeRate.eq(platformFeeRate)).to.be.true
+
+		const ideaToken = new ethers.Contract(
+			(await ideaTokenFactory.getTokenInfo(BigNumber.from('1'), BigNumber.from('1'))).ideaToken,
+			IdeaToken.interface,
+			IdeaToken.signer
+		)
+
+		expect(await ideaToken.name()).to.equal(marketName + ': ' + tokenName)
 	})
 
 	it('fail add token with invalid name', async () => {
