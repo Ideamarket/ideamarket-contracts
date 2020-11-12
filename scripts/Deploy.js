@@ -158,7 +158,7 @@ async function main() {
 		)
 		console.log('')
 	} else {
-		twitterHandleNameVerifierAddress = loadDeployedAddress(networkName, 'twitterHandleNameVerifierAddress')
+		twitterHandleNameVerifierAddress = loadDeployedAddress(networkName, 'twitterHandleNameVerifier')
 	}
 
 	if (STAGE <= 7) {
