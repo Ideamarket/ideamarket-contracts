@@ -1,10 +1,15 @@
 const { run, ethers, artifacts } = require('hardhat')
 const fs = require('fs')
+const { BigNumber } = require('ethers')
 
 const allDeploymentParams = {
 	kovan: {
 		timelockDelay: '1',
 		gasPrice: 1000000000, // 1 gwei
+		twitterBaseCost: BigNumber.from('1000000000000000000'), // 1 DAI
+		twitterPriceRise: BigNumber.from('10000000000000000'), // 0.01 DAI
+		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
+		twitterPlatformFeeRate: BigNumber.from('25'), // 0.25%
 	},
 }
 
@@ -125,7 +130,7 @@ async function main() {
 		const [ideaTokenFactoryProxy, ideaTokenFactoryLogic] = await deployProxyContract(
 			'IdeaTokenFactory',
 			proxyAdminAddress,
-			dsPauseProxyAddress,
+			deployerAddress, // owner - this will be changed to the dsPauseProxy later
 			ideaTokenExchangeProxyAddress
 		)
 
@@ -138,8 +143,58 @@ async function main() {
 		ideaTokenFactoryProxyAddress = loadDeployedAddress(networkName, 'ideaTokenFactory')
 	}
 
+	let twitterHandleNameVerifierAddress
 	if (STAGE <= 6) {
-		console.log('6. Set InterestManagerCompound owner')
+		console.log('6. Deploy TwitterHandleNameVerifier')
+		console.log('==============================================')
+		const twitterHandleNameVerifier = await deployContract('TwitterHandleNameVerifier')
+
+		twitterHandleNameVerifierAddress = twitterHandleNameVerifier.address
+		saveDeployedAddress(networkName, 'twitterHandleNameVerifier', twitterHandleNameVerifier.address)
+		saveDeployedABI(
+			networkName,
+			'twitterHandleNameVerifier',
+			artifacts.readArtifactSync('TwitterHandleNameVerifier').abi
+		)
+		console.log('')
+	} else {
+		twitterHandleNameVerifierAddress = loadDeployedAddress(networkName, 'twitterHandleNameVerifierAddress')
+	}
+
+	if (STAGE <= 7) {
+		console.log('7. List Twitter market')
+		console.log('==============================================')
+		const ideaTokenFactory = new ethers.Contract(
+			ideaTokenFactoryProxyAddress,
+			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
+			deployerAccount
+		)
+		await ideaTokenFactory.addMarket(
+			'Twitter',
+			twitterHandleNameVerifierAddress,
+			deploymentParams.twitterBaseCost,
+			deploymentParams.twitterPriceRise,
+			deploymentParams.twitterTradingFeeRate,
+			deploymentParams.twitterPlatformFeeRate,
+			{ gasPrice: deploymentParams.gasPrice }
+		)
+		console.log('')
+	}
+
+	if (STAGE <= 8) {
+		console.log('8. Set IdeaTokenFactory owner')
+		console.log('==============================================')
+		const ideaTokenFactory = new ethers.Contract(
+			ideaTokenFactoryProxyAddress,
+			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
+			deployerAccount
+		)
+		await ideaTokenFactory.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		console.log('')
+	}
+
+	if (STAGE <= 9) {
+		console.log('9. Set InterestManagerCompound owner')
 		console.log('==============================================')
 		const interestManagerCompound = new ethers.Contract(
 			interestManagerCompoundProxyAddress,
@@ -150,8 +205,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 7) {
-		console.log('7. Set IdeaTokenFactory address')
+	if (STAGE <= 10) {
+		console.log('10. Set IdeaTokenFactory address')
 		console.log('==============================================')
 		const ideaTokenExchange = new ethers.Contract(
 			ideaTokenExchangeProxyAddress,
@@ -164,8 +219,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 8) {
-		console.log('8. Set IdeaTokenExchange owner')
+	if (STAGE <= 11) {
+		console.log('11. Set IdeaTokenExchange owner')
 		console.log('==============================================')
 		const ideaTokenExchange = new ethers.Contract(
 			ideaTokenExchangeProxyAddress,
@@ -176,8 +231,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 9) {
-		console.log('9. Deploy CurrencyConverter')
+	if (STAGE <= 12) {
+		console.log('12. Deploy CurrencyConverter')
 		console.log('==============================================')
 		const currencyConverter = await deployContract(
 			'CurrencyConverter',
@@ -191,8 +246,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 10) {
-		console.log('10. Deploy AddMarketSpell')
+	if (STAGE <= 13) {
+		console.log('13. Deploy AddMarketSpell')
 		console.log('==============================================')
 		const addMarketSpell = await deployContract('AddMarketSpell')
 		saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
@@ -200,21 +255,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 11) {
-		console.log('11. Deploy DomainNoSubdomainNameVerifier')
-		console.log('==============================================')
-		const domainNoSubdomainNameVerifier = await deployContract('DomainNoSubdomainNameVerifier')
-		saveDeployedAddress(networkName, 'domainNoSubdomainNameVerifier', domainNoSubdomainNameVerifier.address)
-		saveDeployedABI(
-			networkName,
-			'domainNoSubdomainNameVerifier',
-			artifacts.readArtifactSync('DomainNoSubdomainNameVerifier').abi
-		)
-		console.log('')
-	}
-
-	if (STAGE <= 12) {
-		console.log('12. Deploy AuthorizeInterestWithdrawerSpell')
+	if (STAGE <= 14) {
+		console.log('14. Deploy AuthorizeInterestWithdrawerSpell')
 		console.log('==============================================')
 		const authorizeInterestWithdrawerSpell = await deployContract('AuthorizeInterestWithdrawerSpell')
 		saveDeployedAddress(networkName, 'authorizeInterestWithdrawerSpell', authorizeInterestWithdrawerSpell.address)
@@ -226,8 +268,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 13) {
-		console.log('13. Deploy AuthorizePlatformFeeWithdrawerSpell')
+	if (STAGE <= 15) {
+		console.log('15. Deploy AuthorizePlatformFeeWithdrawerSpell')
 		console.log('==============================================')
 		const authorizePlatformFeeWithdrawerSpell = await deployContract('AuthorizePlatformFeeWithdrawerSpell')
 		saveDeployedAddress(
@@ -243,8 +285,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 14) {
-		console.log('14. Deploy SetTradingFeeSpell')
+	if (STAGE <= 16) {
+		console.log('16. Deploy SetTradingFeeSpell')
 		console.log('==============================================')
 		const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
 		saveDeployedAddress(networkName, 'setTradingFeeSpell', setTradingFeeSpell.address)
@@ -252,8 +294,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 15) {
-		console.log('15. Deploy SetPlatformFeeSpell')
+	if (STAGE <= 17) {
+		console.log('17. Deploy SetPlatformFeeSpell')
 		console.log('==============================================')
 		const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
 		saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
