@@ -133,7 +133,7 @@ describe('core/IdeaTokenFactory', () => {
 		).to.be.revertedWith('Ownable: onlyOwner')
 	})
 
-	it.only('can add token', async () => {
+	it('can add token', async () => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await nameVerifier.deployed()
 		await ideaTokenFactory
