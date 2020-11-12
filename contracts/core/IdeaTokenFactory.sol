@@ -23,6 +23,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     struct MarketInfo {
         mapping(uint => TokenInfo) tokens;
         mapping(string => uint) tokenIDs;
+        mapping(string => bool) tokenNameUsed;
 
         MarketDetails marketDetails;
     }
@@ -34,9 +35,6 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     mapping(uint => MarketInfo) _markets;
     mapping(string => uint) _marketIDs;
     uint _numMarkets;
-
-    /// @dev We want token names to be unique across markets, so we keep track of them in a seperate map
-    mapping(string => bool) _tokenNameUsed;
 
     event NewMarket(uint id,
                     string name,
@@ -128,7 +126,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
 
         marketInfo.tokens[tokenID] = tokenInfo;
         marketInfo.tokenIDs[tokenName] = tokenID;
-        _tokenNameUsed[tokenName] = true;
+        marketInfo.tokenNameUsed[tokenName] = true;
         _tokenIDPairs[address(ideaToken)] = IDPair({
             exists: true,
             marketID: marketID,
@@ -148,9 +146,10 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      */
     function isValidTokenName(string calldata tokenName, uint marketID) public view override returns (bool) {
 
-        MarketDetails storage marketDetails = _markets[marketID].marketDetails;
+        MarketInfo storage marketInfo = _markets[marketID];
+        MarketDetails storage marketDetails = marketInfo.marketDetails;
 
-        if(_tokenNameUsed[tokenName] || !marketDetails.nameVerifier.verifyTokenName(tokenName)) {
+        if(marketInfo.tokenNameUsed[tokenName] || !marketDetails.nameVerifier.verifyTokenName(tokenName)) {
             return false;
         }
 
