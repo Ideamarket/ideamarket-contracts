@@ -18,6 +18,7 @@ describe('core/IdeaTokenFactory', () => {
 	let adminAccount
 	let ideaTokenExchangeAddress
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const someAddress = '0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5' // random addr from etherscan
 
 	let ideaTokenFactory
 
@@ -259,5 +260,35 @@ describe('core/IdeaTokenFactory', () => {
 		await expect(
 			ideaTokenFactory.connect(adminAccount).setPlatformFee(BigNumber.from('2'), BigNumber.from('123'))
 		).to.be.revertedWith('setPlatformFee: market does not exist')
+	})
+
+	it('can set name verifier', async () => {
+		await ideaTokenFactory
+			.connect(adminAccount)
+			.addMarket(marketName, zeroAddress, baseCost, priceRise, tradingFeeRate, platformFeeRate)
+
+		await ideaTokenFactory.connect(adminAccount).setNameVerifier(BigNumber.from('1'), someAddress)
+		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(BigNumber.from('1'))
+		expect(marketDetails.nameVerifier).to.equal(someAddress)
+	})
+
+	it('fail user sets name verifier ', async () => {
+		await ideaTokenFactory
+			.connect(adminAccount)
+			.addMarket(marketName, zeroAddress, baseCost, priceRise, tradingFeeRate, platformFeeRate)
+
+		await expect(
+			ideaTokenFactory.connect(userAccount).setNameVerifier(BigNumber.from('1'), someAddress)
+		).to.be.revertedWith('Ownable: onlyOwner')
+	})
+
+	it('fail set name verifier invalid market', async () => {
+		await ideaTokenFactory
+			.connect(adminAccount)
+			.addMarket(marketName, zeroAddress, baseCost, priceRise, tradingFeeRate, platformFeeRate)
+
+		await expect(
+			ideaTokenFactory.connect(adminAccount).setNameVerifier(BigNumber.from('2'), someAddress)
+		).to.be.revertedWith('setNameVerifier: market does not exist')
 	})
 })

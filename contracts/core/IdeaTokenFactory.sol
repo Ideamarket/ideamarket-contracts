@@ -47,6 +47,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     event NewToken(uint id, uint marketID, string name, address addr);
     event NewTradingFee(uint marketID, uint tradingFeeRate);
     event NewPlatformFee(uint marketID, uint platformFeeRate);
+    event NewNameVerifier(uint marketID, address nameVerifier);
 
     /**
      * @dev Initializes the contract
@@ -259,5 +260,19 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
         marketDetails.platformFeeRate = platformFeeRate;
 
         emit NewPlatformFee(marketID, platformFeeRate);
+    }
+
+    /**
+     * @dev Changes the address of the name verifier for a market
+     *
+     * @param marketID The marketID for which to change the name verifier
+     * @param nameVerifier The new name verifier address
+     */
+    function setNameVerifier(uint marketID, address nameVerifier) external override onlyOwner {
+        MarketDetails storage marketDetails = _markets[marketID].marketDetails;
+        require(marketDetails.exists, "setNameVerifier: market does not exist");
+        marketDetails.nameVerifier = IIdeaTokenNameVerifier(nameVerifier);
+
+        emit NewNameVerifier(marketID, nameVerifier);
     }
 }
