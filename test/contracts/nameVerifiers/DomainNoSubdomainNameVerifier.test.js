@@ -10,6 +10,10 @@ describe('nameVerifiers/DomainNoSubdomainNameVerifier', () => {
 		await nameVerifier.deployed()
 	})
 
+	it('(empty)', async () => {
+		expect(await nameVerifier.verifyTokenName('')).to.be.false
+	})
+
 	it('test.com', async () => {
 		expect(await nameVerifier.verifyTokenName('test.com')).to.be.true
 	})
