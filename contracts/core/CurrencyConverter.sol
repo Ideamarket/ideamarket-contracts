@@ -10,7 +10,7 @@ import "./IIdeaTokenExchange.sol";
  * @title CurrencyConverter
  * @author Alexander Schlindwein
  *
- * @dev Allows to use different currencies to buy/sell IdeaTokens by integrating UniswapV2
+ * Allows to use different currencies to buy/sell IdeaTokens by integrating UniswapV2
  */
 contract CurrencyConverter {
 
@@ -36,7 +36,7 @@ contract CurrencyConverter {
     }
 
     /**
-     * @dev Converts an input currency to Dai and buys IdeaTokens
+     * Converts an input currency to Dai and buys IdeaTokens
      *
      * @param inputCurrency The address of the input currency. 0x0 means ETH
      * @param ideaToken The address of the IdeaToken to buy
@@ -100,7 +100,7 @@ contract CurrencyConverter {
     }
 
     /**
-     * @dev Sells IdeaTokens and converts the received Dai to a specified currency
+     * Sells IdeaTokens and converts the received Dai to a specified currency
      *
      * @param outputCurrency The address of the desired output currency
      * @param ideaToken The address of the IdeaToken to sell
@@ -154,7 +154,7 @@ contract CurrencyConverter {
     }
 
     /**
-     * @dev Fallback required for WETH withdraw. Fails if sender is not WETH contract
+     * Fallback required for WETH withdraw. Fails if sender is not WETH contract
      */
     receive() external payable {
         require(msg.sender == address(_weth));
