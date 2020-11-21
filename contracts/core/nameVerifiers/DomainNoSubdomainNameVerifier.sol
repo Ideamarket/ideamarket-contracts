@@ -7,11 +7,11 @@ import "./IIdeaTokenNameVerifier.sol";
  * @title DomainNoSubdomainNameVerifier
  * @author Alexander Schlindwein
  *
- * @dev Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains
+ * Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains
  */
 contract DomainNoSubdomainNameVerifier is IIdeaTokenNameVerifier {
     /**
-     * @dev Verifies whether a string matches the required format
+     * Verifies whether a string matches the required format
      *
      * @param name The input string (domain name)
      *

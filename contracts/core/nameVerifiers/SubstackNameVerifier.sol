@@ -7,11 +7,11 @@ import "./IIdeaTokenNameVerifier.sol";
  * @title SubstackNameVerifier
  * @author Alexander Schlindwein
  *
- * @dev Verifies a string to be a substack name: <the name>.substack.com. Allowed characters are a-z (lowercase).
+ * Verifies a string to be a substack name: <the name>.substack.com. Allowed characters are a-z (lowercase).
  */
 contract SubstackNameVerifier is IIdeaTokenNameVerifier {
     /**
-     * @dev Verifies whether a string matches the required format
+     * Verifies whether a string matches the required format
      *
      * @param name The input string (Substack name)
      *
