@@ -7,7 +7,7 @@ import "./IIdeaTokenNameVerifier.sol";
  * @title TwitterHandleNameVerifier
  * @author Alexander Schlindwein
  *
- * Verifies a string to be a Twitter handle: "@" followed by 1-15 letters or numbers including "_".
+ * Verifies a string to be a Twitter handle: @ followed by 1-15 letters or numbers including "_".
  */
 contract TwitterHandleNameVerifier is IIdeaTokenNameVerifier {
     /**
