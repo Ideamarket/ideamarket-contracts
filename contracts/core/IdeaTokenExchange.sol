@@ -15,7 +15,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
  * @title IdeaTokenExchange
  * @author Alexander Schlindwein
  *
- * @dev Exchanges Dai <-> IdeaTokens using a bonding curve. Sits behind a proxy
+ * Exchanges Dai <-> IdeaTokens using a bonding curve. Sits behind a proxy
  */
 contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     using SafeMath for uint256;
@@ -50,7 +50,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     event PlatformFeeRedeemed(uint marketID);
     
     /**
-     * @dev Initializes the contract
+     * Initializes the contract
      *
      * @param owner The owner of the contract
      * @param tradingFeeRecipient The address of the recipient of the trading fee
@@ -70,7 +70,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Burns IdeaTokens in exchange for Dai
+     * Burns IdeaTokens in exchange for Dai
      *
      * @param ideaToken The IdeaToken to sell
      * @param amount The amount of IdeaTokens to sell
@@ -112,7 +112,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
 
     /**
-     * @dev Returns the price for selling IdeaTokens
+     * Returns the price for selling IdeaTokens
      *
      * @param ideaToken The IdeaToken to sell
      * @param amount The amount of IdeaTokens to sell
@@ -125,7 +125,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Calculates each price related to selling tokens
+     * Calculates each price related to selling tokens
      *
      * @param ideaToken The IdeaToken to sell
      * @param amount The amount of IdeaTokens to sell
@@ -149,7 +149,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the price for selling tokens without any fees applied
+     * Returns the price for selling tokens without any fees applied
      *
      * @param b The baseCost of the token
      * @param r The priceRise of the token
@@ -167,7 +167,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Mints IdeaTokens in exchange for Dai
+     * Mints IdeaTokens in exchange for Dai
      *
      * @param ideaToken The IdeaToken to buy
      * @param amount The amount of IdeaTokens to buy
@@ -215,7 +215,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the cost for buying IdeaTokens
+     * Returns the cost for buying IdeaTokens
      *
      * @param ideaToken The IdeaToken to buy
      * @param amount The amount of IdeaTokens to buy
@@ -228,7 +228,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Calculates each cost related to buying tokens
+     * Calculates each cost related to buying tokens
      *
      * @param ideaToken The IdeaToken to buy
      * @param amount The amount of IdeaTokens to buy
@@ -252,7 +252,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the cost for buying tokens without any fees applied
+     * Returns the cost for buying tokens without any fees applied
      *
      * @param b The baseCost of the token
      * @param r The priceRise of the token
@@ -270,7 +270,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Withdraws available interest for a publisher
+     * Withdraws available interest for a publisher
      *
      * @param token The token from which the generated interest is to be withdrawn
      */
@@ -290,7 +290,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the interest available to be paid out
+     * Returns the interest available to be paid out
      *
      * @param token The token from which the generated interest is to be withdrawn
      *
@@ -302,7 +302,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Authorizes an address which is allowed to withdraw interest for a token
+     * Authorizes an address which is allowed to withdraw interest for a token
      *
      * @param token The token for which to authorize an address
      * @param withdrawer The address to be authorized
@@ -320,7 +320,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Withdraws available platform fee
+     * Withdraws available platform fee
      *
      * @param marketID The market from which the generated platform fee is to be withdrawn
      */
@@ -340,7 +340,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the platform fee available to be paid out
+     * Returns the platform fee available to be paid out
      *
      * @param marketID The market from which the generated interest is to be withdrawn
      *
@@ -351,7 +351,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Authorizes an address which is allowed to withdraw platform fee for a market
+     * Authorizes an address which is allowed to withdraw platform fee for a market
      *
      * @param marketID The market for which to authorize an address
      * @param withdrawer The address to be authorized
@@ -369,7 +369,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Withdraws available trading fee
+     * Withdraws available trading fee
      */
     function withdrawTradingFee() external {
 
@@ -385,7 +385,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the trading fee available to be paid out
+     * Returns the trading fee available to be paid out
      *
      * @return The trading fee available to be paid out
      */
@@ -394,7 +394,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Sets the authorizer address
+     * Sets the authorizer address
      *
      * @param authorizer The new authorizer address
      */
@@ -403,7 +403,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * @dev Sets the IdeaTokenFactory address. Only required once for deployment
+     * Sets the IdeaTokenFactory address. Only required once for deployment
      *
      * @param factory The address of the IdeaTokenFactory 
      */
