@@ -14,7 +14,8 @@ import "./nameVerifiers/IIdeaTokenNameVerifier.sol";
  * @title IdeaTokenFactory
  * @author Alexander Schlindwein
  *
- * @dev Manages the creation, exchange and interest distribution of IdeaTokens. Sits behind a proxy
+ * Manages the creation of markets and IdeaTokens
+ * Sits behind an AdminUpgradabilityProxy
  */
 contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
 
@@ -50,7 +51,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     event NewNameVerifier(uint marketID, address nameVerifier);
 
     /**
-     * @dev Initializes the contract
+     * Initializes the contract with all required values
      *
      * @param owner The owner of the contract
      */
@@ -60,8 +61,9 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Adds a new market. May only be called by admin
-
+     * Adds a new market
+     * May only be called by the owner
+     *
      * @param marketName The name of the market
      * @param nameVerifier The address of the name verifier
      * @param baseCost: The initial cost in Dai per IdeaToken in the first interval
@@ -103,8 +105,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Adds a new token.
-
+     * Adds a new IdeaToken 
+     *
      * @param tokenName The name of the token
      * @param marketID The ID of the market
      */
@@ -138,7 +140,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Checks whether a token name is allowed and not used already
+     * Checks whether a token name is allowed and not used already
      *
      * @param tokenName The intended token name
      * @param marketID The market on which the token is to be listed
@@ -158,7 +160,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the market id by the market name
+     * Returns the market id by the market name
      *
      * @param marketName The market name
      *
@@ -169,7 +171,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the market details by the market id
+     * Returns the market details by the market id
      *
      * @param marketID The market id
      *
@@ -180,7 +182,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the market details by the market name
+     * Returns the market details by the market name
      *
      * @param marketName The market name
      *
@@ -191,7 +193,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the amount of existing markets
+     * Returns the amount of existing markets
      *
      * @return The amount of existing markets
      */
@@ -200,7 +202,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the token id by the token name and market id
+     * Returns the token id by the token name and market id
      *
      * @param tokenName The token name
      * @param marketID The market id
@@ -212,7 +214,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the token info by the token id and market id
+     * Returns the token info by the token id and market id
      *
      * @param marketID The market id
      * @param tokenID The token id
@@ -224,7 +226,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Returns the token id pair by the tokens address
+     * Returns the token id pair by the tokens address
      *
      * @param token The tokens address
      *
@@ -235,7 +237,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Sets the trading fee for a market
+     * Sets the trading fee for a market
+     * May only be called by the owner
      *
      * @param marketID The market id for which to set the trading fee
      * @param tradingFeeRate The trading fee
@@ -249,7 +252,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Sets the platform fee for a market
+     * Sets the platform fee for a market
+     * May only be called by the owner
      *
      * @param marketID The market id for which to set the platform fee
      * @param platformFeeRate The platform fee
@@ -263,7 +267,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * @dev Changes the address of the name verifier for a market
+     * Changes the address of the name verifier for a market
+     * May only be called by the owner
      *
      * @param marketID The marketID for which to change the name verifier
      * @param nameVerifier The new name verifier address
