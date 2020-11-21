@@ -4,8 +4,6 @@ pragma solidity ^0.6.9;
 /**
  * @title IIdeaTokenExchange
  * @author Alexander Schlindwein
- *
- * @dev Interface for IdeaTokenExchange
  */
 interface IIdeaTokenExchange {
     function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external;
