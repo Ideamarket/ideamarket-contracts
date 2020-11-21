@@ -11,8 +11,9 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 /**
  * @title InterestManagerCompound
  * @author Alexander Schlindwein
- *
- * @dev Manages DAI investments into Compound. Sits behind a proxy
+ * 
+ * Invests DAI into Compound to generate interest
+ * Sits behind an AdminUpgradabilityProxy 
  */
 contract InterestManagerCompound is Ownable, Initializable {
 
@@ -26,7 +27,7 @@ contract InterestManagerCompound is Ownable, Initializable {
     mapping(address => uint) _donatedDai;
 
     /**
-     * @dev Initializes the contract
+     * Initializes the contract with all required values
      *
      * @param owner The owner of the contract
      * @param dai The Dai token address
@@ -43,7 +44,8 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * @dev Invests a given amount of Dai into Compound
+     * Invests a given amount of Dai into Compound
+     * The Dai have to be transfered to this contract before this function is called
      *
      * @param amount The amount of Dai to invest
      *
@@ -59,7 +61,7 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * @dev Checks that the caller is the owner and delegates to redeemInternal
+     * Checks that the caller is the owner and delegates to redeemInternal
      *
      * @return The amount of burned cDai
      */
@@ -68,7 +70,7 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * @dev Redeem a given amount of Dai from Compound and sends it to the recipient
+     * Redeems a given amount of Dai from Compound and sends it to the recipient
      *
      * @param recipient The recipient of the redeemed Dai
      * @param amount The amount of Dai to redeem
@@ -84,7 +86,7 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * @dev Redeem a given amount of cDai from Compound and sends Dai to the recipient
+     * Redeems a given amount of cDai from Compound and sends Dai to the recipient
      *
      * @param recipient The recipient of the redeemed Dai
      * @param amount The amount of cDai to redeem
@@ -100,7 +102,7 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * @dev Accepts donated Dai and invests into Compound to generate interest
+     * Accepts donated Dai and invests into Compound to generate interest
      *
      * @param amount The amount of Dai to donate
      */
@@ -112,7 +114,7 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * @dev Redeems donated Dai back to the donator without generated interest
+     * Redeems donated Dai back to the donator without generated interest
      *
      * @param amount The amount of Dai to redeem
      */
@@ -123,21 +125,21 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * @dev Updates accrued interest on the invested Dai
+     * Updates accrued interest on the invested Dai
      */
     function accrueInterest() external {
         require(_cDai.accrueInterest() == 0, "accrueInterest: failed to accrue interest");
     }
 
     /**
-     * @dev Withdraws the generated Comp tokens to the Comp recipient
+     * Withdraws the generated Comp tokens to the Comp recipient
      */
     function withdrawComp() external {
         require(_comp.transfer(_compRecipient, _comp.balanceOf(address(this))), "redeemComp: transfer failed");
     }
 
     /**
-     * @dev Converts an amount of underlying tokens to an amount of investment tokens
+     * Converts an amount of underlying tokens to an amount of investment tokens
      *
      * @param underlyingAmount The amount of underlying tokens
      *
@@ -148,7 +150,7 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * @dev Converts an amount of investment tokens to an amount of underlying tokens
+     * Converts an amount of investment tokens to an amount of underlying tokens
      *
      * @param investmentTokenAmount The amount of investment tokens
      *
