@@ -9,8 +9,6 @@ import "./nameVerifiers/IIdeaTokenNameVerifier.sol";
 /**
  * @title IIdeaTokenFactory
  * @author Alexander Schlindwein
- *
- * @dev Interface for IdeaTokenFactory
  */
 interface IIdeaTokenFactory {
 
