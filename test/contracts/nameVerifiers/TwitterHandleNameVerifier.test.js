@@ -73,7 +73,7 @@ describe('nameVerifiers/TwitterHandleNameVerifier', () => {
 		}
 	})
 
-	it.only('@{allowed ascii char}', async () => {
+	it('@{allowed ascii char}', async () => {
 		for (let i = 0; i < 255; i++) {
 			if (
 				(i >= 0x30 && i <= 0x39) || //9-0
