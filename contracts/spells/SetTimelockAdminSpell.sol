@@ -7,12 +7,12 @@ import "../timelock/IDSPause.sol";
  * @title SetTimelockAdminSpell
  * @author Alexander Schlindwein
  *
- * @dev Spell to set the admin of the timelock
+ * Spell to set the admin of the timelock
  */
 contract SetTimelockAdminSpell {
 
     /**
-     * @dev Sets the timelock admin
+     * Sets the timelock admin
      *
      * @param dsPause The address of the timelock
      * @param owner The address of the new admin

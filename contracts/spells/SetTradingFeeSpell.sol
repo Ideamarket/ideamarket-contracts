@@ -7,12 +7,12 @@ import "../core/IIdeaTokenFactory.sol";
  * @title SetTradingFeeSpell
  * @author Alexander Schlindwein
  *
- * @dev Spell to set the trading fee for a market
+ * Spell to set the trading fee for a market
  */
 contract SetTradingFeeSpell {
 
     /**
-     * @dev Sets the trading fee for a market
+     * Sets the trading fee for a market
      *
      * @param factory The address of the IdeaTokenFactory
      * @param marketID The market for which to set the trading fee

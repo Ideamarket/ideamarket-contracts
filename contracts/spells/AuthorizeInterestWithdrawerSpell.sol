@@ -7,12 +7,12 @@ import "../core/IIdeaTokenExchange.sol";
  * @title AuthorizeInterestWithdrawerSpell
  * @author Alexander Schlindwein
  *
- * @dev Spell to authorize an interest withdrawer
+ * Spell to authorize an interest withdrawer
  */
 contract AuthorizeInterestWithdrawerSpell {
 
     /**
-     * @dev Authorizes an address to withdraw interest for an IdeaToken
+     * Authorizes an address to withdraw interest for an IdeaToken
      *
      * @param exchange The address of the IdeaTokenExchange
      * @param ideaToken The address of the IdeaToken for which to authorize an interest withdrawer

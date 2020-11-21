@@ -7,12 +7,12 @@ import "../core/IIdeaTokenFactory.sol";
  * @title AddMarketSpell
  * @author Alexander Schlindwein
  *
- * @dev Spell to add a market
+ * Spell to add a market
  */
 contract AddMarketSpell {
 
     /**
-     * @dev Adds a market to the factory
+     * Adds a market to the factory
      *
      * @param factory The address of the IdeaTokenFactory
      * @param marketName The name of the market

@@ -7,12 +7,12 @@ import "../timelock/IDSPause.sol";
  * @title SetTimelockDelaySpell
  * @author Alexander Schlindwein
  *
- * @dev Spell to set the timelock delay
+ * Spell to set the timelock delay
  */
 contract SetTimelockDelaySpell {
 
     /**
-     * @dev Sets the timelock delay
+     * Sets the timelock delay
      *
      * @param dsPause The address of the timelock
      * @param delay The new delay in seconds
