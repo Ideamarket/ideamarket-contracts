@@ -9,6 +9,7 @@ coverage.json
 
 # Hardhat
 cache
+build
 
 # Dotenv
 .env
