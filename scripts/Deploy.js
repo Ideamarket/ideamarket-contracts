@@ -3,7 +3,7 @@ const fs = require('fs')
 const { BigNumber } = require('ethers')
 
 const allDeploymentParams = {
-	kovan: {
+	rinkeby: {
 		timelockDelay: '1',
 		gasPrice: 1000000000, // 1 gwei
 		twitterBaseCost: BigNumber.from('1000000000000000000'), // 1 DAI
@@ -14,13 +14,13 @@ const allDeploymentParams = {
 }
 
 const allExternalContractAddresses = {
-	kovan: {
+	rinkeby: {
 		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
 		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-		dai: '0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa',
-		cDai: '0xF0d0EB522cfa50B716B3b1604C4F0fA6f04376AD',
-		comp: '0x61460874a7196d6a22D1eE4922473664b3E95270',
-		weth: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
+		dai: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
+		cDai: '0x6D7F0754FFeb405d23C51CE938289d4835bE3b14',
+		comp: '0000000000000000000000000000000000000000', // Not deployed on Rinkeby
+		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
 		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
 	},
 }
@@ -37,9 +37,9 @@ async function main() {
 	console.log('')
 
 	const networkName = (await ethers.provider.getNetwork()).name
-	if (networkName === 'kovan') {
-		deploymentParams = allDeploymentParams.kovan
-		externalContractAdresses = allExternalContractAddresses.kovan
+	if (networkName === 'rinkeby') {
+		deploymentParams = allDeploymentParams.rinkeby
+		externalContractAdresses = allExternalContractAddresses.rinkeby
 	} else {
 		throw 'cannot deploy to network: ' + networkName
 	}
