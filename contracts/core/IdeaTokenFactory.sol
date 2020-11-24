@@ -41,6 +41,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                     string name,
                     uint baseCost,
                     uint priceRise,
+                    uint hatchTokens,
                     uint tradingFeeRate,
                     uint platformFeeRate,
                     address nameVerifier);
@@ -68,16 +69,19 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      * @param nameVerifier The address of the name verifier
      * @param baseCost: The initial cost in Dai per IdeaToken in the first interval
      * @param priceRise: The price rise in Dai per IdeaToken per completed interval
+     * @param hatchTokens: The amount of IdeaTokens for which the price does not change initially
      * @param tradingFeeRate: The trading fee rate
      * @param platformFeeRate: The platform fee rate
      */
     function addMarket(string calldata marketName, address nameVerifier,
-                       uint baseCost, uint priceRise,
+                       uint baseCost, uint priceRise, uint hatchTokens,
                        uint tradingFeeRate, uint platformFeeRate) external override onlyOwner {
         require(_marketIDs[marketName] == 0, "addMarket: market exists already");
         require(baseCost > 0 && priceRise > 0, "addMarket: invalid parameters");
 
         uint marketID = ++_numMarkets;
+
+        { // Stack too deep
         MarketInfo memory marketInfo = MarketInfo({
             marketDetails: MarketDetails({
                 exists: true,
@@ -87,6 +91,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                 numTokens: 0,
                 baseCost: baseCost,
                 priceRise: priceRise,
+                hatchTokens: hatchTokens,
                 tradingFeeRate: tradingFeeRate,
                 platformFeeRate: platformFeeRate
             })
@@ -94,11 +99,13 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
 
         _markets[marketID] = marketInfo;
         _marketIDs[marketName] = marketID;
+        }
 
         emit NewMarket(marketID,
                        marketName,
                        baseCost,
                        priceRise,
+                       hatchTokens,
                        tradingFeeRate,
                        platformFeeRate,
                        nameVerifier);

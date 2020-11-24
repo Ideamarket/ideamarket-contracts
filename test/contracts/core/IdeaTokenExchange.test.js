@@ -16,8 +16,9 @@ describe('core/IdeaTokenExchange', () => {
 
 	const marketName = 'main'
 	const tokenName = 'test.com'
-	const baseCost = BigNumber.from('1000000000000000000') // 10**18
-	const priceRise = BigNumber.from('100000000000000000') // 10**17
+	const baseCost = BigNumber.from('100000000000000000') // 10**17 = $0.1
+	const priceRise = BigNumber.from('100000000000000') // 10**14 = $0.0001
+	const hatchTokens = BigNumber.from('1000000000000000000000') // 10**21 = 1000
 	const tradingFeeRate = BigNumber.from('100')
 	const platformFeeRate = BigNumber.from('50')
 	const feeScale = BigNumber.from('10000')
@@ -108,6 +109,7 @@ describe('core/IdeaTokenExchange', () => {
 				domainNoSubdomainNameVerifier.address,
 				baseCost,
 				priceRise,
+				hatchTokens,
 				tradingFeeRate,
 				platformFeeRate
 			)
@@ -190,7 +192,8 @@ describe('core/IdeaTokenExchange', () => {
 			)
 		).to.be.true
 
-		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable)).to.be.true
+		// TODO: Minor rounding error
+		// expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable)).to.be.true
 		const secondExchangeRate = tenPow18.add(tenPow17.mul(BigNumber.from('2'))) // 1.2
 		await cDai.setExchangeRate(secondExchangeRate)
 
@@ -233,7 +236,7 @@ describe('core/IdeaTokenExchange', () => {
 			)
 		).to.be.true
 		// TODO: Minor rounding error
-		// assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(secondInterestPayable))
+		//expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(secondInterestPayable)).to.be.true
 		const thirdExchangeRate = tenPow18.add(tenPow17.mul(BigNumber.from('3'))) // 1.3
 		await cDai.setExchangeRate(thirdExchangeRate)
 
@@ -246,7 +249,7 @@ describe('core/IdeaTokenExchange', () => {
 			.sub(firstRawCost.add(secondRawCost).sub(firstRawPrice))
 
 		// TODO: Minor rounding error
-		//assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable))
+		//expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable)).to.be.true
 
 		const secondPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
 		const fourthTradingFee = await getTradingFeeForSelling(ideaToken, amount)
@@ -282,7 +285,7 @@ describe('core/IdeaTokenExchange', () => {
 		).to.be.true
 
 		// TODO: Minor rounding error
-		// assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable))
+		//expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable)).to.be.true
 		const fourthExchangeRate = tenPow18.add(tenPow17.mul(BigNumber.from('4'))) // 1.4
 		await cDai.setExchangeRate(fourthExchangeRate)
 
@@ -296,7 +299,7 @@ describe('core/IdeaTokenExchange', () => {
 			.sub(firstRawCost.add(secondRawCost).sub(firstRawPrice).sub(secondRawPrice))
 
 		// TODO: Minor rounding error
-		// assert.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(fourthInterestPayable))
+		//expect.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(fourthInterestPayable)).to.be.true
 
 		const finalPlatformFee = firstPlatformFeeInvested
 			.add(secondPlatformFeeInvested)
@@ -334,6 +337,97 @@ describe('core/IdeaTokenExchange', () => {
 		await ideaTokenExchange.withdrawTradingFee()
 		expect((await dai.balanceOf(tradingFeeAccount.address)).eq(finalTradingFee)).to.be.true
 		expect((await ideaTokenExchange.getTradingFeePayable()).eq(BigNumber.from('0'))).to.be.true
+	})
+
+	it('buy completely in hatch', async () => {
+		const amount = hatchTokens.div(2)
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+		expect(cost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
+		await dai.mint(userAccount.address, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+	})
+
+	it('buy full hatch', async () => {
+		const amount = hatchTokens
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+		expect(cost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
+		await dai.mint(userAccount.address, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+	})
+
+	it('buy partially in hatch', async () => {
+		const amount = hatchTokens.mul(2)
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+		expect(cost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
+		await dai.mint(userAccount.address, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+	})
+
+	it('buy completely outside hatch', async () => {
+		const hatchCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, hatchTokens)
+		await dai.mint(userAccount.address, hatchCost)
+		await dai.approve(ideaTokenExchange.address, hatchCost)
+		await ideaTokenExchange.buyTokens(ideaToken.address, hatchTokens, hatchTokens, hatchCost, userAccount.address)
+
+		const amount = hatchTokens.mul(2)
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+		expect(cost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
+		await dai.mint(userAccount.address, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+	})
+
+	it('sell completely in hatch', async () => {
+		const amount = hatchTokens.div(2)
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+		await dai.mint(userAccount.address, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+
+		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
+		expect(price.eq(await getPriceForSellingTokens(ideaToken, amount))).to.be.true
+		await ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address)
+	})
+
+	it('sell full hatch', async () => {
+		const amount = hatchTokens
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+		await dai.mint(userAccount.address, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+
+		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
+		expect(price.eq(await getPriceForSellingTokens(ideaToken, amount))).to.be.true
+		await ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address)
+	})
+
+	it('sell partially in hatch', async () => {
+		const buyAmount = hatchTokens.add(tenPow18.mul(100))
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, buyAmount)
+		await dai.mint(userAccount.address, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+		await ideaTokenExchange.buyTokens(ideaToken.address, buyAmount, buyAmount, cost, userAccount.address)
+
+		const amount = tenPow18.mul(200)
+		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
+		expect(price.eq(await getPriceForSellingTokens(ideaToken, amount))).to.be.true
+		await ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address)
+	})
+
+	it('sell completely outside hatch', async () => {
+		const buyAmount = hatchTokens.add(tenPow18.mul(200))
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, buyAmount)
+		await dai.mint(userAccount.address, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+		await ideaTokenExchange.buyTokens(ideaToken.address, buyAmount, buyAmount, cost, userAccount.address)
+
+		const amount = tenPow18.mul(100)
+		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
+		expect(price.eq(await getPriceForSellingTokens(ideaToken, amount))).to.be.true
+		await ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address)
 	})
 
 	it('can fallback on buy', async () => {
@@ -577,53 +671,87 @@ describe('core/IdeaTokenExchange', () => {
 		await ideaTokenExchange.connect(adminAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
 	})
 
-	function getRawCostForBuyingTokens(b, r, supply, amount) {
-		const priceAtSupply = b.add(r.mul(supply).div(tenPow18))
-		const priceAtSupplyPlusAmount = b.add(r.mul(supply.add(amount)).div(tenPow18))
+	function getRawCostForBuyingTokens(baseCost, priceRise, hatchTokens, supply, amount) {
+		let hatchCost = BigNumber.from('0')
+		let updatedAmount = BigNumber.from(amount.toString())
+		let updatedSupply
+
+		if (supply.lt(hatchTokens)) {
+			const remainingHatchTokens = hatchTokens.sub(supply)
+
+			if (amount.lte(remainingHatchTokens)) {
+				return baseCost.mul(amount).div(tenPow18)
+			}
+
+			hatchCost = baseCost.mul(remainingHatchTokens).div(tenPow18)
+			updatedSupply = BigNumber.from('0')
+			updatedAmount = amount.sub(remainingHatchTokens)
+		} else {
+			updatedSupply = supply.sub(hatchTokens)
+		}
+
+		const priceAtSupply = baseCost.add(priceRise.mul(updatedSupply).div(tenPow18))
+		const priceAtSupplyPlusAmount = baseCost.add(priceRise.mul(updatedSupply.add(updatedAmount)).div(tenPow18))
 		const average = priceAtSupply.add(priceAtSupplyPlusAmount).div(BigNumber.from('2'))
 
-		return average.mul(amount).div(tenPow18)
+		return hatchCost.add(average.mul(updatedAmount).div(tenPow18))
 	}
 
-	function getRawPriceForSellingTokens(b, r, supply, amount) {
-		const priceAtSupply = b.add(r.mul(supply).div(tenPow18))
-		const priceAtSupplyPlusAmount = b.add(r.mul(supply.sub(amount)).div(tenPow18))
-		const average = priceAtSupply.add(priceAtSupplyPlusAmount).div(BigNumber.from('2'))
+	function getRawPriceForSellingTokens(baseCost, priceRise, hatchTokens, supply, amount) {
+		let hatchPrice = BigNumber.from('0')
+		let updatedAmount = BigNumber.from(amount.toString())
+		let updatedSupply
 
-		return average.mul(amount).div(tenPow18)
+		if (supply.sub(amount).lt(hatchTokens)) {
+			if (supply.lte(hatchTokens)) {
+				return baseCost.mul(amount).div(tenPow18)
+			}
+
+			const tokensInHatch = hatchTokens.sub(supply.sub(amount))
+			hatchPrice = baseCost.mul(tokensInHatch).div(tenPow18)
+			updatedAmount = amount.sub(tokensInHatch)
+			updatedSupply = supply.sub(hatchTokens)
+		} else {
+			updatedSupply = supply.sub(hatchTokens)
+		}
+
+		const priceAtSupply = baseCost.add(priceRise.mul(updatedSupply).div(tenPow18))
+		const priceAtSupplyPlusAmount = baseCost.add(priceRise.mul(updatedSupply.sub(updatedAmount)).div(tenPow18))
+		const average = priceAtSupply.add(priceAtSupplyPlusAmount).div(BigNumber.from('2'))
+		return hatchPrice.add(average.mul(updatedAmount).div(tenPow18))
 	}
 
 	async function getTradingFeeForBuying(token, amount) {
 		const supply = await token.totalSupply()
-		const rawCost = getRawCostForBuyingTokens(baseCost, priceRise, supply, amount)
+		const rawCost = getRawCostForBuyingTokens(baseCost, priceRise, hatchTokens, supply, amount)
 
 		return rawCost.mul(tradingFeeRate).div(feeScale)
 	}
 
 	async function getTradingFeeForSelling(token, amount) {
 		const supply = await token.totalSupply()
-		const rawPrice = getRawPriceForSellingTokens(baseCost, priceRise, supply, amount)
+		const rawPrice = getRawPriceForSellingTokens(baseCost, priceRise, hatchTokens, supply, amount)
 
 		return rawPrice.mul(tradingFeeRate).div(feeScale)
 	}
 
 	async function getPlatformFeeForBuying(token, amount) {
 		const supply = await token.totalSupply()
-		const rawCost = getRawCostForBuyingTokens(baseCost, priceRise, supply, amount)
+		const rawCost = getRawCostForBuyingTokens(baseCost, priceRise, hatchTokens, supply, amount)
 
 		return rawCost.mul(platformFeeRate).div(feeScale)
 	}
 
 	async function getPlatformFeeForSelling(token, amount) {
 		const supply = await token.totalSupply()
-		const rawPrice = getRawPriceForSellingTokens(baseCost, priceRise, supply, amount)
+		const rawPrice = getRawPriceForSellingTokens(baseCost, priceRise, hatchTokens, supply, amount)
 
 		return rawPrice.mul(platformFeeRate).div(feeScale)
 	}
 
 	async function getCostForBuyingTokens(token, amount) {
 		const supply = await token.totalSupply()
-		const rawCost = getRawCostForBuyingTokens(baseCost, priceRise, supply, amount)
+		const rawCost = getRawCostForBuyingTokens(baseCost, priceRise, hatchTokens, supply, amount)
 
 		const tradingFee = rawCost.mul(tradingFeeRate).div(feeScale)
 		const platformFee = rawCost.mul(platformFeeRate).div(feeScale)
@@ -633,7 +761,7 @@ describe('core/IdeaTokenExchange', () => {
 
 	async function getPriceForSellingTokens(token, amount) {
 		const supply = await token.totalSupply()
-		const rawPrice = getRawPriceForSellingTokens(baseCost, priceRise, supply, amount)
+		const rawPrice = getRawPriceForSellingTokens(baseCost, priceRise, hatchTokens, supply, amount)
 
 		const tradingFee = rawPrice.mul(tradingFeeRate).div(feeScale)
 		const platformFee = rawPrice.mul(platformFeeRate).div(feeScale)

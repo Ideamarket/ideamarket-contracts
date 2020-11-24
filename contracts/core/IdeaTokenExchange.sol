@@ -138,6 +138,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
         uint rawPrice = getRawPriceForSellingTokens(marketDetails.baseCost,
                                                     marketDetails.priceRise,
+                                                    marketDetails.hatchTokens,
                                                     IERC20(ideaToken).totalSupply(),
                                                     amount);
 
@@ -151,19 +152,42 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     /**
      * Returns the price for selling tokens without any fees applied
      *
-     * @param b The baseCost of the token
-     * @param r The priceRise of the token
+     * @param baseCost The baseCost of the token
+     * @param priceRise The priceRise of the token
+     * @param hatchTokens The amount of hatch tokens
      * @param supply The current total supply of the token
      * @param amount The amount of IdeaTokens to sell
      *
      * @return The price selling `amount` IdeaTokens without any fees applied
      */
-    function getRawPriceForSellingTokens(uint b, uint r, uint supply, uint amount) internal pure returns (uint) {
-        uint priceAtSupply = b.add(r.mul(supply).div(10**18));
-        uint priceAtSupplyMinusAmount = b.add(r.mul(supply.sub(amount)).div(10**18));
+    function getRawPriceForSellingTokens(uint baseCost, uint priceRise, uint hatchTokens, uint supply, uint amount) internal pure returns (uint) {
+
+        uint hatchPrice = 0;
+        uint updatedAmount = amount;
+        uint updatedSupply;
+
+        if(supply.sub(amount) < hatchTokens) {
+
+            if(supply <= hatchTokens) {
+                return baseCost.mul(amount).div(10**18);
+            }
+
+            // No SafeMath required because supply - amount < hatchTokens
+            uint tokensInHatch = hatchTokens - (supply - amount);
+            hatchPrice = baseCost.mul(tokensInHatch).div(10**18);
+            updatedAmount = amount.sub(tokensInHatch);
+            // No SafeMath required because supply >= hatchTokens
+            updatedSupply = supply - hatchTokens;
+        } else {
+            // No SafeMath required because supply >= hatchTokens
+            updatedSupply = supply - hatchTokens;
+        }
+
+        uint priceAtSupply = baseCost.add(priceRise.mul(updatedSupply).div(10**18));
+        uint priceAtSupplyMinusAmount = baseCost.add(priceRise.mul(updatedSupply.sub(updatedAmount)).div(10**18));
         uint average = priceAtSupply.add(priceAtSupplyMinusAmount).div(2);
     
-        return average.mul(amount).div(10**18);
+        return hatchPrice.add(average.mul(updatedAmount).div(10**18));
     }
 
     /**
@@ -241,6 +265,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
         uint rawCost = getRawCostForBuyingTokens(marketDetails.baseCost,
                                                  marketDetails.priceRise,
+                                                 marketDetails.hatchTokens,
                                                  IERC20(ideaToken).totalSupply(),
                                                  amount);
 
@@ -254,19 +279,42 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     /**
      * Returns the cost for buying tokens without any fees applied
      *
-     * @param b The baseCost of the token
-     * @param r The priceRise of the token
+     * @param baseCost The baseCost of the token
+     * @param priceRise The priceRise of the token
+     * @param hatchTokens The amount of hatch tokens
      * @param supply The current total supply of the token
      * @param amount The amount of IdeaTokens to buy
      *
      * @return The cost buying `amount` IdeaTokens without any fees applied
      */
-    function getRawCostForBuyingTokens(uint b, uint r, uint supply, uint amount) internal pure returns (uint) {
-        uint priceAtSupply = b.add(r.mul(supply).div(10**18));
-        uint priceAtSupplyPlusAmount = b.add(r.mul(supply.add(amount)).div(10**18));
+    function getRawCostForBuyingTokens(uint baseCost, uint priceRise, uint hatchTokens, uint supply, uint amount) internal pure returns (uint) {
+
+        uint hatchCost = 0;
+        uint updatedAmount = amount;
+        uint updatedSupply;
+
+        if(supply < hatchTokens) {
+            // No SafeMath required because supply < hatchTokens
+            uint remainingHatchTokens = hatchTokens - supply;
+
+            if(amount <= remainingHatchTokens) {
+                return baseCost.mul(amount).div(10**18);
+            }
+
+            hatchCost = baseCost.mul(remainingHatchTokens).div(10**18);
+            updatedSupply = 0;
+            // No SafeMath required because remainingHatchTokens < amount
+            updatedAmount = amount - remainingHatchTokens;
+        } else {
+            // No SafeMath required because supply >= hatchTokens
+            updatedSupply = supply - hatchTokens;
+        }
+
+        uint priceAtSupply = baseCost.add(priceRise.mul(updatedSupply).div(10**18));
+        uint priceAtSupplyPlusAmount = baseCost.add(priceRise.mul(updatedSupply.add(updatedAmount)).div(10**18));
         uint average = priceAtSupply.add(priceAtSupplyPlusAmount).div(2);
 
-        return average.mul(amount).div(10**18);
+        return hatchCost.add(average.mul(updatedAmount).div(10**18));
     }
 
     /**

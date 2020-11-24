@@ -6,8 +6,9 @@ const allDeploymentParams = {
 	rinkeby: {
 		timelockDelay: '1',
 		gasPrice: 1000000000, // 1 gwei
-		twitterBaseCost: BigNumber.from('1000000000000000000'), // 1 DAI
-		twitterPriceRise: BigNumber.from('10000000000000000'), // 0.01 DAI
+		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
 		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
 		twitterPlatformFeeRate: BigNumber.from('25'), // 0.25%
 	},
@@ -174,6 +175,7 @@ async function main() {
 			twitterHandleNameVerifierAddress,
 			deploymentParams.twitterBaseCost,
 			deploymentParams.twitterPriceRise,
+			deploymentParams.twitterHatchTokens,
 			deploymentParams.twitterTradingFeeRate,
 			deploymentParams.twitterPlatformFeeRate,
 			{ gasPrice: deploymentParams.gasPrice }

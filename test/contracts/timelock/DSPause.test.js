@@ -72,6 +72,7 @@ describe('timelock/DSPause', () => {
 			zeroAddress,
 			'1',
 			'1',
+			'1',
 			'0',
 			'0',
 		])

@@ -21,8 +21,9 @@ describe('core/CurrencyConverter', () => {
 
 	const marketName = 'main'
 	const tokenName = 'test.com'
-	const baseCost = BigNumber.from('1000000000000000000') // 10**18
-	const priceRise = BigNumber.from('100000000000000000') // 10**17
+	const baseCost = BigNumber.from('100000000000000000') // 10**17 = $0.1
+	const priceRise = BigNumber.from('100000000000000') // 10**14 = $0.0001
+	const hatchTokens = BigNumber.from('1000000000000000000000') // 10**21 = 1000
 	const tradingFeeRate = BigNumber.from('100')
 	const platformFeeRate = BigNumber.from('50')
 
@@ -144,6 +145,7 @@ describe('core/CurrencyConverter', () => {
 				domainNoSubdomainNameVerifier.address,
 				baseCost,
 				priceRise,
+				hatchTokens,
 				tradingFeeRate,
 				platformFeeRate
 			)

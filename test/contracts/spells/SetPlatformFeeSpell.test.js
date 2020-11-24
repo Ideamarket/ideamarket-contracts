@@ -20,6 +20,7 @@ describe('spells/SetPlatformFeeSpell', () => {
 	const nameVerifierAddress = zeroAddress
 	const baseCost = '1'
 	const priceRise = '1'
+	const hatchTokens = '1'
 	const tradingFeeRate = '2'
 	const platformFeeRate = '3'
 
@@ -44,7 +45,15 @@ describe('spells/SetPlatformFeeSpell', () => {
 		await factory.deployed()
 		await factory.initialize(adminAccount.address, zeroAddress)
 
-		await factory.addMarket(marketName, nameVerifierAddress, baseCost, priceRise, tradingFeeRate, platformFeeRate)
+		await factory.addMarket(
+			marketName,
+			nameVerifierAddress,
+			baseCost,
+			priceRise,
+			hatchTokens,
+			tradingFeeRate,
+			platformFeeRate
+		)
 
 		await factory.setOwner(dsPauseProxyAddress)
 

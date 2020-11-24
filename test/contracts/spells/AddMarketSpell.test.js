@@ -20,6 +20,7 @@ describe('spells/AddMarketSpell', () => {
 	const nameVerifierAddress = zeroAddress
 	const baseCost = BigNumber.from('1')
 	const priceRise = BigNumber.from('1')
+	const hatchTokens = BigNumber.from('1')
 	const tradingFeeRate = BigNumber.from('0')
 	const platformFeeRate = BigNumber.from('0')
 
@@ -52,6 +53,7 @@ describe('spells/AddMarketSpell', () => {
 			nameVerifierAddress,
 			baseCost,
 			priceRise,
+			hatchTokens,
 			tradingFeeRate,
 			platformFeeRate,
 		])
@@ -72,6 +74,7 @@ describe('spells/AddMarketSpell', () => {
 		expect(marketDetails.numTokens.eq(BigNumber.from('0'))).to.be.true
 		expect(marketDetails.baseCost.eq(baseCost)).to.be.true
 		expect(marketDetails.priceRise.eq(priceRise)).to.be.true
+		expect(marketDetails.hatchTokens.eq(hatchTokens)).to.be.true
 		expect(marketDetails.tradingFeeRate.eq(tradingFeeRate)).to.be.true
 		expect(marketDetails.platformFeeRate.eq(platformFeeRate)).to.be.true
 	})
