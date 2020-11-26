@@ -1,9 +1,20 @@
+const readline = require('readline')
+
 const { run, ethers, artifacts } = require('hardhat')
 const fs = require('fs')
 const { BigNumber } = require('ethers')
 
 const allDeploymentParams = {
 	rinkeby: {
+		timelockDelay: '1',
+		gasPrice: 1000000000, // 1 gwei
+		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
+		twitterPlatformFeeRate: BigNumber.from('25'), // 0.25%
+	},
+	test: {
 		timelockDelay: '1',
 		gasPrice: 1000000000, // 1 gwei
 		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
@@ -24,6 +35,28 @@ const allExternalContractAddresses = {
 		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
 		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
 	},
+	test: {
+		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
+		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
+		dai: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
+		cDai: '0x6D7F0754FFeb405d23C51CE938289d4835bE3b14',
+		comp: '0000000000000000000000000000000000000000', // Not deployed on Rinkeby
+		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+	},
+}
+
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+})
+
+async function read(question) {
+	return await new Promise((resolve) => {
+		rl.question(question, (answer) => {
+			return resolve(answer)
+		})
+	})
 }
 
 let deploymentParams
@@ -37,10 +70,20 @@ async function main() {
 	await run('compile')
 	console.log('')
 
-	const networkName = (await ethers.provider.getNetwork()).name
+	let networkName = (await ethers.provider.getNetwork()).name
 	if (networkName === 'rinkeby') {
-		deploymentParams = allDeploymentParams.rinkeby
-		externalContractAdresses = allExternalContractAddresses.rinkeby
+		const input = await read('Use test network? [y/n] ')
+
+		if (input === 'Y' || input === 'y') {
+			console.log('Using test network')
+			networkName = 'test'
+			deploymentParams = allDeploymentParams.test
+			externalContractAdresses = allExternalContractAddresses.test
+		} else {
+			console.log('Using Rinkeby')
+			deploymentParams = allDeploymentParams.rinkeby
+			externalContractAdresses = allExternalContractAddresses.rinkeby
+		}
 	} else {
 		throw 'cannot deploy to network: ' + networkName
 	}
