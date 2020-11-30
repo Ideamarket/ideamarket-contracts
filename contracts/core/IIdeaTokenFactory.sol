@@ -10,36 +10,36 @@ import "./nameVerifiers/IIdeaTokenNameVerifier.sol";
  * @title IIdeaTokenFactory
  * @author Alexander Schlindwein
  */
+
+ struct IDPair {
+    bool exists;
+    uint marketID;
+    uint tokenID;
+}
+
+struct TokenInfo {
+    bool exists;
+    uint id;
+    string name;
+    IIdeaToken ideaToken;
+}
+
+struct MarketDetails {
+    bool exists;
+    uint id;
+    string name;
+
+    IIdeaTokenNameVerifier nameVerifier;
+    uint numTokens;
+
+    uint baseCost;
+    uint priceRise;
+    uint hatchTokens;
+    uint tradingFeeRate;
+    uint platformFeeRate;
+}
+
 interface IIdeaTokenFactory {
-
-    struct IDPair {
-        bool exists;
-        uint marketID;
-        uint tokenID;
-    }
-
-    struct TokenInfo {
-        bool exists;
-        uint id;
-        string name;
-        IIdeaToken ideaToken;
-    }
-
-    struct MarketDetails {
-        bool exists;
-        uint id;
-        string name;
-
-        IIdeaTokenNameVerifier nameVerifier;
-        uint numTokens;
-
-        uint baseCost;
-        uint priceRise;
-        uint hatchTokens;
-        uint tradingFeeRate;
-        uint platformFeeRate;
-    }
-
     function addMarket(string calldata marketName, address nameVerifier,
                        uint baseCost, uint priceRise, uint hatchTokens,
                        uint tradingFeeRate, uint platformFeeRate) external;

@@ -79,10 +79,10 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      */
     function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
 
-        IIdeaTokenFactory.MarketDetails memory marketDetails;
+        MarketDetails memory marketDetails;
         uint marketID;
         {
-        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
+        IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "sellTokens: token does not exist");
         marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
         marketID = marketDetails.id;
@@ -123,8 +123,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @return The price in Dai for selling `amount` IdeaTokens
      */
     function getPriceForSellingTokens(address ideaToken, uint amount) external view override returns (uint) {
-        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
-        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
+        IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
+        MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
         (uint finalCost, , , ) = getPricesForSellingTokens(marketDetails, IERC20(ideaToken).totalSupply(), amount);
         return finalCost;
@@ -139,7 +139,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return Final cost, raw cost and trading fee
      */
-    function getPricesForSellingTokens(IIdeaTokenFactory.MarketDetails memory marketDetails, uint supply, uint amount) public pure override returns (uint, uint, uint, uint) {
+    function getPricesForSellingTokens(MarketDetails memory marketDetails, uint supply, uint amount) public pure override returns (uint, uint, uint, uint) {
         uint rawPrice = getRawPriceForSellingTokens(marketDetails.baseCost,
                                                     marketDetails.priceRise,
                                                     marketDetails.hatchTokens,
@@ -204,10 +204,10 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param recipient The recipient of the bought IdeaTokens
      */
     function buyTokens(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external override {
-        IIdeaTokenFactory.MarketDetails memory marketDetails;
+        MarketDetails memory marketDetails;
         uint marketID;
         {
-        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
+        IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "buyTokens: token does not exist");
         marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
         marketID = marketDetails.id;
@@ -250,8 +250,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @return The cost in Dai for buying `amount` IdeaTokens
      */
     function getCostForBuyingTokens(address ideaToken, uint amount) external view override returns (uint) {
-        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
-        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
+        IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
+        MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
 
         (uint finalCost, , , ) = getCostsForBuyingTokens(marketDetails, IERC20(ideaToken).totalSupply(), amount);
         return finalCost;
@@ -266,7 +266,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return Final cost, raw cost, trading fee, platform fee
      */
-    function getCostsForBuyingTokens(IIdeaTokenFactory.MarketDetails memory marketDetails, uint supply, uint amount) public pure override returns (uint, uint, uint, uint) {
+    function getCostsForBuyingTokens(MarketDetails memory marketDetails, uint supply, uint amount) public pure override returns (uint, uint, uint, uint) {
         uint rawCost = getRawCostForBuyingTokens(marketDetails.baseCost,
                                                  marketDetails.priceRise,
                                                  marketDetails.hatchTokens,
