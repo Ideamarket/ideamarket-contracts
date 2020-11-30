@@ -200,23 +200,22 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param recipient The recipient of the bought IdeaTokens
      */
     function buyTokens(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external override {
+        IIdeaTokenFactory.MarketDetails memory marketDetails;
         uint marketID;
         {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "buyTokens: token does not exist");
-        marketID = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID).id;
+        marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
+        marketID = marketDetails.id;
         }
+        uint supply = IERC20(ideaToken).totalSupply();
 
         uint actualAmount = amount;
-        uint finalCost;
-        uint rawCost;
-        uint tradingFee;
-        uint platformFee;
-        (finalCost, rawCost, tradingFee, platformFee) = getCostsForBuyingTokens(ideaToken, actualAmount);
+        (uint finalCost, uint rawCost, uint tradingFee, uint platformFee) = getCostsForBuyingTokens(marketDetails, supply, actualAmount);
 
         if(finalCost > cost) {
             actualAmount = fallbackAmount;
-            (finalCost, rawCost, tradingFee, platformFee) = getCostsForBuyingTokens(ideaToken, actualAmount);
+            (finalCost, rawCost, tradingFee, platformFee) = getCostsForBuyingTokens(marketDetails, supply, actualAmount);
     
             require(finalCost <= cost, "buyTokens: slippage too high");
         }
@@ -247,26 +246,27 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @return The cost in Dai for buying `amount` IdeaTokens
      */
     function getCostForBuyingTokens(address ideaToken, uint amount) external view override returns (uint) {
-        (uint finalCost, , , ) = getCostsForBuyingTokens(ideaToken, amount);
+        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
+        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
+
+        (uint finalCost, , , ) = getCostsForBuyingTokens(marketDetails, IERC20(ideaToken).totalSupply(), amount);
         return finalCost;
     }
 
     /**
      * Calculates each cost related to buying tokens
      *
-     * @param ideaToken The IdeaToken to buy
+     * @param marketDetails The market details
+     * @param supply The existing supply of the IdeaToken
      * @param amount The amount of IdeaTokens to buy
      *
-     * @return Final cost, raw cost and trading fee
+     * @return Final cost, raw cost, trading fee, platform fee
      */
-    function getCostsForBuyingTokens(address ideaToken, uint amount) internal view returns (uint, uint, uint, uint) {
-        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
-        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
-
+    function getCostsForBuyingTokens(IIdeaTokenFactory.MarketDetails memory marketDetails, uint supply, uint amount) public pure returns (uint, uint, uint, uint) {
         uint rawCost = getRawCostForBuyingTokens(marketDetails.baseCost,
                                                  marketDetails.priceRise,
                                                  marketDetails.hatchTokens,
-                                                 IERC20(ideaToken).totalSupply(),
+                                                 supply,
                                                  amount);
 
         uint tradingFee = rawCost.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
