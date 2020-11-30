@@ -139,7 +139,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return Final cost, raw cost and trading fee
      */
-    function getPricesForSellingTokens(IIdeaTokenFactory.MarketDetails memory marketDetails, uint supply, uint amount) public pure returns (uint, uint, uint, uint) {
+    function getPricesForSellingTokens(IIdeaTokenFactory.MarketDetails memory marketDetails, uint supply, uint amount) public pure override returns (uint, uint, uint, uint) {
         uint rawPrice = getRawPriceForSellingTokens(marketDetails.baseCost,
                                                     marketDetails.priceRise,
                                                     marketDetails.hatchTokens,
@@ -266,7 +266,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return Final cost, raw cost, trading fee, platform fee
      */
-    function getCostsForBuyingTokens(IIdeaTokenFactory.MarketDetails memory marketDetails, uint supply, uint amount) public pure returns (uint, uint, uint, uint) {
+    function getCostsForBuyingTokens(IIdeaTokenFactory.MarketDetails memory marketDetails, uint supply, uint amount) public pure override returns (uint, uint, uint, uint) {
         uint rawCost = getRawCostForBuyingTokens(marketDetails.baseCost,
                                                  marketDetails.priceRise,
                                                  marketDetails.hatchTokens,
