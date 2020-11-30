@@ -79,14 +79,17 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      */
     function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
 
+        IIdeaTokenFactory.MarketDetails memory marketDetails;
         uint marketID;
         {
         IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
         require(idPair.exists, "sellTokens: token does not exist");
-        marketID = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID).id;
+        marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
+        marketID = marketDetails.id;
         }
-
-        (uint finalPrice, uint rawPrice, uint tradingFee, uint platformFee) = getPricesForSellingTokens(ideaToken, amount);
+        uint supply = IERC20(ideaToken).totalSupply();
+    
+        (uint finalPrice, uint rawPrice, uint tradingFee, uint platformFee) = getPricesForSellingTokens(marketDetails, supply, amount);
 
         require(finalPrice >= minPrice, "sellTokens: price subceeds min price");
         require(IIdeaToken(ideaToken).balanceOf(msg.sender) >= amount, "sellTokens: not enough tokens");
@@ -120,26 +123,27 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @return The price in Dai for selling `amount` IdeaTokens
      */
     function getPriceForSellingTokens(address ideaToken, uint amount) external view override returns (uint) {
-        (uint finalCost, , , ) = getPricesForSellingTokens(ideaToken, amount);
+        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
+        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
+
+        (uint finalCost, , , ) = getPricesForSellingTokens(marketDetails, IERC20(ideaToken).totalSupply(), amount);
         return finalCost;
     }
 
     /**
      * Calculates each price related to selling tokens
      *
-     * @param ideaToken The IdeaToken to sell
+     * @param marketDetails The market details
+     * @param supply The existing supply of the IdeaToken
      * @param amount The amount of IdeaTokens to sell
      *
      * @return Final cost, raw cost and trading fee
      */
-    function getPricesForSellingTokens(address ideaToken, uint amount) internal view returns (uint, uint, uint, uint) {
-        IIdeaTokenFactory.IDPair memory idPair = _ideaTokenFactory.getTokenIDPair(ideaToken);
-        IIdeaTokenFactory.MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(idPair.marketID);
-
+    function getPricesForSellingTokens(IIdeaTokenFactory.MarketDetails memory marketDetails, uint supply, uint amount) public pure returns (uint, uint, uint, uint) {
         uint rawPrice = getRawPriceForSellingTokens(marketDetails.baseCost,
                                                     marketDetails.priceRise,
                                                     marketDetails.hatchTokens,
-                                                    IERC20(ideaToken).totalSupply(),
+                                                    supply,
                                                     amount);
 
         uint tradingFee = rawPrice.mul(marketDetails.tradingFeeRate).div(FEE_SCALE);
