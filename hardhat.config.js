@@ -1,5 +1,6 @@
 require('@nomiclabs/hardhat-waffle')
 require('@nomiclabs/hardhat-web3')
+require('solidity-coverage')
 require('dotenv').config()
 
 module.exports = {
