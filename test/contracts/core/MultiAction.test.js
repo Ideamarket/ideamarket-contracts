@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('core/CurrencyConverter', () => {
+describe('core/MultiAction', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
 	let TestCDai
@@ -15,7 +15,8 @@ describe('core/CurrencyConverter', () => {
 	let TestUniswapV2Lib
 	let TestUniswapV2Factory
 	let TestUniswapV2Router02
-	let CurrencyConverter
+	let IdeaTokenVault
+	let MultiAction
 
 	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
 
@@ -43,7 +44,8 @@ describe('core/CurrencyConverter', () => {
 	let weth
 	let uniswapFactory
 	let router
-	let currencyConverter
+	let ideaTokenVault
+	let multiAction
 
 	let marketID
 	let tokenID
@@ -67,7 +69,8 @@ describe('core/CurrencyConverter', () => {
 		TestUniswapV2Lib = await ethers.getContractFactory('TestUniswapV2Library')
 		TestUniswapV2Factory = await ethers.getContractFactory('TestUniswapV2Factory')
 		TestUniswapV2Router02 = await ethers.getContractFactory('TestUniswapV2Router02')
-		CurrencyConverter = await ethers.getContractFactory('CurrencyConverter')
+		IdeaTokenVault = await ethers.getContractFactory('IdeaTokenVault')
+		MultiAction = await ethers.getContractFactory('MultiAction')
 	})
 
 	beforeEach(async () => {
@@ -104,22 +107,24 @@ describe('core/CurrencyConverter', () => {
 		const uniswapV2Lib = await TestUniswapV2Lib.deploy()
 		await uniswapV2Lib.deployed()
 
-		//await TestUniswapV2Router02.link('TestTransferHelper', transferHelperLib.address)
-		//await TestUniswapV2Router02.link('TestUniswapV2Library', uniswapV2Lib.address)
-
 		uniswapFactory = await TestUniswapV2Factory.deploy(zeroAddress)
 		await uniswapFactory.deployed()
 
 		router = await TestUniswapV2Router02.deploy(uniswapFactory.address, weth.address)
 		await router.deployed()
 
-		currencyConverter = await CurrencyConverter.deploy(
+		ideaTokenVault = await IdeaTokenVault.deploy()
+		await ideaTokenVault.deployed()
+	
+		multiAction = await MultiAction.deploy(
 			ideaTokenExchange.address,
+			ideaTokenFactory.address,
+			ideaTokenVault.address,
 			dai.address,
 			router.address,
 			weth.address
 		)
-		await currencyConverter.deployed()
+		await multiAction.deployed()
 
 		await interestManagerCompound
 			.connect(adminAccount)
@@ -161,6 +166,8 @@ describe('core/CurrencyConverter', () => {
 			IdeaToken.interface,
 			IdeaToken.signer
 		)
+
+		await ideaTokenVault.initialize(ideaTokenFactory.address)
 
 		// Setup Uniswap pools
 		// ETH-DAI: 1 ETH, 200 DAI
@@ -214,13 +221,14 @@ describe('core/CurrencyConverter', () => {
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
 		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
 
-		await currencyConverter.buyTokens(
+		await multiAction.convertAndBuy(
 			zeroAddress,
 			ideaToken.address,
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
 			userAccount.address,
+			false,
 			{ value: requiredInputForCost }
 		)
 
@@ -230,8 +238,8 @@ describe('core/CurrencyConverter', () => {
 		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
 		const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, weth.address]))[1]
 
-		await ideaToken.approve(currencyConverter.address, tokenBalanceAfterBuy)
-		await currencyConverter.sellTokens(
+		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
+		await multiAction.sellAndConvert(
 			zeroAddress,
 			ideaToken.address,
 			tokenBalanceAfterBuy,
@@ -249,14 +257,15 @@ describe('core/CurrencyConverter', () => {
 		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
 
 		await weth.deposit({ value: requiredInputForCost })
-		await weth.approve(currencyConverter.address, requiredInputForCost)
-		await currencyConverter.buyTokens(
+		await weth.approve(multiAction.address, requiredInputForCost)
+		await multiAction.convertAndBuy(
 			weth.address,
 			ideaToken.address,
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
-			userAccount.address
+			userAccount.address,
+			false
 		)
 
 		const wethBalanceAfterBuy = await weth.balanceOf(userAccount.address)
@@ -267,8 +276,8 @@ describe('core/CurrencyConverter', () => {
 		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
 		const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, weth.address]))[1]
 
-		await ideaToken.approve(currencyConverter.address, tokenBalanceAfterBuy)
-		await currencyConverter.sellTokens(
+		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
+		await multiAction.sellAndConvert(
 			weth.address,
 			ideaToken.address,
 			tokenBalanceAfterBuy,
@@ -288,14 +297,15 @@ describe('core/CurrencyConverter', () => {
 		const requiredInputForCost = (await router.getAmountsIn(buyCost, [someToken.address, dai.address]))[0]
 
 		await someToken.mint(userAccount.address, requiredInputForCost)
-		await someToken.approve(currencyConverter.address, requiredInputForCost)
-		await currencyConverter.buyTokens(
+		await someToken.approve(multiAction.address, requiredInputForCost)
+		await multiAction.convertAndBuy(
 			someToken.address,
 			ideaToken.address,
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
-			userAccount.address
+			userAccount.address,
+			false
 		)
 
 		const someBalanceAfterBuy = await someToken.balanceOf(userAccount.address)
@@ -306,8 +316,8 @@ describe('core/CurrencyConverter', () => {
 		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
 		const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, someToken.address]))[1]
 
-		await ideaToken.approve(currencyConverter.address, tokenBalanceAfterBuy)
-		await currencyConverter.sellTokens(
+		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
+		await multiAction.sellAndConvert(
 			someToken.address,
 			ideaToken.address,
 			tokenBalanceAfterBuy,
@@ -327,13 +337,14 @@ describe('core/CurrencyConverter', () => {
 		const requiredInputForCost = (await router.getAmountsIn(buyCost, [someToken.address, dai.address]))[0]
 
 		expect(
-			currencyConverter.buyTokens(
+			multiAction.convertAndBuy(
 				someToken.address,
 				ideaToken.address,
 				ideaTokenAmount,
 				ideaTokenAmount,
 				requiredInputForCost.sub(BigNumber.from('1')),
-				userAccount.address
+				userAccount.address,
+				false
 			)
 		).to.be.revertedWith('')
 	})
@@ -344,14 +355,15 @@ describe('core/CurrencyConverter', () => {
 		const requiredInputForCost = (await router.getAmountsIn(buyCost, [someToken.address, dai.address]))[0]
 
 		await someToken.mint(userAccount.address, requiredInputForCost)
-		await someToken.approve(currencyConverter.address, requiredInputForCost)
-		await currencyConverter.buyTokens(
+		await someToken.approve(multiAction.address, requiredInputForCost)
+		await multiAction.convertAndBuy(
 			someToken.address,
 			ideaToken.address,
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
-			userAccount.address
+			userAccount.address,
+			false
 		)
 
 		const someBalanceAfterBuy = await someToken.balanceOf(userAccount.address)
@@ -362,15 +374,15 @@ describe('core/CurrencyConverter', () => {
 		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
 		const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, someToken.address]))[1]
 
-		await ideaToken.approve(currencyConverter.address, tokenBalanceAfterBuy)
+		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
 		expect(
-			currencyConverter.sellTokens(
+			multiAction.sellAndConvert(
 				someToken.address,
 				ideaToken.address,
 				tokenBalanceAfterBuy,
 				outputFromSell.add(BigNumber.from('1')),
 				userAccount.address
 			)
-		).to.be.revertedWith('sellTokens: slippage too high')
+		).to.be.revertedWith('sellAndConvert: slippage too high')
 	})
 })
