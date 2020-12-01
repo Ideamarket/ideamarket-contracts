@@ -26,6 +26,7 @@ contract MultiAction {
 
     /**
      * @param ideaTokenExchange The address of the IdeaTokenExchange contract
+     * @param ideaTokenFactory The address of the IdeaTokenFactory contract
      * @param ideaTokenVault The address of the IdeaTokenVault contract
      * @param dai The address of the Dai token
      * @param uniswapV2Router02 The address of the UniswapV2Router02 contract
@@ -45,6 +46,17 @@ contract MultiAction {
         _weth = IWETH(weth);
     }
 
+    /**
+     * Converts inputCurrency to Dai on Uniswap and buys IdeaTokens
+     *
+     * @param inputCurrency The input currency
+     * @param ideaToken The IdeaToken to buy
+     * @param amount The amount of IdeaTokens to buy
+     * @param fallbackAmount The amount of IdeaTokens to buy if the original amount cannot be bought
+     * @param cost The maximum cost in input currency
+     * @param recipient The recipient of the IdeaTokens
+     * @param lock If true, IdeaTokens will be locked in the IdeaTokenVault
+     */
     function convertAndBuy(address inputCurrency,
                            address ideaToken,
                            uint amount,
@@ -66,6 +78,15 @@ contract MultiAction {
         convertAndBuyInternal(inputCurrency, ideaToken, requiredInput, buyAmount, buyCost, recipient, lock);
     }
 
+    /**
+     * Sells IdeaTokens and converts Dai to outputCurrency
+     *
+     * @param outputCurrency The output currency
+     * @param ideaToken The IdeaToken to sell
+     * @param amount The amount of IdeaTokens to sell
+     * @param minPrice The minimum price to receive for selling in outputCurrency
+     * @param recipient The recipient of the funds
+     */
     function sellAndConvert(address outputCurrency,
                             address ideaToken,
                             uint amount,
@@ -86,6 +107,18 @@ contract MultiAction {
         }
     }
 
+    /**
+     * Converts `inputCurrency` to Dai, adds a token and buys the added token
+     * 
+     * @param tokenName The name for the new IdeaToken
+     * @param marketID The ID of the market where the new token will be added
+     * @param inputCurrency The input currency to use for the purchase of the added token
+     * @param amount The amount of IdeaTokens to buy
+     * @param fallbackAmount The amount of IdeaTokens to buy if the original amount cannot be bought
+     * @param cost The maximum cost in input currency
+     * @param recipient The recipient of the IdeaTokens
+     * @param lock If true, IdeaTokens will be locked in IdeaTokenVault
+     */
     function convertAddAndBuy(string calldata tokenName,
                               uint marketID,
                               address inputCurrency,
@@ -109,6 +142,15 @@ contract MultiAction {
         convertAndBuyInternal(inputCurrency, ideaToken, requiredInput, buyAmount, buyCost, recipient, lock);
     }
 
+    /**
+     * Adds a token and buys it
+     * 
+     * @param tokenName The name for the new IdeaToken
+     * @param marketID The ID of the market where the new token will be added
+     * @param amount The amount of IdeaTokens to buy
+     * @param recipient The recipient of the IdeaTokens
+     * @param lock If true, IdeaTokens will be locked in IdeaTokenVault
+     */
     function addAndBuy(string calldata tokenName, uint marketID, uint amount, address recipient, bool lock) external {
         uint cost = getBuyCostFromZeroSupplyInternal(marketID, amount);
         pullERC20Internal(address(_dai), msg.sender, cost);
@@ -122,6 +164,15 @@ contract MultiAction {
         }
     }
 
+    /**
+     * Buys a IdeaToken and locks it in the IdeaTokenVault
+     *
+     * @param ideaToken The IdeaToken to buy
+     * @param amount The amount of IdeaTokens to buy
+     * @param fallbackAmount The amount of IdeaTokens to buy if the original amount cannot be bought
+     * @param cost The maximum cost in input currency
+     * @param recipient The recipient of the IdeaTokens
+     */
     function buyAndLock(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external {
         uint buyAmount = amount;
         uint buyCost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, amount);
@@ -135,6 +186,17 @@ contract MultiAction {
         buyAndLockInternal(ideaToken, buyAmount, buyCost, recipient);
     }
 
+    /**
+     * Converts `inputCurrency` to Dai on Uniswap and buys an IdeaToken, optionally locking it in the IdeaTokenVault
+     *
+     * @param inputCurrency The input currency to use
+     * @param ideaToken The IdeaToken to buy
+     * @param input The amount of `inputCurrency` to sell
+     * @param amount The amount of IdeaTokens to buy
+     * @param cost The cost in Dai for purchasing `amount` IdeaTokens
+     * @param recipient The recipient of the IdeaTokens
+     * @param lock If true, IdeaTokens will be locked in the IdeaTokenVault
+     */
     function convertAndBuyInternal(address inputCurrency, address ideaToken, uint input, uint amount, uint cost, address recipient, bool lock) internal {
         if(inputCurrency != address(0)) {
             pullERC20Internal(inputCurrency, msg.sender, input);
@@ -148,33 +210,75 @@ contract MultiAction {
             buyInternal(ideaToken, amount, cost, recipient);
         }
 
-        // TODO: Add comment
+        /*
+            If the user has paid with ETH and we had to fallback there will be ETH left.
+            Refund the remaining ETH to the user.
+        */
         if(address(this).balance > 0) {
             msg.sender.transfer(address(this).balance);
         }
     }
 
+    /**
+     * Buys and locks an IdeaToken in the IdeaTokenVault
+     *
+     * @param ideaToken The IdeaToken to buy
+     * @param amount The amount of IdeaTokens to buy
+     * @param cost The cost in Dai for the purchase of `amount` IdeaTokens
+     * @param recipient The recipient of the locked IdeaTokens
+     */
     function buyAndLockInternal(address ideaToken, uint amount, uint cost, address recipient) internal {
         buyInternal(ideaToken, amount, cost, address(this));
         require(IERC20(ideaToken).approve(address(_ideaTokenVault), amount), "buyAndLockInternal: approve failed");
         _ideaTokenVault.lock(ideaToken, amount, recipient);
     }
 
+    /**
+     * Buys an IdeaToken
+     *
+     * @param ideaToken The IdeaToken to buy
+     * @param amount The amount of IdeaTokens to buy
+     * @param cost The cost in Dai for the purchase of `amount` IdeaTokens
+     * @param recipient The recipient of the bought IdeaTokens 
+     */
     function buyInternal(address ideaToken, uint amount, uint cost, address recipient) internal {
         require(_dai.approve(address(_ideaTokenExchange), cost), "buyInternal: approve failed");
         _ideaTokenExchange.buyTokens(ideaToken, amount, amount, cost, recipient);
     }
 
+    /**
+     * Adds a new IdeaToken
+     *
+     * @param tokenName The name of the new token
+     * @param marketID The ID of the market where the new token will be added
+     *
+     * @return The address of the new IdeaToken
+     */
     function addTokenInternal(string memory tokenName, uint marketID) internal returns (address) {
         _ideaTokenFactory.addToken(tokenName, marketID);
         return address(_ideaTokenFactory.getTokenInfo(marketID, _ideaTokenFactory.getTokenIDByName(tokenName, marketID) ).ideaToken);
     }
 
+    /**
+     * Transfers ERC20 from an address to this contract
+     *
+     * @param token The ERC20 token to transfer
+     * @param from The address to transfer from
+     * @param amount The amount of tokens to transfer
+     */
     function pullERC20Internal(address token, address from, uint amount) internal {
         require(IERC20(token).allowance(from, address(this)) >= amount, "pullERC20Internal: not enough allowance");
         require(IERC20(token).transferFrom(from, address(this), amount), "pullERC20Internal: transfer failed");
     }
 
+    /**
+     * Returns the cost for buying IdeaTokens on a given market from zero supply
+     *
+     * @param marketID The ID of the market on which the IdeaToken is listed
+     * @param amount The amount of IdeaTokens to buy
+     *
+     * @return The cost for buying IdeaTokens on a given market from zero supply
+     */
     function getBuyCostFromZeroSupplyInternal(uint marketID, uint amount) internal view returns (uint) {
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(marketID);
         require(marketDetails.exists, "invalid market");
@@ -183,16 +287,42 @@ contract MultiAction {
         return cost;
     }
 
+    /**
+     * Returns the required input to get a given output from an Uniswap swap
+     *
+     * @param inputCurrency The input currency
+     * @param outputCurrency The output currency
+     * @param outputAmount The desired output amount 
+     *
+     * @return The required input to get a `outputAmount` from an Uniswap swap
+     */
     function getInputForOutputInternal(address inputCurrency, address outputCurrency, uint outputAmount) internal view returns (uint) {
         address[] memory path = getPathInternal(inputCurrency, outputCurrency);
         return _uniswapV2Router02.getAmountsIn(outputAmount, path)[0];
     }
 
+    /**
+     * Returns the output for a given input for an Uniswap swap
+     *
+     * @param inputCurrency The input currency
+     * @param outputCurrency The output currency
+     * @param inputAmount The desired input amount 
+     *
+     * @return The output for `inputAmount` for an Uniswap swap
+     */
     function getOutputForInputInternal(address inputCurrency, address outputCurrency, uint inputAmount) internal view returns (uint) {
         address[] memory path = getPathInternal(inputCurrency, outputCurrency);
         return _uniswapV2Router02.getAmountsOut(inputAmount, path)[1];
     }
 
+    /**
+     * Returns the Uniswap path from `inputCurrency` to `outputCurrency`
+     *
+     * @param inputCurrency The input currency
+     * @param outputCurrency The output currency
+     *
+     * @return The Uniswap path from `inputCurrency` to `outputCurrency`
+     */
     function getPathInternal(address inputCurrency, address outputCurrency) internal view returns (address[] memory) {
         address[] memory path = new address[](2);
         if(inputCurrency == address(0)) {
@@ -210,6 +340,14 @@ contract MultiAction {
         return path;
     }
 
+    /**
+     * Converts from `inputCurrency` to `outputCurrency` using Uniswap
+     *
+     * @param inputCurrency The input currency
+     * @param outputCurrency The output currency
+     * @param inputAmount The input amount
+     * @param outputAmount The output amount
+     */
     function convertInternal(address inputCurrency, address outputCurrency, uint inputAmount, uint outputAmount) internal {
         
         IERC20 inputERC20;
