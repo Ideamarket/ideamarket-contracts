@@ -3,10 +3,10 @@ pragma solidity ^0.6.9;
 pragma experimental ABIEncoderV2;
 
 import "../util/Ownable.sol";
-import "./IIdeaTokenExchange.sol";
-import "./IIdeaToken.sol";
-import "./IIdeaTokenFactory.sol";
-import "./IInterestManager.sol";
+import "./interfaces/IIdeaTokenExchange.sol";
+import "./interfaces/IIdeaToken.sol";
+import "./interfaces/IIdeaTokenFactory.sol";
+import "./interfaces/IInterestManager.sol";
 import "../util/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";

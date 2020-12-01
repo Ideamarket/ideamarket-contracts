@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./IIdeaToken.sol";
-import "./nameVerifiers/IIdeaTokenNameVerifier.sol";
+import "../nameVerifiers/IIdeaTokenNameVerifier.sol";
 
 /**
  * @title IIdeaTokenFactory

@@ -4,7 +4,7 @@ pragma solidity ^0.6.9;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../weth/IWETH.sol";
 import "../uniswap/IUniswapV2Router02.sol";
-import "./IIdeaTokenExchange.sol";
+import "./interfaces/IIdeaTokenExchange.sol";
 
 /**
  * @title CurrencyConverter

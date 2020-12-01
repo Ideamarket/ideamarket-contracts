@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.9;
 
-import "../core/IIdeaTokenExchange.sol";
+import "../core/interfaces/IIdeaTokenExchange.sol";
 
 /**
  * @title AuthorizeInterestWithdrawerSpell

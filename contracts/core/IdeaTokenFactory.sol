@@ -5,9 +5,9 @@ pragma experimental ABIEncoderV2;
 import "../util/Initializable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../util/Ownable.sol";
-import "./IIdeaTokenFactory.sol";
+import "./interfaces/IIdeaTokenFactory.sol";
 import "./IdeaToken.sol";
-import "./IIdeaToken.sol";
+import "./interfaces/IIdeaToken.sol";
 import "./nameVerifiers/IIdeaTokenNameVerifier.sol";
 
 /**

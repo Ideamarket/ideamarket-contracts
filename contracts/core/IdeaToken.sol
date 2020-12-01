@@ -3,7 +3,7 @@ pragma solidity ^0.6.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../util/Ownable.sol";
-import "./IIdeaToken.sol";
+import "./interfaces/IIdeaToken.sol";
 
 /**
  * @title IdeaToken
