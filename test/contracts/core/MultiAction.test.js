@@ -331,6 +331,246 @@ describe('core/MultiAction', () => {
 		expect(tokenBalanceAfterSell.eq(BigNumber.from('0'))).to.be.true
 	})
 
+	it('can buy and fallback', async () => {
+		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
+
+		const ideaTokenFallbackAmount = tenPow18.mul(BigNumber.from('24'))
+		const buyFallbackCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenFallbackAmount)
+		const requiredInputForFallbackCost = (await router.getAmountsIn(buyFallbackCost, [weth.address, dai.address]))[0]
+
+		await multiAction.convertAndBuy(
+			zeroAddress,
+			ideaToken.address,
+			ideaTokenAmount,
+			ideaTokenFallbackAmount,
+			requiredInputForFallbackCost.add(BigNumber.from('1000')),
+			userAccount.address,
+			false,
+			{ value: requiredInputForFallbackCost.add(BigNumber.from('1000')) }
+		)
+
+		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterBuy.eq(ideaTokenFallbackAmount)).to.be.true
+	})
+
+	it('can buy and lock ETH', async () => {
+		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
+		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
+		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
+
+		await multiAction.convertAndBuy(
+			zeroAddress,
+			ideaToken.address,
+			ideaTokenAmount,
+			ideaTokenAmount,
+			requiredInputForCost,
+			userAccount.address,
+			true,
+			{ value: requiredInputForCost }
+		)
+
+		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
+		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(ideaTokenAmount)).to.be.true
+	})
+
+	it('can buy and lock DAI', async () => {
+		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
+		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
+		await dai.mint(userAccount.address, buyCost)
+		await dai.approve(multiAction.address, buyCost)
+
+		await multiAction.buyAndLock(
+			ideaToken.address,
+			ideaTokenAmount,
+			ideaTokenAmount,
+			buyCost,
+			userAccount.address
+		)
+
+		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
+		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(ideaTokenAmount)).to.be.true
+	})
+
+	it('can buy and lock DAI with fallback', async () => {
+		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
+
+		const ideaTokenFallbackAmount = tenPow18.mul(BigNumber.from('24'))
+		const buyFallbackCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenFallbackAmount)
+
+		await dai.mint(userAccount.address, buyFallbackCost)
+		await dai.approve(multiAction.address, buyFallbackCost)
+
+		await multiAction.buyAndLock(
+			ideaToken.address,
+			ideaTokenAmount,
+			ideaTokenFallbackAmount,
+			buyFallbackCost,
+			userAccount.address
+		)
+
+		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
+		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(ideaTokenFallbackAmount)).to.be.true
+	})
+
+	it('can add and buy', async () => {
+		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
+		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
+		const buyCost = (await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount))[0]
+
+		await dai.mint(userAccount.address, buyCost)
+		await dai.approve(multiAction.address, buyCost)
+
+		const newTokenName = 'sometoken.com'
+		await multiAction.addAndBuy(newTokenName, marketID, ideaTokenAmount, userAccount.address, false)
+
+		const id = await ideaTokenFactory.getTokenIDByName(newTokenName, marketID)
+		expect(id.eq(BigNumber.from('2'))).to.be.true
+
+		const newTokenAddress = (await ideaTokenFactory.getTokenInfo(marketID, id)).ideaToken
+		const newIdeaToken = new ethers.Contract(
+			newTokenAddress,
+			IdeaToken.interface,
+			IdeaToken.signer
+		)
+
+		const tokenBalanceAfterBuy = await newIdeaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterBuy.eq(ideaTokenAmount)).to.be.true
+	})
+
+	it('can add and buy and lock', async () => {
+		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
+		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
+		const buyCost = (await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount))[0]
+
+		await dai.mint(userAccount.address, buyCost)
+		await dai.approve(multiAction.address, buyCost)
+
+		const newTokenName = 'sometoken.com'
+		await multiAction.addAndBuy(newTokenName, marketID, ideaTokenAmount, userAccount.address, true)
+
+		const id = await ideaTokenFactory.getTokenIDByName(newTokenName, marketID)
+		expect(id.eq(BigNumber.from('2'))).to.be.true
+
+		const newTokenAddress = (await ideaTokenFactory.getTokenInfo(marketID, id)).ideaToken
+		const newIdeaToken = new ethers.Contract(
+			newTokenAddress,
+			IdeaToken.interface,
+			IdeaToken.signer
+		)
+
+		const tokenBalanceAfterBuy = await newIdeaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
+		expect((await ideaTokenVault.getLockedAmount(newIdeaToken.address, userAccount.address)).eq(ideaTokenAmount)).to.be.true
+	})
+
+	it('can convert add and buy', async () => {
+		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
+		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
+		const buyCost = (await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount))[0]
+		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
+
+		const newTokenName = 'sometoken.com'
+
+		await multiAction.convertAddAndBuy(
+			newTokenName,
+			marketID,
+			zeroAddress,
+			ideaTokenAmount,
+			ideaTokenAmount,
+			requiredInputForCost,
+			userAccount.address,
+			false,
+			{ value: requiredInputForCost }
+		)
+
+		const id = await ideaTokenFactory.getTokenIDByName(newTokenName, marketID)
+		expect(id.eq(BigNumber.from('2'))).to.be.true
+
+		const newTokenAddress = (await ideaTokenFactory.getTokenInfo(marketID, id)).ideaToken
+		const newIdeaToken = new ethers.Contract(
+			newTokenAddress,
+			IdeaToken.interface,
+			IdeaToken.signer
+		)
+
+		const tokenBalanceAfterBuy = await newIdeaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterBuy.eq(ideaTokenAmount)).to.be.true
+	})
+
+	it('can convert add and buy and fallback', async () => {
+		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
+
+		const ideaTokenFallbackAmount = tenPow18.mul(BigNumber.from('24'))
+		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
+		const buyFallbackCost = (await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenFallbackAmount))[0]
+		const requiredInputForFallbackCost = (await router.getAmountsIn(buyFallbackCost, [weth.address, dai.address]))[0]
+
+		const newTokenName = 'sometoken.com'
+
+		await multiAction.convertAddAndBuy(
+			newTokenName,
+			marketID,
+			zeroAddress,
+			ideaTokenAmount,
+			ideaTokenFallbackAmount,
+			requiredInputForFallbackCost,
+			userAccount.address,
+			false,
+			{ value: requiredInputForFallbackCost }
+		)
+
+		const id = await ideaTokenFactory.getTokenIDByName(newTokenName, marketID)
+		expect(id.eq(BigNumber.from('2'))).to.be.true
+
+		const newTokenAddress = (await ideaTokenFactory.getTokenInfo(marketID, id)).ideaToken
+		const newIdeaToken = new ethers.Contract(
+			newTokenAddress,
+			IdeaToken.interface,
+			IdeaToken.signer
+		)
+
+		const tokenBalanceAfterBuy = await newIdeaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterBuy.eq(ideaTokenFallbackAmount)).to.be.true
+	})
+
+	it('can convert add and buy and lock', async () => {
+		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
+		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
+		const buyCost = (await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount))[0]
+		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
+
+		const newTokenName = 'sometoken.com'
+
+		await multiAction.convertAddAndBuy(
+			newTokenName,
+			marketID,
+			zeroAddress,
+			ideaTokenAmount,
+			ideaTokenAmount,
+			requiredInputForCost,
+			userAccount.address,
+			true,
+			{ value: requiredInputForCost }
+		)
+
+		const id = await ideaTokenFactory.getTokenIDByName(newTokenName, marketID)
+		expect(id.eq(BigNumber.from('2'))).to.be.true
+
+		const newTokenAddress = (await ideaTokenFactory.getTokenInfo(marketID, id)).ideaToken
+		const newIdeaToken = new ethers.Contract(
+			newTokenAddress,
+			IdeaToken.interface,
+			IdeaToken.signer
+		)
+
+		const tokenBalanceAfterBuy = await newIdeaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
+		expect((await ideaTokenVault.getLockedAmount(newIdeaToken.address, userAccount.address)).eq(ideaTokenAmount)).to.be.true
+	})
+
 	it('fail buy cost too high', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
@@ -384,5 +624,12 @@ describe('core/MultiAction', () => {
 				userAccount.address
 			)
 		).to.be.revertedWith('sellAndConvert: slippage too high')
+	})
+
+	it('fail directly send ETH', async () => {
+		expect(userAccount.sendTransaction({
+			to: multiAction.address,
+			value: tenPow18
+		})).to.be.revertedWith('')
 	})
 })

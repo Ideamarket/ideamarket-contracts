@@ -89,11 +89,11 @@ contract MultiAction {
     function convertAddAndBuy(string calldata tokenName,
                               uint marketID,
                               address inputCurrency,
-                              uint cost,
                               uint amount,
                               uint fallbackAmount,
+                              uint cost,
                               address recipient,
-                              bool lock) external {
+                              bool lock) external payable {
         uint buyAmount = amount;
         uint buyCost = getBuyCostFromZeroSupplyInternal(marketID, buyAmount);
         uint requiredInput = getInputForOutputInternal(inputCurrency, address(_dai), buyCost);
