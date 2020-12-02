@@ -187,9 +187,28 @@ async function main() {
 		ideaTokenFactoryProxyAddress = loadDeployedAddress(networkName, 'ideaTokenFactory')
 	}
 
-	let twitterHandleNameVerifierAddress
+	let ideaTokenVaultProxyAddress
 	if (STAGE <= 6) {
-		console.log('6. Deploy TwitterHandleNameVerifier')
+		console.log('6. Deploy IdeaTokenVault')
+		console.log('==============================================')
+		const [ideaTokenVaultProxy, ideaTokenVaultLogic] = await deployProxyContract(
+			'IdeaTokenVault',
+			proxyAdminAddress,
+			ideaTokenFactoryProxyAddress
+		)
+
+		ideaTokenVaultProxyAddress = ideaTokenVaultProxy.address
+		saveDeployedAddress(networkName, 'ideaTokenVault', ideaTokenVaultProxyAddress)
+		saveDeployedABI(networkName, 'ideaTokenVault', artifacts.readArtifactSync('IdeaTokenVault').abi)
+		saveDeployedAddress(networkName, 'ideaTokenVaultLogic', ideaTokenVaultLogic.address)
+		console.log('')
+	} else {
+		ideaTokenVaultProxyAddress = loadDeployedAddress(networkName, 'ideaTokenVault')
+	}
+
+	let twitterHandleNameVerifierAddress
+	if (STAGE <= 7) {
+		console.log('7. Deploy TwitterHandleNameVerifier')
 		console.log('==============================================')
 		const twitterHandleNameVerifier = await deployContract('TwitterHandleNameVerifier')
 
@@ -205,8 +224,8 @@ async function main() {
 		twitterHandleNameVerifierAddress = loadDeployedAddress(networkName, 'twitterHandleNameVerifier')
 	}
 
-	if (STAGE <= 7) {
-		console.log('7. List Twitter market')
+	if (STAGE <= 8) {
+		console.log('8. List Twitter market')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -226,8 +245,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 8) {
-		console.log('8. Set IdeaTokenFactory owner')
+	if (STAGE <= 9) {
+		console.log('9. Set IdeaTokenFactory owner')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -238,8 +257,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 9) {
-		console.log('9. Set InterestManagerCompound owner')
+	if (STAGE <= 10) {
+		console.log('10. Set InterestManagerCompound owner')
 		console.log('==============================================')
 		const interestManagerCompound = new ethers.Contract(
 			interestManagerCompoundProxyAddress,
@@ -250,8 +269,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 10) {
-		console.log('10. Set IdeaTokenFactory address')
+	if (STAGE <= 11) {
+		console.log('11. Set IdeaTokenFactory address')
 		console.log('==============================================')
 		const ideaTokenExchange = new ethers.Contract(
 			ideaTokenExchangeProxyAddress,
@@ -264,8 +283,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 11) {
-		console.log('11. Set IdeaTokenExchange owner')
+	if (STAGE <= 12) {
+		console.log('12. Set IdeaTokenExchange owner')
 		console.log('==============================================')
 		const ideaTokenExchange = new ethers.Contract(
 			ideaTokenExchangeProxyAddress,
@@ -276,23 +295,25 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 12) {
-		console.log('12. Deploy CurrencyConverter')
+	if (STAGE <= 13) {
+		console.log('13. Deploy MultiAction')
 		console.log('==============================================')
-		const currencyConverter = await deployContract(
-			'CurrencyConverter',
+		const multiAction = await deployContract(
+			'MultiAction',
 			ideaTokenExchangeProxyAddress,
+			ideaTokenFactoryProxyAddress,
+			ideaTokenVaultProxyAddress,
 			externalContractAdresses.dai,
 			externalContractAdresses.uniswapV2Router02,
 			externalContractAdresses.weth
 		)
-		saveDeployedAddress(networkName, 'currencyConverter', currencyConverter.address)
-		saveDeployedABI(networkName, 'currencyConverter', artifacts.readArtifactSync('CurrencyConverter').abi)
+		saveDeployedAddress(networkName, 'multiAction', multiAction.address)
+		saveDeployedABI(networkName, 'multiAction', artifacts.readArtifactSync('MultiAction').abi)
 		console.log('')
 	}
 
-	if (STAGE <= 13) {
-		console.log('13. Deploy AddMarketSpell')
+	if (STAGE <= 14) {
+		console.log('14. Deploy AddMarketSpell')
 		console.log('==============================================')
 		const addMarketSpell = await deployContract('AddMarketSpell')
 		saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
@@ -300,8 +321,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 14) {
-		console.log('14. Deploy AuthorizeInterestWithdrawerSpell')
+	if (STAGE <= 15) {
+		console.log('15. Deploy AuthorizeInterestWithdrawerSpell')
 		console.log('==============================================')
 		const authorizeInterestWithdrawerSpell = await deployContract('AuthorizeInterestWithdrawerSpell')
 		saveDeployedAddress(networkName, 'authorizeInterestWithdrawerSpell', authorizeInterestWithdrawerSpell.address)
@@ -313,8 +334,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 15) {
-		console.log('15. Deploy AuthorizePlatformFeeWithdrawerSpell')
+	if (STAGE <= 16) {
+		console.log('16. Deploy AuthorizePlatformFeeWithdrawerSpell')
 		console.log('==============================================')
 		const authorizePlatformFeeWithdrawerSpell = await deployContract('AuthorizePlatformFeeWithdrawerSpell')
 		saveDeployedAddress(
@@ -330,8 +351,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 16) {
-		console.log('16. Deploy SetTradingFeeSpell')
+	if (STAGE <= 17) {
+		console.log('17. Deploy SetTradingFeeSpell')
 		console.log('==============================================')
 		const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
 		saveDeployedAddress(networkName, 'setTradingFeeSpell', setTradingFeeSpell.address)
@@ -339,8 +360,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 17) {
-		console.log('17. Deploy SetPlatformFeeSpell')
+	if (STAGE <= 18) {
+		console.log('18. Deploy SetPlatformFeeSpell')
 		console.log('==============================================')
 		const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
 		saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
