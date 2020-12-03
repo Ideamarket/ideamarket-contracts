@@ -83,6 +83,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken);
         require(marketDetails.exists, "sellTokens: token does not exist");
+        uint marketID = marketDetails.id;
 
         CostAndPriceAmounts memory amounts = getPricesForSellingTokens(marketDetails, IERC20(ideaToken).totalSupply(), amount, _tokenFeeKillswitch[ideaToken]);
 
@@ -92,19 +93,28 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         IIdeaToken(ideaToken).burn(msg.sender, amount);
 
         _interestManager.accrueInterest();
+
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
+        uint tradingFeeInvested;
+        uint platformFeeInvested;
+        uint invested;
+        uint daiInToken;
         {
         uint totalRedeemed = _interestManager.redeem(address(this), amounts.total);
         uint tradingFeeRedeemed = _interestManager.underlyingToInvestmentToken(amounts.tradingFee);
         uint platformFeeRedeemed = _interestManager.underlyingToInvestmentToken(amounts.platformFee);
 
-        exchangeInfo.invested = exchangeInfo.invested.sub(totalRedeemed.add(tradingFeeRedeemed).add(platformFeeRedeemed));
-        _tradingFeeInvested = _tradingFeeInvested.add(tradingFeeRedeemed);
-        _platformFeeInvested[marketDetails.id] = _platformFeeInvested[marketDetails.id].add(platformFeeRedeemed);
-        exchangeInfo.daiInToken = exchangeInfo.daiInToken.sub(amounts.raw);
+        invested = exchangeInfo.invested.sub(totalRedeemed.add(tradingFeeRedeemed).add(platformFeeRedeemed));
+        exchangeInfo.invested = invested;
+        tradingFeeInvested = _tradingFeeInvested.add(tradingFeeRedeemed);
+        _tradingFeeInvested = tradingFeeInvested;
+        platformFeeInvested = _platformFeeInvested[marketID].add(platformFeeRedeemed);
+        _platformFeeInvested[marketID] = platformFeeInvested;
+        daiInToken = exchangeInfo.daiInToken.sub(amounts.raw);
+        exchangeInfo.daiInToken = daiInToken;
         }
 
-        emit InvestedState(marketDetails.id, ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested, _tradingFeeInvested, _platformFeeInvested[marketDetails.id], amounts.raw);
+        emit InvestedState(marketID, ideaToken, daiInToken, invested, tradingFeeInvested, platformFeeInvested, amounts.raw);
         _dai.transfer(recipient, amounts.total);
     }
 
@@ -138,8 +148,6 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                                                     marketDetails.hatchTokens,
                                                     supply,
                                                     amount);
-
-        
 
         uint tradingFee = 0;
         uint platformFee = 0;
@@ -234,13 +242,16 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _interestManager.accrueInterest();
         _interestManager.invest(amounts.total);
 
+
         TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
         exchangeInfo.invested = exchangeInfo.invested.add(_interestManager.underlyingToInvestmentToken(amounts.raw));
-        _tradingFeeInvested = _tradingFeeInvested.add(_interestManager.underlyingToInvestmentToken(amounts.tradingFee));
-        _platformFeeInvested[marketID] = _platformFeeInvested[marketID].add(_interestManager.underlyingToInvestmentToken(amounts.platformFee));
+        uint tradingFeeInvested = _tradingFeeInvested.add(_interestManager.underlyingToInvestmentToken(amounts.tradingFee));
+        _tradingFeeInvested = tradingFeeInvested;
+        uint platformFeeInvested = _platformFeeInvested[marketID].add(_interestManager.underlyingToInvestmentToken(amounts.platformFee));
+        _platformFeeInvested[marketID] = platformFeeInvested;
         exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(amounts.raw);
     
-        emit InvestedState(marketID, ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested, _tradingFeeInvested, _platformFeeInvested[marketID], amounts.total);
+        emit InvestedState(marketID, ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested, tradingFeeInvested, platformFeeInvested, amounts.total);
         IIdeaToken(ideaToken).mint(recipient, actualAmount);
     }
 
