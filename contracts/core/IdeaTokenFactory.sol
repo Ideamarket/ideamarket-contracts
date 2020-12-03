@@ -199,6 +199,10 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
         return _markets[_marketIDs[marketName]].marketDetails;
     }
 
+    function getMarketDetailsByTokenAddress(address ideaToken) external view override returns (MarketDetails memory) {
+        return _markets[_tokenIDPairs[ideaToken].marketID].marketDetails;
+    }
+
     /**
      * Returns the amount of existing markets
      *

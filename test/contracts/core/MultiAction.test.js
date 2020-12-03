@@ -425,8 +425,8 @@ describe('core/MultiAction', () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
 		const buyCost = (
-			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount)
-		)[0]
+			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount, false)
+		).total
 
 		await dai.mint(userAccount.address, buyCost)
 		await dai.approve(multiAction.address, buyCost)
@@ -448,8 +448,8 @@ describe('core/MultiAction', () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
 		const buyCost = (
-			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount)
-		)[0]
+			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount, false)
+		).total
 
 		await dai.mint(userAccount.address, buyCost)
 		await dai.approve(multiAction.address, buyCost)
@@ -473,8 +473,8 @@ describe('core/MultiAction', () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
 		const buyCost = (
-			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount)
-		)[0]
+			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount, false)
+		).total
 		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
 
 		const newTokenName = 'sometoken.com'
@@ -507,8 +507,13 @@ describe('core/MultiAction', () => {
 		const ideaTokenFallbackAmount = tenPow18.mul(BigNumber.from('24'))
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
 		const buyFallbackCost = (
-			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenFallbackAmount)
-		)[0]
+			await ideaTokenExchange.getCostsForBuyingTokens(
+				marketDetails,
+				BigNumber.from('0'),
+				ideaTokenFallbackAmount,
+				false
+			)
+		).total
 		const requiredInputForFallbackCost = (
 			await router.getAmountsIn(buyFallbackCost, [weth.address, dai.address])
 		)[0]
@@ -541,8 +546,8 @@ describe('core/MultiAction', () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
 		const buyCost = (
-			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount)
-		)[0]
+			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount, false)
+		).total
 		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
 
 		const newTokenName = 'sometoken.com'

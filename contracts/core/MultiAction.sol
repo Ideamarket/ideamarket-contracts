@@ -283,8 +283,7 @@ contract MultiAction {
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(marketID);
         require(marketDetails.exists, "invalid market");
 
-        (uint cost, , , ) = _ideaTokenExchange.getCostsForBuyingTokens(marketDetails, 0, amount);
-        return cost;
+        return _ideaTokenExchange.getCostsForBuyingTokens(marketDetails, 0, amount, false).total;
     }
 
     /**

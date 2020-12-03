@@ -671,6 +671,87 @@ describe('core/IdeaTokenExchange', () => {
 		await ideaTokenExchange.connect(adminAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
 	})
 
+	it('admin can disable fees for specific token', async () => {
+		expect(await ideaTokenExchange.isTokenFeeDisabled(ideaToken.address)).to.be.false
+		await ideaTokenExchange.connect(adminAccount).setTokenFeeKillswitch(ideaToken.address, true)
+		expect(await ideaTokenExchange.isTokenFeeDisabled(ideaToken.address)).to.be.true
+	})
+
+	it('fail user cannot disable fees for specific token', async () => {
+		await expect(ideaTokenExchange.setTokenFeeKillswitch(ideaToken.address, true)).to.be.revertedWith(
+			'Ownable: onlyOwner'
+		)
+	})
+
+	it('correct costs when buying with fee disabled', async () => {
+		const amount = tenPow18.mul(BigNumber.from('2000'))
+		const marketDetails = await ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken.address)
+
+		const buyAmountsWithFees = await ideaTokenExchange.getCostsForBuyingTokens(
+			marketDetails,
+			BigNumber.from('0'),
+			amount,
+			false
+		)
+		const buyAmountsWithoutFees = await ideaTokenExchange.getCostsForBuyingTokens(
+			marketDetails,
+			BigNumber.from('0'),
+			amount,
+			true
+		)
+
+		const expectedTotalWithFee = await getCostForBuyingTokens(ideaToken, amount)
+		const expectedTradingFeeWithFee = await getTradingFeeForBuying(ideaToken, amount)
+		const expectedPlatformFeeWithFee = await getPlatformFeeForBuying(ideaToken, amount)
+		const expectedRawWithFee = expectedTotalWithFee.sub(expectedTradingFeeWithFee).sub(expectedPlatformFeeWithFee)
+		expect(buyAmountsWithFees.total.eq(expectedTotalWithFee)).to.be.true
+		expect(buyAmountsWithFees.tradingFee.eq(expectedTradingFeeWithFee)).to.be.true
+		expect(buyAmountsWithFees.platformFee.eq(expectedPlatformFeeWithFee)).to.be.true
+		expect(buyAmountsWithFees.raw.eq(expectedRawWithFee)).to.be.true
+
+		expect(buyAmountsWithoutFees.tradingFee.eq(BigNumber.from('0'))).to.be.true
+		expect(buyAmountsWithoutFees.platformFee.eq(BigNumber.from('0'))).to.be.true
+		expect(buyAmountsWithoutFees.total.eq(expectedRawWithFee)).to.be.true
+		expect(buyAmountsWithoutFees.total.eq(buyAmountsWithoutFees.raw)).to.be.true
+	})
+
+	it('correct prices when selling with fee disabled', async () => {
+		const amount = tenPow18.mul(BigNumber.from('2000'))
+		const costToBuy = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+		await dai.mint(userAccount.address, costToBuy)
+		await dai.approve(ideaTokenExchange.address, costToBuy)
+		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, costToBuy, userAccount.address)
+
+		const marketDetails = await ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken.address)
+
+		const sellAmountsWithFees = await ideaTokenExchange.getPricesForSellingTokens(
+			marketDetails,
+			amount,
+			amount,
+			false
+		)
+		const sellAmountsWithoutFees = await ideaTokenExchange.getPricesForSellingTokens(
+			marketDetails,
+			amount,
+			amount,
+			true
+		)
+
+		const expectedTotalWithFee = await getPriceForSellingTokens(ideaToken, amount)
+		const expectedTradingFeeWithFee = await getTradingFeeForSelling(ideaToken, amount)
+		const expectedPlatformFeeWithFee = await getPlatformFeeForSelling(ideaToken, amount)
+		const expectedRawWithFee = expectedTotalWithFee.add(expectedTradingFeeWithFee).add(expectedPlatformFeeWithFee)
+		expect(sellAmountsWithFees.total.eq(expectedTotalWithFee)).to.be.true
+		expect(sellAmountsWithFees.tradingFee.eq(expectedTradingFeeWithFee)).to.be.true
+		expect(sellAmountsWithFees.platformFee.eq(expectedPlatformFeeWithFee)).to.be.true
+		expect(sellAmountsWithFees.raw.eq(expectedRawWithFee)).to.be.true
+
+		expect(sellAmountsWithoutFees.tradingFee.eq(BigNumber.from('0'))).to.be.true
+		expect(sellAmountsWithoutFees.platformFee.eq(BigNumber.from('0'))).to.be.true
+		expect(sellAmountsWithoutFees.total.eq(expectedRawWithFee)).to.be.true
+		expect(sellAmountsWithoutFees.total.eq(sellAmountsWithoutFees.raw)).to.be.true
+	})
+
 	function getRawCostForBuyingTokens(baseCost, priceRise, hatchTokens, supply, amount) {
 		let hatchCost = BigNumber.from('0')
 		let updatedAmount = BigNumber.from(amount.toString())
