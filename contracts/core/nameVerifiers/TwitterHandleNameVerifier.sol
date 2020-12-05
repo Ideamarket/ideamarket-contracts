@@ -7,7 +7,7 @@ import "./IIdeaTokenNameVerifier.sol";
  * @title TwitterHandleNameVerifier
  * @author Alexander Schlindwein
  *
- * Verifies a string to be a Twitter handle: @ followed by 1-15 letters or numbers including "_".
+ * Verifies a string to be a Twitter handle: @ followed by 1-15 letters or numbers including "_". All lower-case.
  */
 contract TwitterHandleNameVerifier is IIdeaTokenNameVerifier {
     /**
@@ -30,7 +30,6 @@ contract TwitterHandleNameVerifier is IIdeaTokenNameVerifier {
         for(uint i = 1; i < b.length; i++) {
             bytes1 char = b[i];
             if (!(char >= 0x30 && char <= 0x39) && //9-0
-                !(char >= 0x41 && char <= 0x5A) && //A-Z
                 !(char >= 0x61 && char <= 0x7A) && //a-z
                 !(char == 0x5F)) { //_
                 

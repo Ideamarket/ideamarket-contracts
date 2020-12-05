@@ -35,11 +35,11 @@ describe('nameVerifiers/TwitterHandleNameVerifier', () => {
 	})
 
 	it('@ABCDEFGHIJKLMNO', async () => {
-		expect(await nameVerifier.verifyTokenName('@ABCDEFGHIJKLMNO')).to.be.true
+		expect(await nameVerifier.verifyTokenName('@ABCDEFGHIJKLMNO')).to.be.false
 	})
 
 	it('@PQRSTUVWXYZ', async () => {
-		expect(await nameVerifier.verifyTokenName('@PQRSTUVWXYZ')).to.be.true
+		expect(await nameVerifier.verifyTokenName('@PQRSTUVWXYZ')).to.be.false
 	})
 
 	it('@123456789_', async () => {
@@ -62,7 +62,6 @@ describe('nameVerifiers/TwitterHandleNameVerifier', () => {
 		for (let i = 0; i < 255; i++) {
 			if (
 				!(i >= 0x30 && i <= 0x39) && //9-0
-				!(i >= 0x41 && i <= 0x5a) && //A-Z
 				!(i >= 0x61 && i <= 0x7a) && //a-z
 				!(i === 0x5f)
 			) {
@@ -77,7 +76,6 @@ describe('nameVerifiers/TwitterHandleNameVerifier', () => {
 		for (let i = 0; i < 255; i++) {
 			if (
 				(i >= 0x30 && i <= 0x39) || //9-0
-				(i >= 0x41 && i <= 0x5a) || //A-Z
 				(i >= 0x61 && i <= 0x7a) || //a-z
 				i === 0x5f
 			) {
