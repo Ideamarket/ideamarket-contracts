@@ -368,6 +368,15 @@ async function main() {
 		saveDeployedABI(networkName, 'setPlatformFeeSpell', artifacts.readArtifactSync('SetPlatformFeeSpell').abi)
 		console.log('')
 	}
+
+	if (STAGE <= 19) {
+		console.log('19. Deploy ChangeLogicSpell')
+		console.log('==============================================')
+		const changeLogicSpell = await deployContract('ChangeLogicSpell')
+		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
+		saveDeployedABI(networkName, 'changeLogicSpell', artifacts.readArtifactSync('ChangeLogicSpell').abi)
+		console.log('')
+	}
 }
 
 async function deployProxyContract(name, admin, ...params) {
