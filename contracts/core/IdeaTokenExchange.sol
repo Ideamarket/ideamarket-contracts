@@ -37,11 +37,11 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     mapping(address => TokenExchangeInfo) _tokensExchangeInfo;
     mapping(address => address) _authorizedInterestWithdrawers;
 
-    mapping(address => bool) _tokenFeeKillswitch;
-
     IIdeaTokenFactory _ideaTokenFactory;
     IInterestManager _interestManager;
     IERC20 _dai;
+
+    mapping(address => bool) _tokenFeeKillswitch;
 
     event NewInterestWithdrawer(address ideaToken, address withdrawer);
     event NewPlatformFeeWithdrawer(uint marketID, address withdrawer);
