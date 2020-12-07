@@ -5,14 +5,17 @@
     "interestManager": "0x88C0FAbC6dC950b19F4DbFEba218A9CdcEE1E690",
     "interestManagerLogic": "0xfF9c78191250E7422E4d73935F1c4E3800349fD9",
     "ideaTokenExchange": "0x358d193f7ea560Fb0153dD285d63Ea25e068bf9A",
-    "ideaTokenExchangeLogic": "0x6DC0F8C5b2187873334A16BA760FCFb50D912252",
+    "ideaTokenExchangeLogic": "0x0FAa9eEA9f2734D7D99b55a1Cb7aBb1eB1b8839e",
     "ideaTokenFactory": "0x0FC166e762bDb1FAFf786c6123192D5c17be2f5A",
-    "ideaTokenFactoryLogic": "0x78F26E8A90DB3fe3fD2585d6E001781D4F7bE4de",
+    "ideaTokenFactoryLogic": "0x0Ca8135990545aC28505E03877f732FdE7aAE713",
     "twitterHandleNameVerifier": "0x49DFcF4C7fc2594E88463fAF9467509113dC0541",
-    "currencyConverter": "0x33359ae2C62cf3DFBC7eE3ED250210788896b10F",
     "addMarketSpell": "0xA97D5892B9bc356fD6C092d996dAd2dc42F69FBB",
     "authorizeInterestWithdrawerSpell": "0x3A744e5d00488F96DCF5a58Fc39B8F047CBc0ba2",
     "authorizePlatformFeeWithdrawerSpell": "0x0Bc59eB1F03bCb7B1B3d70dE0238C37389d2eE86",
     "setTradingFeeSpell": "0xF89aA8389fAdDFDF8D8A8cF616AbA8599c5462fb",
-    "setPlatformFeeSpell": "0xaC7F03962383bD73573C11F7e2942f5eFd05AFAa"
+    "setPlatformFeeSpell": "0xaC7F03962383bD73573C11F7e2942f5eFd05AFAa",
+    "changeLogicSpell": "0x7caC2A65C8C3bf881BAD8370705c4E0A6ECA2d08",
+    "ideaTokenVault": "0x99a26270b11e28912b2C8E03D94BE6Dc3ea05329",
+    "ideaTokenVaultLogic": "0x61EE7e0BEDf56a4f1E38746a86edCfFDe6b501cB",
+    "multiAction": "0x7e519280d3C6150357881597ef0089C89b2Fc398"
 }
