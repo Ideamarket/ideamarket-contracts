@@ -27,8 +27,6 @@ describe('core/IdeaTokenVault', () => {
 	let adminAccount
 	let authorizerAccount
 	let tradingFeeAccount
-	let interestReceiverAccount
-	let platformFeeReceiverAccount
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
 
 	let domainNoSubdomainNameVerifier
