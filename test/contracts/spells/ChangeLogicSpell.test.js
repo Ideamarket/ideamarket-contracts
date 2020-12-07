@@ -47,7 +47,7 @@ describe('spells/ChangeLogicSpell', () => {
 		await proxy.deployed()
 	})
 
-	it.only('can change logic', async () => {
+	it('can change logic', async () => {
 		const newLogic = await IdeaTokenFactory.deploy()
 		await newLogic.deployed()
 

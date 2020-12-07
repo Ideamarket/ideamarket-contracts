@@ -54,16 +54,16 @@ contract MultiAction {
      * @param amount The amount of IdeaTokens to buy
      * @param fallbackAmount The amount of IdeaTokens to buy if the original amount cannot be bought
      * @param cost The maximum cost in input currency
+     * @param lockDuration The duration in seconds to lock the tokens
      * @param recipient The recipient of the IdeaTokens
-     * @param lock If true, IdeaTokens will be locked in the IdeaTokenVault
      */
     function convertAndBuy(address inputCurrency,
                            address ideaToken,
                            uint amount,
                            uint fallbackAmount,
                            uint cost,
-                           address recipient,
-                           bool lock) external payable {
+                           uint lockDuration,
+                           address recipient) external payable {
         uint buyAmount = amount;
         uint buyCost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, amount);
         uint requiredInput = getInputForOutputInternal(inputCurrency, address(_dai), buyCost);
@@ -75,7 +75,7 @@ contract MultiAction {
             buyAmount = fallbackAmount;
         }
 
-        convertAndBuyInternal(inputCurrency, ideaToken, requiredInput, buyAmount, buyCost, recipient, lock);
+        convertAndBuyInternal(inputCurrency, ideaToken, requiredInput, buyAmount, buyCost, lockDuration, recipient);
     }
 
     /**
@@ -116,8 +116,8 @@ contract MultiAction {
      * @param amount The amount of IdeaTokens to buy
      * @param fallbackAmount The amount of IdeaTokens to buy if the original amount cannot be bought
      * @param cost The maximum cost in input currency
+     * @param lockDuration The duration in seconds to lock the tokens
      * @param recipient The recipient of the IdeaTokens
-     * @param lock If true, IdeaTokens will be locked in IdeaTokenVault
      */
     function convertAddAndBuy(string calldata tokenName,
                               uint marketID,
@@ -125,8 +125,8 @@ contract MultiAction {
                               uint amount,
                               uint fallbackAmount,
                               uint cost,
-                              address recipient,
-                              bool lock) external payable {
+                              uint lockDuration,
+                              address recipient) external payable {
         uint buyAmount = amount;
         uint buyCost = getBuyCostFromZeroSupplyInternal(marketID, buyAmount);
         uint requiredInput = getInputForOutputInternal(inputCurrency, address(_dai), buyCost);
@@ -139,7 +139,7 @@ contract MultiAction {
         }
 
         address ideaToken = addTokenInternal(tokenName, marketID);
-        convertAndBuyInternal(inputCurrency, ideaToken, requiredInput, buyAmount, buyCost, recipient, lock);
+        convertAndBuyInternal(inputCurrency, ideaToken, requiredInput, buyAmount, buyCost, lockDuration, recipient);
     }
 
     /**
@@ -148,17 +148,17 @@ contract MultiAction {
      * @param tokenName The name for the new IdeaToken
      * @param marketID The ID of the market where the new token will be added
      * @param amount The amount of IdeaTokens to buy
+     * @param lockDuration The duration in seconds to lock the tokens
      * @param recipient The recipient of the IdeaTokens
-     * @param lock If true, IdeaTokens will be locked in IdeaTokenVault
      */
-    function addAndBuy(string calldata tokenName, uint marketID, uint amount, address recipient, bool lock) external {
+    function addAndBuy(string calldata tokenName, uint marketID, uint amount, uint lockDuration, address recipient) external {
         uint cost = getBuyCostFromZeroSupplyInternal(marketID, amount);
         pullERC20Internal(address(_dai), msg.sender, cost);
 
         address ideaToken = addTokenInternal(tokenName, marketID);
         
-        if(lock) {
-            buyAndLockInternal(ideaToken, amount, cost, recipient);
+        if(lockDuration > 0) {
+            buyAndLockInternal(ideaToken, amount, cost, lockDuration, recipient);
         } else {
             buyInternal(ideaToken, amount, cost, recipient);
         }
@@ -173,7 +173,7 @@ contract MultiAction {
      * @param cost The maximum cost in input currency
      * @param recipient The recipient of the IdeaTokens
      */
-    function buyAndLock(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external {
+    function buyAndLock(address ideaToken, uint amount, uint fallbackAmount, uint cost, uint lockDuration, address recipient) external {
         uint buyAmount = amount;
         uint buyCost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, amount);
         if(buyCost > cost) {
@@ -183,7 +183,7 @@ contract MultiAction {
         }
 
         pullERC20Internal(address(_dai), msg.sender, buyCost);
-        buyAndLockInternal(ideaToken, buyAmount, buyCost, recipient);
+        buyAndLockInternal(ideaToken, buyAmount, buyCost, lockDuration, recipient);
     }
 
     /**
@@ -194,18 +194,18 @@ contract MultiAction {
      * @param input The amount of `inputCurrency` to sell
      * @param amount The amount of IdeaTokens to buy
      * @param cost The cost in Dai for purchasing `amount` IdeaTokens
+     * @param lockDuration The duration in seconds to lock the tokens
      * @param recipient The recipient of the IdeaTokens
-     * @param lock If true, IdeaTokens will be locked in the IdeaTokenVault
      */
-    function convertAndBuyInternal(address inputCurrency, address ideaToken, uint input, uint amount, uint cost, address recipient, bool lock) internal {
+    function convertAndBuyInternal(address inputCurrency, address ideaToken, uint input, uint amount, uint cost, uint lockDuration, address recipient) internal {
         if(inputCurrency != address(0)) {
             pullERC20Internal(inputCurrency, msg.sender, input);
         }
 
         convertInternal(inputCurrency, address(_dai), input, cost);
 
-        if(lock) {
-            buyAndLockInternal(ideaToken, amount, cost, recipient);
+        if(lockDuration > 0) {
+            buyAndLockInternal(ideaToken, amount, cost, lockDuration, recipient);
         } else {
             buyInternal(ideaToken, amount, cost, recipient);
         }
@@ -227,10 +227,10 @@ contract MultiAction {
      * @param cost The cost in Dai for the purchase of `amount` IdeaTokens
      * @param recipient The recipient of the locked IdeaTokens
      */
-    function buyAndLockInternal(address ideaToken, uint amount, uint cost, address recipient) internal {
+    function buyAndLockInternal(address ideaToken, uint amount, uint cost, uint lockDuration, address recipient) internal {
         buyInternal(ideaToken, amount, cost, address(this));
         require(IERC20(ideaToken).approve(address(_ideaTokenVault), amount), "buyAndLockInternal: approve failed");
-        _ideaTokenVault.lock(ideaToken, amount, recipient);
+        _ideaTokenVault.lock(ideaToken, amount, lockDuration, recipient);
     }
 
     /**

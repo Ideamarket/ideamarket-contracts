@@ -13,6 +13,8 @@ describe('core/IdeaTokenVault', () => {
 	let IdeaToken
 	let IdeaTokenVault
 
+	const YEAR_DURATION = BigNumber.from('31556952')
+
 	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
 
 	const marketName = 'main'
@@ -104,7 +106,7 @@ describe('core/IdeaTokenVault', () => {
 			)
 		await ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address)
 
-		await ideaTokenVault.connect(adminAccount).initialize(ideaTokenFactory.address)
+		await ideaTokenVault.connect(adminAccount).initialize(adminAccount.address, ideaTokenFactory.address)
 
 		await ideaTokenFactory
 			.connect(adminAccount)
@@ -139,9 +141,9 @@ describe('core/IdeaTokenVault', () => {
 		await ideaTokenExchange.buyTokens(ideaToken.address, tokenAmount, tokenAmount, buyCost, userAccount.address)
 
 		await ideaToken.approve(ideaTokenVault.address, tokenAmount.div('2'))
-		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), userAccount.address)
-		expect((await ideaTokenVault.getTotalLockedAmount(ideaToken.address)).eq(tokenAmount.div('2'))).to.be.true
-		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(tokenAmount.div('2')))
+		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), YEAR_DURATION, userAccount.address)
+		expect((await ideaToken.balanceOf(ideaTokenVault.address)).eq(tokenAmount.div('2'))).to.be.true
+		expect((await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(tokenAmount.div('2')))
 			.to.be.true
 		expect(
 			(await ideaTokenVault.getWithdrawableAmount(ideaToken.address, userAccount.address)).eq(BigNumber.from('0'))
@@ -150,10 +152,9 @@ describe('core/IdeaTokenVault', () => {
 		await time.increase(time.duration.days(10))
 
 		await ideaToken.approve(ideaTokenVault.address, tokenAmount.div('2'))
-		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), userAccount.address)
-		expect((await ideaTokenVault.getTotalLockedAmount(ideaToken.address)).eq(tokenAmount)).to.be.true
-		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(tokenAmount)).to.be
-			.true
+		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), YEAR_DURATION, userAccount.address)
+		expect((await ideaToken.balanceOf(ideaTokenVault.address)).eq(tokenAmount)).to.be.true
+		expect((await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(tokenAmount)).to.be.true
 		expect(
 			(await ideaTokenVault.getWithdrawableAmount(ideaToken.address, userAccount.address)).eq(BigNumber.from('0'))
 		).to.be.true
@@ -163,9 +164,8 @@ describe('core/IdeaTokenVault', () => {
 
 		await time.increase(time.duration.days(356))
 
-		expect((await ideaTokenVault.getTotalLockedAmount(ideaToken.address)).eq(tokenAmount)).to.be.true
-		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(tokenAmount)).to.be
-			.true
+		expect((await ideaToken.balanceOf(ideaTokenVault.address)).eq(tokenAmount)).to.be.true
+		expect((await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(tokenAmount)).to.be.true
 		expect(
 			(await ideaTokenVault.getWithdrawableAmount(ideaToken.address, userAccount.address)).eq(
 				tokenAmount.div('2')
@@ -175,8 +175,8 @@ describe('core/IdeaTokenVault', () => {
 		await ideaTokenVault.withdraw(ideaToken.address, userAccount.address)
 		expect((await ideaToken.balanceOf(userAccount.address)).eq(tokenAmount.div('2'))).to.be.true
 
-		expect((await ideaTokenVault.getTotalLockedAmount(ideaToken.address)).eq(tokenAmount.div('2'))).to.be.true
-		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(tokenAmount.div('2')))
+		expect((await ideaToken.balanceOf(ideaTokenVault.address)).eq(tokenAmount.div('2'))).to.be.true
+		expect((await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(tokenAmount.div('2')))
 			.to.be.true
 		expect(
 			(await ideaTokenVault.getWithdrawableAmount(ideaToken.address, userAccount.address)).eq(BigNumber.from('0'))
@@ -184,8 +184,8 @@ describe('core/IdeaTokenVault', () => {
 
 		await time.increase(time.duration.days(10))
 
-		expect((await ideaTokenVault.getTotalLockedAmount(ideaToken.address)).eq(tokenAmount.div('2'))).to.be.true
-		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(tokenAmount.div('2')))
+		expect((await ideaToken.balanceOf(ideaTokenVault.address)).eq(tokenAmount.div('2'))).to.be.true
+		expect((await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(tokenAmount.div('2')))
 			.to.be.true
 		expect(
 			(await ideaTokenVault.getWithdrawableAmount(ideaToken.address, userAccount.address)).eq(
@@ -196,9 +196,9 @@ describe('core/IdeaTokenVault', () => {
 		await ideaTokenVault.withdraw(ideaToken.address, userAccount.address)
 		expect((await ideaToken.balanceOf(userAccount.address)).eq(tokenAmount)).to.be.true
 
-		expect((await ideaTokenVault.getTotalLockedAmount(ideaToken.address)).eq(BigNumber.from('0'))).to.be.true
-		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(BigNumber.from('0')))
-			.to.be.true
+		expect((await ideaToken.balanceOf(ideaTokenVault.address)).eq(BigNumber.from('0'))).to.be.true
+		expect((await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(BigNumber.from('0'))).to
+			.be.true
 		expect(
 			(await ideaTokenVault.getWithdrawableAmount(ideaToken.address, userAccount.address)).eq(BigNumber.from('0'))
 		).to.be.true
@@ -215,14 +215,14 @@ describe('core/IdeaTokenVault', () => {
 		await ideaTokenExchange.buyTokens(ideaToken.address, tokenAmount, tokenAmount, buyCost, userAccount.address)
 
 		await ideaToken.approve(ideaTokenVault.address, tokenAmount.div('2'))
-		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), userAccount.address)
+		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), YEAR_DURATION, userAccount.address)
 
 		const secondEntries = await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address)
 		expect(secondEntries.length).to.be.equal(1)
 		expect(secondEntries[0].lockedAmount.eq(tokenAmount.div('2'))).to.be.true
 
 		await ideaToken.approve(ideaTokenVault.address, tokenAmount.div('2'))
-		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), userAccount.address)
+		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), YEAR_DURATION, userAccount.address)
 
 		const thirdEntries = await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address)
 		expect(thirdEntries.length).to.be.equal(2)
@@ -244,27 +244,27 @@ describe('core/IdeaTokenVault', () => {
 	})
 
 	it('fail invalid token', async () => {
-		await expect(ideaTokenVault.lock(dai.address, tenPow18, userAccount.address)).to.be.revertedWith(
+		await expect(ideaTokenVault.lock(dai.address, tenPow18, YEAR_DURATION, userAccount.address)).to.be.revertedWith(
 			'lockTokens: invalid IdeaToken'
 		)
 	})
 
 	it('fail invalid amount', async () => {
 		await expect(
-			ideaTokenVault.lock(ideaToken.address, BigNumber.from('0'), userAccount.address)
+			ideaTokenVault.lock(ideaToken.address, BigNumber.from('0'), YEAR_DURATION, userAccount.address)
 		).to.be.revertedWith('lockTokens: invalid amount')
 	})
 
 	it('fail not enough allowance', async () => {
-		await expect(ideaTokenVault.lock(ideaToken.address, tenPow18, userAccount.address)).to.be.revertedWith(
-			'lockTokens: not enough allowance'
-		)
+		await expect(
+			ideaTokenVault.lock(ideaToken.address, tenPow18, YEAR_DURATION, userAccount.address)
+		).to.be.revertedWith('lockTokens: not enough allowance')
 	})
 
 	it('fail not enough balance', async () => {
 		await ideaToken.approve(ideaTokenVault.address, tenPow18)
-		await expect(ideaTokenVault.lock(ideaToken.address, tenPow18, userAccount.address)).to.be.revertedWith(
-			'ERC20: transfer amount exceeds balance'
-		)
+		await expect(
+			ideaTokenVault.lock(ideaToken.address, tenPow18, YEAR_DURATION, userAccount.address)
+		).to.be.revertedWith('ERC20: transfer amount exceeds balance')
 	})
 })

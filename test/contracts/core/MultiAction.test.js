@@ -18,6 +18,8 @@ describe('core/MultiAction', () => {
 	let IdeaTokenVault
 	let MultiAction
 
+	const YEAR_DURATION = BigNumber.from('31556952')
+
 	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
 
 	const marketName = 'main'
@@ -167,7 +169,7 @@ describe('core/MultiAction', () => {
 			IdeaToken.signer
 		)
 
-		await ideaTokenVault.initialize(ideaTokenFactory.address)
+		await ideaTokenVault.initialize(adminAccount.address, ideaTokenFactory.address)
 
 		// Setup Uniswap pools
 		// ETH-DAI: 1 ETH, 200 DAI
@@ -227,8 +229,8 @@ describe('core/MultiAction', () => {
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
+			BigNumber.from('0'),
 			userAccount.address,
-			false,
 			{ value: requiredInputForCost }
 		)
 
@@ -264,8 +266,8 @@ describe('core/MultiAction', () => {
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
-			userAccount.address,
-			false
+			BigNumber.from('0'),
+			userAccount.address
 		)
 
 		const wethBalanceAfterBuy = await weth.balanceOf(userAccount.address)
@@ -304,8 +306,8 @@ describe('core/MultiAction', () => {
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
-			userAccount.address,
-			false
+			BigNumber.from('0'),
+			userAccount.address
 		)
 
 		const someBalanceAfterBuy = await someToken.balanceOf(userAccount.address)
@@ -349,8 +351,8 @@ describe('core/MultiAction', () => {
 			ideaTokenAmount,
 			ideaTokenFallbackAmount,
 			requiredInputForFallbackCost.add(BigNumber.from('1000')),
+			BigNumber.from('0'),
 			userAccount.address,
-			false,
 			{ value: requiredInputForFallbackCost.add(BigNumber.from('1000')) }
 		)
 
@@ -369,14 +371,14 @@ describe('core/MultiAction', () => {
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
+			YEAR_DURATION,
 			userAccount.address,
-			true,
 			{ value: requiredInputForCost }
 		)
 
 		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
-		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(ideaTokenAmount)).to.be
+		expect((await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(ideaTokenAmount)).to.be
 			.true
 	})
 
@@ -386,11 +388,18 @@ describe('core/MultiAction', () => {
 		await dai.mint(userAccount.address, buyCost)
 		await dai.approve(multiAction.address, buyCost)
 
-		await multiAction.buyAndLock(ideaToken.address, ideaTokenAmount, ideaTokenAmount, buyCost, userAccount.address)
+		await multiAction.buyAndLock(
+			ideaToken.address,
+			ideaTokenAmount,
+			ideaTokenAmount,
+			buyCost,
+			YEAR_DURATION,
+			userAccount.address
+		)
 
 		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
-		expect((await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(ideaTokenAmount)).to.be
+		expect((await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(ideaTokenAmount)).to.be
 			.true
 	})
 
@@ -411,13 +420,14 @@ describe('core/MultiAction', () => {
 			ideaTokenAmount,
 			ideaTokenFallbackAmount,
 			buyFallbackCost,
+			YEAR_DURATION,
 			userAccount.address
 		)
 
 		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
 		expect(
-			(await ideaTokenVault.getLockedAmount(ideaToken.address, userAccount.address)).eq(ideaTokenFallbackAmount)
+			(await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(ideaTokenFallbackAmount)
 		).to.be.true
 	})
 
@@ -432,7 +442,7 @@ describe('core/MultiAction', () => {
 		await dai.approve(multiAction.address, buyCost)
 
 		const newTokenName = 'sometoken.com'
-		await multiAction.addAndBuy(newTokenName, marketID, ideaTokenAmount, userAccount.address, false)
+		await multiAction.addAndBuy(newTokenName, marketID, ideaTokenAmount, BigNumber.from('0'), userAccount.address)
 
 		const id = await ideaTokenFactory.getTokenIDByName(newTokenName, marketID)
 		expect(id.eq(BigNumber.from('2'))).to.be.true
@@ -455,7 +465,7 @@ describe('core/MultiAction', () => {
 		await dai.approve(multiAction.address, buyCost)
 
 		const newTokenName = 'sometoken.com'
-		await multiAction.addAndBuy(newTokenName, marketID, ideaTokenAmount, userAccount.address, true)
+		await multiAction.addAndBuy(newTokenName, marketID, ideaTokenAmount, YEAR_DURATION, userAccount.address)
 
 		const id = await ideaTokenFactory.getTokenIDByName(newTokenName, marketID)
 		expect(id.eq(BigNumber.from('2'))).to.be.true
@@ -465,7 +475,7 @@ describe('core/MultiAction', () => {
 
 		const tokenBalanceAfterBuy = await newIdeaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
-		expect((await ideaTokenVault.getLockedAmount(newIdeaToken.address, userAccount.address)).eq(ideaTokenAmount)).to
+		expect((await ideaTokenVault.getTotalAmount(newIdeaToken.address, userAccount.address)).eq(ideaTokenAmount)).to
 			.be.true
 	})
 
@@ -486,8 +496,8 @@ describe('core/MultiAction', () => {
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
+			BigNumber.from('0'),
 			userAccount.address,
-			false,
 			{ value: requiredInputForCost }
 		)
 
@@ -527,8 +537,8 @@ describe('core/MultiAction', () => {
 			ideaTokenAmount,
 			ideaTokenFallbackAmount,
 			requiredInputForFallbackCost,
+			BigNumber.from('0'),
 			userAccount.address,
-			false,
 			{ value: requiredInputForFallbackCost }
 		)
 
@@ -559,8 +569,8 @@ describe('core/MultiAction', () => {
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
+			YEAR_DURATION,
 			userAccount.address,
-			true,
 			{ value: requiredInputForCost }
 		)
 
@@ -572,7 +582,7 @@ describe('core/MultiAction', () => {
 
 		const tokenBalanceAfterBuy = await newIdeaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
-		expect((await ideaTokenVault.getLockedAmount(newIdeaToken.address, userAccount.address)).eq(ideaTokenAmount)).to
+		expect((await ideaTokenVault.getTotalAmount(newIdeaToken.address, userAccount.address)).eq(ideaTokenAmount)).to
 			.be.true
 	})
 
@@ -588,8 +598,8 @@ describe('core/MultiAction', () => {
 				ideaTokenAmount,
 				ideaTokenAmount,
 				requiredInputForCost.sub(BigNumber.from('1')),
-				userAccount.address,
-				false
+				BigNumber.from('0'),
+				userAccount.address
 			)
 		).to.be.revertedWith('')
 	})
@@ -607,8 +617,8 @@ describe('core/MultiAction', () => {
 			ideaTokenAmount,
 			ideaTokenAmount,
 			requiredInputForCost,
-			userAccount.address,
-			false
+			BigNumber.from('0'),
+			userAccount.address
 		)
 
 		const someBalanceAfterBuy = await someToken.balanceOf(userAccount.address)

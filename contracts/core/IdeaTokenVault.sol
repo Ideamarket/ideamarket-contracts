@@ -4,9 +4,21 @@ pragma experimental ABIEncoderV2;
 
 import "./interfaces/IIdeaTokenVault.sol";
 import "./interfaces/IIdeaTokenFactory.sol";
+import "../util/Ownable.sol";
 import "../util/Initializable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+
+/*
+    ========================================== TODO =========================================
+    * Setters to add allowed durations
+    * Getters to get allowed durations
+    * Tests for the above, different durations, multiple durations, fail on invalid duration, max entries
+    * Update deployment script
+    * Update Subgraph binary search
+    * Update frontend new calls (different param ordering)
+*/
 
 
 /**
@@ -16,51 +28,57 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  * Locks IdeaTokens for 365 days
  * Sits behind an AdminUpgradabilityProxy
  */
-contract IdeaTokenVault is IIdeaTokenVault, Initializable {
+contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
     using SafeMath for uint256;
 
-    uint constant LOCK_DURATION = 365 days;
+    IIdeaTokenFactory _ideaTokenFactory;
 
-    IIdeaTokenFactory internal _ideaTokenFactory;
+    mapping(uint => bool) _allowedDurations;
+    uint[] _allowedDurationsList;
 
-    // IdeaToken => toal locked
-    mapping(address => uint) internal _totalLockedTokens;
-    // IdeaToken => owner => locked amounts
-    mapping(address => mapping(address => LockedEntry[])) internal _lockedEntries;
-    // IdeaToken => owner => list head index
-    mapping(address => mapping(address => uint)) internal _listHead;
+    // IdeaToken => owner => => duration => locked amounts
+    mapping(address => mapping(address => mapping(uint => LockedEntry[]))) _lockedEntries;
+    // IdeaToken => owner => duration => list head index
+    mapping(address => mapping(address => mapping(uint => uint))) _listHead;
 
-    event Locked(address ideaToken, address owner, uint lockedUntil, uint lockedAmount, uint index);
-    event Withdrawn(address ideaToken, address owner, uint index);
+    event Locked(address ideaToken, address owner, uint lockedAmount, uint lockedUntil, uint lockedDuration, uint index);
+    event Withdrawn(address ideaToken, address owner, uint lockedDuration, uint index);
 
     /**
      * Initializes the contract
      *
+     * @param owner The owner of the contract
      * @param ideaTokenFactory The address of the IdeaTokenFactory contract
      */
-    function initialize (address ideaTokenFactory) external initializer {
+    function initialize(address owner, address ideaTokenFactory) external initializer {
+        setOwnerInternal(owner);
         _ideaTokenFactory = IIdeaTokenFactory(ideaTokenFactory);
+
+        _allowedDurations[31556952] = true; // 1 year
+        _allowedDurationsList.push(31556952);
     }
 
     /**
-     * Locks IdeaTokens for 365 days
+     * Locks IdeaTokens for a given duration.
+     * Allowed durations are set by the owner.
      *
      * @param ideaToken The IdeaToken to be locked
      * @param amount The amount of IdeaTokens to lock
+     * @param duration The duration in seconds to lock the tokens
      * @param recipient The account which receives the locked tokens 
      */
-    function lock(address ideaToken, uint amount, address recipient) external override {
+    function lock(address ideaToken, uint amount, uint duration, address recipient) external override {
+        require(_allowedDurations[duration], "lockTokens: invalid duration");
         require(_ideaTokenFactory.getTokenIDPair(ideaToken).exists, "lockTokens: invalid IdeaToken");
         require(amount > 0, "lockTokens: invalid amount");
         require(IERC20(ideaToken).allowance(msg.sender, address(this)) >= amount, "lockTokens: not enough allowance");
         require(IERC20(ideaToken).transferFrom(msg.sender, address(this), amount), "lockTokens: transfer failed");
 
-        _totalLockedTokens[ideaToken] = _totalLockedTokens[ideaToken].add(amount);
-        uint lockedUntil = now + LOCK_DURATION;
+        uint lockedUntil = now + duration;
         LockedEntry memory newEntry = LockedEntry({lockedUntil: lockedUntil, lockedAmount: amount});
-        _lockedEntries[ideaToken][recipient].push(newEntry);
+        _lockedEntries[ideaToken][recipient][duration].push(newEntry);
 
-        emit Locked(ideaToken, recipient, lockedUntil, amount, _lockedEntries[ideaToken][recipient].length - 1);
+        emit Locked(ideaToken, recipient, amount, lockedUntil, duration, _lockedEntries[ideaToken][recipient][duration].length - 1);
     }
 
     /**
@@ -81,60 +99,64 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
      * @param maxEntries The maximum amount of entries to iterate over before exiting early
      */
     function withdrawMaxEntries(address ideaToken, address recipient, uint maxEntries) public override {
+       
         uint ts = now;
-        uint head = _listHead[ideaToken][msg.sender];
-        LockedEntry[] storage entries = _lockedEntries[ideaToken][msg.sender];
-
         uint counter = 0;
         uint total = 0;
-        uint newHead = head;
-        for(uint i = head; i < entries.length && counter < maxEntries; i++) {
-            if(entries[i].lockedUntil >= ts) {
+        address user = msg.sender;
+
+        for(uint i = 0; i < _allowedDurationsList.length; i++) {
+            uint duration = _allowedDurationsList[i];
+            LockedEntry[] storage entries = _lockedEntries[ideaToken][user][duration];
+            uint head = _listHead[ideaToken][user][duration];
+            uint newHead = head;
+
+            for(uint j = head; j < entries.length && counter < maxEntries; j++) {
+                if(entries[j].lockedUntil >= ts) {
+                    break;
+                }
+
+                counter++;
+                newHead++;
+                total = total.add(entries[j].lockedAmount);
+
+                delete entries[j];
+                emit Withdrawn(ideaToken, user, duration, j);
+            } 
+
+            _listHead[ideaToken][user][duration] = newHead;
+
+            
+            if(counter >= maxEntries) {
                 break;
             }
-
-            counter ++;
-            newHead++;
-            total = total.add(entries[i].lockedAmount);
-
-            delete entries[i];
-            emit Withdrawn(ideaToken, msg.sender, i);
         }
 
-        _listHead[ideaToken][msg.sender] = newHead;
-
         if(total > 0) {
-            _totalLockedTokens[ideaToken] = _totalLockedTokens[ideaToken].sub(total);
             IERC20(ideaToken).transfer(recipient, total);
         }
     }
 
     /**
-     * Returns the total amount of locked IdeaTokens
-     *
-     * @param ideaToken The address of the IdeaToken
-     *
-     * @return The amount of locked IdeaTokens
-     */
-    function getTotalLockedAmount(address ideaToken) external view override returns (uint) {
-        return _totalLockedTokens[ideaToken];
-    }
-
-    /**
-     * Returns the amount of locked IdeaTokens for a given account
+     * Returns the amount of locked IdeaTokens for a given account.
+     * Includes withdrawable tokens
      *
      * @param ideaToken The address of the IdeaToken
      * @param owner The holder account
      *
      * @return The amount of IdeaTokens held for this account
      */
-    function getLockedAmount(address ideaToken, address owner) external view override returns (uint) {
-        uint head = _listHead[ideaToken][owner];
-        LockedEntry[] storage entries = _lockedEntries[ideaToken][owner];
+    function getTotalAmount(address ideaToken, address owner) external view override returns (uint) {
 
         uint total = 0;
-        for(uint i = head; i < entries.length; i++) {
-            total = total.add(entries[i].lockedAmount);
+        for(uint i = 0; i < _allowedDurationsList.length; i++) {
+            uint duration = _allowedDurationsList[i];
+            uint head = _listHead[ideaToken][owner][duration];
+            LockedEntry[] storage entries = _lockedEntries[ideaToken][owner][duration];
+            
+            for(uint j = head; j < entries.length; j++) {
+                total = total.add(entries[j].lockedAmount);
+            }
         }
 
         return total;
@@ -150,16 +172,19 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
      */
     function getWithdrawableAmount(address ideaToken, address owner) external view override returns (uint) {
         uint ts = now;
-        uint head = _listHead[ideaToken][owner];
-        LockedEntry[] storage entries = _lockedEntries[ideaToken][owner];
-
         uint total = 0;
-        for(uint i = head; i < entries.length; i++) {
-            if(entries[i].lockedUntil >= ts) {
-                break;
+        for(uint i = 0; i < _allowedDurationsList.length; i++) {
+            uint duration = _allowedDurationsList[i];
+            uint head = _listHead[ideaToken][owner][duration];
+            LockedEntry[] storage entries = _lockedEntries[ideaToken][owner][duration];
+
+            for(uint j = head; j < entries.length; j++) {
+                if(entries[j].lockedUntil >= ts) {
+                    break;
+                }
+                
+                total = total.add(entries[j].lockedAmount);
             }
-            
-            total = total.add(entries[i].lockedAmount);
         }
 
         return total;
@@ -174,19 +199,31 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
      * @return The available LockedEntries for this account
      */
     function getLockedEntries(address ideaToken, address owner) external view override returns (LockedEntry[] memory) {
-        uint head = _listHead[ideaToken][owner];
-        LockedEntry[] storage entries = _lockedEntries[ideaToken][owner];
 
-        uint len = entries.length - head;
+        uint len = 0;
+        for(uint i = 0; i < _allowedDurationsList.length; i++) {
+            uint duration = _allowedDurationsList[i];
+            uint head = _listHead[ideaToken][owner][duration];
+            LockedEntry[] storage entries = _lockedEntries[ideaToken][owner][duration];
+            len += entries.length - head;
+        }
+
         if(len == 0) {
             LockedEntry[] memory empty;
             return empty;
         }
 
         LockedEntry[] memory ret = new LockedEntry[](len);
+        uint counter = 0;
+        for(uint i = 0; i < _allowedDurationsList.length; i++) {
+            uint duration = _allowedDurationsList[i];
+            uint head = _listHead[ideaToken][owner][duration];
+            LockedEntry[] storage entries = _lockedEntries[ideaToken][owner][duration];
 
-        for(uint i = head; i < entries.length; i++) {
-            ret[i - head] = entries[i];
+            for(uint j = head; j < entries.length; j++) {
+                ret[counter] = entries[j];
+                counter++;
+            }
         }
 
         return ret;
