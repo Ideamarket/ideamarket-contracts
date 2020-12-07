@@ -22,7 +22,6 @@ describe('core/IdeaTokenVault', () => {
 	const hatchTokens = BigNumber.from('1000000000000000000000') // 10**21 = 1000
 	const tradingFeeRate = BigNumber.from('100')
 	const platformFeeRate = BigNumber.from('50')
-	const feeScale = BigNumber.from('10000')
 
 	let userAccount
 	let adminAccount
@@ -31,7 +30,6 @@ describe('core/IdeaTokenVault', () => {
 	let interestReceiverAccount
 	let platformFeeReceiverAccount
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
-	const someAddress = '0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5' // random addr from etherscan
 
 	let domainNoSubdomainNameVerifier
 	let dai
@@ -206,6 +204,45 @@ describe('core/IdeaTokenVault', () => {
 		expect(
 			(await ideaTokenVault.getWithdrawableAmount(ideaToken.address, userAccount.address)).eq(BigNumber.from('0'))
 		).to.be.true
+	})
+
+	it('has correct locked entries', async () => {
+		const firstEntries = await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address)
+		expect(firstEntries.length).to.be.equal(0)
+
+		await dai.mint(userAccount.address, tenPow18.mul('500'))
+		const tokenAmount = tenPow18.mul('500')
+		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tokenAmount)
+		await dai.approve(ideaTokenExchange.address, buyCost)
+		await ideaTokenExchange.buyTokens(ideaToken.address, tokenAmount, tokenAmount, buyCost, userAccount.address)
+
+		await ideaToken.approve(ideaTokenVault.address, tokenAmount.div('2'))
+		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), userAccount.address)
+
+		const secondEntries = await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address)
+		expect(secondEntries.length).to.be.equal(1)
+		expect(secondEntries[0].lockedAmount.eq(tokenAmount.div('2'))).to.be.true
+
+		await ideaToken.approve(ideaTokenVault.address, tokenAmount.div('2'))
+		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), userAccount.address)
+
+		const thirdEntries = await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address)
+		expect(thirdEntries.length).to.be.equal(2)
+		expect(thirdEntries[0].lockedAmount.eq(tokenAmount.div('2'))).to.be.true
+		expect(thirdEntries[1].lockedAmount.eq(tokenAmount.div('2'))).to.be.true
+
+		await time.increase(time.duration.days(400))
+
+		await ideaTokenVault.withdrawMaxEntries(ideaToken.address, userAccount.address, BigNumber.from('1'))
+
+		const fourthEntries = await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address)
+		expect(fourthEntries.length).to.be.equal(1)
+		expect(fourthEntries[0].lockedAmount.eq(tokenAmount.div('2'))).to.be.true
+
+		await ideaTokenVault.withdrawMaxEntries(ideaToken.address, userAccount.address, BigNumber.from('1'))
+
+		const fifthEntries = await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address)
+		expect(fifthEntries.length).to.be.equal(0)
 	})
 
 	it('fail invalid token', async () => {

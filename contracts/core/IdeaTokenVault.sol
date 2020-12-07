@@ -164,4 +164,31 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
 
         return total;
     }
+
+    /**
+     * Returns the available LockedEntries for an account
+     *
+     * @param ideaToken The address of the IdeaToken
+     * @param owner The holder account
+     *
+     * @return The available LockedEntries for this account
+     */
+    function getLockedEntries(address ideaToken, address owner) external view override returns (LockedEntry[] memory) {
+        uint head = _listHead[ideaToken][owner];
+        LockedEntry[] storage entries = _lockedEntries[ideaToken][owner];
+
+        uint len = entries.length - head;
+        if(len == 0) {
+            LockedEntry[] memory empty;
+            return empty;
+        }
+
+        LockedEntry[] memory ret = new LockedEntry[](len);
+
+        for(uint i = head; i < entries.length; i++) {
+            ret[i - head] = entries[i];
+        }
+
+        return ret;
+    }
 }
