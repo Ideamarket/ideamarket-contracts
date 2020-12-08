@@ -16,7 +16,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  * Locks IdeaTokens for a given duration
  * Sits behind an AdminUpgradabilityProxy
  */
-contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
+contract IdeaTokenVault is IIdeaTokenVault, Initializable {
     using SafeMath for uint256;
 
     // LinkedList Entry
@@ -29,8 +29,6 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
 
     IIdeaTokenFactory _ideaTokenFactory;
 
-    mapping(uint => bool) public _allowedDurations;
-
     // IdeaToken => owner => lockedUntil => bool
     mapping(address => mapping(address => bytes32)) public _llHead;
 
@@ -39,14 +37,10 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
     /**
      * Initializes the contract
      *
-     * @param owner The owner of the contract
      * @param ideaTokenFactory The address of the IdeaTokenFactory contract
      */
-    function initialize(address owner, address ideaTokenFactory) external initializer {
-        setOwnerInternal(owner);
+    function initialize(address ideaTokenFactory) external initializer {
         _ideaTokenFactory = IIdeaTokenFactory(ideaTokenFactory);
-
-        _allowedDurations[31556952] = true; // 1 year
     }
 
     /**
@@ -59,7 +53,7 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
      * @param recipient The account which receives the locked tokens 
      */
     function lock(address ideaToken, uint amount, uint duration, address recipient) external override {
-        require(_allowedDurations[duration], "lockTokens: invalid duration");
+        require(duration > 0, "lockTokens: invalid duration");
         require(_ideaTokenFactory.getTokenIDPair(ideaToken).exists, "lockTokens: invalid IdeaToken");
         require(amount > 0, "lockTokens: invalid amount");
         require(IERC20(ideaToken).allowance(msg.sender, address(this)) >= amount, "lockTokens: not enough allowance");
@@ -196,17 +190,4 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
         assembly { entry_slot := location }
         return entry;
     } 
-
-    /**
-     * Adds an allowed duration
-     * May only be called by the owner
-     *
-     * @param duration The duration to add 
-     */
-    function addAllowedDuration(uint duration) external override onlyOwner {
-        require(!_allowedDurations[duration], "addAllowedDuration: already set");
-        require(duration > 0, "addAllowedDuration: invalid duration");
-
-        _allowedDurations[duration] = true;
-    }
 }

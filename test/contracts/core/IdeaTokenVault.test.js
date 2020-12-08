@@ -107,7 +107,7 @@ describe('core/IdeaTokenVault', () => {
 			)
 		await ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address)
 
-		await ideaTokenVault.connect(adminAccount).initialize(adminAccount.address, ideaTokenFactory.address)
+		await ideaTokenVault.connect(adminAccount).initialize(ideaTokenFactory.address)
 
 		await ideaTokenFactory
 			.connect(adminAccount)
@@ -132,10 +132,6 @@ describe('core/IdeaTokenVault', () => {
 			IdeaToken.interface,
 			IdeaToken.signer
 		)
-	})
-
-	it('admin is owner', async () => {
-		expect(adminAccount.address).to.be.equal(await ideaTokenVault.getOwner())
 	})
 
 	it('can lock and withdraw tokens', async () => {
@@ -231,16 +227,15 @@ describe('core/IdeaTokenVault', () => {
 		await dai.approve(ideaTokenExchange.address, buyCost)
 		await ideaTokenExchange.buyTokens(ideaToken.address, tokenAmount, tokenAmount, buyCost, userAccount.address)
 
-		const addDuration = BigNumber.from('1234')
-		await ideaTokenVault.connect(adminAccount).addAllowedDuration(addDuration)
+		const otherDuration = BigNumber.from('1234')
 
 		await ideaToken.approve(ideaTokenVault.address, tokenAmount.div('2'))
 		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), YEAR_DURATION, userAccount.address)
 
 		await ideaToken.approve(ideaTokenVault.address, tokenAmount.div('2'))
-		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), addDuration, userAccount.address)
+		await ideaTokenVault.lock(ideaToken.address, tokenAmount.div('2'), otherDuration, userAccount.address)
 
-		await time.increase(addDuration.add('1').toString())
+		await time.increase(otherDuration.add('1').toString())
 
 		const firstEntries = await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address, uint256max)
 		await ideaTokenVault.withdraw(ideaToken.address, [firstEntries[0].lockedUntil], userAccount.address)
@@ -261,13 +256,13 @@ describe('core/IdeaTokenVault', () => {
 
 		await ideaToken.approve(ideaTokenVault.address, tokenAmount)
 		await expect(
-			ideaTokenVault.lock(ideaToken.address, tokenAmount, BigNumber.from('1234'), userAccount.address)
-		).to.be.revertedWith('lockTokens: invalid duration')
+			ideaTokenVault.lock(dai.address, tokenAmount, BigNumber.from('1234'), userAccount.address)
+		).to.be.revertedWith('lockTokens: invalid IdeaToken')
 	})
 
 	it('fail invalid duration', async () => {
 		await expect(
-			ideaTokenVault.lock(dai.address, tenPow18, BigNumber.from('1234'), userAccount.address)
+			ideaTokenVault.lock(ideaToken.address, tenPow18, BigNumber.from('0'), userAccount.address)
 		).to.be.revertedWith('lockTokens: invalid duration')
 	})
 
@@ -300,32 +295,5 @@ describe('core/IdeaTokenVault', () => {
 		await expect(
 			ideaTokenVault.lock(ideaToken.address, tenPow18, YEAR_DURATION, userAccount.address)
 		).to.be.revertedWith('ERC20: transfer amount exceeds balance')
-	})
-
-	it('can add duration', async () => {
-		const addDuration = BigNumber.from('1234')
-		await ideaTokenVault.connect(adminAccount).addAllowedDuration(addDuration)
-		expect(await ideaTokenVault._allowedDurations(YEAR_DURATION)).to.be.true
-		expect(await ideaTokenVault._allowedDurations(addDuration)).to.be.true
-	})
-
-	it('fail cannot add duration twice', async () => {
-		const addDuration = BigNumber.from('1234')
-		await ideaTokenVault.connect(adminAccount).addAllowedDuration(addDuration)
-		await expect(ideaTokenVault.connect(adminAccount).addAllowedDuration(addDuration)).to.be.revertedWith(
-			'addAllowedDuration: already set'
-		)
-	})
-
-	it('fail cannot add invalid duration', async () => {
-		const addDuration = BigNumber.from('0')
-		await expect(ideaTokenVault.connect(adminAccount).addAllowedDuration(addDuration)).to.be.revertedWith(
-			'addAllowedDuration: invalid duration'
-		)
-	})
-
-	it('fail user cannot add duration', async () => {
-		const addDuration = BigNumber.from('1234')
-		await expect(ideaTokenVault.addAllowedDuration(addDuration)).to.be.revertedWith('Ownable: onlyOwner')
 	})
 })

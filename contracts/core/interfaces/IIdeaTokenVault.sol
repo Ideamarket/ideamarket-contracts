@@ -16,5 +16,4 @@ interface IIdeaTokenVault {
     function lock(address ideaToken, uint amount, uint duration, address recipient) external;
     function withdraw(address ideaToken, uint[] calldata untils, address recipient) external;
     function getLockedEntries(address ideaToken, address user, uint maxEntries) external view returns (LockedEntry[] memory);
-    function addAllowedDuration(uint duration) external;
 } 

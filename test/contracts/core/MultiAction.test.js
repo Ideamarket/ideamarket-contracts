@@ -170,7 +170,7 @@ describe('core/MultiAction', () => {
 			IdeaToken.signer
 		)
 
-		await ideaTokenVault.initialize(adminAccount.address, ideaTokenFactory.address)
+		await ideaTokenVault.initialize(ideaTokenFactory.address)
 
 		// Setup Uniswap pools
 		// ETH-DAI: 1 ETH, 200 DAI
