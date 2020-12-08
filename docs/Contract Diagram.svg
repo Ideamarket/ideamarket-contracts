@@ -15,7 +15,10 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="Contract Diagram.svg">
+   sodipodi:docname="Contract Diagram.svg"
+   inkscape:export-filename="C:\Users\alexa\Desktop\Contract Diagram.png"
+   inkscape:export-xdpi="401.23001"
+   inkscape:export-ydpi="401.23001">
   <defs
      id="defs2">
     <marker
@@ -385,8 +388,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="1388.6324"
-     inkscape:cy="540.56362"
+     inkscape:cx="1374.4815"
+     inkscape:cy="538.19468"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -403,7 +406,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -422,6 +425,13 @@
          x="154.40327"
          y="97.478767"
          style="stroke-width:0.26458332" /></text>
+    <rect
+       style="fill:#fcfcfc;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect1225"
+       width="443.13287"
+       height="233.05902"
+       x="22.450636"
+       y="13.961573" />
     <g
        id="g4532"
        transform="translate(287.56537,85.789335)">
@@ -1570,7 +1580,7 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.26458332"
          id="tspan13007"><tspan
    style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold'"
-   id="tspan13009">IdeaTokenVault</tspan>: Locks IdeaTokens for one year.</tspan><tspan
+   id="tspan13009">IdeaTokenVault</tspan>: Locks IdeaTokens for a given duration.</tspan><tspan
          sodipodi:role="line"
          x="42.900299"
          y="208.9819"
