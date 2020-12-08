@@ -194,7 +194,6 @@ async function main() {
 		const [ideaTokenVaultProxy, ideaTokenVaultLogic] = await deployProxyContract(
 			'IdeaTokenVault',
 			proxyAdminAddress,
-			dsPauseProxyAddress,
 			ideaTokenFactoryProxyAddress
 		)
 
