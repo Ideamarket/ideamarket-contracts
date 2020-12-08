@@ -19,4 +19,5 @@ interface IIdeaTokenVault {
     function getTotalAmount(address ideaToken, address owner) external view returns (uint);
     function getWithdrawableAmount(address ideaToken, address owner) external view returns (uint);
     function getLockedEntries(address ideaToken, address owner) external view returns (LockedEntry[] memory);
+    function addAllowedDuration(uint duration) external;
 } 

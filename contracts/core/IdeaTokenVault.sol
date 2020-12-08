@@ -12,9 +12,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /*
     ========================================== TODO =========================================
-    * Setters to add allowed durations
-    * Getters to get allowed durations
-    * Tests for the above, different durations, multiple durations, fail on invalid duration, max entries
     * Update deployment script
     * Update Subgraph binary search
     * Update frontend new calls (different param ordering)
@@ -33,8 +30,8 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
 
     IIdeaTokenFactory _ideaTokenFactory;
 
-    mapping(uint => bool) _allowedDurations;
-    uint[] _allowedDurationsList;
+    mapping(uint => bool) public _allowedDurations;
+    uint[] public _allowedDurationsList;
 
     // IdeaToken => owner => => duration => locked amounts
     mapping(address => mapping(address => mapping(uint => LockedEntry[]))) _lockedEntries;
@@ -214,18 +211,32 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
         }
 
         LockedEntry[] memory ret = new LockedEntry[](len);
-        uint counter = 0;
+        uint index = 0;
         for(uint i = 0; i < _allowedDurationsList.length; i++) {
             uint duration = _allowedDurationsList[i];
             uint head = _listHead[ideaToken][owner][duration];
             LockedEntry[] storage entries = _lockedEntries[ideaToken][owner][duration];
 
             for(uint j = head; j < entries.length; j++) {
-                ret[counter] = entries[j];
-                counter++;
+                ret[index] = entries[j];
+                index++;
             }
         }
 
         return ret;
+    }
+
+    /**
+     * Adds an allowed duration
+     * May only be called by the owner
+     *
+     * @param duration The duration to add 
+     */
+    function addAllowedDuration(uint duration) external override onlyOwner {
+        require(!_allowedDurations[duration], "addAllowedDuration: already set");
+        require(duration > 0, "addAllowedDuration: invalid duration");
+
+        _allowedDurations[duration] = true;
+        _allowedDurationsList.push(duration);
     }
 }
