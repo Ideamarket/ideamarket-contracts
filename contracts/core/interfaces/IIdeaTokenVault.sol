@@ -14,10 +14,7 @@ struct LockedEntry {
     
 interface IIdeaTokenVault {
     function lock(address ideaToken, uint amount, uint duration, address recipient) external;
-    function withdraw(address ideaToken, address recipient) external;
-    function withdrawMaxEntries(address ideaToken, address recipient, uint maxEntries) external;
-    function getTotalAmount(address ideaToken, address owner) external view returns (uint);
-    function getWithdrawableAmount(address ideaToken, address owner) external view returns (uint);
-    function getLockedEntries(address ideaToken, address owner) external view returns (LockedEntry[] memory);
+    function withdraw(address ideaToken, uint[] calldata untils, address recipient) external;
+    function getLockedEntries(address ideaToken, address user, uint maxEntries) external view returns (LockedEntry[] memory);
     function addAllowedDuration(uint duration) external;
 } 

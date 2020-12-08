@@ -21,6 +21,7 @@ describe('core/MultiAction', () => {
 	const YEAR_DURATION = BigNumber.from('31556952')
 
 	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
+	const uint256max = BigNumber.from('2').pow(BigNumber.from('256')).sub(BigNumber.from('1'))
 
 	const marketName = 'main'
 	const tokenName = 'test.com'
@@ -378,8 +379,11 @@ describe('core/MultiAction', () => {
 
 		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
-		expect((await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(ideaTokenAmount)).to.be
-			.true
+		expect(
+			(
+				await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address, uint256max)
+			)[0].lockedAmount.eq(ideaTokenAmount)
+		).to.be.true
 	})
 
 	it('can buy and lock DAI', async () => {
@@ -399,8 +403,11 @@ describe('core/MultiAction', () => {
 
 		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
-		expect((await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(ideaTokenAmount)).to.be
-			.true
+		expect(
+			(
+				await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address, uint256max)
+			)[0].lockedAmount.eq(ideaTokenAmount)
+		).to.be.true
 	})
 
 	it('can buy and lock DAI with fallback', async () => {
@@ -427,7 +434,9 @@ describe('core/MultiAction', () => {
 		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
 		expect(
-			(await ideaTokenVault.getTotalAmount(ideaToken.address, userAccount.address)).eq(ideaTokenFallbackAmount)
+			(
+				await ideaTokenVault.getLockedEntries(ideaToken.address, userAccount.address, uint256max)
+			)[0].lockedAmount.eq(ideaTokenFallbackAmount)
 		).to.be.true
 	})
 
@@ -475,8 +484,11 @@ describe('core/MultiAction', () => {
 
 		const tokenBalanceAfterBuy = await newIdeaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
-		expect((await ideaTokenVault.getTotalAmount(newIdeaToken.address, userAccount.address)).eq(ideaTokenAmount)).to
-			.be.true
+		expect(
+			(
+				await ideaTokenVault.getLockedEntries(newIdeaToken.address, userAccount.address, uint256max)
+			)[0].lockedAmount.eq(ideaTokenAmount)
+		).to.be.true
 	})
 
 	it('can convert add and buy', async () => {
@@ -582,8 +594,11 @@ describe('core/MultiAction', () => {
 
 		const tokenBalanceAfterBuy = await newIdeaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterBuy.eq(BigNumber.from('0'))).to.be.true
-		expect((await ideaTokenVault.getTotalAmount(newIdeaToken.address, userAccount.address)).eq(ideaTokenAmount)).to
-			.be.true
+		expect(
+			(
+				await ideaTokenVault.getLockedEntries(newIdeaToken.address, userAccount.address, uint256max)
+			)[0].lockedAmount.eq(ideaTokenAmount)
+		).to.be.true
 	})
 
 	it('fail buy cost too high', async () => {

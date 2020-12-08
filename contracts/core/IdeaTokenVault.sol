@@ -13,24 +13,28 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  * @title IdeaTokenVault
  * @author Alexander Schlindwein
  *
- * Locks IdeaTokens for 365 days
+ * Locks IdeaTokens for a given duration
  * Sits behind an AdminUpgradabilityProxy
  */
 contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
     using SafeMath for uint256;
 
+    // LinkedList Entry
+    struct LLEntry {
+        uint until;
+        uint amount;
+        bytes32 prev;
+        bytes32 next;
+    }
+
     IIdeaTokenFactory _ideaTokenFactory;
 
     mapping(uint => bool) public _allowedDurations;
-    uint[] public _allowedDurationsList;
 
-    // IdeaToken => owner => => duration => locked amounts
-    mapping(address => mapping(address => mapping(uint => LockedEntry[]))) _lockedEntries;
-    // IdeaToken => owner => duration => list head index
-    mapping(address => mapping(address => mapping(uint => uint))) _listHead;
+    // IdeaToken => owner => lockedUntil => bool
+    mapping(address => mapping(address => bytes32)) public _llHead;
 
-    event Locked(address ideaToken, address owner, uint lockedAmount, uint lockedUntil, uint lockedDuration, uint index);
-    event Withdrawn(address ideaToken, address owner, uint lockedDuration, uint index);
+    event Locked(address ideaToken, address owner, uint lockedAmount, uint lockedUntil, uint lockedDuration);
 
     /**
      * Initializes the contract
@@ -43,7 +47,6 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
         _ideaTokenFactory = IIdeaTokenFactory(ideaTokenFactory);
 
         _allowedDurations[31556952] = true; // 1 year
-        _allowedDurationsList.push(31556952);
     }
 
     /**
@@ -63,137 +66,97 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
         require(IERC20(ideaToken).transferFrom(msg.sender, address(this), amount), "lockTokens: transfer failed");
 
         uint lockedUntil = now + duration;
-        LockedEntry memory newEntry = LockedEntry({lockedUntil: lockedUntil, lockedAmount: amount});
-        _lockedEntries[ideaToken][recipient][duration].push(newEntry);
+        bytes32 location = getLLEntryStorageLocation(ideaToken, recipient, lockedUntil);
 
-        emit Locked(ideaToken, recipient, amount, lockedUntil, duration, _lockedEntries[ideaToken][recipient][duration].length - 1);
-    }
+        LLEntry storage entry = getLLEntry(location);
+        entry.amount = entry.amount.add(amount);
 
-    /**
-     * Withdraws all available IdeaTokens for a given account
-     *
-     * @param ideaToken The IdeaToken to withdraw
-     * @param recipient The account which will receive the IdeaTokens
-     */
-    function withdraw(address ideaToken, address recipient) external override {
-        withdrawMaxEntries(ideaToken, recipient, uint(-1));
-    }
+        // If an entry with this `until` does not already exist,
+        // create a new one and add it the LL
+        if(entry.until == 0) {
+            entry.until = lockedUntil;
+            entry.prev = bytes32(0);
+            entry.next = _llHead[ideaToken][recipient];
 
-    /**
-     * Same as `withdraw`, but is limited to a maximum amount of entries.
-     *
-     * @param ideaToken The IdeaToken to withdraw
-     * @param recipient The account which will receive the IdeaTokens
-     * @param maxEntries The maximum amount of entries to iterate over before exiting early
-     */
-    function withdrawMaxEntries(address ideaToken, address recipient, uint maxEntries) public override {
-       
-        uint ts = now;
-        uint counter = 0;
-        uint total = 0;
-        address user = msg.sender;
-
-        for(uint i = 0; i < _allowedDurationsList.length; i++) {
-            uint duration = _allowedDurationsList[i];
-            LockedEntry[] storage entries = _lockedEntries[ideaToken][user][duration];
-            uint head = _listHead[ideaToken][user][duration];
-            uint newHead = head;
-
-            for(uint j = head; j < entries.length && counter < maxEntries; j++) {
-                if(entries[j].lockedUntil >= ts) {
-                    break;
-                }
-
-                counter++;
-                newHead++;
-                total = total.add(entries[j].lockedAmount);
-
-                delete entries[j];
-                emit Withdrawn(ideaToken, user, duration, j);
+            bytes32 currentHeadID = _llHead[ideaToken][recipient];
+            if(currentHeadID != bytes32(0)) {
+                // Set `prev` of the old head to the new entry
+                LLEntry storage head = getLLEntry(currentHeadID);
+                head.prev = location;
             } 
 
-            _listHead[ideaToken][user][duration] = newHead;
+            _llHead[ideaToken][recipient] = location;
+        }
 
-            
-            if(counter >= maxEntries) {
-                break;
+        emit Locked(ideaToken, recipient, amount, lockedUntil, duration);
+    }
+
+    /**
+     * Withdraws a given list of locked tokens
+     *
+     * @param ideaToken The IdeaToken to withdraw
+     * @param untils List of timestamps until which tokens are locked
+     * @param recipient The account which will receive the IdeaTokens
+     */
+    function withdraw(address ideaToken, uint[] calldata untils, address recipient) external override {
+
+        uint ts = now;
+        uint total = 0;
+
+        for(uint i = 0; i < untils.length; i++) {
+            uint until = untils[i];
+            require(ts > until, "withdraw: too early");
+
+            bytes32 location = getLLEntryStorageLocation(ideaToken, recipient, until);
+            LLEntry storage entry = getLLEntry(location);
+
+            require(entry.until > 0, "withdraw: invalid until");
+            total = total.add(entry.amount);
+
+            if(entry.next != bytes32(0)) {
+                // Set `prev` of the next entry
+                LLEntry storage next = getLLEntry(entry.next);
+                next.prev = entry.prev;
             }
+
+            if(entry.prev != bytes32(0)) {
+                // Set `next` of the prev entry
+                LLEntry storage prev = getLLEntry(entry.prev);
+                prev.next = entry.next;
+            } else {
+                // This was the first entry in the LL
+                // Update the head to the next entry
+                // If this was also the only entry in the list
+                // head will be set to 0
+                _llHead[ideaToken][recipient] = entry.next;
+            }
+
+            // Reset storage to 0
+            clearEntry(entry);
         }
 
         if(total > 0) {
-            IERC20(ideaToken).transfer(recipient, total);
+            require(IERC20(ideaToken).transfer(recipient, total), "withdraw: transfer failed");
         }
     }
 
     /**
-     * Returns the amount of locked IdeaTokens for a given account.
-     * Includes withdrawable tokens
+     * Returns all locked entries up to `maxEntries` for `user`
      *
-     * @param ideaToken The address of the IdeaToken
-     * @param owner The holder account
+     * @param ideaToken The IdeaToken for which to return the locked entries
+     * @param user The user for which to return the locked entries
+     * @param maxEntries The maximum amount of entries to return
      *
-     * @return The amount of IdeaTokens held for this account
+     * @return All locked entries up to `maxEntries` for `user`
      */
-    function getTotalAmount(address ideaToken, address owner) external view override returns (uint) {
-
-        uint total = 0;
-        for(uint i = 0; i < _allowedDurationsList.length; i++) {
-            uint duration = _allowedDurationsList[i];
-            uint head = _listHead[ideaToken][owner][duration];
-            LockedEntry[] storage entries = _lockedEntries[ideaToken][owner][duration];
-            
-            for(uint j = head; j < entries.length; j++) {
-                total = total.add(entries[j].lockedAmount);
-            }
-        }
-
-        return total;
-    }
-
-    /**
-     * Returns the amount of withdrawable IdeaTokens for a given account
-     *
-     * @param ideaToken The address of the IdeaToken
-     * @param owner The holder account
-     *
-     * @return The amount of withdrawable IdeaTokens for this account
-     */
-    function getWithdrawableAmount(address ideaToken, address owner) external view override returns (uint) {
-        uint ts = now;
-        uint total = 0;
-        for(uint i = 0; i < _allowedDurationsList.length; i++) {
-            uint duration = _allowedDurationsList[i];
-            uint head = _listHead[ideaToken][owner][duration];
-            LockedEntry[] storage entries = _lockedEntries[ideaToken][owner][duration];
-
-            for(uint j = head; j < entries.length; j++) {
-                if(entries[j].lockedUntil >= ts) {
-                    break;
-                }
-                
-                total = total.add(entries[j].lockedAmount);
-            }
-        }
-
-        return total;
-    }
-
-    /**
-     * Returns the available LockedEntries for an account
-     *
-     * @param ideaToken The address of the IdeaToken
-     * @param owner The holder account
-     *
-     * @return The available LockedEntries for this account
-     */
-    function getLockedEntries(address ideaToken, address owner) external view override returns (LockedEntry[] memory) {
-
+    function getLockedEntries(address ideaToken, address user, uint maxEntries) external view override returns (LockedEntry[] memory) {
+        // Calculate the required size of the returned array
+        bytes32 next = _llHead[ideaToken][user];
         uint len = 0;
-        for(uint i = 0; i < _allowedDurationsList.length; i++) {
-            uint duration = _allowedDurationsList[i];
-            uint head = _listHead[ideaToken][owner][duration];
-            LockedEntry[] storage entries = _lockedEntries[ideaToken][owner][duration];
-            len += entries.length - head;
+        while(next != bytes32(0) && len < maxEntries) {
+            len += 1;
+            LLEntry storage entry = getLLEntry(next);
+            next = entry.next;
         }
 
         if(len == 0) {
@@ -202,20 +165,37 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
         }
 
         LockedEntry[] memory ret = new LockedEntry[](len);
-        uint index = 0;
-        for(uint i = 0; i < _allowedDurationsList.length; i++) {
-            uint duration = _allowedDurationsList[i];
-            uint head = _listHead[ideaToken][owner][duration];
-            LockedEntry[] storage entries = _lockedEntries[ideaToken][owner][duration];
 
-            for(uint j = head; j < entries.length; j++) {
-                ret[index] = entries[j];
-                index++;
-            }
+        uint index = 0;
+        next = _llHead[ideaToken][user];
+        while(next != bytes32(0) && len < maxEntries) {
+            LLEntry storage entry = getLLEntry(next);
+            
+            ret[index] = LockedEntry({lockedUntil: entry.until, lockedAmount: entry.amount});
+
+            index++;
+            next = entry.next;
         }
 
         return ret;
     }
+
+    function clearEntry(LLEntry storage entry) internal {
+        entry.until = 0;
+        entry.amount = 0;
+        entry.prev = bytes32(0);
+        entry.next = bytes32(0);
+    }
+
+    function getLLEntryStorageLocation(address ideaToken, address owner, uint until) internal pure returns (bytes32) {
+        return keccak256(abi.encode(ideaToken, owner, until));
+    }
+
+    function getLLEntry(bytes32 location) internal pure returns (LLEntry storage) {
+        LLEntry storage entry;
+        assembly { entry_slot := location }
+        return entry;
+    } 
 
     /**
      * Adds an allowed duration
@@ -228,6 +208,5 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable, Ownable {
         require(duration > 0, "addAllowedDuration: invalid duration");
 
         _allowedDurations[duration] = true;
-        _allowedDurationsList.push(duration);
     }
 }
