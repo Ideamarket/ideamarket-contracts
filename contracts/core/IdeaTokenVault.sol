@@ -9,15 +9,6 @@ import "../util/Initializable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-
-/*
-    ========================================== TODO =========================================
-    * Update deployment script
-    * Update Subgraph binary search
-    * Update frontend new calls (different param ordering)
-*/
-
-
 /**
  * @title IdeaTokenVault
  * @author Alexander Schlindwein
