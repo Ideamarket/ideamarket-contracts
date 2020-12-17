@@ -2,7 +2,18 @@ require('dotenv').config({ path: '../.env' })
 const { ethers } = require('hardhat')
 const shared = require('./shared')
 async function run() {
-	const network = (await ethers.provider.getNetwork()).name
+	let network = (await ethers.provider.getNetwork()).name
+
+	if (network === 'rinkeby') {
+		const input = await shared.getInput('Use test network? [y/n] ')
+
+		if (input === 'Y' || input === 'y') {
+			console.log('Using test network')
+			network = 'test'
+		} else {
+			console.log('Using Rinkeby')
+		}
+	}
 
 	const marketName = await shared.getInput('market name')
 	const nameVerifierName = await shared.getInput('name of name verifier')
