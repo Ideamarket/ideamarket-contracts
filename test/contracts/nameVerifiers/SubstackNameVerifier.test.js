@@ -26,10 +26,19 @@ describe('nameVerifiers/SubstackNameVerifier', () => {
 		expect(await nameVerifier.verifyTokenName('VITALIK')).to.be.false
 	})
 
+	it('12vitalik34', async () => {
+		expect(await nameVerifier.verifyTokenName('12vitalik34')).to.be.true
+	})
+
+	it('(too long)', async () => {
+		expect(await nameVerifier.verifyTokenName('tooloooooooooooooooooooooooooog')).to.be.false
+	})
+
 	it('{unallowed ascii char}', async () => {
 		for (let i = 0; i < 255; i++) {
 			if (
-				!(i >= 0x61 && i <= 0x7a) //a-z
+				!(i >= 0x61 && i <= 0x7a) && // a-z
+				!(i >= 0x30 && i <= 0x39)    // 0-9
 			) {
 				expect(await nameVerifier.verifyTokenName(String.fromCharCode(i))).to.be.false
 			}
@@ -39,8 +48,8 @@ describe('nameVerifiers/SubstackNameVerifier', () => {
 	it('{allowed ascii char}', async () => {
 		for (let i = 0; i < 255; i++) {
 			if (
-				i >= 0x61 &&
-				i <= 0x7a //a-z
+				(i >= 0x61 && i <= 0x7a) || // a-z
+				(i >= 0x30 && i <= 0x39)    // 0-9
 			) {
 				expect(await nameVerifier.verifyTokenName(String.fromCharCode(i))).to.be.true
 			}
