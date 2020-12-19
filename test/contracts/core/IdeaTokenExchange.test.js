@@ -111,7 +111,8 @@ describe('core/IdeaTokenExchange', () => {
 				priceRise,
 				hatchTokens,
 				tradingFeeRate,
-				platformFeeRate
+				platformFeeRate,
+				false
 			)
 
 		marketID = await ideaTokenFactory.getMarketIDByName(marketName)
@@ -514,6 +515,55 @@ describe('core/IdeaTokenExchange', () => {
 		).to.be.revertedWith('sellTokens: not enough tokens')
 	})
 
+	it('can withdraw platform interest', async () => {
+		await ideaTokenFactory
+			.connect(adminAccount)
+			.addMarket(
+				'SomeOtherMarket',
+				domainNoSubdomainNameVerifier.address,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				true
+			)
+		const newMarketID = await ideaTokenFactory.getMarketIDByName('SomeOtherMarket')
+
+		await ideaTokenFactory.addToken('someothertoken.com', newMarketID)
+		const newTokenID = await ideaTokenFactory.getTokenIDByName('someothertoken.com', newMarketID)
+		const newIdeaToken = new ethers.Contract(
+			(await ideaTokenFactory.getTokenInfo(newMarketID, newTokenID)).ideaToken,
+			IdeaToken.interface,
+			IdeaToken.signer
+		)
+
+		const amount = tenPow18
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(newIdeaToken.address, tenPow18)
+		await dai.mint(userAccount.address, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+		await dai.approve(ideaTokenExchange.address, cost)
+
+		expect((await ideaTokenExchange.getPlatformInterestPayable(newMarketID)).eq(BigNumber.from('0'))).to.be.true
+		await ideaTokenExchange.buyTokens(newIdeaToken.address, amount, amount, cost, userAccount.address)
+		expect((await ideaTokenExchange.getPlatformInterestPayable(newMarketID)).eq(BigNumber.from('0'))).to.be.true
+
+		await cDai.setExchangeRate(tenPow18.mul(BigNumber.from('2')))
+
+		const interest = await ideaTokenExchange.getPlatformInterestPayable(newMarketID)
+		expect(interest.eq(BigNumber.from('0'))).to.be.false
+		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(BigNumber.from('0'))).to.be.true
+
+		await ideaTokenExchange
+			.connect(adminAccount)
+			.authorizePlatformFeeWithdrawer(newMarketID, platformFeeReceiverAccount.address)
+
+		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformInterest(newMarketID)
+
+		expect((await ideaTokenExchange.getPlatformInterestPayable(newMarketID)).eq(BigNumber.from('0'))).to.be.true
+		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(interest)).to.be.true
+	})
+
 	it('no trading fee available', async () => {
 		expect((await ideaTokenExchange.getTradingFeePayable()).eq(BigNumber.from('0'))).to.be.true
 		await ideaTokenExchange.withdrawTradingFee()
@@ -527,6 +577,16 @@ describe('core/IdeaTokenExchange', () => {
 
 		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(BigNumber.from('0'))).to.be.true
 		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformFee(marketID)
+		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(BigNumber.from('0'))).to.be.true
+	})
+
+	it('no platform interest available', async () => {
+		await ideaTokenExchange
+			.connect(adminAccount)
+			.authorizePlatformFeeWithdrawer(marketID, platformFeeReceiverAccount.address)
+
+		expect((await ideaTokenExchange.getPlatformInterestPayable(marketID)).eq(BigNumber.from('0'))).to.be.true
+		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformInterest(marketID)
 		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(BigNumber.from('0'))).to.be.true
 	})
 
@@ -555,6 +615,12 @@ describe('core/IdeaTokenExchange', () => {
 	it('fail withdraw platform fee not authorized', async () => {
 		await expect(ideaTokenExchange.withdrawPlatformFee(marketID)).to.be.revertedWith(
 			'withdrawPlatformFee: not authorized'
+		)
+	})
+
+	it('fail withdraw platform interest not authorized', async () => {
+		await expect(ideaTokenExchange.withdrawPlatformInterest(marketID)).to.be.revertedWith(
+			'withdrawPlatformInterest: not authorized'
 		)
 	})
 

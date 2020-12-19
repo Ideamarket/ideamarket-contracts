@@ -75,6 +75,7 @@ describe('timelock/DSPause', () => {
 			'1',
 			'0',
 			'0',
+			false,
 		])
 
 		await dsPause.plot(spell.address, tag, fax, eta)

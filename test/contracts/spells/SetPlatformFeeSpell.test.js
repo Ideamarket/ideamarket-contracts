@@ -52,7 +52,8 @@ describe('spells/SetPlatformFeeSpell', () => {
 			priceRise,
 			hatchTokens,
 			tradingFeeRate,
-			platformFeeRate
+			platformFeeRate,
+			false
 		)
 
 		await factory.setOwner(dsPauseProxyAddress)

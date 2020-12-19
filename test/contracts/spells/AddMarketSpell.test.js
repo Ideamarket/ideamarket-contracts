@@ -56,6 +56,7 @@ describe('spells/AddMarketSpell', () => {
 			hatchTokens,
 			tradingFeeRate,
 			platformFeeRate,
+			false,
 		])
 
 		await dsPause.plot(spell.address, tag, fax, eta)

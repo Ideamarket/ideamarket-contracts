@@ -14,12 +14,14 @@ const allDeploymentParams = {
 		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
 		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
 		twitterPlatformFeeRate: BigNumber.from('25'), // 0.25%
+		twitterAllInterestToPlatform: false,
 
 		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
 		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
 		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
 		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
 		substackPlatformFeeRate: BigNumber.from('25'), // 0.25%
+		substackAllInterestToPlatform: false,
 	},
 	test: {
 		timelockDelay: '1',
@@ -30,12 +32,14 @@ const allDeploymentParams = {
 		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
 		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
 		twitterPlatformFeeRate: BigNumber.from('25'), // 0.25%
+		twitterAllInterestToPlatform: false,
 
 		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
 		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
 		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
 		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
 		substackPlatformFeeRate: BigNumber.from('25'), // 0.25%
+		substackAllInterestToPlatform: false,
 	},
 }
 
@@ -387,6 +391,7 @@ async function main() {
 			deploymentParams.twitterHatchTokens,
 			deploymentParams.twitterTradingFeeRate,
 			deploymentParams.twitterPlatformFeeRate,
+			deploymentParams.twitterAllInterestToPlatform,
 			{ gasPrice: deploymentParams.gasPrice }
 		)
 		console.log('')
@@ -422,6 +427,7 @@ async function main() {
 			deploymentParams.substackHatchTokens,
 			deploymentParams.substackTradingFeeRate,
 			deploymentParams.substackPlatformFeeRate,
+			deploymentParams.substackAllInterestToPlatform,
 			{ gasPrice: deploymentParams.gasPrice }
 		)
 		console.log('')

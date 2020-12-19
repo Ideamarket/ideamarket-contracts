@@ -20,8 +20,8 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     using SafeMath for uint256;
 
-    struct TokenExchangeInfo {
-        uint daiInToken; // The amount of Dai collected by trading
+    struct ExchangeInfo {
+        uint dai; // The amount of Dai collected by trading
         uint invested; // The amount of "investment tokens", e.g. cDai
     }
 
@@ -34,7 +34,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     mapping(uint => uint) _platformFeeInvested;
     mapping(uint => address) _authorizedPlatformFeeWithdrawers;
 
-    mapping(address => TokenExchangeInfo) _tokensExchangeInfo;
+    mapping(uint => ExchangeInfo) _platformsExchangeInfo;
+    mapping(address => ExchangeInfo) _tokensExchangeInfo;
     mapping(address => address) _authorizedInterestWithdrawers;
 
     IIdeaTokenFactory _ideaTokenFactory;
@@ -46,8 +47,10 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     event NewInterestWithdrawer(address ideaToken, address withdrawer);
     event NewPlatformFeeWithdrawer(uint marketID, address withdrawer);
 
-    event InvestedState(uint marketID, address ideaToken, uint daiInToken, uint daiInvested, uint tradingFeeInvested, uint platformFeeInvested, uint volume);
-    event DaiRedeemed(address ideaToken, uint investmentToken);
+    event InvestedState(uint marketID, address ideaToken, uint dai, uint daiInvested, uint tradingFeeInvested, uint platformFeeInvested, uint volume);
+    
+    event PlatformInterestRedeemed(uint marketID, uint investmentToken);
+    event TokenInterestRedeemed(address ideaToken, uint investmentToken);
     event TradingFeeRedeemed();
     event PlatformFeeRedeemed(uint marketID);
     
@@ -94,11 +97,17 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
         _interestManager.accrueInterest();
 
-        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
+        ExchangeInfo storage exchangeInfo;
+        if(marketDetails.allInterestToPlatform) {
+            exchangeInfo = _platformsExchangeInfo[marketID];
+        } else {
+            exchangeInfo = _tokensExchangeInfo[ideaToken];
+        }
+
         uint tradingFeeInvested;
         uint platformFeeInvested;
         uint invested;
-        uint daiInToken;
+        uint dai;
         {
         uint totalRedeemed = _interestManager.redeem(address(this), amounts.total);
         uint tradingFeeRedeemed = _interestManager.underlyingToInvestmentToken(amounts.tradingFee);
@@ -110,11 +119,11 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _tradingFeeInvested = tradingFeeInvested;
         platformFeeInvested = _platformFeeInvested[marketID].add(platformFeeRedeemed);
         _platformFeeInvested[marketID] = platformFeeInvested;
-        daiInToken = exchangeInfo.daiInToken.sub(amounts.raw);
-        exchangeInfo.daiInToken = daiInToken;
+        dai = exchangeInfo.dai.sub(amounts.raw);
+        exchangeInfo.dai = dai;
         }
 
-        emit InvestedState(marketID, ideaToken, daiInToken, invested, tradingFeeInvested, platformFeeInvested, amounts.raw);
+        emit InvestedState(marketID, ideaToken, dai, invested, tradingFeeInvested, platformFeeInvested, amounts.raw);
         _dai.transfer(recipient, amounts.total);
     }
 
@@ -243,15 +252,21 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _interestManager.invest(amounts.total);
 
 
-        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[ideaToken];
+        ExchangeInfo storage exchangeInfo;
+        if(marketDetails.allInterestToPlatform) {
+            exchangeInfo = _platformsExchangeInfo[marketID];
+        } else {
+            exchangeInfo = _tokensExchangeInfo[ideaToken];
+        }
+
         exchangeInfo.invested = exchangeInfo.invested.add(_interestManager.underlyingToInvestmentToken(amounts.raw));
         uint tradingFeeInvested = _tradingFeeInvested.add(_interestManager.underlyingToInvestmentToken(amounts.tradingFee));
         _tradingFeeInvested = tradingFeeInvested;
         uint platformFeeInvested = _platformFeeInvested[marketID].add(_interestManager.underlyingToInvestmentToken(amounts.platformFee));
         _platformFeeInvested[marketID] = platformFeeInvested;
-        exchangeInfo.daiInToken = exchangeInfo.daiInToken.add(amounts.raw);
+        exchangeInfo.dai = exchangeInfo.dai.add(amounts.raw);
     
-        emit InvestedState(marketID, ideaToken, exchangeInfo.daiInToken, exchangeInfo.invested, tradingFeeInvested, platformFeeInvested, amounts.total);
+        emit InvestedState(marketID, ideaToken, exchangeInfo.dai, exchangeInfo.invested, tradingFeeInvested, platformFeeInvested, amounts.total);
         IIdeaToken(ideaToken).mint(recipient, actualAmount);
     }
 
@@ -358,22 +373,22 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
             return;
         }
 
-        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
+        ExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
         exchangeInfo.invested = exchangeInfo.invested.sub(_interestManager.redeem(msg.sender, interestPayable));
 
-        emit DaiRedeemed(token, exchangeInfo.invested);
+        emit TokenInterestRedeemed(token, exchangeInfo.invested);
     }
 
     /**
-     * Returns the interest available to be paid out
+     * Returns the interest available to be paid out for a token
      *
      * @param token The token from which the generated interest is to be withdrawn
      *
      * @return The interest available to be paid out
      */
     function getInterestPayable(address token) public view returns (uint) {
-        TokenExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
-        return _interestManager.investmentTokenToUnderlying(exchangeInfo.invested).sub(exchangeInfo.daiInToken);
+        ExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
+        return _interestManager.investmentTokenToUnderlying(exchangeInfo.invested).sub(exchangeInfo.dai);
     }
 
     /**
@@ -392,6 +407,38 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _authorizedInterestWithdrawers[token] = withdrawer;
 
         emit NewInterestWithdrawer(token, withdrawer);
+    }
+
+    /**
+     * Withdraws available interest for a platform
+     *
+     * @param marketID The market id from which the generated interest is to be withdrawn
+     */
+    function withdrawPlatformInterest(uint marketID) external {
+        require(_authorizedPlatformFeeWithdrawers[marketID] == msg.sender, "withdrawPlatformInterest: not authorized");
+        _interestManager.accrueInterest();
+
+        uint platformInterestPayable = getPlatformInterestPayable(marketID);
+        if(platformInterestPayable == 0) {
+            return;
+        }
+
+        ExchangeInfo storage exchangeInfo = _platformsExchangeInfo[marketID];
+        exchangeInfo.invested = exchangeInfo.invested.sub(_interestManager.redeem(msg.sender, platformInterestPayable));
+
+        emit PlatformInterestRedeemed(marketID, exchangeInfo.invested);
+    }
+
+    /**
+     * Returns the interest available to be paid out for a platform
+     *
+     * @param marketID The market id from which the generated interest is to be withdrawn
+     *
+     * @return The interest available to be paid out
+     */
+    function getPlatformInterestPayable(uint marketID) public view returns (uint) {
+        ExchangeInfo storage exchangeInfo = _platformsExchangeInfo[marketID];
+        return _interestManager.investmentTokenToUnderlying(exchangeInfo.invested).sub(exchangeInfo.dai);
     }
 
     /**

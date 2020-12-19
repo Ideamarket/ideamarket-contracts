@@ -38,7 +38,7 @@ describe('nameVerifiers/SubstackNameVerifier', () => {
 		for (let i = 0; i < 255; i++) {
 			if (
 				!(i >= 0x61 && i <= 0x7a) && // a-z
-				!(i >= 0x30 && i <= 0x39)    // 0-9
+				!(i >= 0x30 && i <= 0x39) // 0-9
 			) {
 				expect(await nameVerifier.verifyTokenName(String.fromCharCode(i))).to.be.false
 			}
@@ -49,7 +49,7 @@ describe('nameVerifiers/SubstackNameVerifier', () => {
 		for (let i = 0; i < 255; i++) {
 			if (
 				(i >= 0x61 && i <= 0x7a) || // a-z
-				(i >= 0x30 && i <= 0x39)    // 0-9
+				(i >= 0x30 && i <= 0x39) // 0-9
 			) {
 				expect(await nameVerifier.verifyTokenName(String.fromCharCode(i))).to.be.true
 			}

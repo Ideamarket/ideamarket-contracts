@@ -22,13 +22,14 @@ contract AddMarketSpell {
      * @param hatchTokens The amount of hatch tokens
      * @param tradingFeeRate The trading fee
      * @param platformFeeRate The platform fee
+     * @param allInterestToPlatform: If true, all interest goes to the platform instead of the token owner
      */
     function execute(address factory, string calldata marketName, address nameVerifier,
                      uint baseCost, uint priceRise, uint hatchTokens,
-                     uint tradingFeeRate, uint platformFeeRate) external {
+                     uint tradingFeeRate, uint platformFeeRate, bool allInterestToPlatform) external {
 
         IIdeaTokenFactory(factory).addMarket(marketName, nameVerifier,
                                               baseCost, priceRise, hatchTokens,
-                                              tradingFeeRate, platformFeeRate);
+                                              tradingFeeRate, platformFeeRate, allInterestToPlatform);
     }
 }

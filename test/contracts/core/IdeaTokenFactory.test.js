@@ -56,7 +56,8 @@ describe('core/IdeaTokenFactory', () => {
 				priceRise,
 				hatchTokens,
 				tradingFeeRate,
-				platformFeeRate
+				platformFeeRate,
+				false
 			)
 
 		expect(BigNumber.from('1').eq(await ideaTokenFactory.getNumMarkets())).to.be.equal
@@ -100,7 +101,8 @@ describe('core/IdeaTokenFactory', () => {
 				priceRise,
 				hatchTokens,
 				tradingFeeRate,
-				platformFeeRate
+				platformFeeRate,
+				false
 			)
 
 		await expect(
@@ -113,7 +115,8 @@ describe('core/IdeaTokenFactory', () => {
 					priceRise,
 					hatchTokens,
 					tradingFeeRate,
-					platformFeeRate
+					platformFeeRate,
+					false
 				)
 		).to.be.revertedWith('addMarket: market exists already')
 	})
@@ -129,7 +132,8 @@ describe('core/IdeaTokenFactory', () => {
 					priceRise,
 					hatchTokens,
 					tradingFeeRate,
-					platformFeeRate
+					platformFeeRate,
+					false
 				)
 		).to.be.revertedWith('addMarket: invalid parameters')
 
@@ -143,7 +147,8 @@ describe('core/IdeaTokenFactory', () => {
 					BigNumber.from('0'),
 					hatchTokens,
 					tradingFeeRate,
-					platformFeeRate
+					platformFeeRate,
+					false
 				)
 		).to.be.revertedWith('addMarket: invalid parameters')
 	})
@@ -159,7 +164,8 @@ describe('core/IdeaTokenFactory', () => {
 					priceRise,
 					hatchTokens,
 					tradingFeeRate,
-					platformFeeRate
+					platformFeeRate,
+					false
 				)
 		).to.be.revertedWith('Ownable: onlyOwner')
 	})
@@ -176,7 +182,8 @@ describe('core/IdeaTokenFactory', () => {
 				priceRise,
 				hatchTokens,
 				tradingFeeRate,
-				platformFeeRate
+				platformFeeRate,
+				true
 			)
 
 		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'))
@@ -193,6 +200,7 @@ describe('core/IdeaTokenFactory', () => {
 		expect(marketDetails.hatchTokens.eq(hatchTokens)).to.be.true
 		expect(marketDetails.tradingFeeRate.eq(tradingFeeRate)).to.be.true
 		expect(marketDetails.platformFeeRate.eq(platformFeeRate)).to.be.true
+		expect(marketDetails.allInterestToPlatform).to.be.true
 
 		const ideaToken = new ethers.Contract(
 			(await ideaTokenFactory.getTokenInfo(BigNumber.from('1'), BigNumber.from('1'))).ideaToken,
@@ -215,7 +223,8 @@ describe('core/IdeaTokenFactory', () => {
 				priceRise,
 				hatchTokens,
 				tradingFeeRate,
-				platformFeeRate
+				platformFeeRate,
+				false
 			)
 
 		await expect(ideaTokenFactory.addToken('some.invalid.name', BigNumber.from('1'))).to.be.revertedWith(
@@ -235,7 +244,8 @@ describe('core/IdeaTokenFactory', () => {
 				priceRise,
 				hatchTokens,
 				tradingFeeRate,
-				platformFeeRate
+				platformFeeRate,
+				false
 			)
 
 		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'))
@@ -256,7 +266,8 @@ describe('core/IdeaTokenFactory', () => {
 				priceRise,
 				hatchTokens,
 				tradingFeeRate,
-				platformFeeRate
+				platformFeeRate,
+				false
 			)
 
 		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'))
@@ -268,7 +279,16 @@ describe('core/IdeaTokenFactory', () => {
 	it('can set trading fee', async () => {
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.addMarket(marketName, zeroAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate)
+			.addMarket(
+				marketName,
+				zeroAddress,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				false
+			)
 
 		await ideaTokenFactory.connect(adminAccount).setTradingFee(BigNumber.from('1'), BigNumber.from('123'))
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(BigNumber.from('1'))
@@ -278,7 +298,16 @@ describe('core/IdeaTokenFactory', () => {
 	it('fail user sets trading fee', async () => {
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.addMarket(marketName, zeroAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate)
+			.addMarket(
+				marketName,
+				zeroAddress,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				false
+			)
 
 		await expect(
 			ideaTokenFactory.connect(userAccount).setTradingFee(BigNumber.from('1'), BigNumber.from('123'))
@@ -288,7 +317,16 @@ describe('core/IdeaTokenFactory', () => {
 	it('fail set trading fee invalid market', async () => {
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.addMarket(marketName, zeroAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate)
+			.addMarket(
+				marketName,
+				zeroAddress,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				false
+			)
 
 		await expect(
 			ideaTokenFactory.connect(adminAccount).setTradingFee(BigNumber.from('2'), BigNumber.from('123'))
@@ -298,7 +336,16 @@ describe('core/IdeaTokenFactory', () => {
 	it('can set platform fee', async () => {
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.addMarket(marketName, zeroAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate)
+			.addMarket(
+				marketName,
+				zeroAddress,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				false
+			)
 
 		await ideaTokenFactory.connect(adminAccount).setPlatformFee(BigNumber.from('1'), BigNumber.from('123'))
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(BigNumber.from('1'))
@@ -308,7 +355,16 @@ describe('core/IdeaTokenFactory', () => {
 	it('fail user sets platform fee', async () => {
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.addMarket(marketName, zeroAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate)
+			.addMarket(
+				marketName,
+				zeroAddress,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				false
+			)
 
 		await expect(
 			ideaTokenFactory.connect(userAccount).setPlatformFee(BigNumber.from('1'), BigNumber.from('123'))
@@ -318,7 +374,16 @@ describe('core/IdeaTokenFactory', () => {
 	it('fail set platform fee invalid market', async () => {
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.addMarket(marketName, zeroAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate)
+			.addMarket(
+				marketName,
+				zeroAddress,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				false
+			)
 
 		await expect(
 			ideaTokenFactory.connect(adminAccount).setPlatformFee(BigNumber.from('2'), BigNumber.from('123'))
@@ -328,7 +393,16 @@ describe('core/IdeaTokenFactory', () => {
 	it('can set name verifier', async () => {
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.addMarket(marketName, zeroAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate)
+			.addMarket(
+				marketName,
+				zeroAddress,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				false
+			)
 
 		await ideaTokenFactory.connect(adminAccount).setNameVerifier(BigNumber.from('1'), someAddress)
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(BigNumber.from('1'))
@@ -338,7 +412,16 @@ describe('core/IdeaTokenFactory', () => {
 	it('fail user sets name verifier ', async () => {
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.addMarket(marketName, zeroAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate)
+			.addMarket(
+				marketName,
+				zeroAddress,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				false
+			)
 
 		await expect(
 			ideaTokenFactory.connect(userAccount).setNameVerifier(BigNumber.from('1'), someAddress)
@@ -348,7 +431,16 @@ describe('core/IdeaTokenFactory', () => {
 	it('fail set name verifier invalid market', async () => {
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.addMarket(marketName, zeroAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate)
+			.addMarket(
+				marketName,
+				zeroAddress,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				false
+			)
 
 		await expect(
 			ideaTokenFactory.connect(adminAccount).setNameVerifier(BigNumber.from('2'), someAddress)

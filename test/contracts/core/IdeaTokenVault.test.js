@@ -118,7 +118,8 @@ describe('core/IdeaTokenVault', () => {
 				priceRise,
 				hatchTokens,
 				tradingFeeRate,
-				platformFeeRate
+				platformFeeRate,
+				false
 			)
 
 		marketID = await ideaTokenFactory.getMarketIDByName(marketName)

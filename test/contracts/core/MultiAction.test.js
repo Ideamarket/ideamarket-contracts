@@ -155,7 +155,8 @@ describe('core/MultiAction', () => {
 				priceRise,
 				hatchTokens,
 				tradingFeeRate,
-				platformFeeRate
+				platformFeeRate,
+				false
 			)
 
 		marketID = await ideaTokenFactory.getMarketIDByName(marketName)

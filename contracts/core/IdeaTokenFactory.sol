@@ -44,6 +44,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                     uint hatchTokens,
                     uint tradingFeeRate,
                     uint platformFeeRate,
+                    bool allInterestToPlatform,
                     address nameVerifier);
 
     event NewToken(uint id, uint marketID, string name, address addr);
@@ -72,16 +73,16 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      * @param hatchTokens: The amount of IdeaTokens for which the price does not change initially
      * @param tradingFeeRate: The trading fee rate
      * @param platformFeeRate: The platform fee rate
+     * @param allInterestToPlatform: If true, all interest goes to the platform instead of the token owner
      */
     function addMarket(string calldata marketName, address nameVerifier,
                        uint baseCost, uint priceRise, uint hatchTokens,
-                       uint tradingFeeRate, uint platformFeeRate) external override onlyOwner {
+                       uint tradingFeeRate, uint platformFeeRate, bool allInterestToPlatform) external override onlyOwner {
         require(_marketIDs[marketName] == 0, "addMarket: market exists already");
         require(baseCost > 0 && priceRise > 0, "addMarket: invalid parameters");
 
         uint marketID = ++_numMarkets;
 
-        { // Stack too deep
         MarketInfo memory marketInfo = MarketInfo({
             marketDetails: MarketDetails({
                 exists: true,
@@ -93,22 +94,28 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                 priceRise: priceRise,
                 hatchTokens: hatchTokens,
                 tradingFeeRate: tradingFeeRate,
-                platformFeeRate: platformFeeRate
+                platformFeeRate: platformFeeRate,
+                allInterestToPlatform: allInterestToPlatform
             })
         });
 
         _markets[marketID] = marketInfo;
         _marketIDs[marketName] = marketID;
-        }
 
-        emit NewMarket(marketID,
-                       marketName,
-                       baseCost,
-                       priceRise,
-                       hatchTokens,
-                       tradingFeeRate,
-                       platformFeeRate,
-                       nameVerifier);
+        emitNewMarketEvent(marketInfo.marketDetails);
+    }
+
+    /// Stack too deep if we do it directly in `addMarket`
+    function emitNewMarketEvent(MarketDetails memory marketDetails) internal {
+        emit NewMarket(marketDetails.id,
+                       marketDetails.name,
+                       marketDetails.baseCost,
+                       marketDetails.priceRise,
+                       marketDetails.hatchTokens,
+                       marketDetails.tradingFeeRate,
+                       marketDetails.platformFeeRate,
+                       marketDetails.allInterestToPlatform,
+                       address(marketDetails.nameVerifier));
     }
 
     /**

@@ -37,12 +37,14 @@ struct MarketDetails {
     uint hatchTokens;
     uint tradingFeeRate;
     uint platformFeeRate;
+
+    bool allInterestToPlatform;
 }
 
 interface IIdeaTokenFactory {
     function addMarket(string calldata marketName, address nameVerifier,
                        uint baseCost, uint priceRise, uint hatchTokens,
-                       uint tradingFeeRate, uint platformFeeRate) external;
+                       uint tradingFeeRate, uint platformFeeRate, bool allInterestToPlatform) external;
 
     function addToken(string calldata tokenName, uint marketID) external;
 
