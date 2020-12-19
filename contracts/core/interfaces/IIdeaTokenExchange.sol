@@ -27,6 +27,11 @@ interface IIdeaTokenExchange {
     function authorizePlatformFeeWithdrawer(uint marketID, address withdrawer) external;
     function withdrawTradingFee() external;
     function withdrawInterest(address token) external;
+    function withdrawPlatformInterest(uint marketID) external;
+    function withdrawPlatformFee(uint marketID) external;
+    function getInterestPayable(address token) external view returns (uint);
+    function getPlatformInterestPayable(uint marketID) external view returns (uint);
+    function getPlatformFeePayable(uint marketID) external view returns (uint);
     function getTradingFeePayable() external view returns (uint);
     function setAuthorizer(address authorizer) external;
     function isTokenFeeDisabled(address ideaToken) external view returns (bool);

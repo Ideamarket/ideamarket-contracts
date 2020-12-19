@@ -386,7 +386,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The interest available to be paid out
      */
-    function getInterestPayable(address token) public view returns (uint) {
+    function getInterestPayable(address token) public view override returns (uint) {
         ExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
         return _interestManager.investmentTokenToUnderlying(exchangeInfo.invested).sub(exchangeInfo.dai);
     }
@@ -414,7 +414,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param marketID The market id from which the generated interest is to be withdrawn
      */
-    function withdrawPlatformInterest(uint marketID) external {
+    function withdrawPlatformInterest(uint marketID) external override {
         require(_authorizedPlatformFeeWithdrawers[marketID] == msg.sender, "withdrawPlatformInterest: not authorized");
         _interestManager.accrueInterest();
 
@@ -436,7 +436,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The interest available to be paid out
      */
-    function getPlatformInterestPayable(uint marketID) public view returns (uint) {
+    function getPlatformInterestPayable(uint marketID) public view override returns (uint) {
         ExchangeInfo storage exchangeInfo = _platformsExchangeInfo[marketID];
         return _interestManager.investmentTokenToUnderlying(exchangeInfo.invested).sub(exchangeInfo.dai);
     }
@@ -446,7 +446,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param marketID The market from which the generated platform fee is to be withdrawn
      */
-    function withdrawPlatformFee(uint marketID) external {
+    function withdrawPlatformFee(uint marketID) external override {
         require(_authorizedPlatformFeeWithdrawers[marketID] == msg.sender, "withdrawPlatformFee: not authorized");
         _interestManager.accrueInterest();
 
@@ -468,7 +468,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The platform fee available to be paid out
      */
-    function getPlatformFeePayable(uint marketID) public view returns (uint) {
+    function getPlatformFeePayable(uint marketID) public view override returns (uint) {
         return _interestManager.investmentTokenToUnderlying(_platformFeeInvested[marketID]);
     }
 
