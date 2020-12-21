@@ -49,10 +49,10 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
     event InvestedState(uint marketID, address ideaToken, uint dai, uint daiInvested, uint tradingFeeInvested, uint platformFeeInvested, uint volume);
     
-    event PlatformInterestRedeemed(uint marketID, uint investmentToken);
-    event TokenInterestRedeemed(address ideaToken, uint investmentToken);
-    event TradingFeeRedeemed();
-    event PlatformFeeRedeemed(uint marketID);
+    event PlatformInterestRedeemed(uint marketID, uint investmentToken, uint daiRedeemed);
+    event TokenInterestRedeemed(address ideaToken, uint investmentToken, uint daiRedeemed);
+    event TradingFeeRedeemed(uint daiRedeemed);
+    event PlatformFeeRedeemed(uint marketID, uint daiRedeemed);
     
     /**
      * Initializes the contract
@@ -376,7 +376,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         ExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
         exchangeInfo.invested = exchangeInfo.invested.sub(_interestManager.redeem(msg.sender, interestPayable));
 
-        emit TokenInterestRedeemed(token, exchangeInfo.invested);
+        emit TokenInterestRedeemed(token, exchangeInfo.invested, interestPayable);
     }
 
     /**
@@ -426,7 +426,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         ExchangeInfo storage exchangeInfo = _platformsExchangeInfo[marketID];
         exchangeInfo.invested = exchangeInfo.invested.sub(_interestManager.redeem(msg.sender, platformInterestPayable));
 
-        emit PlatformInterestRedeemed(marketID, exchangeInfo.invested);
+        emit PlatformInterestRedeemed(marketID, exchangeInfo.invested, platformInterestPayable);
     }
 
     /**
@@ -458,7 +458,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         _platformFeeInvested[marketID] = 0;
         _interestManager.redeem(msg.sender, platformFeePayable);
 
-        emit PlatformFeeRedeemed(marketID);
+        emit PlatformFeeRedeemed(marketID, platformFeePayable);
     }
 
     /**
@@ -495,15 +495,16 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      */
     function withdrawTradingFee() external override {
 
-        if(_tradingFeeInvested == 0) {
+        uint invested = _tradingFeeInvested;
+        if(invested == 0) {
             return;
         }
 
-        uint redeem = _tradingFeeInvested;
         _tradingFeeInvested = 0;
-        _interestManager.redeemInvestmentToken(_tradingFeeRecipient, redeem);
+        uint redeem = _interestManager.investmentTokenToUnderlying(invested);
+        _interestManager.redeem(_tradingFeeRecipient, redeem);
 
-        emit TradingFeeRedeemed();
+        emit TradingFeeRedeemed(redeem);
     }
 
     /**
