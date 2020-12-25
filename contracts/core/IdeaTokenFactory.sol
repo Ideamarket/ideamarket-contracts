@@ -47,7 +47,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
                     bool allInterestToPlatform,
                     address nameVerifier);
 
-    event NewToken(uint id, uint marketID, string name, address addr);
+    event NewToken(uint id, uint marketID, string name, address addr, address lister);
     event NewTradingFee(uint marketID, uint tradingFeeRate);
     event NewPlatformFee(uint marketID, uint platformFeeRate);
     event NewNameVerifier(uint marketID, address nameVerifier);
@@ -150,7 +150,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
             tokenID: tokenID
         });
 
-        emit NewToken(tokenID, marketID, tokenName, address(ideaToken));
+        emit NewToken(tokenID, marketID, tokenName, address(ideaToken), msg.sender);
     }
 
     /**
