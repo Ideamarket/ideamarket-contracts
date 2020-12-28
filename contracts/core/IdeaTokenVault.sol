@@ -59,7 +59,7 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
         require(IERC20(ideaToken).allowance(msg.sender, address(this)) >= amount, "lockTokens: not enough allowance");
         require(IERC20(ideaToken).transferFrom(msg.sender, address(this), amount), "lockTokens: transfer failed");
 
-        uint lockedUntil = now + duration;
+        uint lockedUntil = duration.add(now);
         bytes32 location = getLLEntryStorageLocation(ideaToken, recipient, lockedUntil);
 
         LLEntry storage entry = getLLEntry(location);
