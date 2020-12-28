@@ -101,7 +101,7 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
             uint until = untils[i];
             require(ts > until, "withdraw: too early");
 
-            bytes32 location = getLLEntryStorageLocation(ideaToken, recipient, until);
+            bytes32 location = getLLEntryStorageLocation(ideaToken, msg.sender, until);
             LLEntry storage entry = getLLEntry(location);
 
             require(entry.until > 0, "withdraw: invalid until");
@@ -122,7 +122,7 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
                 // Update the head to the next entry
                 // If this was also the only entry in the list
                 // head will be set to 0
-                _llHead[ideaToken][recipient] = entry.next;
+                _llHead[ideaToken][msg.sender] = entry.next;
             }
 
             // Reset storage to 0
