@@ -13,7 +13,7 @@ The Ideamarket contracts for the Ethereum blockchain.
 
 ### Deploy
 
-`npx hardhat run --network <mainnet|rinkeby|test> scripts/Deploy.js`
+`npx hardhat run --network <mainnet|rinkeby> scripts/Deploy.js`
 
 ## Repository structure
 
