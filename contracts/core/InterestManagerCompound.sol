@@ -61,15 +61,6 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * Checks that the caller is the owner and delegates to redeemInternal
-     *
-     * @return The amount of burned cDai
-     */
-    function redeem(address recipient, uint amount) external onlyOwner returns (uint) {
-        return redeemInternal(recipient, amount);
-    }
-
-    /**
      * Redeems a given amount of Dai from Compound and sends it to the recipient
      *
      * @param recipient The recipient of the redeemed Dai
@@ -77,7 +68,7 @@ contract InterestManagerCompound is Ownable, Initializable {
      *
      * @return The amount of burned cDai
      */
-    function redeemInternal(address recipient, uint amount) internal returns (uint) {
+    function redeem(address recipient, uint amount) external onlyOwner returns (uint) {
         uint balanceBefore = _cDai.balanceOf(address(this));
         require(_cDai.redeemUnderlying(amount) == 0, "redeem: failed to redeem");
         uint balanceAfter = _cDai.balanceOf(address(this));
