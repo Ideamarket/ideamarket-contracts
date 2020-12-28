@@ -123,8 +123,9 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      *
      * @param tokenName The name of the token
      * @param marketID The ID of the market
+     * @param lister The address of the account which shall be seen as lister of this token
      */
-    function addToken(string calldata tokenName, uint marketID) external override {
+    function addToken(string calldata tokenName, uint marketID, address lister) external override {
         MarketInfo storage marketInfo = _markets[marketID];
         require(marketInfo.marketDetails.exists, "addToken: market does not exist");
         require(isValidTokenName(tokenName, marketID), "addToken: name verification failed");
@@ -150,7 +151,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
             tokenID: tokenID
         });
 
-        emit NewToken(tokenID, marketID, tokenName, address(ideaToken), msg.sender);
+        emit NewToken(tokenID, marketID, tokenName, address(ideaToken), lister);
     }
 
     /**

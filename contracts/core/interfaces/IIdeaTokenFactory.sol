@@ -46,7 +46,7 @@ interface IIdeaTokenFactory {
                        uint baseCost, uint priceRise, uint hatchTokens,
                        uint tradingFeeRate, uint platformFeeRate, bool allInterestToPlatform) external;
 
-    function addToken(string calldata tokenName, uint marketID) external;
+    function addToken(string calldata tokenName, uint marketID, address lister) external;
 
     function isValidTokenName(string calldata tokenName, uint marketID) external view returns (bool);
     function getMarketIDByName(string calldata marketName) external view returns (uint);

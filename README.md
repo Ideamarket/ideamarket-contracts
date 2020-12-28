@@ -3,6 +3,7 @@
 The Ideamarket contracts for the Ethereum blockchain.
 
 ## Docs
+
 [Ideamarket contract documentation](https://docs.ideamarket.io/contracts)
 
 ## Usage

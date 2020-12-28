@@ -186,7 +186,7 @@ describe('core/IdeaTokenFactory', () => {
 				true
 			)
 
-		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'))
+		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)
 
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(BigNumber.from('1'))
 
@@ -227,9 +227,9 @@ describe('core/IdeaTokenFactory', () => {
 				false
 			)
 
-		await expect(ideaTokenFactory.addToken('some.invalid.name', BigNumber.from('1'))).to.be.revertedWith(
-			'addToken: name verification failed'
-		)
+		await expect(
+			ideaTokenFactory.addToken('some.invalid.name', BigNumber.from('1'), userAccount.address)
+		).to.be.revertedWith('addToken: name verification failed')
 	})
 
 	it('fail add token with same name twice', async () => {
@@ -248,8 +248,8 @@ describe('core/IdeaTokenFactory', () => {
 				false
 			)
 
-		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'))
-		await expect(ideaTokenFactory.addToken(tokenName, BigNumber.from('1'))).to.be.revertedWith(
+		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)
+		await expect(ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)).to.be.revertedWith(
 			'addToken: name verification failed'
 		)
 	})
@@ -270,8 +270,8 @@ describe('core/IdeaTokenFactory', () => {
 				false
 			)
 
-		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'))
-		await expect(ideaTokenFactory.addToken(tokenName, BigNumber.from('2'))).to.be.revertedWith(
+		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)
+		await expect(ideaTokenFactory.addToken(tokenName, BigNumber.from('2'), userAccount.address)).to.be.revertedWith(
 			'addToken: market does not exist'
 		)
 	})

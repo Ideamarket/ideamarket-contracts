@@ -161,7 +161,7 @@ describe('core/MultiAction', () => {
 
 		marketID = await ideaTokenFactory.getMarketIDByName(marketName)
 
-		await ideaTokenFactory.addToken(tokenName, marketID)
+		await ideaTokenFactory.addToken(tokenName, marketID, userAccount.address)
 
 		tokenID = await ideaTokenFactory.getTokenIDByName(tokenName, marketID)
 

@@ -255,7 +255,7 @@ contract MultiAction {
      * @return The address of the new IdeaToken
      */
     function addTokenInternal(string memory tokenName, uint marketID) internal returns (address) {
-        _ideaTokenFactory.addToken(tokenName, marketID);
+        _ideaTokenFactory.addToken(tokenName, marketID, msg.sender);
         return address(_ideaTokenFactory.getTokenInfo(marketID, _ideaTokenFactory.getTokenIDByName(tokenName, marketID) ).ideaToken);
     }
 

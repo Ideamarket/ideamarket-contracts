@@ -117,7 +117,7 @@ describe('core/IdeaTokenExchange', () => {
 
 		marketID = await ideaTokenFactory.getMarketIDByName(marketName)
 
-		await ideaTokenFactory.addToken(tokenName, marketID)
+		await ideaTokenFactory.addToken(tokenName, marketID, userAccount.address)
 
 		tokenID = await ideaTokenFactory.getTokenIDByName(tokenName, marketID)
 
@@ -530,7 +530,7 @@ describe('core/IdeaTokenExchange', () => {
 			)
 		const newMarketID = await ideaTokenFactory.getMarketIDByName('SomeOtherMarket')
 
-		await ideaTokenFactory.addToken('someothertoken.com', newMarketID)
+		await ideaTokenFactory.addToken('someothertoken.com', newMarketID, userAccount.address)
 		const newTokenID = await ideaTokenFactory.getTokenIDByName('someothertoken.com', newMarketID)
 		const newIdeaToken = new ethers.Contract(
 			(await ideaTokenFactory.getTokenInfo(newMarketID, newTokenID)).ideaToken,
