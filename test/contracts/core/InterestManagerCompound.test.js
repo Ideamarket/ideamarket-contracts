@@ -92,47 +92,10 @@ describe('core/InterestManagerCompound', () => {
 		)
 	})
 
-	it('can donate interest and redeem donated dai', async () => {
-		await dai.mint(userAccount.address, tenPow18)
-		await dai.approve(interestManagerCompound.address, tenPow18)
-		await interestManagerCompound.donateInterest(tenPow18)
-		expect(zero.eq(await dai.balanceOf(userAccount.address))).to.be.true
-		expect(tenPow18.eq(await dai.balanceOf(cDai.address))).to.be.true
-		expect(tenPow18.eq(await cDai.balanceOf(interestManagerCompound.address))).to.be.true
-
-		await interestManagerCompound.redeemDonated(tenPow18)
-		expect(tenPow18.eq(await dai.balanceOf(userAccount.address))).to.be.true
-		expect(zero.eq(await dai.balanceOf(cDai.address))).to.be.true
-		expect(zero.eq(await cDai.balanceOf(interestManagerCompound.address))).to.be.true
-	})
-
-	it('fail donate donate when too few dai', async () => {
-		await dai.approve(interestManagerCompound.address, tenPow18)
-		await expect(interestManagerCompound.donateInterest(tenPow18)).to.be.revertedWith(
-			'ERC20: transfer amount exceeds balance'
-		)
-	})
-
-	it('fail donate not enough allowance', async () => {
-		await expect(interestManagerCompound.donateInterest(BigNumber.from('100'))).to.be.revertedWith(
-			'donateInterest: not enough allowance'
-		)
-	})
-
-	it('cannot redeem more than donated', async () => {
-		await dai.mint(userAccount.address, tenPow18)
-		await dai.approve(interestManagerCompound.address, tenPow18)
-		await interestManagerCompound.donateInterest(tenPow18)
-
-		await expect(interestManagerCompound.redeemDonated(tenPow18.mul(BigNumber.from('2')))).to.be.revertedWith(
-			'redeemDonated: not enough donated'
-		)
-	})
-
 	it('can withdraw COMP', async () => {
 		await dai.mint(userAccount.address, tenPow18)
-		await dai.approve(interestManagerCompound.address, tenPow18)
-		await interestManagerCompound.donateInterest(tenPow18)
+		await dai.transfer(interestManagerCompound.address, tenPow18)
+		await interestManagerCompound.invest(tenPow18)
 
 		const compBalance = await comp.balanceOf(interestManagerCompound.address)
 		await interestManagerCompound.withdrawComp()

@@ -102,29 +102,6 @@ contract InterestManagerCompound is Ownable, Initializable {
     }
 
     /**
-     * Accepts donated Dai and invests into Compound to generate interest
-     *
-     * @param amount The amount of Dai to donate
-     */
-    function donateInterest(uint amount) external {
-        require(_dai.allowance(msg.sender, address(this)) >= amount, "donateInterest: not enough allowance");
-        require(_dai.transferFrom(msg.sender, address(this), amount), "donateInterest: dai transfer failed");
-        _donatedDai[msg.sender] = _donatedDai[msg.sender].add(amount);
-        invest(amount);
-    }
-
-    /**
-     * Redeems donated Dai back to the donator without generated interest
-     *
-     * @param amount The amount of Dai to redeem
-     */
-    function redeemDonated(uint amount) external {
-        require(_donatedDai[msg.sender] >= amount, "redeemDonated: not enough donated");
-        _donatedDai[msg.sender] = _donatedDai[msg.sender].sub(amount);
-        redeemInternal(msg.sender, amount);
-    }
-
-    /**
      * Updates accrued interest on the invested Dai
      */
     function accrueInterest() external {
