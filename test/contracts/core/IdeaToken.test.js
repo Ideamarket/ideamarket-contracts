@@ -21,7 +21,8 @@ describe('core/IdeaToken', () => {
 	})
 
 	beforeEach(async () => {
-		ideaToken = await IdeaToken.connect(adminAccount).deploy('name', 'symbol')
+		ideaToken = await IdeaToken.connect(adminAccount).deploy()
+		await ideaToken.initialize('name', adminAccount.address)
 		await ideaToken.deployed()
 	})
 

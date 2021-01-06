@@ -21,6 +21,7 @@ describe('core/IdeaTokenFactory', () => {
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
 	const someAddress = '0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5' // random addr from etherscan
 
+	let ideaTokenLogic
 	let ideaTokenFactory
 
 	before(async () => {
@@ -37,7 +38,13 @@ describe('core/IdeaTokenFactory', () => {
 	beforeEach(async () => {
 		ideaTokenFactory = await IdeaTokenFactory.connect(adminAccount).deploy()
 		await ideaTokenFactory.deployed()
-		await ideaTokenFactory.connect(adminAccount).initialize(adminAccount.address, ideaTokenExchangeAddress)
+
+		ideaTokenLogic = await IdeaToken.deploy()
+		await ideaTokenLogic.deployed()
+
+		await ideaTokenFactory
+			.connect(adminAccount)
+			.initialize(adminAccount.address, ideaTokenExchangeAddress, ideaTokenLogic.address)
 	})
 
 	it('admin is owner', async () => {

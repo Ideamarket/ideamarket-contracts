@@ -64,7 +64,7 @@ describe('timelock/DSPause', () => {
 
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
-		await factory.initialize(dsPauseProxyAddress, zeroAddress)
+		await factory.initialize(dsPauseProxyAddress, zeroAddress, zeroAddress)
 
 		const fax = spell.interface.encodeFunctionData('execute', [
 			factory.address,

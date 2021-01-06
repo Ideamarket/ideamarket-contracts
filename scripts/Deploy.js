@@ -185,9 +185,22 @@ async function main() {
 		ideaTokenExchangeProxyAddress = loadDeployedAddress(networkName, 'ideaTokenExchange')
 	}
 
-	let ideaTokenFactoryProxyAddress
+	let ideaTokenLogicAddress
 	if (STAGE <= 5) {
-		console.log('5. Deploy IdeaTokenFactory')
+		console.log('5. Deploy IdeaToken')
+		console.log('==============================================')
+		const ideaTokenLogic = await deployContract('IdeaToken')
+		ideaTokenLogicAddress = ideaTokenLogic.address
+		saveDeployedAddress(networkName, 'ideaTokenLogic', ideaTokenLogicAddress)
+		saveDeployedABI(networkName, 'ideaTokenLogic', artifacts.readArtifactSync('IdeaToken').abi)
+		console.log('')
+	} else {
+		ideaTokenLogicAddress = loadDeployedAddress(networkName, 'ideaTokenLogic')
+	}
+
+	let ideaTokenFactoryProxyAddress
+	if (STAGE <= 6) {
+		console.log('6. Deploy IdeaTokenFactory')
 		console.log('==============================================')
 		const [ideaTokenFactoryProxy, ideaTokenFactoryLogic] = await deployProxyContract(
 			'IdeaTokenFactory',
@@ -206,8 +219,8 @@ async function main() {
 	}
 
 	let ideaTokenVaultProxyAddress
-	if (STAGE <= 6) {
-		console.log('6. Deploy IdeaTokenVault')
+	if (STAGE <= 7) {
+		console.log('7. Deploy IdeaTokenVault')
 		console.log('==============================================')
 		const [ideaTokenVaultProxy, ideaTokenVaultLogic] = await deployProxyContract(
 			'IdeaTokenVault',
@@ -224,8 +237,8 @@ async function main() {
 		ideaTokenVaultProxyAddress = loadDeployedAddress(networkName, 'ideaTokenVault')
 	}
 
-	if (STAGE <= 7) {
-		console.log('7. Set InterestManagerCompound owner')
+	if (STAGE <= 8) {
+		console.log('8. Set InterestManagerCompound owner')
 		console.log('==============================================')
 		const interestManagerCompound = new ethers.Contract(
 			interestManagerCompoundProxyAddress,
@@ -236,8 +249,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 8) {
-		console.log('8. Set IdeaTokenFactory address')
+	if (STAGE <= 9) {
+		console.log('9. Set IdeaTokenFactory address')
 		console.log('==============================================')
 		const ideaTokenExchange = new ethers.Contract(
 			ideaTokenExchangeProxyAddress,
@@ -250,8 +263,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 9) {
-		console.log('9. Set IdeaTokenExchange owner')
+	if (STAGE <= 10) {
+		console.log('10. Set IdeaTokenExchange owner')
 		console.log('==============================================')
 		const ideaTokenExchange = new ethers.Contract(
 			ideaTokenExchangeProxyAddress,
@@ -262,8 +275,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 10) {
-		console.log('10. Deploy MultiAction')
+	if (STAGE <= 11) {
+		console.log('11. Deploy MultiAction')
 		console.log('==============================================')
 		const multiAction = await deployContract(
 			'MultiAction',
@@ -279,8 +292,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 11) {
-		console.log('11. Deploy AddMarketSpell')
+	if (STAGE <= 12) {
+		console.log('12. Deploy AddMarketSpell')
 		console.log('==============================================')
 		const addMarketSpell = await deployContract('AddMarketSpell')
 		saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
@@ -288,8 +301,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 12) {
-		console.log('12. Deploy SetTokenOwnerSpell')
+	if (STAGE <= 13) {
+		console.log('13. Deploy SetTokenOwnerSpell')
 		console.log('==============================================')
 		const setTokenOwnerSpell = await deployContract('SetTokenOwnerSpell')
 		saveDeployedAddress(networkName, 'setTokenOwnerSpell', setTokenOwnerSpell.address)
@@ -297,8 +310,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 13) {
-		console.log('13. Deploy SetPlatformOwnerSpell')
+	if (STAGE <= 14) {
+		console.log('14. Deploy SetPlatformOwnerSpell')
 		console.log('==============================================')
 		const setPlatformOwnerSpell = await deployContract('SetPlatformOwnerSpell')
 		saveDeployedAddress(networkName, 'setPlatformOwnerSpell', setPlatformOwnerSpell.address)
@@ -306,8 +319,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 14) {
-		console.log('14. Deploy SetTradingFeeSpell')
+	if (STAGE <= 15) {
+		console.log('15. Deploy SetTradingFeeSpell')
 		console.log('==============================================')
 		const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
 		saveDeployedAddress(networkName, 'setTradingFeeSpell', setTradingFeeSpell.address)
@@ -315,8 +328,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 15) {
-		console.log('15. Deploy SetPlatformFeeSpell')
+	if (STAGE <= 16) {
+		console.log('16. Deploy SetPlatformFeeSpell')
 		console.log('==============================================')
 		const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
 		saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
@@ -324,8 +337,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 16) {
-		console.log('16. Deploy ChangeLogicSpell')
+	if (STAGE <= 17) {
+		console.log('17. Deploy ChangeLogicSpell')
 		console.log('==============================================')
 		const changeLogicSpell = await deployContract('ChangeLogicSpell')
 		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
@@ -334,8 +347,8 @@ async function main() {
 	}
 
 	let twitterHandleNameVerifierAddress
-	if (STAGE <= 17) {
-		console.log('17. Deploy TwitterHandleNameVerifier')
+	if (STAGE <= 18) {
+		console.log('18. Deploy TwitterHandleNameVerifier')
 		console.log('==============================================')
 		const twitterHandleNameVerifier = await deployContract('TwitterHandleNameVerifier')
 
@@ -351,8 +364,8 @@ async function main() {
 		twitterHandleNameVerifierAddress = loadDeployedAddress(networkName, 'twitterHandleNameVerifier')
 	}
 
-	if (STAGE <= 18) {
-		console.log('18. Add Twitter market')
+	if (STAGE <= 19) {
+		console.log('19. Add Twitter market')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -374,8 +387,8 @@ async function main() {
 	}
 
 	let substackNameVerifierAddress
-	if (STAGE <= 19) {
-		console.log('19. Deploy SubstackNameVerifier')
+	if (STAGE <= 20) {
+		console.log('20. Deploy SubstackNameVerifier')
 		console.log('==============================================')
 		const substackNameVerifier = await deployContract('SubstackNameVerifier')
 
@@ -387,8 +400,8 @@ async function main() {
 		substackNameVerifierAddress = loadDeployedAddress(networkName, 'substackNameVerifier')
 	}
 
-	if (STAGE <= 20) {
-		console.log('20. Add Substack market')
+	if (STAGE <= 21) {
+		console.log('21. Add Substack market')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -409,8 +422,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 21) {
-		console.log('21. Set IdeaTokenFactory owner')
+	if (STAGE <= 22) {
+		console.log('22. Set IdeaTokenFactory owner')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,

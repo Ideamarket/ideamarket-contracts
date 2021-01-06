@@ -37,6 +37,7 @@ describe('core/IdeaTokenVault', () => {
 	let comp
 	let cDai
 	let interestManagerCompound
+	let ideaTokenLogic
 	let ideaTokenFactory
 	let ideaTokenExchange
 	let ideaTokenVault
@@ -81,6 +82,9 @@ describe('core/IdeaTokenVault', () => {
 		interestManagerCompound = await InterestManagerCompound.deploy()
 		await interestManagerCompound.deployed()
 
+		ideaTokenLogic = await IdeaToken.deploy()
+		await ideaTokenLogic.deployed()
+
 		ideaTokenFactory = await IdeaTokenFactory.deploy()
 		await ideaTokenFactory.deployed()
 
@@ -94,7 +98,9 @@ describe('core/IdeaTokenVault', () => {
 			.connect(adminAccount)
 			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, zeroAddress)
 
-		await ideaTokenFactory.connect(adminAccount).initialize(adminAccount.address, ideaTokenExchange.address)
+		await ideaTokenFactory
+			.connect(adminAccount)
+			.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address)
 
 		await ideaTokenExchange
 			.connect(adminAccount)

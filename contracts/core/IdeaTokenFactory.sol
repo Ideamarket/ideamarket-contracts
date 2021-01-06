@@ -9,7 +9,7 @@ import "./interfaces/IIdeaTokenFactory.sol";
 import "./IdeaToken.sol";
 import "./interfaces/IIdeaToken.sol";
 import "./nameVerifiers/IIdeaTokenNameVerifier.sol";
-
+import "../util/MinimalProxy.sol";
 /**
  * @title IdeaTokenFactory
  * @author Alexander Schlindwein
@@ -33,6 +33,9 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     // Address of the IdeaTokenExchange contract
     // This is needed to transfer ownership of a newly created IdeaToken to the IdeaTokenExchange
     address _ideaTokenExchange;
+
+    // Address of the IdeaToken logic contract
+    address _ideaTokenLogic;
 
     // IdeaTokenAddress => IDPair. Stores an IDPair (marketID, tokenID) for an IdeaToken
     mapping(address => IDPair) _tokenIDPairs;
@@ -64,9 +67,10 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      *
      * @param owner The owner of the contract
      */
-    function initialize(address owner, address ideaTokenExchange) external initializer {
+    function initialize(address owner, address ideaTokenExchange, address ideaTokenLogic) external initializer {
         setOwnerInternal(owner);
         _ideaTokenExchange = ideaTokenExchange;
+        _ideaTokenLogic = ideaTokenLogic;
     }
 
     /**
@@ -126,7 +130,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     }
 
     /**
-     * Adds a new IdeaToken 
+     * Adds a new IdeaToken using MinimalProxy
      *
      * @param tokenName The name of the token
      * @param marketID The ID of the market
@@ -137,9 +141,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
         require(marketInfo.marketDetails.exists, "market-not-exist");
         require(isValidTokenName(tokenName, marketID), "invalid-name");
 
-        address ideaTokenAddress = address(new IdeaToken(string(abi.encodePacked(marketInfo.marketDetails.name, ": ", tokenName)), "IDT"));
-        IIdeaToken ideaToken = IIdeaToken(ideaTokenAddress);
-        Ownable(ideaTokenAddress).setOwner(_ideaTokenExchange);
+        IIdeaToken ideaToken = IIdeaToken(address(new MinimalProxy(_ideaTokenLogic)));
+        ideaToken.initialize(string(abi.encodePacked(marketInfo.marketDetails.name, ": ", tokenName)), _ideaTokenExchange);
 
         uint tokenID = ++marketInfo.marketDetails.numTokens;
         TokenInfo memory tokenInfo = TokenInfo({

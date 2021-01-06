@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.9;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "../erc20/ERC20.sol";
 import "../util/Ownable.sol";
+import "../util/Initializable.sol";
 import "./interfaces/IIdeaToken.sol";
 
 /**
@@ -11,19 +12,24 @@ import "./interfaces/IIdeaToken.sol";
  *
  * IdeaTokens are implementations of the ERC20 interface
  * They can be burned and minted by the owner of the contract instance which is the IdeaTokenExchange
+ *
+ * New instances are created using a MinimalProxy
  */
-contract IdeaToken is IIdeaToken, ERC20, Ownable {
+contract IdeaToken is IIdeaToken, ERC20, Ownable, Initializable {
 
     /**
      * Constructs an IdeaToken with 18 decimals
      * The constructor is called by the IdeaTokenFactory when a new token is listed
      * The owner of the contract is set to msg.sender
      *
-     * @param _name The name of the token. IdeaTokenFactory will prefix the market name
-     * @param _symbol The symbol of the token, as supplied by the IdeaTokenFactory
+     * @param __name The name of the token. IdeaTokenFactory will prefix the market name
+     * @param owner The owner of this contract, IdeaTokenExchange
      */
-    constructor (string memory _name, string memory _symbol) public ERC20(_name, _symbol) {
-        setOwnerInternal(msg.sender);
+    function initialize(string calldata __name, address owner) external override initializer {
+        setOwnerInternal(owner);
+        _decimals = 18;
+        _symbol = "IDT";
+        _name = __name;
     }
 
     /**

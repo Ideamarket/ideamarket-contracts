@@ -42,7 +42,7 @@ describe('spells/ChangeLogicSpell', () => {
 		await proxyAdmin.deployed()
 
 		AdminUpgradeabilityProxy = await ethers.getContractFactory('AdminUpgradeabilityProxy')
-		const data = logic.interface.encodeFunctionData('initialize', [dsPauseProxyAddress, zeroAddress])
+		const data = logic.interface.encodeFunctionData('initialize', [dsPauseProxyAddress, zeroAddress, zeroAddress])
 		proxy = await AdminUpgradeabilityProxy.deploy(logic.address, proxyAdmin.address, data)
 		await proxy.deployed()
 	})
