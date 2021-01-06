@@ -17,11 +17,17 @@ import "./interfaces/IIdeaTokenVault.sol";
  */
 contract MultiAction {
 
+    // IdeaTokenExchange contract
     IIdeaTokenExchange _ideaTokenExchange;
+    // IdeaTokenFactory contract
     IIdeaTokenFactory _ideaTokenFactory;
+    // IdeaTokenVault contract
     IIdeaTokenVault _ideaTokenVault;
+    // Dai contract
     IERC20 public _dai;
+    // IUniswapV2Router02 contract
     IUniswapV2Router02 public _uniswapV2Router02;
+    // WETH contract
     IWETH public _weth;
 
     /**

@@ -20,28 +20,53 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     using SafeMath for uint256;
 
+    // Stored for every IdeaToken and market.
+    // Keeps track of the amount of invested dai in this token, and the amount of investment tokens (e.g. cDai).
     struct ExchangeInfo {
-        uint dai; // The amount of Dai collected by trading
-        uint invested; // The amount of "investment tokens", e.g. cDai
+        // The amount of Dai collected by trading
+        uint dai;
+        // The amount of "investment tokens", e.g. cDai
+        uint invested; 
     }
 
     uint constant FEE_SCALE = 10000;
 
+    // The address authorized to set token and platform owners.
+    // It is only allowed to change these when the current owner is not set (zero address).
+    // Using such an address allows an external program to make authorization calls without having to go through the timelock.
     address _authorizer;
-    uint _tradingFeeInvested; // The amount of "investment tokens" for the collected trading fee, e.g. cDai
+
+    // The amount of "investment tokens" for the collected trading fee, e.g. cDai 
+    uint _tradingFeeInvested; 
+    // The address which receives the trading fee when withdrawTradingFee is called
     address _tradingFeeRecipient;
 
-    mapping(uint => uint) _platformFeeInvested;
+    // marketID => owner. The owner of a platform.
+    // This address is allowed to withdraw platform fee.
+    // When allInterestToPlatform=true then this address can also withdraw the platform interest
     mapping(uint => address) _platformOwner;
 
-    mapping(uint => ExchangeInfo) _platformsExchangeInfo;
-    mapping(address => ExchangeInfo) _tokensExchangeInfo;
-    mapping(address => address) _tokenOwner;
+    // marketID => amount. The amount of "investment tokens" for the collected platform fee, e.g. cDai
+    mapping(uint => uint) _platformFeeInvested;
+    
 
+    // marketID => ExchangeInfo. Stores ExchangeInfo structs for platforms
+    mapping(uint => ExchangeInfo) _platformsExchangeInfo;
+
+    // IdeaToken address => owner. The owner of an IdeaToken.
+    // This address is allowed to withdraw the interest for an IdeaToken
+    mapping(address => address) _tokenOwner;
+    // IdeaToken address => ExchangeInfo. Stores ExchangeInfo structs for IdeaTokens
+    mapping(address => ExchangeInfo) _tokensExchangeInfo;
+
+    // IdeaTokenFactory contract
     IIdeaTokenFactory _ideaTokenFactory;
+    // InterestManager contract
     IInterestManager _interestManager;
+    // Dai contract
     IERC20 _dai;
 
+    // IdeaToken address => bool. Whether or not to disable all fee collection for a specific IdeaToken.
     mapping(address => bool) _tokenFeeKillswitch;
 
     event NewTokenOwner(address ideaToken, address owner);

@@ -19,12 +19,14 @@ contract InterestManagerCompound is Ownable, Initializable {
 
     using SafeMath for uint;
 
+    // Dai contract
     IERC20 private _dai;
+    // cDai contract
     ICToken private _cDai;
+    // COMP contract
     IERC20 private _comp;
+    // Address which is allowed to withdraw accrued COMP tokens
     address private _compRecipient;
-
-    mapping(address => uint) _donatedDai;
 
     /**
      * Initializes the contract with all required values

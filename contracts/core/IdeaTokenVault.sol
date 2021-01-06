@@ -15,21 +15,42 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  *
  * Locks IdeaTokens for a given duration
  * Sits behind an AdminUpgradabilityProxy
+ *
+ * This contract uses a doubly linked list to keep track of locked tokens and allow for iteration.
+ * For each (IdeaToken, owner) combination a linked list is stored where new entries to the list are inserted at the head:
+ * 
+ * |-----------| --- next ---> |-----------|
+ * |  LLEntry  |			   |  LLEntry  |  ---- > 
+ * |-----------| <--- prev --- |-----------|
+ *       |
+ *       |
+ *       |
+ * _llHead[IdeaToken][owner]
+ *
+ * Each LLEntry has an 'until' field which is the timestamp when the tokens in this entry will be unlocked.
+ * A (IdeaToken, owner, until) combination uniquely identifies a LLEntry. Thus the 'until' also often serves as an ID.
+ *
+ * Since (IdeaToken, owner, until) is unique, the storage location of each LLEntry is calculated as keccak256(abi.encode(ideaToken, owner, until)).
+ *
  */
 contract IdeaTokenVault is IIdeaTokenVault, Initializable {
     using SafeMath for uint256;
 
     // LinkedList Entry
     struct LLEntry {
+        // Timestamp when unlocked. Also serves as ID
         uint until;
+        // Amount of locked tokens
         uint amount;
+        // Previous LLEntry
         bytes32 prev;
+        // Next LLEntry
         bytes32 next;
     }
 
     IIdeaTokenFactory _ideaTokenFactory;
 
-    // IdeaToken => owner => lockedUntil => bool
+    // IdeaToken address => owner address => storage location
     mapping(address => mapping(address => bytes32)) public _llHead;
 
     event Locked(address ideaToken, address owner, uint lockedAmount, uint lockedUntil, uint lockedDuration);
@@ -125,7 +146,7 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
                 _llHead[ideaToken][msg.sender] = entry.next;
             }
 
-            // Reset storage to 0
+            // Reset storage to 0, gas savings
             clearEntry(entry);
         }
 

@@ -21,6 +21,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
 
     using SafeMath for uint256;
 
+    // Contains details for each market
     struct MarketInfo {
         mapping(uint => TokenInfo) tokens;
         mapping(string => uint) tokenIDs;
@@ -29,12 +30,18 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
         MarketDetails marketDetails;
     }
 
+    // Address of the IdeaTokenExchange contract
+    // This is needed to transfer ownership of a newly created IdeaToken to the IdeaTokenExchange
     address _ideaTokenExchange;
 
+    // IdeaTokenAddress => IDPair. Stores an IDPair (marketID, tokenID) for an IdeaToken
     mapping(address => IDPair) _tokenIDPairs;
 
+    // marketID => MarketInfo. Stores information for a market
     mapping(uint => MarketInfo) _markets;
+    // market name => marketID. Translates market names to market IDs.
     mapping(string => uint) _marketIDs;
+    // The amount of existing markets.
     uint _numMarkets;
 
     event NewMarket(uint id,
@@ -123,7 +130,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      *
      * @param tokenName The name of the token
      * @param marketID The ID of the market
-     * @param lister The address of the account which shall be seen as lister of this token
+     * @param lister The address of the account which off-chain software shall see as lister of this token. Only emitted, not stored
      */
     function addToken(string calldata tokenName, uint marketID, address lister) external override {
         MarketInfo storage marketInfo = _markets[marketID];
