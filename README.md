@@ -23,6 +23,7 @@ The Ideamarket contracts for the Ethereum blockchain.
 Holds the Solidity smart contracts.
 
 -   `./core`: Main Ideamarket contracts
+-   `./erc20`: OZ ERC20 implementation
 -   `./proxy`: OZ `AdminUpgradeabilityProxy`
 -   `./compound`: Compound V2 interfaces
 -   `./weth`: Wrapped ETH (WETH) interfaces
