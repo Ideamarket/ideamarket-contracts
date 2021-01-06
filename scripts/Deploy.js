@@ -206,7 +206,8 @@ async function main() {
 			'IdeaTokenFactory',
 			proxyAdminAddress,
 			deployerAddress, // owner - this will be changed to the dsPauseProxy later
-			ideaTokenExchangeProxyAddress
+			ideaTokenExchangeProxyAddress,
+			ideaTokenLogicAddress
 		)
 
 		ideaTokenFactoryProxyAddress = ideaTokenFactoryProxy.address
