@@ -320,16 +320,12 @@ describe('core/IdeaTokenExchange', () => {
 
 		expect((await ideaTokenExchange.getTradingFeePayable()).eq(finalTradingFee)).to.be.true
 
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.setPlatformOwner(marketID, platformFeeReceiverAccount.address)
+		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, platformFeeReceiverAccount.address)
 
 		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformFee(marketID)
 		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(finalPlatformFee)).to.be.true
 
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.setTokenOwner(ideaToken.address, interestReceiverAccount.address)
+		await ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, interestReceiverAccount.address)
 
 		await ideaTokenExchange.connect(interestReceiverAccount).withdrawTokenInterest(ideaToken.address)
 		// TODO: Minor rounding error
@@ -554,9 +550,7 @@ describe('core/IdeaTokenExchange', () => {
 		expect(interest.eq(BigNumber.from('0'))).to.be.false
 		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(BigNumber.from('0'))).to.be.true
 
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.setPlatformOwner(newMarketID, platformFeeReceiverAccount.address)
+		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(newMarketID, platformFeeReceiverAccount.address)
 
 		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformInterest(newMarketID)
 
@@ -571,9 +565,7 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	it('no platform fee available', async () => {
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.setPlatformOwner(marketID, platformFeeReceiverAccount.address)
+		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, platformFeeReceiverAccount.address)
 
 		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(BigNumber.from('0'))).to.be.true
 		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformFee(marketID)
@@ -581,9 +573,7 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	it('no platform interest available', async () => {
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.setPlatformOwner(marketID, platformFeeReceiverAccount.address)
+		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, platformFeeReceiverAccount.address)
 
 		expect((await ideaTokenExchange.getPlatformInterestPayable(marketID)).eq(BigNumber.from('0'))).to.be.true
 		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformInterest(marketID)
@@ -591,9 +581,7 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	it('no interest available', async () => {
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.setTokenOwner(ideaToken.address, interestReceiverAccount.address)
+		await ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, interestReceiverAccount.address)
 
 		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(BigNumber.from('0'))).to.be.true
 		await ideaTokenExchange.connect(interestReceiverAccount).withdrawTokenInterest(ideaToken.address)
@@ -607,21 +595,15 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	it('fail withdraw interest not authorized', async () => {
-		await expect(ideaTokenExchange.withdrawTokenInterest(ideaToken.address)).to.be.revertedWith(
-			'not-authorized'
-		)
+		await expect(ideaTokenExchange.withdrawTokenInterest(ideaToken.address)).to.be.revertedWith('not-authorized')
 	})
 
 	it('fail withdraw platform fee not authorized', async () => {
-		await expect(ideaTokenExchange.withdrawPlatformFee(marketID)).to.be.revertedWith(
-			'not-authorized'
-		)
+		await expect(ideaTokenExchange.withdrawPlatformFee(marketID)).to.be.revertedWith('not-authorized')
 	})
 
 	it('fail withdraw platform interest not authorized', async () => {
-		await expect(ideaTokenExchange.withdrawPlatformInterest(marketID)).to.be.revertedWith(
-			'not-authorized'
-		)
+		await expect(ideaTokenExchange.withdrawPlatformInterest(marketID)).to.be.revertedWith('not-authorized')
 	})
 
 	it('fail authorize platform fee withdrawer not authorized', async () => {
@@ -661,7 +643,7 @@ describe('core/IdeaTokenExchange', () => {
 				dai.address
 			)
 
-		await expect(exchange.setIdeaTokenFactoryAddress(someAddress)).to.be.revertedWith('Ownable: onlyOwner')
+		await expect(exchange.setIdeaTokenFactoryAddress(someAddress)).to.be.revertedWith('only-owner')
 	})
 
 	it('fail cannot set factory address twice', async () => {
@@ -688,7 +670,7 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	it('fail user cannot set authorizer', async () => {
-		await expect(ideaTokenExchange.setAuthorizer(zeroAddress)).to.be.revertedWith('Ownable: onlyOwner')
+		await expect(ideaTokenExchange.setAuthorizer(zeroAddress)).to.be.revertedWith('only-owner')
 	})
 
 	it('authorizer can set interest withdrawer', async () => {
@@ -696,9 +678,7 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	it('interest withdrawer can set new interest withdrawer', async () => {
-		await ideaTokenExchange
-			.connect(authorizerAccount)
-			.setTokenOwner(ideaToken.address, tradingFeeAccount.address)
+		await ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, tradingFeeAccount.address)
 		await ideaTokenExchange.connect(tradingFeeAccount).setTokenOwner(ideaToken.address, someAddress)
 	})
 
@@ -719,9 +699,7 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	it('platform fee withdrawer can set new platform fee withdrawer', async () => {
-		await ideaTokenExchange
-			.connect(authorizerAccount)
-			.setPlatformOwner(marketID, tradingFeeAccount.address)
+		await ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, tradingFeeAccount.address)
 		await ideaTokenExchange.connect(tradingFeeAccount).setPlatformOwner(marketID, someAddress)
 	})
 
@@ -744,9 +722,7 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	it('fail user cannot disable fees for specific token', async () => {
-		await expect(ideaTokenExchange.setTokenFeeKillswitch(ideaToken.address, true)).to.be.revertedWith(
-			'Ownable: onlyOwner'
-		)
+		await expect(ideaTokenExchange.setTokenFeeKillswitch(ideaToken.address, true)).to.be.revertedWith('only-owner')
 	})
 
 	it('correct costs when buying with fee disabled', async () => {

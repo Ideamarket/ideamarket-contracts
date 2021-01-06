@@ -32,7 +32,7 @@ contract Initializable {
    * @dev Modifier to use in the initializer function of a contract.
    */
   modifier initializer() {
-    require(initializing || isConstructor() || !initialized, "Contract instance has already been initialized");
+    require(initializing || isConstructor() || !initialized, "already-initialized");
 
     bool isTopLevelCall = !initializing;
     if (isTopLevelCall) {

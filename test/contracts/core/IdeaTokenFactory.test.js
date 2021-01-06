@@ -118,7 +118,7 @@ describe('core/IdeaTokenFactory', () => {
 					platformFeeRate,
 					false
 				)
-		).to.be.revertedWith('addMarket: market exists already')
+		).to.be.revertedWith('market-exists')
 	})
 
 	it('checks parameters when adding market', async () => {
@@ -135,7 +135,7 @@ describe('core/IdeaTokenFactory', () => {
 					platformFeeRate,
 					false
 				)
-		).to.be.revertedWith('addMarket: invalid parameters')
+		).to.be.revertedWith('invalid-params')
 
 		await expect(
 			ideaTokenFactory
@@ -150,7 +150,7 @@ describe('core/IdeaTokenFactory', () => {
 					platformFeeRate,
 					false
 				)
-		).to.be.revertedWith('addMarket: invalid parameters')
+		).to.be.revertedWith('invalid-params')
 	})
 
 	it('only admin can add market', async () => {
@@ -167,7 +167,7 @@ describe('core/IdeaTokenFactory', () => {
 					platformFeeRate,
 					false
 				)
-		).to.be.revertedWith('Ownable: onlyOwner')
+		).to.be.revertedWith('only-owner')
 	})
 
 	it('can add token', async () => {
@@ -229,7 +229,7 @@ describe('core/IdeaTokenFactory', () => {
 
 		await expect(
 			ideaTokenFactory.addToken('some.invalid.name', BigNumber.from('1'), userAccount.address)
-		).to.be.revertedWith('addToken: name verification failed')
+		).to.be.revertedWith('invalid-name')
 	})
 
 	it('fail add token with same name twice', async () => {
@@ -250,7 +250,7 @@ describe('core/IdeaTokenFactory', () => {
 
 		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)
 		await expect(ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)).to.be.revertedWith(
-			'addToken: name verification failed'
+			'invalid-name'
 		)
 	})
 
@@ -272,7 +272,7 @@ describe('core/IdeaTokenFactory', () => {
 
 		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)
 		await expect(ideaTokenFactory.addToken(tokenName, BigNumber.from('2'), userAccount.address)).to.be.revertedWith(
-			'addToken: market does not exist'
+			'market-not-exist'
 		)
 	})
 
@@ -311,7 +311,7 @@ describe('core/IdeaTokenFactory', () => {
 
 		await expect(
 			ideaTokenFactory.connect(userAccount).setTradingFee(BigNumber.from('1'), BigNumber.from('123'))
-		).to.be.revertedWith('Ownable: onlyOwner')
+		).to.be.revertedWith('only-owner')
 	})
 
 	it('fail set trading fee invalid market', async () => {
@@ -330,7 +330,7 @@ describe('core/IdeaTokenFactory', () => {
 
 		await expect(
 			ideaTokenFactory.connect(adminAccount).setTradingFee(BigNumber.from('2'), BigNumber.from('123'))
-		).to.be.revertedWith('setTradingFee: market does not exist')
+		).to.be.revertedWith('market-not-exist')
 	})
 
 	it('can set platform fee', async () => {
@@ -368,7 +368,7 @@ describe('core/IdeaTokenFactory', () => {
 
 		await expect(
 			ideaTokenFactory.connect(userAccount).setPlatformFee(BigNumber.from('1'), BigNumber.from('123'))
-		).to.be.revertedWith('Ownable: onlyOwner')
+		).to.be.revertedWith('only-owner')
 	})
 
 	it('fail set platform fee invalid market', async () => {
@@ -387,7 +387,7 @@ describe('core/IdeaTokenFactory', () => {
 
 		await expect(
 			ideaTokenFactory.connect(adminAccount).setPlatformFee(BigNumber.from('2'), BigNumber.from('123'))
-		).to.be.revertedWith('setPlatformFee: market does not exist')
+		).to.be.revertedWith('market-not-exist')
 	})
 
 	it('can set name verifier', async () => {
@@ -425,7 +425,7 @@ describe('core/IdeaTokenFactory', () => {
 
 		await expect(
 			ideaTokenFactory.connect(userAccount).setNameVerifier(BigNumber.from('1'), someAddress)
-		).to.be.revertedWith('Ownable: onlyOwner')
+		).to.be.revertedWith('only-owner')
 	})
 
 	it('fail set name verifier invalid market', async () => {
@@ -444,6 +444,6 @@ describe('core/IdeaTokenFactory', () => {
 
 		await expect(
 			ideaTokenFactory.connect(adminAccount).setNameVerifier(BigNumber.from('2'), someAddress)
-		).to.be.revertedWith('setNameVerifier: market does not exist')
+		).to.be.revertedWith('market-not-exist')
 	})
 })

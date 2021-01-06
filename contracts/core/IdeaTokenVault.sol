@@ -53,11 +53,11 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
      * @param recipient The account which receives the locked tokens 
      */
     function lock(address ideaToken, uint amount, uint duration, address recipient) external override {
-        require(duration > 0, "lockTokens: invalid duration");
-        require(_ideaTokenFactory.getTokenIDPair(ideaToken).exists, "lockTokens: invalid IdeaToken");
-        require(amount > 0, "lockTokens: invalid amount");
-        require(IERC20(ideaToken).allowance(msg.sender, address(this)) >= amount, "lockTokens: not enough allowance");
-        require(IERC20(ideaToken).transferFrom(msg.sender, address(this), amount), "lockTokens: transfer failed");
+        require(duration > 0, "invalid-duration");
+        require(_ideaTokenFactory.getTokenIDPair(ideaToken).exists, "invalid-token");
+        require(amount > 0, "invalid-amount");
+        require(IERC20(ideaToken).allowance(msg.sender, address(this)) >= amount, "insufficient-allowance");
+        require(IERC20(ideaToken).transferFrom(msg.sender, address(this), amount), "transfer-failed");
 
         uint lockedUntil = duration.add(now);
         bytes32 location = getLLEntryStorageLocation(ideaToken, recipient, lockedUntil);
@@ -99,12 +99,12 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
 
         for(uint i = 0; i < untils.length; i++) {
             uint until = untils[i];
-            require(ts > until, "withdraw: too early");
+            require(ts > until, "too-early");
 
             bytes32 location = getLLEntryStorageLocation(ideaToken, msg.sender, until);
             LLEntry storage entry = getLLEntry(location);
 
-            require(entry.until > 0, "withdraw: invalid until");
+            require(entry.until > 0, "invalid-until");
             total = total.add(entry.amount);
 
             if(entry.next != bytes32(0)) {
@@ -130,7 +130,7 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
         }
 
         if(total > 0) {
-            require(IERC20(ideaToken).transfer(recipient, total), "withdraw: transfer failed");
+            require(IERC20(ideaToken).transfer(recipient, total), "transfer-failed");
         }
     }
 

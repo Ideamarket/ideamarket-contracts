@@ -53,9 +53,9 @@ contract InterestManagerCompound is Ownable, Initializable {
      */
     function invest(uint amount) public returns (uint) {
         uint balanceBefore = _cDai.balanceOf(address(this));
-        require(_dai.balanceOf(address(this)) >= amount, "invest: not enough dai");
-        require(_dai.approve(address(_cDai), amount), "invest: dai approve cDai failed");
-        require(_cDai.mint(amount) == 0, "invest: cDai mint failed");
+        require(_dai.balanceOf(address(this)) >= amount, "insufficient-dai");
+        require(_dai.approve(address(_cDai), amount), "dai-cdai-approve");
+        require(_cDai.mint(amount) == 0, "cdai-mint");
         uint balanceAfter = _cDai.balanceOf(address(this));
         return balanceAfter.sub(balanceBefore);
     }
@@ -70,9 +70,9 @@ contract InterestManagerCompound is Ownable, Initializable {
      */
     function redeem(address recipient, uint amount) external onlyOwner returns (uint) {
         uint balanceBefore = _cDai.balanceOf(address(this));
-        require(_cDai.redeemUnderlying(amount) == 0, "redeem: failed to redeem");
+        require(_cDai.redeemUnderlying(amount) == 0, "redeem");
         uint balanceAfter = _cDai.balanceOf(address(this));
-        require(_dai.transfer(recipient, amount), "redeem: dai transfer failed");
+        require(_dai.transfer(recipient, amount), "dai-transfer");
         return balanceBefore.sub(balanceAfter);
     }
 
@@ -86,9 +86,9 @@ contract InterestManagerCompound is Ownable, Initializable {
      */
     function redeemInvestmentToken(address recipient, uint amount) external onlyOwner returns (uint) {
         uint balanceBefore = _dai.balanceOf(address(this));
-        require(_cDai.redeem(amount) == 0, "redeemInvestmentToken: failed to redeem");
+        require(_cDai.redeem(amount) == 0, "redeem");
         uint redeemed = _dai.balanceOf(address(this)).sub(balanceBefore);
-        require(_dai.transfer(recipient, redeemed), "redeemInvestmentToken: failed to transfer");
+        require(_dai.transfer(recipient, redeemed), "dai-transfer");
         return redeemed;
     }
 
@@ -96,14 +96,14 @@ contract InterestManagerCompound is Ownable, Initializable {
      * Updates accrued interest on the invested Dai
      */
     function accrueInterest() external {
-        require(_cDai.accrueInterest() == 0, "accrueInterest: failed to accrue interest");
+        require(_cDai.accrueInterest() == 0, "accrue");
     }
 
     /**
      * Withdraws the generated Comp tokens to the Comp recipient
      */
     function withdrawComp() external {
-        require(_comp.transfer(_compRecipient, _comp.balanceOf(address(this))), "redeemComp: transfer failed");
+        require(_comp.transfer(_compRecipient, _comp.balanceOf(address(this))), "comp-transfer");
     }
 
     /**

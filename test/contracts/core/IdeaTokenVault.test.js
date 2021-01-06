@@ -258,37 +258,37 @@ describe('core/IdeaTokenVault', () => {
 		await ideaToken.approve(ideaTokenVault.address, tokenAmount)
 		await expect(
 			ideaTokenVault.lock(dai.address, tokenAmount, BigNumber.from('1234'), userAccount.address)
-		).to.be.revertedWith('lockTokens: invalid IdeaToken')
+		).to.be.revertedWith('invalid-token')
 	})
 
 	it('fail invalid duration', async () => {
 		await expect(
 			ideaTokenVault.lock(ideaToken.address, tenPow18, BigNumber.from('0'), userAccount.address)
-		).to.be.revertedWith('lockTokens: invalid duration')
+		).to.be.revertedWith('invalid-duration')
 	})
 
 	it('fail invalid amount', async () => {
 		await expect(
 			ideaTokenVault.lock(ideaToken.address, BigNumber.from('0'), YEAR_DURATION, userAccount.address)
-		).to.be.revertedWith('lockTokens: invalid amount')
+		).to.be.revertedWith('invalid-amount')
 	})
 
 	it('fail invalid until', async () => {
 		await expect(
 			ideaTokenVault.withdraw(ideaToken.address, [BigNumber.from('0')], userAccount.address)
-		).to.be.revertedWith('withdraw: invalid until')
+		).to.be.revertedWith('invalid-until')
 	})
 
 	it('fail too early', async () => {
 		await expect(
 			ideaTokenVault.withdraw(ideaToken.address, [BigNumber.from('9999999999999999')], userAccount.address)
-		).to.be.revertedWith('withdraw: too early')
+		).to.be.revertedWith('too-early')
 	})
 
 	it('fail not enough allowance', async () => {
 		await expect(
 			ideaTokenVault.lock(ideaToken.address, tenPow18, YEAR_DURATION, userAccount.address)
-		).to.be.revertedWith('lockTokens: not enough allowance')
+		).to.be.revertedWith('insufficient-allowance')
 	})
 
 	it('fail not enough balance', async () => {

@@ -78,8 +78,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
     function addMarket(string calldata marketName, address nameVerifier,
                        uint baseCost, uint priceRise, uint hatchTokens,
                        uint tradingFeeRate, uint platformFeeRate, bool allInterestToPlatform) external override onlyOwner {
-        require(_marketIDs[marketName] == 0, "addMarket: market exists already");
-        require(baseCost > 0 && priceRise > 0, "addMarket: invalid parameters");
+        require(_marketIDs[marketName] == 0, "market-exists");
+        require(baseCost > 0 && priceRise > 0, "invalid-params");
 
         uint marketID = ++_numMarkets;
 
@@ -127,8 +127,8 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      */
     function addToken(string calldata tokenName, uint marketID, address lister) external override {
         MarketInfo storage marketInfo = _markets[marketID];
-        require(marketInfo.marketDetails.exists, "addToken: market does not exist");
-        require(isValidTokenName(tokenName, marketID), "addToken: name verification failed");
+        require(marketInfo.marketDetails.exists, "market-not-exist");
+        require(isValidTokenName(tokenName, marketID), "invalid-name");
 
         address ideaTokenAddress = address(new IdeaToken(string(abi.encodePacked(marketInfo.marketDetails.name, ": ", tokenName)), "IDT"));
         IIdeaToken ideaToken = IIdeaToken(ideaTokenAddress);
@@ -264,7 +264,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      */
     function setTradingFee(uint marketID, uint tradingFeeRate) external override onlyOwner {
         MarketDetails storage marketDetails = _markets[marketID].marketDetails;
-        require(marketDetails.exists, "setTradingFee: market does not exist");
+        require(marketDetails.exists, "market-not-exist");
         marketDetails.tradingFeeRate = tradingFeeRate;
         
         emit NewTradingFee(marketID, tradingFeeRate);
@@ -279,7 +279,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      */
     function setPlatformFee(uint marketID, uint platformFeeRate) external override onlyOwner {
         MarketDetails storage marketDetails = _markets[marketID].marketDetails;
-        require(marketDetails.exists, "setPlatformFee: market does not exist");
+        require(marketDetails.exists, "market-not-exist");
         marketDetails.platformFeeRate = platformFeeRate;
 
         emit NewPlatformFee(marketID, platformFeeRate);
@@ -294,7 +294,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      */
     function setNameVerifier(uint marketID, address nameVerifier) external override onlyOwner {
         MarketDetails storage marketDetails = _markets[marketID].marketDetails;
-        require(marketDetails.exists, "setNameVerifier: market does not exist");
+        require(marketDetails.exists, "market-not-exist");
         marketDetails.nameVerifier = IIdeaTokenNameVerifier(nameVerifier);
 
         emit NewNameVerifier(marketID, nameVerifier);

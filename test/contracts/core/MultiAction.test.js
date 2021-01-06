@@ -654,7 +654,7 @@ describe('core/MultiAction', () => {
 				outputFromSell.add(BigNumber.from('1')),
 				userAccount.address
 			)
-		).to.be.revertedWith('sellAndConvert: slippage too high')
+		).to.be.revertedWith('slippage')
 	})
 
 	it('fail directly send ETH', async () => {

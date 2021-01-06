@@ -71,7 +71,7 @@ contract MultiAction {
         if(requiredInput > cost) {
             buyCost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, fallbackAmount);
             requiredInput = getInputForOutputInternal(inputCurrency, address(_dai), buyCost);
-            require(requiredInput <= cost, "convertAndBuy: slippage too high");
+            require(requiredInput <= cost, "slippage");
             buyAmount = fallbackAmount;
         }
 
@@ -94,7 +94,7 @@ contract MultiAction {
                             address payable recipient) external {
         uint sellPrice = _ideaTokenExchange.getPriceForSellingTokens(ideaToken, amount);
         uint output = getOutputForInputInternal(address(_dai), outputCurrency, sellPrice);
-        require(output >= minPrice, "sellAndConvert: slippage too high");
+        require(output >= minPrice, "slippage");
 
         pullERC20Internal(ideaToken, msg.sender, amount);
         _ideaTokenExchange.sellTokens(ideaToken, amount, sellPrice, address(this));
@@ -103,7 +103,7 @@ contract MultiAction {
         if(outputCurrency == address(0)) {
             recipient.transfer(output);
         } else {
-            require(IERC20(outputCurrency).transfer(recipient, output), "sellAndConvert: transfer failed");
+            require(IERC20(outputCurrency).transfer(recipient, output), "transfer");
         }
     }
 
@@ -134,7 +134,7 @@ contract MultiAction {
         if(requiredInput > cost) {
             buyCost = getBuyCostFromZeroSupplyInternal(marketID, fallbackAmount);
             requiredInput = getInputForOutputInternal(inputCurrency, address(_dai), buyCost);
-            require(requiredInput <= cost, "convertAddAndBuy: slippage too high");
+            require(requiredInput <= cost, "slippage");
             buyAmount = fallbackAmount;
         }
 
@@ -178,7 +178,7 @@ contract MultiAction {
         uint buyCost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, amount);
         if(buyCost > cost) {
             buyCost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, fallbackAmount);
-            require(buyCost <= cost, "buyAndLock: slippage too high");
+            require(buyCost <= cost, "slippage");
             buyAmount = fallbackAmount;
         }
 
@@ -229,7 +229,7 @@ contract MultiAction {
      */
     function buyAndLockInternal(address ideaToken, uint amount, uint cost, uint lockDuration, address recipient) internal {
         buyInternal(ideaToken, amount, cost, address(this));
-        require(IERC20(ideaToken).approve(address(_ideaTokenVault), amount), "buyAndLockInternal: approve failed");
+        require(IERC20(ideaToken).approve(address(_ideaTokenVault), amount), "approve");
         _ideaTokenVault.lock(ideaToken, amount, lockDuration, recipient);
     }
 
@@ -242,7 +242,7 @@ contract MultiAction {
      * @param recipient The recipient of the bought IdeaTokens 
      */
     function buyInternal(address ideaToken, uint amount, uint cost, address recipient) internal {
-        require(_dai.approve(address(_ideaTokenExchange), cost), "buyInternal: approve failed");
+        require(_dai.approve(address(_ideaTokenExchange), cost), "approve");
         _ideaTokenExchange.buyTokens(ideaToken, amount, amount, cost, recipient);
     }
 
@@ -267,8 +267,8 @@ contract MultiAction {
      * @param amount The amount of tokens to transfer
      */
     function pullERC20Internal(address token, address from, uint amount) internal {
-        require(IERC20(token).allowance(from, address(this)) >= amount, "pullERC20Internal: not enough allowance");
-        require(IERC20(token).transferFrom(from, address(this), amount), "pullERC20Internal: transfer failed");
+        require(IERC20(token).allowance(from, address(this)) >= amount, "insufficient-allowance");
+        require(IERC20(token).transferFrom(from, address(this), amount), "transfer");
     }
 
     /**
@@ -281,7 +281,7 @@ contract MultiAction {
      */
     function getBuyCostFromZeroSupplyInternal(uint marketID, uint amount) internal view returns (uint) {
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(marketID);
-        require(marketDetails.exists, "invalid market");
+        require(marketDetails.exists, "invalid-market");
 
         return _ideaTokenExchange.getCostsForBuyingTokens(marketDetails, 0, amount, false).total;
     }
@@ -360,7 +360,7 @@ contract MultiAction {
             inputERC20 = IERC20(inputCurrency);
         }
 
-        require(inputERC20.approve(address(_uniswapV2Router02), inputAmount), "convert: failed to erc20 approve router");
+        require(inputERC20.approve(address(_uniswapV2Router02), inputAmount), "router-approve");
 
         if(outputCurrency == address(0)) {
             path[1] = address(_weth);

@@ -43,7 +43,7 @@ describe('core/IdeaToken', () => {
 
 	it('normal user cannot mint tokens', async () => {
 		await expect(ideaToken.connect(userAccount).mint(userAccount.address, tenPow18)).to.be.revertedWith(
-			'Ownable: onlyOwner'
+			'only-owner'
 		)
 	})
 
@@ -51,7 +51,7 @@ describe('core/IdeaToken', () => {
 		await ideaToken.connect(adminAccount).mint(userAccount.address, tenPow18)
 		expect(tenPow18.eq(await ideaToken.balanceOf(userAccount.address))).to.be.true
 		await expect(ideaToken.connect(userAccount).burn(userAccount.address, tenPow18)).to.be.revertedWith(
-			'Ownable: onlyOwner'
+			'only-owner'
 		)
 	})
 

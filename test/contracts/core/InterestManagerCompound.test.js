@@ -66,7 +66,7 @@ describe('core/InterestManagerCompound', () => {
 	})
 
 	it('fail invest too few dai', async () => {
-		await expect(interestManagerCompound.invest(tenPow18)).to.be.revertedWith('invest: not enough dai')
+		await expect(interestManagerCompound.invest(tenPow18)).to.be.revertedWith('insufficient-dai')
 	})
 
 	it('can redeem', async () => {
@@ -88,7 +88,7 @@ describe('core/InterestManagerCompound', () => {
 
 		const redeemAmount = tenPow18.div(BigNumber.from('2'))
 		await expect(interestManagerCompound.redeem(adminAccount.address, redeemAmount)).to.be.revertedWith(
-			'Ownable: onlyOwner'
+			'only-owner'
 		)
 	})
 
