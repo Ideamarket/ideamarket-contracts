@@ -4,8 +4,8 @@ const shared = require('./shared')
 const Web3 = require('web3')
 
 async function run() {
-	const marketName = await shared.getInput('market name')
-	const platformFeeWithdrawerAddress = await shared.getInput('withdrawer address')
+	const tokenAddress = await shared.getInput('ideatoken address')
+	const ownerAddress = await shared.getInput('owner address')
 	const executionDate = await shared.getInput('execution date (DAY-MONTH-YEAR HOUR:MINUTE:SECOND) in UTC time')
 	const network = await shared.getInput('network (mainnet / kovan)')
 
@@ -17,12 +17,15 @@ async function run() {
 	const factoryAddress = shared.loadDeployedAddress(network, 'ideaTokenFactory')
 	const factoryContract = new web3.eth.Contract(factoryAbi, factoryAddress)
 
-	const marketDetails = await factoryContract.methods.getMarketDetailsByName(marketName).call()
-	if (!marketDetails.exists) {
-		throw 'market not found'
+	const idPair = await factoryContract.methods.getTokenIDPair(tokenAddress).call()
+	if (!idPair.exists) {
+		throw 'token not found'
 	}
 
-	const marketID = marketDetails.id
+	const marketID = idPair.marketID
+	const tokenID = idPair.tokenID
+	const tokenName = (await factoryContract.methods.getTokenInfo(marketID, tokenID).call()).name
+	const marketName = (await factoryContract.methods.getMarketDetailsByID(marketID).call()).name
 	const executionTimestamp = shared.unixTimestampFromDateString(executionDate)
 	const exchangeAddress = shared.loadDeployedAddress(network, 'ideaTokenExchange')
 
@@ -30,16 +33,19 @@ async function run() {
 	const timelockAddress = shared.loadDeployedAddress(network, 'dsPause')
 	const timelockContract = new web3.eth.Contract(timelockAbi, timelockAddress)
 
-	const spellAbi = shared.loadABI('AuthorizePlatformFeeWithdrawerSpell')
-	const spellAddress = shared.loadDeployedAddress(network, 'authorizePlatformFeeWithdrawerSpell')
+	const spellAbi = shared.loadABI('SetTokenOwnerSpell')
+	const spellAddress = shared.loadDeployedAddress(network, 'setTokenOwnerSpell')
 
 	const tag = await timelockContract.methods.soul(spellAddress).call()
 
 	console.log('')
 	console.log('------------------------------------------------------')
+	console.log('token address:', tokenAddress)
+	console.log('token name:', tokenName)
+	console.log('token id:', tokenID)
 	console.log('market name:', marketName)
 	console.log('market id:', marketID)
-	console.log('platform fee withdrawer:', platformFeeWithdrawerAddress)
+	console.log('owner:', ownerAddress)
 	console.log('idea token exchange:', exchangeAddress)
 	console.log('network:', network)
 
@@ -48,8 +54,8 @@ async function run() {
 
 	const fax = web3.eth.abi.encodeFunctionCall(shared.getFunctionABI(spellAbi, 'execute'), [
 		exchangeAddress,
-		marketID,
-		platformFeeWithdrawerAddress,
+		tokenAddress,
+		ownerAddress,
 	])
 
 	console.log('')

@@ -289,32 +289,20 @@ async function main() {
 	}
 
 	if (STAGE <= 12) {
-		console.log('12. Deploy AuthorizeInterestWithdrawerSpell')
+		console.log('12. Deploy SetTokenOwnerSpell')
 		console.log('==============================================')
-		const authorizeInterestWithdrawerSpell = await deployContract('AuthorizeInterestWithdrawerSpell')
-		saveDeployedAddress(networkName, 'authorizeInterestWithdrawerSpell', authorizeInterestWithdrawerSpell.address)
-		saveDeployedABI(
-			networkName,
-			'authorizeInterestWithdrawerSpell',
-			artifacts.readArtifactSync('AuthorizeInterestWithdrawerSpell').abi
-		)
+		const setTokenOwnerSpell = await deployContract('SetTokenOwnerSpell')
+		saveDeployedAddress(networkName, 'setTokenOwnerSpell', setTokenOwnerSpell.address)
+		saveDeployedABI(networkName, 'setTokenOwnerSpell', artifacts.readArtifactSync('SetTokenOwnerSpell').abi)
 		console.log('')
 	}
 
 	if (STAGE <= 13) {
-		console.log('13. Deploy AuthorizePlatformFeeWithdrawerSpell')
+		console.log('13. Deploy SetPlatformOwnerSpell')
 		console.log('==============================================')
-		const authorizePlatformFeeWithdrawerSpell = await deployContract('AuthorizePlatformFeeWithdrawerSpell')
-		saveDeployedAddress(
-			networkName,
-			'authorizePlatformFeeWithdrawerSpell',
-			authorizePlatformFeeWithdrawerSpell.address
-		)
-		saveDeployedABI(
-			networkName,
-			'authorizePlatformFeeWithdrawerSpell',
-			artifacts.readArtifactSync('AuthorizePlatformFeeWithdrawerSpell').abi
-		)
+		const setPlatformOwnerSpell = await deployContract('SetPlatformOwnerSpell')
+		saveDeployedAddress(networkName, 'setPlatformOwnerSpell', setPlatformOwnerSpell.address)
+		saveDeployedABI(networkName, 'setPlatformOwnerSpell', artifacts.readArtifactSync('SetPlatformOwnerSpell').abi)
 		console.log('')
 	}
 
