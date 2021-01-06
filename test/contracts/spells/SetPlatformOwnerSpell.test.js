@@ -2,10 +2,10 @@ const { time } = require('@openzeppelin/test-helpers')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('spells/AuthorizeInterestWithdrawerSpell', () => {
+describe('spells/SetPlatformOwnerSpell', () => {
 	let DSPause
 	let IdeaTokenExchange
-	let AuthorizeInterestWithdrawerSpell
+	let SetPlatformOwnerSpell
 
 	let dsPause
 	let dsPauseProxyAddress
@@ -24,13 +24,13 @@ describe('spells/AuthorizeInterestWithdrawerSpell', () => {
 
 		DSPause = await ethers.getContractFactory('DSPause')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchange')
-		AuthorizeInterestWithdrawerSpell = await ethers.getContractFactory('AuthorizeInterestWithdrawerSpell')
+		SetPlatformOwnerSpell = await ethers.getContractFactory('SetPlatformOwnerSpell')
 
 		dsPause = await DSPause.deploy(delay, adminAccount.address)
 		await dsPause.deployed()
 		dsPauseProxyAddress = await dsPause._proxy()
 
-		spell = await AuthorizeInterestWithdrawerSpell.deploy()
+		spell = await SetPlatformOwnerSpell.deploy()
 		await spell.deployed()
 
 		ideaTokenExchange = await IdeaTokenExchange.deploy()
@@ -41,12 +41,12 @@ describe('spells/AuthorizeInterestWithdrawerSpell', () => {
 			.initialize(dsPauseProxyAddress, zeroAddress, zeroAddress, zeroAddress, zeroAddress)
 	})
 
-	it('can set new interest withdrawer', async () => {
+	it('can set new platform owner', async () => {
 		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
 		const tag = await dsPause.soul(spell.address)
 		const fax = spell.interface.encodeFunctionData('execute', [
 			ideaTokenExchange.address,
-			zeroAddress,
+			BigNumber.from('1'),
 			withdrawer.address,
 		])
 

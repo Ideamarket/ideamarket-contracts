@@ -322,16 +322,16 @@ describe('core/IdeaTokenExchange', () => {
 
 		await ideaTokenExchange
 			.connect(adminAccount)
-			.authorizePlatformFeeWithdrawer(marketID, platformFeeReceiverAccount.address)
+			.setPlatformOwner(marketID, platformFeeReceiverAccount.address)
 
 		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformFee(marketID)
 		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(finalPlatformFee)).to.be.true
 
 		await ideaTokenExchange
 			.connect(adminAccount)
-			.authorizeInterestWithdrawer(ideaToken.address, interestReceiverAccount.address)
+			.setTokenOwner(ideaToken.address, interestReceiverAccount.address)
 
-		await ideaTokenExchange.connect(interestReceiverAccount).withdrawInterest(ideaToken.address)
+		await ideaTokenExchange.connect(interestReceiverAccount).withdrawTokenInterest(ideaToken.address)
 		// TODO: Minor rounding error
 		// expect((await dai.balanceOf(interestReceiverAccount)).eq(fourthInterestPayable))
 
@@ -441,17 +441,17 @@ describe('core/IdeaTokenExchange', () => {
 
 		await expect(
 			ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, tooHighAmount, cost, userAccount.address)
-		).to.be.revertedWith('buyTokens: slippage too high')
+		).to.be.revertedWith('slippage')
 		await ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, amount, cost, userAccount.address)
 	})
 
 	it('fail buy/sell - invalid token', async () => {
 		await expect(
 			ideaTokenExchange.buyTokens(zeroAddress, tenPow18, tenPow18, tenPow18, userAccount.address)
-		).to.be.revertedWith('buyTokens: token does not exist')
+		).to.be.revertedWith('token-not-exist')
 		await expect(
 			ideaTokenExchange.sellTokens(zeroAddress, tenPow18, tenPow18, userAccount.address)
-		).to.be.revertedWith('sellTokens: token does not exist')
+		).to.be.revertedWith('token-not-exist')
 	})
 
 	it('fail buy/sell - max cost / minPrice', async () => {
@@ -466,7 +466,7 @@ describe('core/IdeaTokenExchange', () => {
 				cost.sub(BigNumber.from('1')),
 				userAccount.address
 			)
-		).to.be.revertedWith('buyTokens: slippage too high')
+		).to.be.revertedWith('slippage')
 
 		await dai.mint(userAccount.address, cost)
 		await dai.approve(ideaTokenExchange.address, cost)
@@ -476,7 +476,7 @@ describe('core/IdeaTokenExchange', () => {
 
 		await expect(
 			ideaTokenExchange.sellTokens(ideaToken.address, amount, price.add(BigNumber.from('1')), userAccount.address)
-		).to.be.revertedWith('sellTokens: price subceeds min price')
+		).to.be.revertedWith('below-min-price')
 	})
 
 	it('fail buy - not enough allowance', async () => {
@@ -486,7 +486,7 @@ describe('core/IdeaTokenExchange', () => {
 
 		await expect(
 			ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
-		).to.be.revertedWith('buyTokens: not enough allowance')
+		).to.be.revertedWith('insufficient-allowance')
 	})
 
 	it('fail buy/sell - not enough tokens', async () => {
@@ -512,7 +512,7 @@ describe('core/IdeaTokenExchange', () => {
 				BigNumber.from('0'),
 				userAccount.address
 			)
-		).to.be.revertedWith('sellTokens: not enough tokens')
+		).to.be.revertedWith('insufficient-tokens')
 	})
 
 	it('can withdraw platform interest', async () => {
@@ -556,7 +556,7 @@ describe('core/IdeaTokenExchange', () => {
 
 		await ideaTokenExchange
 			.connect(adminAccount)
-			.authorizePlatformFeeWithdrawer(newMarketID, platformFeeReceiverAccount.address)
+			.setPlatformOwner(newMarketID, platformFeeReceiverAccount.address)
 
 		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformInterest(newMarketID)
 
@@ -573,7 +573,7 @@ describe('core/IdeaTokenExchange', () => {
 	it('no platform fee available', async () => {
 		await ideaTokenExchange
 			.connect(adminAccount)
-			.authorizePlatformFeeWithdrawer(marketID, platformFeeReceiverAccount.address)
+			.setPlatformOwner(marketID, platformFeeReceiverAccount.address)
 
 		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(BigNumber.from('0'))).to.be.true
 		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformFee(marketID)
@@ -583,7 +583,7 @@ describe('core/IdeaTokenExchange', () => {
 	it('no platform interest available', async () => {
 		await ideaTokenExchange
 			.connect(adminAccount)
-			.authorizePlatformFeeWithdrawer(marketID, platformFeeReceiverAccount.address)
+			.setPlatformOwner(marketID, platformFeeReceiverAccount.address)
 
 		expect((await ideaTokenExchange.getPlatformInterestPayable(marketID)).eq(BigNumber.from('0'))).to.be.true
 		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformInterest(marketID)
@@ -593,41 +593,41 @@ describe('core/IdeaTokenExchange', () => {
 	it('no interest available', async () => {
 		await ideaTokenExchange
 			.connect(adminAccount)
-			.authorizeInterestWithdrawer(ideaToken.address, interestReceiverAccount.address)
+			.setTokenOwner(ideaToken.address, interestReceiverAccount.address)
 
 		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(BigNumber.from('0'))).to.be.true
-		await ideaTokenExchange.connect(interestReceiverAccount).withdrawInterest(ideaToken.address)
+		await ideaTokenExchange.connect(interestReceiverAccount).withdrawTokenInterest(ideaToken.address)
 		expect((await dai.balanceOf(interestReceiverAccount.address)).eq(BigNumber.from('0'))).to.be.true
 	})
 
 	it('fail authorize interest withdrawer not authorized', async () => {
 		await expect(
-			ideaTokenExchange.authorizeInterestWithdrawer(ideaToken.address, interestReceiverAccount.address)
-		).to.be.revertedWith('authorizeInterestWithdrawer: not authorized')
+			ideaTokenExchange.setTokenOwner(ideaToken.address, interestReceiverAccount.address)
+		).to.be.revertedWith('not-authorized')
 	})
 
 	it('fail withdraw interest not authorized', async () => {
-		await expect(ideaTokenExchange.withdrawInterest(ideaToken.address)).to.be.revertedWith(
-			'withdrawInterest: not authorized'
+		await expect(ideaTokenExchange.withdrawTokenInterest(ideaToken.address)).to.be.revertedWith(
+			'not-authorized'
 		)
 	})
 
 	it('fail withdraw platform fee not authorized', async () => {
 		await expect(ideaTokenExchange.withdrawPlatformFee(marketID)).to.be.revertedWith(
-			'withdrawPlatformFee: not authorized'
+			'not-authorized'
 		)
 	})
 
 	it('fail withdraw platform interest not authorized', async () => {
 		await expect(ideaTokenExchange.withdrawPlatformInterest(marketID)).to.be.revertedWith(
-			'withdrawPlatformInterest: not authorized'
+			'not-authorized'
 		)
 	})
 
 	it('fail authorize platform fee withdrawer not authorized', async () => {
 		await expect(
-			ideaTokenExchange.authorizePlatformFeeWithdrawer(marketID, platformFeeReceiverAccount.address)
-		).to.be.revertedWith('authorizePlatformFeeWithdrawer: not authorized')
+			ideaTokenExchange.setPlatformOwner(marketID, platformFeeReceiverAccount.address)
+		).to.be.revertedWith('not-authorized')
 	})
 
 	it('can set factory address on init', async () => {
@@ -692,49 +692,49 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	it('authorizer can set interest withdrawer', async () => {
-		await ideaTokenExchange.connect(authorizerAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
+		await ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, someAddress)
 	})
 
 	it('interest withdrawer can set new interest withdrawer', async () => {
 		await ideaTokenExchange
 			.connect(authorizerAccount)
-			.authorizeInterestWithdrawer(ideaToken.address, tradingFeeAccount.address)
-		await ideaTokenExchange.connect(tradingFeeAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
+			.setTokenOwner(ideaToken.address, tradingFeeAccount.address)
+		await ideaTokenExchange.connect(tradingFeeAccount).setTokenOwner(ideaToken.address, someAddress)
 	})
 
 	it('fail authorizer cannot set interest withdrawer twice', async () => {
-		await ideaTokenExchange.connect(authorizerAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
+		await ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, someAddress)
 		await expect(
-			ideaTokenExchange.connect(authorizerAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
-		).to.be.revertedWith('authorizeInterestWithdrawer: not authorized')
+			ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, someAddress)
+		).to.be.revertedWith('not-authorized')
 	})
 
 	it('admin can set interest withdrawer twice', async () => {
-		await ideaTokenExchange.connect(adminAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
-		await ideaTokenExchange.connect(adminAccount).authorizeInterestWithdrawer(ideaToken.address, someAddress)
+		await ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, someAddress)
+		await ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, someAddress)
 	})
 
 	it('authorizer can set platform fee withdrawer', async () => {
-		await ideaTokenExchange.connect(authorizerAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
+		await ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, someAddress)
 	})
 
 	it('platform fee withdrawer can set new platform fee withdrawer', async () => {
 		await ideaTokenExchange
 			.connect(authorizerAccount)
-			.authorizePlatformFeeWithdrawer(marketID, tradingFeeAccount.address)
-		await ideaTokenExchange.connect(tradingFeeAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
+			.setPlatformOwner(marketID, tradingFeeAccount.address)
+		await ideaTokenExchange.connect(tradingFeeAccount).setPlatformOwner(marketID, someAddress)
 	})
 
 	it('fail authorizer cannot set platform fee withdrawer twice', async () => {
-		await ideaTokenExchange.connect(authorizerAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
+		await ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, someAddress)
 		await expect(
-			ideaTokenExchange.connect(authorizerAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
-		).to.be.revertedWith('authorizePlatformFeeWithdrawer: not authorized')
+			ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, someAddress)
+		).to.be.revertedWith('not-authorized')
 	})
 
 	it('admin can set platform fee withdrawer twice', async () => {
-		await ideaTokenExchange.connect(adminAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
-		await ideaTokenExchange.connect(adminAccount).authorizePlatformFeeWithdrawer(marketID, someAddress)
+		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, someAddress)
+		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, someAddress)
 	})
 
 	it('admin can disable fees for specific token', async () => {

@@ -23,10 +23,10 @@ interface IIdeaTokenExchange {
     function buyTokens(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external;
     function getCostForBuyingTokens(address ideaToken, uint amount) external view returns (uint);
     function getCostsForBuyingTokens(MarketDetails memory marketDetails, uint supply, uint amount, bool feesDisabled) external pure returns (CostAndPriceAmounts memory);
-    function authorizeInterestWithdrawer(address ideaToken, address withdrawer) external;
-    function authorizePlatformFeeWithdrawer(uint marketID, address withdrawer) external;
+    function setTokenOwner(address ideaToken, address owner) external;
+    function setPlatformOwner(uint marketID, address owner) external;
     function withdrawTradingFee() external;
-    function withdrawInterest(address token) external;
+    function withdrawTokenInterest(address token) external;
     function withdrawPlatformInterest(uint marketID) external;
     function withdrawPlatformFee(uint marketID) external;
     function getInterestPayable(address token) external view returns (uint);

@@ -32,11 +32,11 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     address _tradingFeeRecipient;
 
     mapping(uint => uint) _platformFeeInvested;
-    mapping(uint => address) _authorizedPlatformFeeWithdrawers;
+    mapping(uint => address) _platformOwner;
 
     mapping(uint => ExchangeInfo) _platformsExchangeInfo;
     mapping(address => ExchangeInfo) _tokensExchangeInfo;
-    mapping(address => address) _authorizedInterestWithdrawers;
+    mapping(address => address) _tokenOwner;
 
     IIdeaTokenFactory _ideaTokenFactory;
     IInterestManager _interestManager;
@@ -44,8 +44,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
 
     mapping(address => bool) _tokenFeeKillswitch;
 
-    event NewInterestWithdrawer(address ideaToken, address withdrawer);
-    event NewPlatformFeeWithdrawer(uint marketID, address withdrawer);
+    event NewTokenOwner(address ideaToken, address owner);
+    event NewPlatformOwner(uint marketID, address owner);
 
     event InvestedState(uint marketID, address ideaToken, uint dai, uint daiInvested, uint tradingFeeInvested, uint platformFeeInvested, uint volume);
     
@@ -85,13 +85,13 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
 
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken);
-        require(marketDetails.exists, "sellTokens: token does not exist");
+        require(marketDetails.exists, "token-not-exist");
         uint marketID = marketDetails.id;
 
         CostAndPriceAmounts memory amounts = getPricesForSellingTokens(marketDetails, IERC20(ideaToken).totalSupply(), amount, _tokenFeeKillswitch[ideaToken]);
 
-        require(amounts.total >= minPrice, "sellTokens: price subceeds min price");
-        require(IIdeaToken(ideaToken).balanceOf(msg.sender) >= amount, "sellTokens: not enough tokens");
+        require(amounts.total >= minPrice, "below-min-price");
+        require(IIdeaToken(ideaToken).balanceOf(msg.sender) >= amount, "insufficient-tokens");
         
         IIdeaToken(ideaToken).burn(msg.sender, amount);
 
@@ -228,7 +228,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      */
     function buyTokens(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external override {
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken);
-        require(marketDetails.exists, "buyTokens: token does not exist");
+        require(marketDetails.exists, "token-not-exist");
         uint marketID = marketDetails.id;
 
         uint supply = IERC20(ideaToken).totalSupply();
@@ -241,12 +241,12 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
             actualAmount = fallbackAmount;
             amounts = getCostsForBuyingTokens(marketDetails, supply, actualAmount, feesDisabled);
     
-            require(amounts.total <= cost, "buyTokens: slippage too high");
+            require(amounts.total <= cost, "slippage");
         }
 
         
-        require(_dai.allowance(msg.sender, address(this)) >= amounts.total, "buyTokens: not enough allowance");
-        require(_dai.transferFrom(msg.sender, address(_interestManager), amounts.total), "buyTokens: dai transfer failed");
+        require(_dai.allowance(msg.sender, address(this)) >= amounts.total, "insufficient-allowance");
+        require(_dai.transferFrom(msg.sender, address(_interestManager), amounts.total), "dai-transfer");
         
         _interestManager.accrueInterest();
         _interestManager.invest(amounts.total);
@@ -364,8 +364,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param token The token from which the generated interest is to be withdrawn
      */
-    function withdrawInterest(address token) external override {
-        require(_authorizedInterestWithdrawers[token] == msg.sender, "withdrawInterest: not authorized");
+    function withdrawTokenInterest(address token) external override {
+        require(_tokenOwner[token] == msg.sender, "not-authorized");
         _interestManager.accrueInterest();
 
         uint interestPayable = getInterestPayable(token);
@@ -392,21 +392,22 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * Authorizes an address which is allowed to withdraw interest for a token
+     * Sets an address as owner of a token, allowing the address to withdraw interest
      *
      * @param token The token for which to authorize an address
-     * @param withdrawer The address to be authorized
+     * @param owner The address to be set as owner
      */
-    function authorizeInterestWithdrawer(address token, address withdrawer) external override {
-        address current = _authorizedInterestWithdrawers[token];
+    function setTokenOwner(address token, address owner) external override {
+        address sender = msg.sender;
+        address current = _tokenOwner[token];
 
-        require((current == address(0) && (msg.sender == _owner || msg.sender == _authorizer)) ||
-                (current != address(0) && (msg.sender == _owner || msg.sender == _authorizedInterestWithdrawers[token])),
-                "authorizeInterestWithdrawer: not authorized");
+        require((current == address(0) && (sender == _owner || sender == _authorizer)) ||
+                (current != address(0) && (sender == _owner || sender == current)),
+                "not-authorized");
 
-        _authorizedInterestWithdrawers[token] = withdrawer;
+        _tokenOwner[token] = owner;
 
-        emit NewInterestWithdrawer(token, withdrawer);
+        emit NewTokenOwner(token, owner);
     }
 
     /**
@@ -415,7 +416,9 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param marketID The market id from which the generated interest is to be withdrawn
      */
     function withdrawPlatformInterest(uint marketID) external override {
-        require(_authorizedPlatformFeeWithdrawers[marketID] == msg.sender, "withdrawPlatformInterest: not authorized");
+        address sender = msg.sender;
+
+        require(_platformOwner[marketID] == sender, "not-authorized");
         _interestManager.accrueInterest();
 
         uint platformInterestPayable = getPlatformInterestPayable(marketID);
@@ -424,7 +427,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         }
 
         ExchangeInfo storage exchangeInfo = _platformsExchangeInfo[marketID];
-        exchangeInfo.invested = exchangeInfo.invested.sub(_interestManager.redeem(msg.sender, platformInterestPayable));
+        exchangeInfo.invested = exchangeInfo.invested.sub(_interestManager.redeem(sender, platformInterestPayable));
 
         emit PlatformInterestRedeemed(marketID, exchangeInfo.invested, platformInterestPayable);
     }
@@ -447,7 +450,9 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param marketID The market from which the generated platform fee is to be withdrawn
      */
     function withdrawPlatformFee(uint marketID) external override {
-        require(_authorizedPlatformFeeWithdrawers[marketID] == msg.sender, "withdrawPlatformFee: not authorized");
+        address sender = msg.sender;
+    
+        require(_platformOwner[marketID] == sender, "not-authorized");
         _interestManager.accrueInterest();
 
         uint platformFeePayable = getPlatformFeePayable(marketID);
@@ -456,7 +461,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         }
 
         _platformFeeInvested[marketID] = 0;
-        _interestManager.redeem(msg.sender, platformFeePayable);
+        _interestManager.redeem(sender, platformFeePayable);
 
         emit PlatformFeeRedeemed(marketID, platformFeePayable);
     }
@@ -473,21 +478,22 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     }
 
     /**
-     * Authorizes an address which is allowed to withdraw platform fee for a market
+     * Authorizes an address as owner of a platform/market, which is allowed to withdraw platform fee and platform interest
      *
      * @param marketID The market for which to authorize an address
-     * @param withdrawer The address to be authorized
+     * @param owner The address to be authorized
      */
-    function authorizePlatformFeeWithdrawer(uint marketID, address withdrawer) external override {
-        address current = _authorizedPlatformFeeWithdrawers[marketID];
+    function setPlatformOwner(uint marketID, address owner) external override {
+        address sender = msg.sender;
+        address current = _platformOwner[marketID];
 
-        require((current == address(0) && (msg.sender == _owner || msg.sender == _authorizer)) ||
-                (current != address(0) && (msg.sender == _owner || msg.sender == _authorizedPlatformFeeWithdrawers[marketID])),
-                "authorizePlatformFeeWithdrawer: not authorized");
+        require((current == address(0) && (sender == _owner || sender == _authorizer)) ||
+                (current != address(0) && (sender == _owner || sender == current)),
+                "not-authorized");
         
-        _authorizedPlatformFeeWithdrawers[marketID] = withdrawer;
+        _platformOwner[marketID] = owner;
 
-        emit NewPlatformFeeWithdrawer(marketID, withdrawer);
+        emit NewPlatformOwner(marketID, owner);
     }
 
     /**
