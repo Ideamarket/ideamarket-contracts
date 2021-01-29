@@ -184,7 +184,7 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
 
         uint index = 0;
         next = _llHead[ideaToken][user];
-        while(next != bytes32(0) && len < maxEntries) {
+        while(next != bytes32(0)) {
             LLEntry storage entry = getLLEntry(next);
             
             ret[index] = LockedEntry({lockedUntil: entry.until, lockedAmount: entry.amount});
