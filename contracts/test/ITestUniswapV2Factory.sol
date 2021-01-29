@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.9;
+pragma solidity 0.6.9;
 
 interface ITestUniswapV2Factory {
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);

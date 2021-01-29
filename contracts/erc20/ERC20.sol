@@ -7,7 +7,7 @@
     This allows this contract to be used with MinimalProxy.
 */
 
-pragma solidity ^0.6.9;
+pragma solidity 0.6.9;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/GSN/Context.sol";
