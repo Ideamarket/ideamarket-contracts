@@ -2,7 +2,7 @@
 pragma solidity 0.6.9;
 
 /**
- * @title IIdeaToken
+ * @title IDSPause
  * @author Alexander Schlindwein
  *
  * @dev Interface for the timelock
