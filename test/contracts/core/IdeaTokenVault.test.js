@@ -8,6 +8,7 @@ describe('core/IdeaTokenVault', () => {
 	let TestERC20
 	let TestCDai
 	let InterestManagerCompound
+	let TestComptroller
 	let IdeaTokenFactory
 	let IdeaTokenExchange
 	let IdeaToken
@@ -35,6 +36,7 @@ describe('core/IdeaTokenVault', () => {
 	let domainNoSubdomainNameVerifier
 	let dai
 	let comp
+	let comptroller
 	let cDai
 	let interestManagerCompound
 	let ideaTokenLogic
@@ -59,6 +61,7 @@ describe('core/IdeaTokenVault', () => {
 		TestERC20 = await ethers.getContractFactory('TestERC20')
 		TestCDai = await ethers.getContractFactory('TestCDai')
 		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
+		TestComptroller = await ethers.getContractFactory('TestComptroller')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactory')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchange')
 		IdeaToken = await ethers.getContractFactory('IdeaToken')
@@ -75,7 +78,10 @@ describe('core/IdeaTokenVault', () => {
 		comp = await TestERC20.deploy('COMP', 'COMP')
 		await comp.deployed()
 
-		cDai = await TestCDai.deploy(dai.address, comp.address)
+		comptroller = await TestComptroller.deploy()
+		await comptroller.deployed()
+
+		cDai = await TestCDai.deploy(dai.address, comp.address, comptroller.address)
 		await cDai.deployed()
 		await cDai.setExchangeRate(tenPow18)
 

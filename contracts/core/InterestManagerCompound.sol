@@ -4,6 +4,7 @@ pragma solidity ^0.6.9;
 import "./interfaces/IInterestManager.sol";
 import "../util/Ownable.sol";
 import "../compound/ICToken.sol";
+import "../compound/IComptroller.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../util/Initializable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -105,7 +106,9 @@ contract InterestManagerCompound is Ownable, Initializable {
      * Withdraws the generated Comp tokens to the Comp recipient
      */
     function withdrawComp() external {
-        require(_comp.transfer(_compRecipient, _comp.balanceOf(address(this))), "comp-transfer");
+        address addr = address(this);
+        IComptroller(_cDai.comptroller()).claimComp(addr);
+        require(_comp.transfer(_compRecipient, _comp.balanceOf(addr)), "comp-transfer");
     }
 
     /**

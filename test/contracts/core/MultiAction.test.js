@@ -7,6 +7,7 @@ describe('core/MultiAction', () => {
 	let TestERC20
 	let TestCDai
 	let InterestManagerCompound
+	let TestComptroller
 	let IdeaTokenFactory
 	let IdeaTokenExchange
 	let IdeaToken
@@ -39,6 +40,7 @@ describe('core/MultiAction', () => {
 	let domainNoSubdomainNameVerifier
 	let dai
 	let comp
+	let comptroller
 	let someToken
 	let someOtherToken
 	let cDai
@@ -66,6 +68,7 @@ describe('core/MultiAction', () => {
 		TestERC20 = await ethers.getContractFactory('TestERC20')
 		TestCDai = await ethers.getContractFactory('TestCDai')
 		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
+		TestComptroller = await ethers.getContractFactory('TestComptroller')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactory')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchange')
 		IdeaToken = await ethers.getContractFactory('IdeaToken')
@@ -84,8 +87,12 @@ describe('core/MultiAction', () => {
 
 		dai = await TestERC20.deploy('DAI', 'DAI')
 		await dai.deployed()
+
 		comp = await TestERC20.deploy('COMP', 'COMP')
 		await comp.deployed()
+
+		comptroller = await TestComptroller.deploy()
+		await comptroller.deployed()
 
 		someToken = await TestERC20.deploy('SOME', 'SOME')
 		await someToken.deployed()

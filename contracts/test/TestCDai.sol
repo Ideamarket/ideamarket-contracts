@@ -16,15 +16,17 @@ contract TestCDai is ERC20, ICToken {
     TestERC20 _dai;
     TestERC20 _comp;
     uint _exchangeRate;
+    address _comptroller;
 
     /**
      * @dev Constructs a new TestCDai
      * @param dai The address of the test dai
      * @param comp The address of the test comp
      */
-    constructor (address dai, address comp) public ERC20("cDai", "cDai") {
+    constructor (address dai, address comp, address comptroller_) public ERC20("cDai", "cDai") {
         _dai = TestERC20(dai);
         _comp = TestERC20(comp);
+        _comptroller = comptroller_;
     }
 
     /**
@@ -103,6 +105,15 @@ contract TestCDai is ERC20, ICToken {
     function exchangeRateStored() public view override returns (uint) {
         return _exchangeRate;
     }
+
+    /**
+     * @dev Returns the address of the Comptroller
+     *
+     * @return Address of the Comptroller
+     */
+    function comptroller() public view override returns (address) {
+        return _comptroller;
+    } 
 
     // ====================================== COMPOUND MATH ======================================
     // https://github.com/compound-finance/compound-protocol/blob/master/contracts/Exponential.sol

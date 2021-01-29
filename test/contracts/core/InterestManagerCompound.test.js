@@ -4,6 +4,7 @@ const { ethers } = require('hardhat')
 
 describe('core/InterestManagerCompound', () => {
 	let InterestManagerCompound
+	let TestComptroller
 	let TestCDai
 	let TestERC20
 
@@ -15,6 +16,7 @@ describe('core/InterestManagerCompound', () => {
 	let compRecipient
 
 	let interestManagerCompound
+	let comptroller
 	let cDai
 	let dai
 	let comp
@@ -26,6 +28,7 @@ describe('core/InterestManagerCompound', () => {
 		compRecipient = accounts[2]
 
 		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
+		TestComptroller = await ethers.getContractFactory('TestComptroller')
 		TestCDai = await ethers.getContractFactory('TestCDai')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
 	})
@@ -37,7 +40,10 @@ describe('core/InterestManagerCompound', () => {
 		comp = await TestERC20.deploy('COMP', 'COMP')
 		await comp.deployed()
 
-		cDai = await TestCDai.deploy(dai.address, comp.address)
+		comptroller = await TestComptroller.deploy()
+		await comptroller.deployed()
+
+		cDai = await TestCDai.deploy(dai.address, comp.address, comptroller.address)
 		await cDai.deployed()
 		await cDai.setExchangeRate(tenPow18)
 
