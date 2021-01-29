@@ -60,7 +60,7 @@ contract InterestManagerCompound is Ownable, Initializable {
      *
      * @return The amount of minted cDai
      */
-    function invest(uint amount) public returns (uint) {
+    function invest(uint amount) external onlyOwner returns (uint) {
         uint balanceBefore = _cDai.balanceOf(address(this));
         require(_dai.balanceOf(address(this)) >= amount, "insufficient-dai");
         require(_dai.approve(address(_cDai), amount), "dai-cdai-approve");

@@ -65,20 +65,20 @@ describe('core/InterestManagerCompound', () => {
 	it('can invest', async () => {
 		await dai.mint(userAccount.address, tenPow18)
 		await dai.transfer(interestManagerCompound.address, tenPow18)
-		await interestManagerCompound.invest(tenPow18)
+		await interestManagerCompound.connect(adminAccount).invest(tenPow18)
 		expect(zero.eq(await dai.balanceOf(userAccount.address))).to.be.true
 		expect(tenPow18.eq(await dai.balanceOf(cDai.address))).to.be.true
 		expect(tenPow18.eq(await cDai.balanceOf(interestManagerCompound.address))).to.be.true
 	})
 
 	it('fail invest too few dai', async () => {
-		await expect(interestManagerCompound.invest(tenPow18)).to.be.revertedWith('insufficient-dai')
+		await expect(interestManagerCompound.connect(adminAccount).invest(tenPow18)).to.be.revertedWith('insufficient-dai')
 	})
 
 	it('can redeem', async () => {
 		await dai.mint(userAccount.address, tenPow18)
 		await dai.transfer(interestManagerCompound.address, tenPow18)
-		await interestManagerCompound.invest(tenPow18)
+		await interestManagerCompound.connect(adminAccount).invest(tenPow18)
 
 		const redeemAmount = tenPow18.div(BigNumber.from('2'))
 		await interestManagerCompound.connect(adminAccount).redeem(adminAccount.address, redeemAmount)
@@ -90,7 +90,7 @@ describe('core/InterestManagerCompound', () => {
 	it('fail redeem not admin', async () => {
 		await dai.mint(userAccount.address, tenPow18)
 		await dai.transfer(interestManagerCompound.address, tenPow18)
-		await interestManagerCompound.invest(tenPow18)
+		await interestManagerCompound.connect(adminAccount).invest(tenPow18)
 
 		const redeemAmount = tenPow18.div(BigNumber.from('2'))
 		await expect(interestManagerCompound.redeem(adminAccount.address, redeemAmount)).to.be.revertedWith(
@@ -101,7 +101,7 @@ describe('core/InterestManagerCompound', () => {
 	it('can withdraw COMP', async () => {
 		await dai.mint(userAccount.address, tenPow18)
 		await dai.transfer(interestManagerCompound.address, tenPow18)
-		await interestManagerCompound.invest(tenPow18)
+		await interestManagerCompound.connect(adminAccount).invest(tenPow18)
 
 		const compBalance = await comp.balanceOf(interestManagerCompound.address)
 		await interestManagerCompound.withdrawComp()
