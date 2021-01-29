@@ -13,11 +13,11 @@ describe('spells/SetPlatformFeeSpell', () => {
 	let spell
 
 	const delay = 86400
-	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const oneAddress = '0x0000000000000000000000000000000000000001'
 	let adminAccount
 
 	const marketName = 'SOME_MARKET'
-	const nameVerifierAddress = zeroAddress
+	const nameVerifierAddress = oneAddress
 	const baseCost = '1'
 	const priceRise = '1'
 	const hatchTokens = '1'
@@ -43,7 +43,7 @@ describe('spells/SetPlatformFeeSpell', () => {
 	it('can set platform fee', async () => {
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
-		await factory.initialize(adminAccount.address, zeroAddress, zeroAddress)
+		await factory.initialize(adminAccount.address, oneAddress, oneAddress)
 
 		await factory.addMarket(
 			marketName,

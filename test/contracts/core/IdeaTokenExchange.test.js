@@ -31,6 +31,7 @@ describe('core/IdeaTokenExchange', () => {
 	let interestReceiverAccount
 	let platformFeeReceiverAccount
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const oneAddress = '0x0000000000000000000000000000000000000001'
 	const someAddress = '0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5' // random addr from etherscan
 
 	let domainNoSubdomainNameVerifier
@@ -97,7 +98,7 @@ describe('core/IdeaTokenExchange', () => {
 
 		await interestManagerCompound
 			.connect(adminAccount)
-			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, zeroAddress)
+			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, oneAddress)
 
 		await ideaTokenFactory
 			.connect(adminAccount)
@@ -632,7 +633,7 @@ describe('core/IdeaTokenExchange', () => {
 			.connect(adminAccount)
 			.initialize(
 				adminAccount.address,
-				zeroAddress,
+				oneAddress,
 				tradingFeeAccount.address,
 				interestManagerCompound.address,
 				dai.address
@@ -649,7 +650,7 @@ describe('core/IdeaTokenExchange', () => {
 			.connect(adminAccount)
 			.initialize(
 				adminAccount.address,
-				zeroAddress,
+				oneAddress,
 				tradingFeeAccount.address,
 				interestManagerCompound.address,
 				dai.address
@@ -666,7 +667,7 @@ describe('core/IdeaTokenExchange', () => {
 			.connect(adminAccount)
 			.initialize(
 				adminAccount.address,
-				zeroAddress,
+				oneAddress,
 				tradingFeeAccount.address,
 				interestManagerCompound.address,
 				dai.address
@@ -678,11 +679,11 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	it('admin can set authorizer', async () => {
-		await ideaTokenExchange.connect(adminAccount).setAuthorizer(zeroAddress)
+		await ideaTokenExchange.connect(adminAccount).setAuthorizer(oneAddress)
 	})
 
 	it('fail user cannot set authorizer', async () => {
-		await expect(ideaTokenExchange.setAuthorizer(zeroAddress)).to.be.revertedWith('only-owner')
+		await expect(ideaTokenExchange.setAuthorizer(oneAddress)).to.be.revertedWith('only-owner')
 	})
 
 	it('authorizer can set interest withdrawer', async () => {

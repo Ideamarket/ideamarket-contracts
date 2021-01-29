@@ -92,7 +92,13 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                         address tradingFeeRecipient,
                         address interestManager,
                         address dai) external initializer {
-        setOwnerInternal(owner);
+        require(authorizer != address(0) &&
+                tradingFeeRecipient != address(0) &&
+                interestManager != address(0) &&
+                dai != address(0),
+                "invalid-params");
+
+        setOwnerInternal(owner); // Checks owner to be non-zero
         _authorizer = authorizer;
         _tradingFeeRecipient = tradingFeeRecipient;
         _interestManager = IInterestManager(interestManager);
@@ -553,6 +559,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param authorizer The new authorizer address
      */
     function setAuthorizer(address authorizer) external override onlyOwner {
+        require(authorizer != address(0), "invalid-params");
         _authorizer = authorizer;
     }
 

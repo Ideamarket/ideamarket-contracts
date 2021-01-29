@@ -19,6 +19,7 @@ describe('core/IdeaTokenFactory', () => {
 	let adminAccount
 	let ideaTokenExchangeAddress
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const oneAddress = '0x0000000000000000000000000000000000000001'
 	const someAddress = '0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5' // random addr from etherscan
 
 	let ideaTokenLogic
@@ -288,7 +289,7 @@ describe('core/IdeaTokenFactory', () => {
 			.connect(adminAccount)
 			.addMarket(
 				marketName,
-				zeroAddress,
+				oneAddress,
 				baseCost,
 				priceRise,
 				hatchTokens,
@@ -307,7 +308,7 @@ describe('core/IdeaTokenFactory', () => {
 			.connect(adminAccount)
 			.addMarket(
 				marketName,
-				zeroAddress,
+				oneAddress,
 				baseCost,
 				priceRise,
 				hatchTokens,
@@ -326,7 +327,7 @@ describe('core/IdeaTokenFactory', () => {
 			.connect(adminAccount)
 			.addMarket(
 				marketName,
-				zeroAddress,
+				oneAddress,
 				baseCost,
 				priceRise,
 				hatchTokens,
@@ -345,7 +346,7 @@ describe('core/IdeaTokenFactory', () => {
 			.connect(adminAccount)
 			.addMarket(
 				marketName,
-				zeroAddress,
+				oneAddress,
 				baseCost,
 				priceRise,
 				hatchTokens,
@@ -364,7 +365,7 @@ describe('core/IdeaTokenFactory', () => {
 			.connect(adminAccount)
 			.addMarket(
 				marketName,
-				zeroAddress,
+				oneAddress,
 				baseCost,
 				priceRise,
 				hatchTokens,
@@ -383,7 +384,7 @@ describe('core/IdeaTokenFactory', () => {
 			.connect(adminAccount)
 			.addMarket(
 				marketName,
-				zeroAddress,
+				oneAddress,
 				baseCost,
 				priceRise,
 				hatchTokens,
@@ -402,7 +403,7 @@ describe('core/IdeaTokenFactory', () => {
 			.connect(adminAccount)
 			.addMarket(
 				marketName,
-				zeroAddress,
+				oneAddress,
 				baseCost,
 				priceRise,
 				hatchTokens,
@@ -421,7 +422,7 @@ describe('core/IdeaTokenFactory', () => {
 			.connect(adminAccount)
 			.addMarket(
 				marketName,
-				zeroAddress,
+				oneAddress,
 				baseCost,
 				priceRise,
 				hatchTokens,
@@ -440,7 +441,7 @@ describe('core/IdeaTokenFactory', () => {
 			.connect(adminAccount)
 			.addMarket(
 				marketName,
-				zeroAddress,
+				oneAddress,
 				baseCost,
 				priceRise,
 				hatchTokens,

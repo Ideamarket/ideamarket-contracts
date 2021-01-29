@@ -39,7 +39,13 @@ contract InterestManagerCompound is Ownable, Initializable {
      * @param compRecipient The address of the recipient of the Comp tokens
      */
     function initialize(address owner, address dai, address cDai, address comp, address compRecipient) external initializer {
-        setOwnerInternal(owner);
+        require(dai != address(0) &&
+                cDai != address(0) && 
+                comp != address(0) &&
+                compRecipient != address(0),
+                "invalid-params");
+
+        setOwnerInternal(owner); // Checks owner to be non-zero
         _dai = IERC20(dai);
         _cDai = ICToken(cDai);
         _comp = IERC20(comp);

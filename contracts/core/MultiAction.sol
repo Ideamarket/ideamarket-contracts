@@ -47,6 +47,15 @@ contract MultiAction {
                 address dai,
                 address uniswapV2Router02,
                 address weth) public {
+
+        require(ideaTokenExchange != address(0) &&
+                ideaTokenFactory != address(0) &&
+                ideaTokenVault != address(0) &&
+                dai != address(0) &&
+                uniswapV2Router02 != address(0) &&
+                weth != address(0),
+                "invalid-params");
+
         _ideaTokenExchange = IIdeaTokenExchange(ideaTokenExchange);
         _ideaTokenFactory = IIdeaTokenFactory(ideaTokenFactory);
         _ideaTokenVault = IIdeaTokenVault(ideaTokenVault);

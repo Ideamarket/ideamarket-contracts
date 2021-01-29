@@ -12,7 +12,7 @@ describe('spells/SetTokenOwnerSpell', () => {
 	let spell
 	let ideaTokenExchange
 
-	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const oneAddress = '0x0000000000000000000000000000000000000001'
 	const delay = 86400
 	let adminAccount
 	let withdrawer
@@ -38,7 +38,7 @@ describe('spells/SetTokenOwnerSpell', () => {
 
 		await ideaTokenExchange
 			.connect(adminAccount)
-			.initialize(dsPauseProxyAddress, zeroAddress, zeroAddress, zeroAddress, zeroAddress)
+			.initialize(dsPauseProxyAddress, oneAddress, oneAddress, oneAddress, oneAddress)
 	})
 
 	it('can set new token owner', async () => {
@@ -46,7 +46,7 @@ describe('spells/SetTokenOwnerSpell', () => {
 		const tag = await dsPause.soul(spell.address)
 		const fax = spell.interface.encodeFunctionData('execute', [
 			ideaTokenExchange.address,
-			zeroAddress,
+			oneAddress,
 			withdrawer.address,
 		])
 

@@ -12,7 +12,7 @@ describe('spells/SetPlatformOwnerSpell', () => {
 	let spell
 	let ideaTokenExchange
 
-	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const oneAddress = '0x0000000000000000000000000000000000000001'
 	const delay = 86400
 	let adminAccount
 	let withdrawer
@@ -38,7 +38,7 @@ describe('spells/SetPlatformOwnerSpell', () => {
 
 		await ideaTokenExchange
 			.connect(adminAccount)
-			.initialize(dsPauseProxyAddress, zeroAddress, zeroAddress, zeroAddress, zeroAddress)
+			.initialize(dsPauseProxyAddress, oneAddress, oneAddress, oneAddress, oneAddress)
 	})
 
 	it('can set new platform owner', async () => {

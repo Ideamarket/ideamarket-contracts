@@ -23,6 +23,8 @@ contract Ownable {
     }
 
     function setOwnerInternal(address newOwner) internal {
+        require(newOwner != address(0), "zero-addr");
+
         address oldOwner = _owner;
         _owner = newOwner;
 

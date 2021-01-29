@@ -14,6 +14,7 @@ describe('timelock/DSPause', () => {
 
 	const delay = 86400
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const oneAddress = '0x0000000000000000000000000000000000000001'
 	const someAddress = '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8' // random addr from etherscan
 	let adminAccount
 	let userAccount
@@ -64,12 +65,12 @@ describe('timelock/DSPause', () => {
 
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
-		await factory.initialize(dsPauseProxyAddress, zeroAddress, zeroAddress)
+		await factory.initialize(dsPauseProxyAddress, oneAddress, oneAddress)
 
 		const fax = spell.interface.encodeFunctionData('execute', [
 			factory.address,
 			'SOME_MARKET',
-			zeroAddress,
+			oneAddress,
 			'1',
 			'1',
 			'1',

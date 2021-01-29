@@ -31,7 +31,7 @@ describe('core/IdeaTokenVault', () => {
 	let adminAccount
 	let authorizerAccount
 	let tradingFeeAccount
-	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const oneAddress = '0x0000000000000000000000000000000000000001'
 
 	let domainNoSubdomainNameVerifier
 	let dai
@@ -102,7 +102,7 @@ describe('core/IdeaTokenVault', () => {
 
 		await interestManagerCompound
 			.connect(adminAccount)
-			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, zeroAddress)
+			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, oneAddress)
 
 		await ideaTokenFactory
 			.connect(adminAccount)

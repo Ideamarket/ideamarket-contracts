@@ -36,6 +36,7 @@ describe('core/MultiAction', () => {
 	let adminAccount
 	let tradingFeeAccount
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const oneAddress = '0x0000000000000000000000000000000000000001'
 
 	let domainNoSubdomainNameVerifier
 	let dai
@@ -146,7 +147,7 @@ describe('core/MultiAction', () => {
 
 		await interestManagerCompound
 			.connect(adminAccount)
-			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, zeroAddress)
+			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, oneAddress)
 
 		await ideaTokenFactory
 			.connect(adminAccount)

@@ -31,12 +31,14 @@ contract DSPause is IDSPause {
     modifier auth { require(msg.sender == _owner, "ds-pause-unauthorized"); _; }
 
     constructor(uint delay, address owner) public {
+        require(owner != address(0), "invalid-params");
         _delay = delay;
         _owner = owner;
         _proxy = new DSPauseProxy();
     }
 
     function setOwner(address owner) public wait override {
+        require(owner != address(0), "invalid-params");
         _owner = owner;
     }
 

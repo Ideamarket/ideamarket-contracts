@@ -61,6 +61,7 @@ contract IdeaTokenVault is IIdeaTokenVault, Initializable {
      * @param ideaTokenFactory The address of the IdeaTokenFactory contract
      */
     function initialize(address ideaTokenFactory) external initializer {
+        require(ideaTokenFactory != address(0), "invalid-params");
         _ideaTokenFactory = IIdeaTokenFactory(ideaTokenFactory);
     }
 

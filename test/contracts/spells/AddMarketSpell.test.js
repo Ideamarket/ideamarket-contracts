@@ -13,11 +13,11 @@ describe('spells/AddMarketSpell', () => {
 	let spell
 
 	const delay = 86400
-	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const oneAddress = '0x0000000000000000000000000000000000000001'
 	let adminAccount
 
 	const marketName = 'SOME_MARKET'
-	const nameVerifierAddress = zeroAddress
+	const nameVerifierAddress = oneAddress
 	const baseCost = BigNumber.from('1')
 	const priceRise = BigNumber.from('1')
 	const hatchTokens = BigNumber.from('1')
@@ -45,7 +45,7 @@ describe('spells/AddMarketSpell', () => {
 		const tag = await dsPause.soul(spell.address)
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
-		await factory.initialize(dsPauseProxyAddress, zeroAddress, zeroAddress)
+		await factory.initialize(dsPauseProxyAddress, oneAddress, oneAddress)
 
 		const fax = spell.interface.encodeFunctionData('execute', [
 			factory.address,

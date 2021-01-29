@@ -15,6 +15,7 @@ contract MinimalProxy {
      * Constructs a new proxy which delegates to the implementation address
      */
     constructor(address implementation) public {
+        require(implementation != address(0), "invalid-params");
         bytes32 slot = IMPLEMENTATION_SLOT;
         assembly {
             sstore(slot, implementation)

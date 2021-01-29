@@ -17,7 +17,7 @@ describe('spells/ChangeLogicSpell', () => {
 	let proxyAdmin
 
 	const delay = 86400
-	const zeroAddress = '0x0000000000000000000000000000000000000000'
+	const oneAddress = '0x0000000000000000000000000000000000000001'
 	let adminAccount
 
 	before(async () => {
@@ -42,7 +42,7 @@ describe('spells/ChangeLogicSpell', () => {
 		await proxyAdmin.deployed()
 
 		AdminUpgradeabilityProxy = await ethers.getContractFactory('AdminUpgradeabilityProxy')
-		const data = logic.interface.encodeFunctionData('initialize', [dsPauseProxyAddress, zeroAddress, zeroAddress])
+		const data = logic.interface.encodeFunctionData('initialize', [dsPauseProxyAddress, oneAddress, oneAddress])
 		proxy = await AdminUpgradeabilityProxy.deploy(logic.address, proxyAdmin.address, data)
 		await proxy.deployed()
 	})
