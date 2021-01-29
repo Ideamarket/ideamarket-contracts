@@ -155,7 +155,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
         }
 
         emit InvestedState(marketID, ideaToken, dai, invested, tradingFeeInvested, platformFeeInvested, amounts.raw);
-        _dai.transfer(recipient, amounts.total);
+        require(_dai.transfer(recipient, amounts.total), "dai-transfer");
     }
 
 
