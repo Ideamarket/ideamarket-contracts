@@ -537,6 +537,8 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
             return;
         }
 
+        _interestManager.accrueInterest();
+
         _tradingFeeInvested = 0;
         uint redeem = _interestManager.investmentTokenToUnderlying(invested);
         _interestManager.redeem(_tradingFeeRecipient, redeem);
