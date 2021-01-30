@@ -40,6 +40,7 @@ describe('core/MultiAction', () => {
 	let dai
 	let comp
 	let someToken
+	let someOtherToken
 	let cDai
 	let interestManagerCompound
 	let ideaTokenLogic
@@ -89,7 +90,10 @@ describe('core/MultiAction', () => {
 		someToken = await TestERC20.deploy('SOME', 'SOME')
 		await someToken.deployed()
 
-		cDai = await TestCDai.deploy(dai.address, comp.address)
+		someOtherToken = await TestERC20.deploy('SOMEOTHER', 'SOMEOTHER')
+		await someOtherToken.deployed()
+
+		cDai = await TestCDai.deploy(dai.address, comp.address, comptroller.address)
 		await cDai.deployed()
 		await cDai.setExchangeRate(tenPow18)
 
@@ -224,6 +228,27 @@ describe('core/MultiAction', () => {
 				adminAccount.address,
 				BigNumber.from('9999999999999999999')
 			)
+
+		// ETH-SOMEOTHER: 1 ETH, 500 SOMEOTHER
+		const someOtherAmount = tenPow18.mul(BigNumber.from('1000'))
+
+		await weth.connect(adminAccount).deposit({ value: ethAmount })
+		await someOtherToken.connect(adminAccount).mint(adminAccount.address, someOtherAmount)
+		await weth.connect(adminAccount).approve(router.address, ethAmount)
+		await someOtherToken.connect(adminAccount).approve(router.address, someOtherAmount)
+		await uniswapFactory.connect(adminAccount).createPair(weth.address, someOtherToken.address)
+		await router
+			.connect(adminAccount)
+			.addLiquidity(
+				weth.address,
+				someOtherToken.address,
+				ethAmount,
+				someOtherAmount,
+				ethAmount,
+				someOtherAmount,
+				adminAccount.address,
+				BigNumber.from('9999999999999999999')
+			)
 	})
 
 	it('can buy/sell tokens ETH', async () => {
@@ -337,6 +362,44 @@ describe('core/MultiAction', () => {
 
 		const someBalanceAfterSell = await someToken.balanceOf(userAccount.address)
 		expect(someBalanceAfterSell.eq(outputFromSell)).to.be.true
+		const tokenBalanceAfterSell = await ideaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterSell.eq(BigNumber.from('0'))).to.be.true
+	})
+
+	it('can buy/sell tokens 3-hop', async () => {
+		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
+		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
+		const requiredInputForCost = (await router.getAmountsIn(buyCost, [someOtherToken.address, weth.address, dai.address]))[0]
+
+		await someOtherToken.mint(userAccount.address, requiredInputForCost)
+		await someOtherToken.approve(multiAction.address, requiredInputForCost)
+		await multiAction.convertAndBuy(
+			someOtherToken.address,
+			ideaToken.address,
+			ideaTokenAmount,
+			ideaTokenAmount,
+			requiredInputForCost,
+			BigNumber.from('0'),
+			userAccount.address
+		)
+
+		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
+		expect(tokenBalanceAfterBuy.eq(ideaTokenAmount)).to.be.true
+
+		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
+		const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, weth.address, someOtherToken.address]))[2]
+
+		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
+		await multiAction.sellAndConvert(
+			someOtherToken.address,
+			ideaToken.address,
+			tokenBalanceAfterBuy,
+			outputFromSell,
+			userAccount.address
+		)
+
+		const someOtherBalanceAfterSell = await someOtherToken.balanceOf(userAccount.address)
+		expect(someOtherBalanceAfterSell.eq(outputFromSell)).to.be.true
 		const tokenBalanceAfterSell = await ideaToken.balanceOf(userAccount.address)
 		expect(tokenBalanceAfterSell.eq(BigNumber.from('0'))).to.be.true
 	})

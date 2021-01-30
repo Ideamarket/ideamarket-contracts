@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../weth/IWETH.sol";
+import "../uniswap/IUniswapV2Factory.sol";
 import "../uniswap/IUniswapV2Router02.sol";
 import "./interfaces/IIdeaTokenExchange.sol";
 import "./interfaces/IIdeaTokenFactory.sol";
@@ -25,6 +26,8 @@ contract MultiAction {
     IIdeaTokenVault _ideaTokenVault;
     // Dai contract
     IERC20 public _dai;
+    // IUniswapV2Factory contract
+    IUniswapV2Factory public _uniswapV2Factory;
     // IUniswapV2Router02 contract
     IUniswapV2Router02 public _uniswapV2Router02;
     // WETH contract
@@ -49,6 +52,7 @@ contract MultiAction {
         _ideaTokenVault = IIdeaTokenVault(ideaTokenVault);
         _dai = IERC20(dai);
         _uniswapV2Router02 = IUniswapV2Router02(uniswapV2Router02);
+        _uniswapV2Factory = IUniswapV2Factory(IUniswapV2Router02(uniswapV2Router02).factory());
         _weth = IWETH(weth);
     }
 
@@ -70,12 +74,15 @@ contract MultiAction {
                            uint cost,
                            uint lockDuration,
                            address recipient) external payable {
+
+        IIdeaTokenExchange exchange = _ideaTokenExchange;
+
         uint buyAmount = amount;
-        uint buyCost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, amount);
+        uint buyCost = exchange.getCostForBuyingTokens(ideaToken, amount);
         uint requiredInput = getInputForOutputInternal(inputCurrency, address(_dai), buyCost);
 
         if(requiredInput > cost) {
-            buyCost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, fallbackAmount);
+            buyCost = exchange.getCostForBuyingTokens(ideaToken, fallbackAmount);
             requiredInput = getInputForOutputInternal(inputCurrency, address(_dai), buyCost);
             require(requiredInput <= cost, "slippage");
             buyAmount = fallbackAmount;
@@ -98,14 +105,18 @@ contract MultiAction {
                             uint amount,
                             uint minPrice,
                             address payable recipient) external {
-        uint sellPrice = _ideaTokenExchange.getPriceForSellingTokens(ideaToken, amount);
-        uint output = getOutputForInputInternal(address(_dai), outputCurrency, sellPrice);
+        
+        IIdeaTokenExchange exchange = _ideaTokenExchange;
+        IERC20 dai = _dai;
+
+        uint sellPrice = exchange.getPriceForSellingTokens(ideaToken, amount);
+        uint output = getOutputForInputInternal(address(dai), outputCurrency, sellPrice);
         require(output >= minPrice, "slippage");
 
         pullERC20Internal(ideaToken, msg.sender, amount);
-        _ideaTokenExchange.sellTokens(ideaToken, amount, sellPrice, address(this));
+        exchange.sellTokens(ideaToken, amount, sellPrice, address(this));
 
-        convertInternal(address(_dai), outputCurrency, sellPrice, output);
+        convertInternal(address(dai), outputCurrency, sellPrice, output);
         if(outputCurrency == address(0)) {
             recipient.transfer(output);
         } else {
@@ -133,13 +144,16 @@ contract MultiAction {
                               uint cost,
                               uint lockDuration,
                               address recipient) external payable {
+
+        IERC20 dai = _dai;
+
         uint buyAmount = amount;
         uint buyCost = getBuyCostFromZeroSupplyInternal(marketID, buyAmount);
-        uint requiredInput = getInputForOutputInternal(inputCurrency, address(_dai), buyCost);
+        uint requiredInput = getInputForOutputInternal(inputCurrency, address(dai), buyCost);
 
         if(requiredInput > cost) {
             buyCost = getBuyCostFromZeroSupplyInternal(marketID, fallbackAmount);
-            requiredInput = getInputForOutputInternal(inputCurrency, address(_dai), buyCost);
+            requiredInput = getInputForOutputInternal(inputCurrency, address(dai), buyCost);
             require(requiredInput <= cost, "slippage");
             buyAmount = fallbackAmount;
         }
@@ -180,10 +194,13 @@ contract MultiAction {
      * @param recipient The recipient of the IdeaTokens
      */
     function buyAndLock(address ideaToken, uint amount, uint fallbackAmount, uint cost, uint lockDuration, address recipient) external {
+
+        IIdeaTokenExchange exchange = _ideaTokenExchange;
+
         uint buyAmount = amount;
-        uint buyCost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, amount);
+        uint buyCost = exchange.getCostForBuyingTokens(ideaToken, amount);
         if(buyCost > cost) {
-            buyCost = _ideaTokenExchange.getCostForBuyingTokens(ideaToken, fallbackAmount);
+            buyCost = exchange.getCostForBuyingTokens(ideaToken, fallbackAmount);
             require(buyCost <= cost, "slippage");
             buyAmount = fallbackAmount;
         }
@@ -234,9 +251,12 @@ contract MultiAction {
      * @param recipient The recipient of the locked IdeaTokens
      */
     function buyAndLockInternal(address ideaToken, uint amount, uint cost, uint lockDuration, address recipient) internal {
+
+        IIdeaTokenVault vault = _ideaTokenVault;
+    
         buyInternal(ideaToken, amount, cost, address(this));
-        require(IERC20(ideaToken).approve(address(_ideaTokenVault), amount), "approve");
-        _ideaTokenVault.lock(ideaToken, amount, lockDuration, recipient);
+        require(IERC20(ideaToken).approve(address(vault), amount), "approve");
+        vault.lock(ideaToken, amount, lockDuration, recipient);
     }
 
     /**
@@ -248,8 +268,11 @@ contract MultiAction {
      * @param recipient The recipient of the bought IdeaTokens 
      */
     function buyInternal(address ideaToken, uint amount, uint cost, address recipient) internal {
-        require(_dai.approve(address(_ideaTokenExchange), cost), "approve");
-        _ideaTokenExchange.buyTokens(ideaToken, amount, amount, cost, recipient);
+
+        IIdeaTokenExchange exchange = _ideaTokenExchange;
+
+        require(_dai.approve(address(exchange), cost), "approve");
+        exchange.buyTokens(ideaToken, amount, amount, cost, recipient);
     }
 
     /**
@@ -261,8 +284,11 @@ contract MultiAction {
      * @return The address of the new IdeaToken
      */
     function addTokenInternal(string memory tokenName, uint marketID) internal returns (address) {
-        _ideaTokenFactory.addToken(tokenName, marketID, msg.sender);
-        return address(_ideaTokenFactory.getTokenInfo(marketID, _ideaTokenFactory.getTokenIDByName(tokenName, marketID) ).ideaToken);
+
+        IIdeaTokenFactory factory = _ideaTokenFactory;
+
+        factory.addToken(tokenName, marketID, msg.sender);
+        return address(factory.getTokenInfo(marketID, factory.getTokenIDByName(tokenName, marketID) ).ideaToken);
     }
 
     /**
@@ -317,7 +343,8 @@ contract MultiAction {
      */
     function getOutputForInputInternal(address inputCurrency, address outputCurrency, uint inputAmount) internal view returns (uint) {
         address[] memory path = getPathInternal(inputCurrency, outputCurrency);
-        return _uniswapV2Router02.getAmountsOut(inputAmount, path)[1];
+        uint[] memory amountsOut = _uniswapV2Router02.getAmountsOut(inputAmount, path);
+        return amountsOut[amountsOut.length - 1];
     }
 
     /**
@@ -329,18 +356,33 @@ contract MultiAction {
      * @return The Uniswap path from `inputCurrency` to `outputCurrency`
      */
     function getPathInternal(address inputCurrency, address outputCurrency) internal view returns (address[] memory) {
-        address[] memory path = new address[](2);
-        if(inputCurrency == address(0)) {
-            path[0] = address(_weth);
-        } else {
-            path[0] = inputCurrency;
+
+        address wethAddress = address(_weth);
+        address updatedInputCurrency = inputCurrency == address(0) ? wethAddress : inputCurrency;
+        address updatedOutputCurrency = outputCurrency == address(0) ? wethAddress : outputCurrency;
+
+        IUniswapV2Factory uniswapFactory = _uniswapV2Factory;
+        if(uniswapFactory.getPair(updatedInputCurrency, updatedOutputCurrency) != address(0)) {
+            // Direct path exists
+             address[] memory path = new address[](2);
+             path[0] = updatedInputCurrency;
+             path[1] = updatedOutputCurrency;
+             return path;
         }
 
-        if(outputCurrency == address(0)) {
-            path[1] = address(_weth);
-        } else {
-            path[1] = outputCurrency;
-        }
+        // Direct path does not exist
+        // Check for 3-hop path: input -> weth -> output
+
+        require(uniswapFactory.getPair(updatedInputCurrency, wethAddress) != address(0) &&
+                uniswapFactory.getPair(wethAddress, updatedOutputCurrency) != address(0),
+                "no-path");
+
+
+        // 3-hop path exists
+        address[] memory path = new address[](3);
+        path[0] = updatedInputCurrency;
+        path[1] = wethAddress;
+        path[2] = updatedOutputCurrency;
 
         return path;
     }
@@ -355,33 +397,31 @@ contract MultiAction {
      */
     function convertInternal(address inputCurrency, address outputCurrency, uint inputAmount, uint outputAmount) internal {
         
+        IWETH weth = _weth;
+        IUniswapV2Router02 router = _uniswapV2Router02;
+
+        address[] memory path = getPathInternal(inputCurrency, outputCurrency);
+    
         IERC20 inputERC20;
-        address[] memory path = new address[](2);
         if(inputCurrency == address(0)) {
-            path[0] = address(_weth);
-            _weth.deposit{value: inputAmount}();
-            inputERC20 = IERC20(address(_weth));
+            // If the input is ETH we convert to WETH
+            weth.deposit{value: inputAmount}();
+            inputERC20 = IERC20(address(weth));
         } else {
-            path[0] = inputCurrency;
             inputERC20 = IERC20(inputCurrency);
         }
 
-        require(inputERC20.approve(address(_uniswapV2Router02), inputAmount), "router-approve");
+        require(inputERC20.approve(address(router), inputAmount), "router-approve");
+
+        router.swapExactTokensForTokensSupportingFeeOnTransferTokens(inputAmount,
+                                                                     outputAmount,
+                                                                     path,
+                                                                     address(this),
+                                                                     now + 1);
 
         if(outputCurrency == address(0)) {
-            path[1] = address(_weth);
-        } else {
-            path[1] = outputCurrency;
-        }
-
-        _uniswapV2Router02.swapExactTokensForTokensSupportingFeeOnTransferTokens(inputAmount,
-                                                                                 outputAmount,
-                                                                                 path,
-                                                                                 address(this),
-                                                                                 now + 1);
-
-        if(outputCurrency == address(0)) {
-            _weth.withdraw(outputAmount);
+            // If the output is ETH we withdraw from WETH
+            weth.withdraw(outputAmount);
         }
     }
 
