@@ -40,6 +40,13 @@ const allDeploymentParams = {
 		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
 		substackPlatformFeeRate: BigNumber.from('25'), // 0.25%
 		substackAllInterestToPlatform: false,
+
+		mirrorBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		mirrorPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		mirrorHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		mirrorTradingFeeRate: BigNumber.from('50'), // 0.50%
+		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		mirrorAllInterestToPlatform: false,
 	},
 }
 
@@ -276,80 +283,9 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 11) {
-		console.log('11. Deploy MultiAction')
-		console.log('==============================================')
-		const multiAction = await deployContract(
-			'MultiAction',
-			ideaTokenExchangeProxyAddress,
-			ideaTokenFactoryProxyAddress,
-			ideaTokenVaultProxyAddress,
-			externalContractAdresses.dai,
-			externalContractAdresses.uniswapV2Router02,
-			externalContractAdresses.weth
-		)
-		saveDeployedAddress(networkName, 'multiAction', multiAction.address)
-		saveDeployedABI(networkName, 'multiAction', artifacts.readArtifactSync('MultiAction').abi)
-		console.log('')
-	}
-
-	if (STAGE <= 12) {
-		console.log('12. Deploy AddMarketSpell')
-		console.log('==============================================')
-		const addMarketSpell = await deployContract('AddMarketSpell')
-		saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
-		saveDeployedABI(networkName, 'addMarketSpell', artifacts.readArtifactSync('AddMarketSpell').abi)
-		console.log('')
-	}
-
-	if (STAGE <= 13) {
-		console.log('13. Deploy SetTokenOwnerSpell')
-		console.log('==============================================')
-		const setTokenOwnerSpell = await deployContract('SetTokenOwnerSpell')
-		saveDeployedAddress(networkName, 'setTokenOwnerSpell', setTokenOwnerSpell.address)
-		saveDeployedABI(networkName, 'setTokenOwnerSpell', artifacts.readArtifactSync('SetTokenOwnerSpell').abi)
-		console.log('')
-	}
-
-	if (STAGE <= 14) {
-		console.log('14. Deploy SetPlatformOwnerSpell')
-		console.log('==============================================')
-		const setPlatformOwnerSpell = await deployContract('SetPlatformOwnerSpell')
-		saveDeployedAddress(networkName, 'setPlatformOwnerSpell', setPlatformOwnerSpell.address)
-		saveDeployedABI(networkName, 'setPlatformOwnerSpell', artifacts.readArtifactSync('SetPlatformOwnerSpell').abi)
-		console.log('')
-	}
-
-	if (STAGE <= 15) {
-		console.log('15. Deploy SetTradingFeeSpell')
-		console.log('==============================================')
-		const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
-		saveDeployedAddress(networkName, 'setTradingFeeSpell', setTradingFeeSpell.address)
-		saveDeployedABI(networkName, 'setTradingFeeSpell', artifacts.readArtifactSync('SetTradingFeeSpell').abi)
-		console.log('')
-	}
-
-	if (STAGE <= 16) {
-		console.log('16. Deploy SetPlatformFeeSpell')
-		console.log('==============================================')
-		const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
-		saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
-		saveDeployedABI(networkName, 'setPlatformFeeSpell', artifacts.readArtifactSync('SetPlatformFeeSpell').abi)
-		console.log('')
-	}
-
-	if (STAGE <= 17) {
-		console.log('17. Deploy ChangeLogicSpell')
-		console.log('==============================================')
-		const changeLogicSpell = await deployContract('ChangeLogicSpell')
-		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
-		saveDeployedABI(networkName, 'changeLogicSpell', artifacts.readArtifactSync('ChangeLogicSpell').abi)
-		console.log('')
-	}
-
 	let twitterHandleNameVerifierAddress
-	if (STAGE <= 18) {
-		console.log('18. Deploy TwitterHandleNameVerifier')
+	if (STAGE <= 11) {
+		console.log('11. Deploy TwitterHandleNameVerifier')
 		console.log('==============================================')
 		const twitterHandleNameVerifier = await deployContract('TwitterHandleNameVerifier')
 
@@ -365,8 +301,8 @@ async function main() {
 		twitterHandleNameVerifierAddress = loadDeployedAddress(networkName, 'twitterHandleNameVerifier')
 	}
 
-	if (STAGE <= 19) {
-		console.log('19. Add Twitter market')
+	if (STAGE <= 12) {
+		console.log('12. Add Twitter market')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -388,8 +324,8 @@ async function main() {
 	}
 
 	let substackNameVerifierAddress
-	if (STAGE <= 20) {
-		console.log('20. Deploy SubstackNameVerifier')
+	if (STAGE <= 13) {
+		console.log('13. Deploy SubstackNameVerifier')
 		console.log('==============================================')
 		const substackNameVerifier = await deployContract('SubstackNameVerifier')
 
@@ -401,8 +337,8 @@ async function main() {
 		substackNameVerifierAddress = loadDeployedAddress(networkName, 'substackNameVerifier')
 	}
 
-	if (STAGE <= 21) {
-		console.log('21. Add Substack market')
+	if (STAGE <= 14) {
+		console.log('14. Add Substack market')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -423,8 +359,44 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 22) {
-		console.log('22. Set IdeaTokenFactory owner')
+	let mirrorNameVerifierAddress
+	if (STAGE <= 15) {
+		console.log('15. Deploy MirrorNameVerifier')
+		console.log('==============================================')
+		const mirrorNameVerifier = await deployContract('MirrorNameVerifier')
+
+		mirrorNameVerifierAddress = mirrorNameVerifier.address
+		saveDeployedAddress(networkName, 'mirrorNameVerifier', mirrorNameVerifier.address)
+		saveDeployedABI(networkName, 'mirrorNameVerifier', artifacts.readArtifactSync('MirrorNameVerifier').abi)
+		console.log('')
+	} else {
+		mirrorNameVerifierAddress = loadDeployedAddress(networkName, 'mirrorNameVerifier')
+	}
+
+	if (STAGE <= 16) {
+		console.log('16. Add Mirror market')
+		console.log('==============================================')
+		const ideaTokenFactory = new ethers.Contract(
+			ideaTokenFactoryProxyAddress,
+			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
+			deployerAccount
+		)
+		await ideaTokenFactory.addMarket(
+			'Mirror',
+			mirrorNameVerifierAddress,
+			deploymentParams.mirrorBaseCost,
+			deploymentParams.mirrorPriceRise,
+			deploymentParams.mirrorHatchTokens,
+			deploymentParams.mirrorTradingFeeRate,
+			deploymentParams.mirrorPlatformFeeRate,
+			deploymentParams.mirrorAllInterestToPlatform,
+			{ gasPrice: deploymentParams.gasPrice }
+		)
+		console.log('')
+	}
+
+	if (STAGE <= 17) {
+		console.log('17. Set IdeaTokenFactory owner')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -434,6 +406,79 @@ async function main() {
 		await ideaTokenFactory.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
 		console.log('')
 	}
+
+	if (STAGE <= 18) {
+		console.log('18. Deploy MultiAction')
+		console.log('==============================================')
+		const multiAction = await deployContract(
+			'MultiAction',
+			ideaTokenExchangeProxyAddress,
+			ideaTokenFactoryProxyAddress,
+			ideaTokenVaultProxyAddress,
+			externalContractAdresses.dai,
+			externalContractAdresses.uniswapV2Router02,
+			externalContractAdresses.weth
+		)
+		saveDeployedAddress(networkName, 'multiAction', multiAction.address)
+		saveDeployedABI(networkName, 'multiAction', artifacts.readArtifactSync('MultiAction').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 19) {
+		console.log('19. Deploy AddMarketSpell')
+		console.log('==============================================')
+		const addMarketSpell = await deployContract('AddMarketSpell')
+		saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
+		saveDeployedABI(networkName, 'addMarketSpell', artifacts.readArtifactSync('AddMarketSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 20) {
+		console.log('20. Deploy SetTokenOwnerSpell')
+		console.log('==============================================')
+		const setTokenOwnerSpell = await deployContract('SetTokenOwnerSpell')
+		saveDeployedAddress(networkName, 'setTokenOwnerSpell', setTokenOwnerSpell.address)
+		saveDeployedABI(networkName, 'setTokenOwnerSpell', artifacts.readArtifactSync('SetTokenOwnerSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 21) {
+		console.log('21. Deploy SetPlatformOwnerSpell')
+		console.log('==============================================')
+		const setPlatformOwnerSpell = await deployContract('SetPlatformOwnerSpell')
+		saveDeployedAddress(networkName, 'setPlatformOwnerSpell', setPlatformOwnerSpell.address)
+		saveDeployedABI(networkName, 'setPlatformOwnerSpell', artifacts.readArtifactSync('SetPlatformOwnerSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 22) {
+		console.log('22. Deploy SetTradingFeeSpell')
+		console.log('==============================================')
+		const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
+		saveDeployedAddress(networkName, 'setTradingFeeSpell', setTradingFeeSpell.address)
+		saveDeployedABI(networkName, 'setTradingFeeSpell', artifacts.readArtifactSync('SetTradingFeeSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 23) {
+		console.log('23. Deploy SetPlatformFeeSpell')
+		console.log('==============================================')
+		const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
+		saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
+		saveDeployedABI(networkName, 'setPlatformFeeSpell', artifacts.readArtifactSync('SetPlatformFeeSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 24) {
+		console.log('24. Deploy ChangeLogicSpell')
+		console.log('==============================================')
+		const changeLogicSpell = await deployContract('ChangeLogicSpell')
+		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
+		saveDeployedABI(networkName, 'changeLogicSpell', artifacts.readArtifactSync('ChangeLogicSpell').abi)
+		console.log('')
+	}
+
+	
 }
 
 async function deployProxyContract(name, admin, ...params) {
