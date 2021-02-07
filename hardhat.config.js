@@ -7,7 +7,7 @@ module.exports = {
 	networks: {
 		hardhat: {},
 		rinkeby: {
-			url: `https://rinkeby.infura.io/v3/${process.env.INFURA_KEY ? process.env.INFURA_KEY : ''}`,
+			url: process.env.RINKEBY_RPC,
 			accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
 		},
 	},
