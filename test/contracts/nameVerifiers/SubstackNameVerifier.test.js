@@ -17,9 +17,28 @@ describe('nameVerifiers/SubstackNameVerifier', () => {
 	it('vitalik', async () => {
 		expect(await nameVerifier.verifyTokenName('vitalik')).to.be.true
 	})
+    it('vi-talik', async () => {
+		expect(await nameVerifier.verifyTokenName('vi-talik')).to.be.true
+	})
+
+    it('v-i-t-a-l-i-k', async () => {
+		expect(await nameVerifier.verifyTokenName('v-i-t-a-l-i-k')).to.be.true
+	})
 
 	it('Vitalik', async () => {
 		expect(await nameVerifier.verifyTokenName('Vitalik')).to.be.false
+	})
+
+    it('-vitalik', async () => {
+		expect(await nameVerifier.verifyTokenName('-vitalik')).to.be.false
+	})
+
+    it('vitalik-', async () => {
+		expect(await nameVerifier.verifyTokenName('vitalik-')).to.be.false
+	})
+
+    it('-vitalik-', async () => {
+		expect(await nameVerifier.verifyTokenName('-vitalik-')).to.be.false
 	})
 
 	it('VITALIK', async () => {
@@ -30,8 +49,14 @@ describe('nameVerifiers/SubstackNameVerifier', () => {
 		expect(await nameVerifier.verifyTokenName('12vitalik34')).to.be.true
 	})
 
+    it('(max length)', async () => {
+        const tooLong = Array.from(Array(63).keys()).map(v => 'o').join('')
+		expect(await nameVerifier.verifyTokenName(tooLong)).to.be.true
+	})
+
 	it('(too long)', async () => {
-		expect(await nameVerifier.verifyTokenName('tooloooooooooooooooooooooooooog')).to.be.false
+        const tooLong = Array.from(Array(64).keys()).map(v => 'o').join('')
+		expect(await nameVerifier.verifyTokenName(tooLong)).to.be.false
 	})
 
 	it('{unallowed ascii char}', async () => {
