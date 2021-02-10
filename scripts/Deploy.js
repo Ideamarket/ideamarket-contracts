@@ -5,6 +5,31 @@ const fs = require('fs')
 const { BigNumber } = require('ethers')
 
 const allDeploymentParams = {
+	mainnet: {
+		timelockDelay: '86400', // 24 hours
+		gasPrice: 130000000000,
+
+		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
+		twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		twitterAllInterestToPlatform: false,
+
+		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
+		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		substackAllInterestToPlatform: false,
+
+		mirrorBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		mirrorPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		mirrorHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		mirrorTradingFeeRate: BigNumber.from('50'), // 0.50%
+		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		mirrorAllInterestToPlatform: false,
+	},
 	rinkeby: {
 		timelockDelay: '1',
 		gasPrice: 1000000000, // 1 gwei
@@ -38,7 +63,7 @@ const allDeploymentParams = {
 		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
 		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
 		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
-		substackPlatformFeeRate: BigNumber.from('50'), // 0.25%
+		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
 		substackAllInterestToPlatform: false,
 
 		mirrorBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
@@ -51,6 +76,15 @@ const allDeploymentParams = {
 }
 
 const allExternalContractAddresses = {
+	mainnet: {
+		multisig: '0x4905485d8B0Be42b317CCB4806b966aC0d4f4AE8', // TODO
+		authorizer: '0x78C15e4B4Ed9D8B4FFd031d0ec7BD09A55d02699', // TODO
+		dai: '0x6B175474E89094C44Da98b954EedeAC495271d0F', // TODO
+		cDai: '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', // TODO
+		comp: '0xc00e94Cb662C3520282E6f5717214004A7f26888', // TODO
+		weth: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // TODO
+		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', // TODO
+	},
 	rinkeby: {
 		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
 		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
@@ -109,6 +143,12 @@ async function main() {
 			deploymentParams = allDeploymentParams.rinkeby
 			externalContractAdresses = allExternalContractAddresses.rinkeby
 		}
+	} else if(networkName === 'homestead') {
+		networkName = 'mainnet'
+
+		console.log('Using Mainnet')
+		deploymentParams = allDeploymentParams.mainnet
+		externalContractAdresses = allExternalContractAddresses.mainnet
 	} else {
 		throw 'cannot deploy to network: ' + networkName
 	}
@@ -340,7 +380,7 @@ async function main() {
 		console.log('')
 	}
 
-	let mirrorNameVerifierAddress
+	/*let mirrorNameVerifierAddress
 	if (STAGE <= 14) {
 		console.log('14. Deploy MirrorNameVerifier')
 		console.log('==============================================')
@@ -374,7 +414,7 @@ async function main() {
 			{ gasPrice: deploymentParams.gasPrice }
 		)
 		console.log('')
-	}
+	}*/
 
 	if (STAGE <= 16) {
 		console.log('16. Set IdeaTokenFactory owner')
@@ -432,6 +472,8 @@ async function main() {
 		saveDeployedABI(networkName, 'addMarketSpell', artifacts.readArtifactSync('AddMarketSpell').abi)
 		console.log('')
 	}
+
+	return
 
 	if (STAGE <= 20) {
 		console.log('20. Deploy SetTokenOwnerSpell')

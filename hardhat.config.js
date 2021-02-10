@@ -6,6 +6,10 @@ require('dotenv').config()
 module.exports = {
 	networks: {
 		hardhat: {},
+		mainnet: {
+			url: process.env.MAINNET_RPC || '',
+			accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
+		},
 		rinkeby: {
 			url: process.env.RINKEBY_RPC || '',
 			accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
