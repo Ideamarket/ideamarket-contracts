@@ -38,15 +38,22 @@ const allDeploymentParams = {
 		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
 		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
 		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
-		twitterPlatformFeeRate: BigNumber.from('25'), // 0.25%
+		twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
 		twitterAllInterestToPlatform: false,
 
 		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
 		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
 		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
 		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
-		substackPlatformFeeRate: BigNumber.from('25'), // 0.25%
+		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
 		substackAllInterestToPlatform: false,
+
+		mirrorBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		mirrorPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		mirrorHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		mirrorTradingFeeRate: BigNumber.from('50'), // 0.50%
+		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		mirrorAllInterestToPlatform: false,
 	},
 	test: {
 		timelockDelay: '1',
