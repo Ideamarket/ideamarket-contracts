@@ -6,7 +6,10 @@ describe('core/MultiAction', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
 	let TestCDai
+	let ProxyAdmin
+	let AdminUpgradeabilityProxy
 	let InterestManagerCompound
+	let InterestManagerCompoundV2
 	let TestComptroller
 	let IdeaTokenFactory
 	let IdeaTokenExchange
@@ -68,7 +71,10 @@ describe('core/MultiAction', () => {
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
 		TestCDai = await ethers.getContractFactory('TestCDai')
+		ProxyAdmin = await ethers.getContractFactory('ProxyAdmin')
+		AdminUpgradeabilityProxy = await ethers.getContractFactory('AdminUpgradeabilityProxy')
 		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
+		InterestManagerCompoundV2 = await ethers.getContractFactory('InterestManagerCompoundV2')
 		TestComptroller = await ethers.getContractFactory('TestComptroller')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactory')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchange')
@@ -83,6 +89,10 @@ describe('core/MultiAction', () => {
 	})
 
 	beforeEach(async () => {
+
+		proxyAdmin = await ProxyAdmin.deploy(adminAccount.address)
+		await proxyAdmin.deployed()
+
 		domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await domainNoSubdomainNameVerifier.deployed()
 
@@ -105,17 +115,47 @@ describe('core/MultiAction', () => {
 		await cDai.deployed()
 		await cDai.setExchangeRate(tenPow18)
 
-		interestManagerCompound = await InterestManagerCompound.deploy()
-		await interestManagerCompound.deployed()
+		ideaTokenExchange = await IdeaTokenExchange.deploy()
+		await ideaTokenExchange.deployed()
+
+		const interestManagerCompoundLogic = await InterestManagerCompound.deploy()
+		await interestManagerCompoundLogic.deployed()
+
+		const data = interestManagerCompoundLogic.interface.encodeFunctionData('initialize', [
+			ideaTokenExchange.address,
+			dai.address,
+			cDai.address,
+			comp.address,
+			oneAddress,
+		])
+
+		const proxy = await AdminUpgradeabilityProxy.deploy(
+			interestManagerCompoundLogic.address,
+			proxyAdmin.address,
+			data
+		)
+		await proxy.deployed()
+
+		const interestManagerCompoundV2Logic = await InterestManagerCompoundV2.deploy()
+		await interestManagerCompoundV2Logic.deployed()
+
+		const dataV2 = interestManagerCompoundV2Logic.interface.encodeFunctionData('initializeV2', [])
+
+		await proxyAdmin
+			.connect(adminAccount)
+			.upgradeAndCall(proxy.address, interestManagerCompoundV2Logic.address, dataV2)
+
+		interestManagerCompound = new ethers.Contract(
+			proxy.address,
+			InterestManagerCompoundV2.interface,
+			InterestManagerCompoundV2.signer
+		)
 
 		ideaTokenLogic = await IdeaToken.deploy()
 		await ideaTokenLogic.deployed()
 
 		ideaTokenFactory = await IdeaTokenFactory.deploy()
 		await ideaTokenFactory.deployed()
-
-		ideaTokenExchange = await IdeaTokenExchange.deploy()
-		await ideaTokenExchange.deployed()
 
 		weth = await TestWETH.deploy('WETH', 'WETH')
 		await weth.deployed()
@@ -144,10 +184,6 @@ describe('core/MultiAction', () => {
 			weth.address
 		)
 		await multiAction.deployed()
-
-		await interestManagerCompound
-			.connect(adminAccount)
-			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, oneAddress)
 
 		await ideaTokenFactory
 			.connect(adminAccount)

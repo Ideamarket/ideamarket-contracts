@@ -150,7 +150,7 @@ async function main() {
 			deploymentParams = allDeploymentParams.rinkeby
 			externalContractAdresses = allExternalContractAddresses.rinkeby
 		}
-	} else if(networkName === 'homestead') {
+	} else if (networkName === 'homestead') {
 		networkName = 'mainnet'
 
 		console.log('Using Mainnet')
@@ -480,46 +480,8 @@ async function main() {
 		console.log('')
 	}
 
-	return
-
 	if (STAGE <= 20) {
-		console.log('20. Deploy SetTokenOwnerSpell')
-		console.log('==============================================')
-		const setTokenOwnerSpell = await deployContract('SetTokenOwnerSpell')
-		saveDeployedAddress(networkName, 'setTokenOwnerSpell', setTokenOwnerSpell.address)
-		saveDeployedABI(networkName, 'setTokenOwnerSpell', artifacts.readArtifactSync('SetTokenOwnerSpell').abi)
-		console.log('')
-	}
-
-	if (STAGE <= 21) {
-		console.log('21. Deploy SetPlatformOwnerSpell')
-		console.log('==============================================')
-		const setPlatformOwnerSpell = await deployContract('SetPlatformOwnerSpell')
-		saveDeployedAddress(networkName, 'setPlatformOwnerSpell', setPlatformOwnerSpell.address)
-		saveDeployedABI(networkName, 'setPlatformOwnerSpell', artifacts.readArtifactSync('SetPlatformOwnerSpell').abi)
-		console.log('')
-	}
-
-	if (STAGE <= 22) {
-		console.log('22. Deploy SetTradingFeeSpell')
-		console.log('==============================================')
-		const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
-		saveDeployedAddress(networkName, 'setTradingFeeSpell', setTradingFeeSpell.address)
-		saveDeployedABI(networkName, 'setTradingFeeSpell', artifacts.readArtifactSync('SetTradingFeeSpell').abi)
-		console.log('')
-	}
-
-	if (STAGE <= 23) {
-		console.log('23. Deploy SetPlatformFeeSpell')
-		console.log('==============================================')
-		const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
-		saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
-		saveDeployedABI(networkName, 'setPlatformFeeSpell', artifacts.readArtifactSync('SetPlatformFeeSpell').abi)
-		console.log('')
-	}
-
-	if (STAGE <= 24) {
-		console.log('24. Deploy ChangeLogicSpell')
+		console.log('20. Deploy ChangeLogicSpell')
 		console.log('==============================================')
 		const changeLogicSpell = await deployContract('ChangeLogicSpell')
 		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
@@ -527,7 +489,56 @@ async function main() {
 		console.log('')
 	}
 
-	
+	if (STAGE <= 21) {
+		console.log('21. Deploy ChangeLogicAndCallSpell')
+		console.log('==============================================')
+		const changeLogicAndCallSpell = await deployContract('ChangeLogicAndCallSpell')
+		saveDeployedAddress(networkName, 'changeLogicAndCallSpell', changeLogicAndCallSpell.address)
+		saveDeployedABI(
+			networkName,
+			'changeLogicAndCallSpell',
+			artifacts.readArtifactSync('ChangeLogicAndCallSpell').abi
+		)
+		console.log('')
+	}
+
+	return
+
+	if (STAGE <= 22) {
+		console.log('22. Deploy SetTokenOwnerSpell')
+		console.log('==============================================')
+		const setTokenOwnerSpell = await deployContract('SetTokenOwnerSpell')
+		saveDeployedAddress(networkName, 'setTokenOwnerSpell', setTokenOwnerSpell.address)
+		saveDeployedABI(networkName, 'setTokenOwnerSpell', artifacts.readArtifactSync('SetTokenOwnerSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 23) {
+		console.log('23. Deploy SetPlatformOwnerSpell')
+		console.log('==============================================')
+		const setPlatformOwnerSpell = await deployContract('SetPlatformOwnerSpell')
+		saveDeployedAddress(networkName, 'setPlatformOwnerSpell', setPlatformOwnerSpell.address)
+		saveDeployedABI(networkName, 'setPlatformOwnerSpell', artifacts.readArtifactSync('SetPlatformOwnerSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 24) {
+		console.log('24. Deploy SetTradingFeeSpell')
+		console.log('==============================================')
+		const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
+		saveDeployedAddress(networkName, 'setTradingFeeSpell', setTradingFeeSpell.address)
+		saveDeployedABI(networkName, 'setTradingFeeSpell', artifacts.readArtifactSync('SetTradingFeeSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 25) {
+		console.log('25. Deploy SetPlatformFeeSpell')
+		console.log('==============================================')
+		const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
+		saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
+		saveDeployedABI(networkName, 'setPlatformFeeSpell', artifacts.readArtifactSync('SetPlatformFeeSpell').abi)
+		console.log('')
+	}
 }
 
 async function deployProxyContract(name, admin, ...params) {

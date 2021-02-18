@@ -6,7 +6,10 @@ describe('core/IdeaTokenExchange', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
 	let TestCDai
+	let ProxyAdmin
+	let AdminUpgradeabilityProxy
 	let InterestManagerCompound
+	let InterestManagerCompoundV2
 	let TestComptroller
 	let IdeaTokenFactory
 	let IdeaTokenExchange
@@ -60,7 +63,10 @@ describe('core/IdeaTokenExchange', () => {
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
 		TestCDai = await ethers.getContractFactory('TestCDai')
+		ProxyAdmin = await ethers.getContractFactory('ProxyAdmin')
+		AdminUpgradeabilityProxy = await ethers.getContractFactory('AdminUpgradeabilityProxy')
 		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
+		InterestManagerCompoundV2 = await ethers.getContractFactory('InterestManagerCompoundV2')
 		TestComptroller = await ethers.getContractFactory('TestComptroller')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactory')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchange')
@@ -68,6 +74,9 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	beforeEach(async () => {
+		proxyAdmin = await ProxyAdmin.deploy(adminAccount.address)
+		await proxyAdmin.deployed()
+
 		domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await domainNoSubdomainNameVerifier.deployed()
 
@@ -84,21 +93,47 @@ describe('core/IdeaTokenExchange', () => {
 		await cDai.deployed()
 		await cDai.setExchangeRate(tenPow18)
 
-		interestManagerCompound = await InterestManagerCompound.deploy()
-		await interestManagerCompound.deployed()
+		ideaTokenExchange = await IdeaTokenExchange.deploy()
+		await ideaTokenExchange.deployed()
+
+		const interestManagerCompoundLogic = await InterestManagerCompound.deploy()
+		await interestManagerCompoundLogic.deployed()
+
+		const data = interestManagerCompoundLogic.interface.encodeFunctionData('initialize', [
+			ideaTokenExchange.address,
+			dai.address,
+			cDai.address,
+			comp.address,
+			oneAddress,
+		])
+
+		const proxy = await AdminUpgradeabilityProxy.deploy(
+			interestManagerCompoundLogic.address,
+			proxyAdmin.address,
+			data
+		)
+		await proxy.deployed()
+
+		const interestManagerCompoundV2Logic = await InterestManagerCompoundV2.deploy()
+		await interestManagerCompoundV2Logic.deployed()
+
+		const dataV2 = interestManagerCompoundV2Logic.interface.encodeFunctionData('initializeV2', [])
+
+		await proxyAdmin
+			.connect(adminAccount)
+			.upgradeAndCall(proxy.address, interestManagerCompoundV2Logic.address, dataV2)
+
+		interestManagerCompound = new ethers.Contract(
+			proxy.address,
+			InterestManagerCompoundV2.interface,
+			InterestManagerCompoundV2.signer
+		)
 
 		ideaTokenLogic = await IdeaToken.deploy()
 		await ideaTokenLogic.deployed()
 
 		ideaTokenFactory = await IdeaTokenFactory.deploy()
 		await ideaTokenFactory.deployed()
-
-		ideaTokenExchange = await IdeaTokenExchange.deploy()
-		await ideaTokenExchange.deployed()
-
-		await interestManagerCompound
-			.connect(adminAccount)
-			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, oneAddress)
 
 		await ideaTokenFactory
 			.connect(adminAccount)
@@ -175,6 +210,8 @@ describe('core/IdeaTokenExchange', () => {
 
 		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(BigNumber.from('0'))).to.be.true
 		const firstExchangeRate = tenPow18.add(tenPow17) // 1.1
+
+		await interestManagerCompound.supplyDaiToCompound()
 		await cDai.setExchangeRate(firstExchangeRate)
 
 		const firstInterestPayable = firstRawCost.mul(firstExchangeRate).div(tenPow18).sub(firstRawCost)
@@ -206,9 +243,10 @@ describe('core/IdeaTokenExchange', () => {
 			)
 		).to.be.true
 
-		// TODO: Minor rounding error
-		// expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable)).to.be.true
+		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(firstInterestPayable)).to.be.true
 		const secondExchangeRate = tenPow18.add(tenPow17.mul(BigNumber.from('2'))) // 1.2
+
+		await interestManagerCompound.supplyDaiToCompound()
 		await cDai.setExchangeRate(secondExchangeRate)
 
 		const secondInterestPayable = firstRawCost
@@ -231,8 +269,10 @@ describe('core/IdeaTokenExchange', () => {
 
 		expect((await dai.balanceOf(userAccount.address)).eq(firstPrice)).to.be.true
 		expect((await ideaToken.balanceOf(userAccount.address)).eq(amount))
+
 		expect(
-			(await ideaTokenExchange.getTradingFeePayable()).eq(
+			eqWithRoundingError(
+				await ideaTokenExchange.getTradingFeePayable(),
 				firstTradingFeeInvested
 					.add(secondTradingFeeInvested)
 					.add(thirdTradingFeeInvested)
@@ -249,9 +289,12 @@ describe('core/IdeaTokenExchange', () => {
 					.div(tenPow18)
 			)
 		).to.be.true
-		// TODO: Minor rounding error
-		//expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(secondInterestPayable)).to.be.true
+		expect(
+			eqWithRoundingError(await ideaTokenExchange.getInterestPayable(ideaToken.address), secondInterestPayable)
+		).to.be.true
 		const thirdExchangeRate = tenPow18.add(tenPow17.mul(BigNumber.from('3'))) // 1.3
+
+		await interestManagerCompound.supplyDaiToCompound()
 		await cDai.setExchangeRate(thirdExchangeRate)
 
 		/* eslint-disable-next-line no-unused-vars*/
@@ -262,8 +305,8 @@ describe('core/IdeaTokenExchange', () => {
 			.div(tenPow18)
 			.sub(firstRawCost.add(secondRawCost).sub(firstRawPrice))
 
-		// TODO: Minor rounding error
-		//expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable)).to.be.true
+		expect(eqWithRoundingError(await ideaTokenExchange.getInterestPayable(ideaToken.address), thirdInterestPayable))
+			.to.be.true
 
 		const secondPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
 		const fourthTradingFee = await getTradingFeeForSelling(ideaToken, amount)
@@ -277,6 +320,7 @@ describe('core/IdeaTokenExchange', () => {
 
 		expect((await dai.balanceOf(userAccount.address)).eq(firstPrice.add(secondPrice))).to.be.true
 		expect((await ideaToken.balanceOf(userAccount.address)).eq(BigNumber.from('0'))).to.be.true
+
 		expect(
 			(await ideaTokenExchange.getTradingFeePayable()).eq(
 				firstTradingFeeInvested
@@ -298,9 +342,16 @@ describe('core/IdeaTokenExchange', () => {
 			)
 		).to.be.true
 
-		// TODO: Minor rounding error
-		//expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(thirdInterestPayable)).to.be.true
+		expect(
+			eqWithRoundingError(
+				await ideaTokenExchange.getInterestPayable(ideaToken.address),
+				thirdInterestPayable,
+				BigNumber.from('4')
+			)
+		).to.be.true
 		const fourthExchangeRate = tenPow18.add(tenPow17.mul(BigNumber.from('4'))) // 1.4
+
+		await interestManagerCompound.supplyDaiToCompound()
 		await cDai.setExchangeRate(fourthExchangeRate)
 
 		/* eslint-disable-next-line no-unused-vars*/
@@ -312,8 +363,13 @@ describe('core/IdeaTokenExchange', () => {
 			.div(tenPow18)
 			.sub(firstRawCost.add(secondRawCost).sub(firstRawPrice).sub(secondRawPrice))
 
-		// TODO: Minor rounding error
-		//expect.isTrue((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(fourthInterestPayable)).to.be.true
+		expect(
+			eqWithRoundingError(
+				await ideaTokenExchange.getInterestPayable(ideaToken.address),
+				fourthInterestPayable,
+				BigNumber.from('3')
+			)
+		).to.be.true
 
 		const finalPlatformFee = firstPlatformFeeInvested
 			.add(secondPlatformFeeInvested)
@@ -322,7 +378,8 @@ describe('core/IdeaTokenExchange', () => {
 			.mul(fourthExchangeRate)
 			.div(tenPow18)
 
-		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(finalPlatformFee)).to.be.true
+		expect(eqWithRoundingError(await ideaTokenExchange.getPlatformFeePayable(marketID), finalPlatformFee)).to.be
+			.true
 
 		const finalTradingFee = firstTradingFeeInvested
 			.add(secondTradingFeeInvested)
@@ -334,16 +391,12 @@ describe('core/IdeaTokenExchange', () => {
 		expect((await ideaTokenExchange.getTradingFeePayable()).eq(finalTradingFee)).to.be.true
 
 		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, platformFeeReceiverAccount.address)
-
 		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformFee(marketID)
-		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(finalPlatformFee)).to.be.true
-
+		expect(eqWithRoundingError(await dai.balanceOf(platformFeeReceiverAccount.address), finalPlatformFee)).to.be
+			.true
 		await ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, interestReceiverAccount.address)
-
 		await ideaTokenExchange.connect(interestReceiverAccount).withdrawTokenInterest(ideaToken.address)
-		// TODO: Minor rounding error
-		// expect((await dai.balanceOf(interestReceiverAccount)).eq(fourthInterestPayable))
-
+		expect(eqWithRoundingError(await dai.balanceOf(interestReceiverAccount.address), fourthInterestPayable))
 		await ideaTokenExchange.withdrawTradingFee()
 		expect((await dai.balanceOf(tradingFeeAccount.address)).eq(finalTradingFee)).to.be.true
 		expect((await ideaTokenExchange.getTradingFeePayable()).eq(BigNumber.from('0'))).to.be.true
@@ -557,6 +610,7 @@ describe('core/IdeaTokenExchange', () => {
 		await ideaTokenExchange.buyTokens(newIdeaToken.address, amount, amount, cost, userAccount.address)
 		expect((await ideaTokenExchange.getPlatformInterestPayable(newMarketID)).eq(BigNumber.from('0'))).to.be.true
 
+		await interestManagerCompound.supplyDaiToCompound()
 		await cDai.setExchangeRate(tenPow18.mul(BigNumber.from('2')))
 
 		const interest = await ideaTokenExchange.getPlatformInterestPayable(newMarketID)
@@ -903,5 +957,14 @@ describe('core/IdeaTokenExchange', () => {
 		const platformFee = rawPrice.mul(platformFeeRate).div(feeScale)
 
 		return rawPrice.sub(tradingFee).sub(platformFee)
+	}
+
+	function eqWithRoundingError(a, b, maxDiff) {
+		const m = maxDiff || BigNumber.from('1')
+		if (a.gt(b)) {
+			return a.sub(b).lte(m)
+		} else {
+			return b.sub(a).lte(m)
+		}
 	}
 })

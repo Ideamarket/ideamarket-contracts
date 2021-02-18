@@ -21,13 +21,13 @@ contract InterestManagerCompound is Ownable, Initializable {
     using SafeMath for uint;
 
     // Dai contract
-    IERC20 private _dai;
+    IERC20 internal _dai;
     // cDai contract
-    ICToken private _cDai;
+    ICToken internal _cDai;
     // COMP contract
-    IERC20 private _comp;
+    IERC20 internal _comp;
     // Address which is allowed to withdraw accrued COMP tokens
-    address private _compRecipient;
+    address internal _compRecipient;
 
     /**
      * Initializes the contract with all required values
@@ -60,7 +60,7 @@ contract InterestManagerCompound is Ownable, Initializable {
      *
      * @return The amount of minted cDai
      */
-    function invest(uint amount) external onlyOwner returns (uint) {
+    function invest(uint amount) external virtual onlyOwner returns (uint) {
         uint balanceBefore = _cDai.balanceOf(address(this));
         require(_dai.balanceOf(address(this)) >= amount, "insufficient-dai");
         require(_dai.approve(address(_cDai), amount), "dai-cdai-approve");
@@ -77,28 +77,12 @@ contract InterestManagerCompound is Ownable, Initializable {
      *
      * @return The amount of burned cDai
      */
-    function redeem(address recipient, uint amount) external onlyOwner returns (uint) {
+    function redeem(address recipient, uint amount) external virtual onlyOwner returns (uint) {
         uint balanceBefore = _cDai.balanceOf(address(this));
         require(_cDai.redeemUnderlying(amount) == 0, "redeem");
         uint balanceAfter = _cDai.balanceOf(address(this));
         require(_dai.transfer(recipient, amount), "dai-transfer");
         return balanceBefore.sub(balanceAfter);
-    }
-
-    /**
-     * Redeems a given amount of cDai from Compound and sends Dai to the recipient
-     *
-     * @param recipient The recipient of the redeemed Dai
-     * @param amount The amount of cDai to redeem
-     *
-     * @return The amount of redeemed Dai
-     */
-    function redeemInvestmentToken(address recipient, uint amount) external onlyOwner returns (uint) {
-        uint balanceBefore = _dai.balanceOf(address(this));
-        require(_cDai.redeem(amount) == 0, "redeem");
-        uint redeemed = _dai.balanceOf(address(this)).sub(balanceBefore);
-        require(_dai.transfer(recipient, redeemed), "dai-transfer");
-        return redeemed;
     }
 
     /**
@@ -124,7 +108,7 @@ contract InterestManagerCompound is Ownable, Initializable {
      *
      * @return The amount of investment tokens
      */
-    function underlyingToInvestmentToken(uint underlyingAmount) external view returns (uint) {
+    function underlyingToInvestmentToken(uint underlyingAmount) public virtual view returns (uint) {
         return divScalarByExpTruncate(underlyingAmount, _cDai.exchangeRateStored());
     }
 
@@ -135,7 +119,7 @@ contract InterestManagerCompound is Ownable, Initializable {
      *
      * @return The amount of underlying tokens
      */
-    function investmentTokenToUnderlying(uint investmentTokenAmount) external view returns (uint) {
+    function investmentTokenToUnderlying(uint investmentTokenAmount) external virtual view returns (uint) {
         return mulScalarTruncate(investmentTokenAmount, _cDai.exchangeRateStored());
     }
 
