@@ -79,6 +79,13 @@ const allDeploymentParams = {
 		mirrorTradingFeeRate: BigNumber.from('50'), // 0.50%
 		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
 		mirrorAllInterestToPlatform: false,
+
+		youtubeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		youtubePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		youtubeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		youtubeTradingFeeRate: BigNumber.from('50'), // 0.50%
+		youtubePlatformFeeRate: BigNumber.from('50'), // 0.50%
+		youtubeAllInterestToPlatform: false,
 	},
 }
 
@@ -423,8 +430,44 @@ async function main() {
 		console.log('')
 	}*/
 
+	let youtubeNameVerifierAddress
 	if (STAGE <= 16) {
-		console.log('16. Set IdeaTokenFactory owner')
+		console.log('16. Deploy YoutubeChannelNameVerifier')
+		console.log('==============================================')
+		const youtubeNameVerifier = await deployContract('YoutubeChannelNameVerifier')
+
+		youtubeNameVerifierAddress = youtubeNameVerifier.address
+		saveDeployedAddress(networkName, 'youtubeNameVerifier', youtubeNameVerifier.address)
+		saveDeployedABI(networkName, 'youtubeNameVerifier', artifacts.readArtifactSync('YoutubeChannelNameVerifier').abi)
+		console.log('')
+	} else {
+		youtubeNameVerifierAddress = loadDeployedAddress(networkName, 'youtubeNameVerifier')
+	}
+
+	if (STAGE <= 17) {
+		console.log('17. Add Youtube market')
+		console.log('==============================================')
+		const ideaTokenFactory = new ethers.Contract(
+			ideaTokenFactoryProxyAddress,
+			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
+			deployerAccount
+		)
+		await ideaTokenFactory.addMarket(
+			'Youtube',
+			youtubeNameVerifierAddress,
+			deploymentParams.youtubeBaseCost,
+			deploymentParams.youtubePriceRise,
+			deploymentParams.youtubeHatchTokens,
+			deploymentParams.youtubeTradingFeeRate,
+			deploymentParams.youtubePlatformFeeRate,
+			deploymentParams.youtubeAllInterestToPlatform,
+			{ gasPrice: deploymentParams.gasPrice }
+		)
+		console.log('')
+	}
+
+	if (STAGE <= 18) {
+		console.log('18. Set IdeaTokenFactory owner')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -436,8 +479,8 @@ async function main() {
 	}
 
 	let ideaTokenVaultProxyAddress
-	if (STAGE <= 17) {
-		console.log('17. Deploy IdeaTokenVault')
+	if (STAGE <= 19) {
+		console.log('19. Deploy IdeaTokenVault')
 		console.log('==============================================')
 		const [ideaTokenVaultProxy, ideaTokenVaultLogic] = await deployProxyContract(
 			'IdeaTokenVault',
@@ -454,8 +497,8 @@ async function main() {
 		ideaTokenVaultProxyAddress = loadDeployedAddress(networkName, 'ideaTokenVault')
 	}
 
-	if (STAGE <= 18) {
-		console.log('18. Deploy MultiAction')
+	if (STAGE <= 20) {
+		console.log('20. Deploy MultiAction')
 		console.log('==============================================')
 		const multiAction = await deployContract(
 			'MultiAction',
@@ -471,8 +514,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 19) {
-		console.log('19. Deploy AddMarketSpell')
+	if (STAGE <= 21) {
+		console.log('21. Deploy AddMarketSpell')
 		console.log('==============================================')
 		const addMarketSpell = await deployContract('AddMarketSpell')
 		saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
@@ -482,8 +525,8 @@ async function main() {
 
 	return
 
-	if (STAGE <= 20) {
-		console.log('20. Deploy SetTokenOwnerSpell')
+	if (STAGE <= 22) {
+		console.log('22. Deploy SetTokenOwnerSpell')
 		console.log('==============================================')
 		const setTokenOwnerSpell = await deployContract('SetTokenOwnerSpell')
 		saveDeployedAddress(networkName, 'setTokenOwnerSpell', setTokenOwnerSpell.address)
@@ -491,8 +534,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 21) {
-		console.log('21. Deploy SetPlatformOwnerSpell')
+	if (STAGE <= 23) {
+		console.log('23. Deploy SetPlatformOwnerSpell')
 		console.log('==============================================')
 		const setPlatformOwnerSpell = await deployContract('SetPlatformOwnerSpell')
 		saveDeployedAddress(networkName, 'setPlatformOwnerSpell', setPlatformOwnerSpell.address)
@@ -500,8 +543,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 22) {
-		console.log('22. Deploy SetTradingFeeSpell')
+	if (STAGE <= 24) {
+		console.log('24. Deploy SetTradingFeeSpell')
 		console.log('==============================================')
 		const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
 		saveDeployedAddress(networkName, 'setTradingFeeSpell', setTradingFeeSpell.address)
@@ -509,8 +552,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 23) {
-		console.log('23. Deploy SetPlatformFeeSpell')
+	if (STAGE <= 25) {
+		console.log('25. Deploy SetPlatformFeeSpell')
 		console.log('==============================================')
 		const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
 		saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
@@ -518,8 +561,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 24) {
-		console.log('24. Deploy ChangeLogicSpell')
+	if (STAGE <= 26) {
+		console.log('26. Deploy ChangeLogicSpell')
 		console.log('==============================================')
 		const changeLogicSpell = await deployContract('ChangeLogicSpell')
 		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
