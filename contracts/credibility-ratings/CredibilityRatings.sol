@@ -27,6 +27,7 @@ contract CredibilityRatings is ICredibilityRatings {
      */
     function submitRating(address link, uint rating) external override {
 
+        require(link != address(0), "invalid-link");
         require(rating <= 100, "invalid-rating");
 
         address user = msg.sender;
