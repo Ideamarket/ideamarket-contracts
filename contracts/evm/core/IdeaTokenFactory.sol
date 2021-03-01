@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: MIT
+// @unsupported: ovm
 pragma solidity 0.6.9;
 pragma experimental ABIEncoderV2;
 
-import "../util/Initializable.sol";
+import "../../shared/util/Initializable.sol";
+import "../../shared/util/Ownable.sol";
+import "../../shared/core/interfaces/IIdeaTokenFactory.sol";
+import "../../shared/core/IdeaToken.sol";
+import "../../shared/core/interfaces/IIdeaToken.sol";
+import "../../shared/core/nameVerifiers/IIdeaTokenNameVerifier.sol";
+import "../../shared/util/MinimalProxy.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "../util/Ownable.sol";
-import "./interfaces/IIdeaTokenFactory.sol";
-import "./IdeaToken.sol";
-import "./interfaces/IIdeaToken.sol";
-import "./nameVerifiers/IIdeaTokenNameVerifier.sol";
-import "../util/MinimalProxy.sol";
+
 /**
  * @title IdeaTokenFactory
  * @author Alexander Schlindwein

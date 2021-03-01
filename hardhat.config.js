@@ -1,5 +1,6 @@
 require('@nomiclabs/hardhat-waffle')
 require('@nomiclabs/hardhat-web3')
+require('@eth-optimism/plugins/hardhat/compiler')
 require('solidity-coverage')
 require('dotenv').config()
 
@@ -17,12 +18,7 @@ module.exports = {
 	},
 	solidity: {
 		version: '0.6.9',
-		settings: {
-			/*optimizer: {
-          enabled: true,
-          runs: 200
-        }*/
-		},
+		settings: {},
 	},
 	paths: {
 		sources: './contracts',

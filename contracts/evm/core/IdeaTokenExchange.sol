@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
+// @unsupported: ovm
 pragma solidity 0.6.9;
 pragma experimental ABIEncoderV2;
 
-import "../util/Ownable.sol";
-import "./interfaces/IIdeaTokenExchange.sol";
-import "./interfaces/IIdeaToken.sol";
-import "./interfaces/IIdeaTokenFactory.sol";
-import "./interfaces/IInterestManager.sol";
-import "../util/Initializable.sol";
+import "../../shared/util/Ownable.sol";
+import "../../shared/core/interfaces/IIdeaTokenExchange.sol";
+import "../../shared/core/interfaces/IIdeaToken.sol";
+import "../../shared/core/interfaces/IIdeaTokenFactory.sol";
+import "../../shared/core/interfaces/IInterestManager.sol";
+import "../../shared/util/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
