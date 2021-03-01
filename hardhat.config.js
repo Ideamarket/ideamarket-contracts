@@ -5,6 +5,7 @@ require('dotenv').config()
 
 module.exports = {
 	networks: {
+		// --- EVM
 		hardhat: {},
 		mainnet: {
 			url: process.env.MAINNET_RPC || '',
@@ -14,14 +15,27 @@ module.exports = {
 			url: process.env.RINKEBY_RPC || '',
 			accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
 		},
+		kovan: {
+			url: process.env.KOVAN_RPC || '',
+			accounts: process.env.KOVAN_PRIVATE_KEY ? [process.env.KOVAN_PRIVATE_KEY] : [],
+		},
+
+		// --- AVM
+		avm_local: {
+			url: 'http://localhost:8547',
+		},
+		kovan_avm: {
+			url: process.env.KOVAN_AVM_RPC || '',
+			accounts: process.env.KOVAN_AVM_PRIVATE_KEY ? [process.env.KOVAN_AVM_PRIVATE_KEY] : [],
+			timeout: 60000,
+		},
 	},
 	solidity: {
 		version: '0.6.9',
 		settings: {
-			/*optimizer: {
-          enabled: true,
-          runs: 200
-        }*/
+			optimizer: {
+				enabled: false,
+			},
 		},
 	},
 	paths: {
@@ -29,5 +43,8 @@ module.exports = {
 		tests: './test/contracts',
 		cache: './cache',
 		artifacts: './build/contracts',
+	},
+	mocha: {
+		timeout: 200000, // 200s
 	},
 }

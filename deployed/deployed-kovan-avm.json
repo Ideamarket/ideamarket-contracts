@@ -1,0 +1,19 @@
+{
+    "bridgeAVM": "0x89E41a103E262876ECa8afD55158A24e6de1aaD4",
+    "dsPause": "0x79F719DDD52CBEb8f96c29A7fB620d733ef31219",
+    "dsPauseProxy": "0x1ee0b855E150a09C1bf14CF7A6d97F04917B87B5",
+    "proxyAdmin": "0xf3330e5A111052e84905298Bc9c15BF8B6AB7Ad5",
+    "interestManagerAVM": "0xff189F4aEf8EB6a0360C72129AaDE0057FaFd826",
+    "interestManagerAVMLogic": "0x301D55550d44b7E740e15a86C903943837c3073D",
+    "ideaTokenExchangeAVM": "0x7fd128Cc9d100C88d71098E9afF60DDfD756d33e",
+    "ideaTokenExchangeAVMLogic": "0x8104C82e6DCae767ad94a575B3C5Ed25Ff04e2D1",
+    "ideaTokenLogic": "0xb4ac0e7155c4189F80174fd1bB62CF5203535e23",
+    "ideaTokenFactoryAVM": "0x2D6837c1Df2Dc6417fdBcD5907EE1184A6AbEe15",
+    "ideaTokenFactoryAVMLogic": "0x909a75e3576Fc9AE98dB25A476F9a324A8628263",
+    "twitterHandleNameVerifier": "0xd8D2A6aAb29DAE9e1bE0e05b31959648823daAec",
+    "substackNameVerifier": "0x9cDD5058a5c7605dB4D875ca98631Fdc5C85bE4b",
+    "showtimeNameVerifier": "0x4328C62B381E5b62E987aA372f79090C65146bf7",
+    "ideaTokenVault": "0x6524528303DBA35b02F92610e8f206A1dC04423f",
+    "ideaTokenVaultLogic": "0x5CD54ef9F42A5e88d47C2cfdEEB987B7c1d7bbA9",
+    "multiAction": "0xe160D53428da4f975451269C6f66980935accdE9"
+}

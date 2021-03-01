@@ -1,8 +1,7 @@
-const readline = require('readline')
-
 const { run, ethers, artifacts } = require('hardhat')
-const fs = require('fs')
 const { BigNumber } = require('ethers')
+
+const { read, loadDeployedAddress, saveDeployedAddress, saveDeployedABI } = require('./shared')
 
 const allDeploymentParams = {
 	mainnet: {
@@ -55,6 +54,45 @@ const allDeploymentParams = {
 		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
 		showtimeAllInterestToPlatform: false,
 	},
+	kovan: {
+		timelockDelay: '1',
+		gasPrice: 1000000000, // 1 gwei
+
+		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
+		twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		twitterAllInterestToPlatform: false,
+
+		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
+		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		substackAllInterestToPlatform: false,
+
+		mirrorBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		mirrorPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		mirrorHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		mirrorTradingFeeRate: BigNumber.from('50'), // 0.50%
+		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		mirrorAllInterestToPlatform: false,
+
+		showtimeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		showtimePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		showtimeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
+		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
+		showtimeAllInterestToPlatform: false,
+
+		youtubeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		youtubePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		youtubeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		youtubeTradingFeeRate: BigNumber.from('50'), // 0.50%
+		youtubePlatformFeeRate: BigNumber.from('50'), // 0.50%
+		youtubeAllInterestToPlatform: false,
+	},
 	test: {
 		timelockDelay: '1',
 		gasPrice: 1000000000, // 1 gwei
@@ -84,13 +122,13 @@ const allDeploymentParams = {
 
 const allExternalContractAddresses = {
 	mainnet: {
-		multisig: '0x4905485d8B0Be42b317CCB4806b966aC0d4f4AE8', // TODO
-		authorizer: '0x78C15e4B4Ed9D8B4FFd031d0ec7BD09A55d02699', // TODO
-		dai: '0x6B175474E89094C44Da98b954EedeAC495271d0F', // TODO
-		cDai: '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', // TODO
-		comp: '0xc00e94Cb662C3520282E6f5717214004A7f26888', // TODO
-		weth: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // TODO
-		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', // TODO
+		multisig: '0x4905485d8B0Be42b317CCB4806b966aC0d4f4AE8',
+		authorizer: '0x78C15e4B4Ed9D8B4FFd031d0ec7BD09A55d02699',
+		dai: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+		cDai: '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643',
+		comp: '0xc00e94Cb662C3520282E6f5717214004A7f26888',
+		weth: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
 	},
 	rinkeby: {
 		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
@@ -99,6 +137,15 @@ const allExternalContractAddresses = {
 		cDai: '0x6D7F0754FFeb405d23C51CE938289d4835bE3b14',
 		comp: '0x0000000000000000000000000000000000000001', // Not deployed on Rinkeby
 		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+	},
+	kovan: {
+		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
+		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
+		dai: '0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa',
+		cDai: '0xf0d0eb522cfa50b716b3b1604c4f0fa6f04376ad',
+		comp: '0x61460874a7196d6a22d1ee4922473664b3e95270',
+		weth: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
 		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
 	},
 	test: {
@@ -110,19 +157,6 @@ const allExternalContractAddresses = {
 		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
 		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
 	},
-}
-
-const rl = readline.createInterface({
-	input: process.stdin,
-	output: process.stdout,
-})
-
-async function read(question) {
-	return await new Promise((resolve) => {
-		rl.question(question, (answer) => {
-			return resolve(answer)
-		})
-	})
 }
 
 let deploymentParams
@@ -150,6 +184,10 @@ async function main() {
 			deploymentParams = allDeploymentParams.rinkeby
 			externalContractAdresses = allExternalContractAddresses.rinkeby
 		}
+	} else if (networkName === 'kovan') {
+		console.log('Using Kovan')
+		deploymentParams = allDeploymentParams.kovan
+		externalContractAdresses = allExternalContractAddresses.kovan
 	} else if (networkName === 'homestead') {
 		networkName = 'mainnet'
 
@@ -159,6 +197,8 @@ async function main() {
 	} else {
 		throw 'cannot deploy to network: ' + networkName
 	}
+
+	console.log('Block', await ethers.provider.getBlockNumber())
 
 	const STAGE = 1
 
@@ -247,7 +287,10 @@ async function main() {
 			(await ethers.getContractFactory('InterestManagerCompound')).interface,
 			deployerAccount
 		)
-		await interestManagerCompound.setOwner(ideaTokenExchangeProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		const tx = await interestManagerCompound.setOwner(ideaTokenExchangeProxyAddress, {
+			gasPrice: deploymentParams.gasPrice,
+		})
+		await tx.wait()
 		console.log('')
 	}
 
@@ -293,9 +336,10 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenExchange')).interface,
 			deployerAccount
 		)
-		await ideaTokenExchange.setIdeaTokenFactoryAddress(ideaTokenFactoryProxyAddress, {
+		const tx = await ideaTokenExchange.setIdeaTokenFactoryAddress(ideaTokenFactoryProxyAddress, {
 			gasPrice: deploymentParams.gasPrice,
 		})
+		await tx.wait()
 		console.log('')
 	}
 
@@ -307,7 +351,8 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenExchange')).interface,
 			deployerAccount
 		)
-		await ideaTokenExchange.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		const tx = await ideaTokenExchange.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		await tx.wait()
 		console.log('')
 	}
 
@@ -337,7 +382,7 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
 			deployerAccount
 		)
-		await ideaTokenFactory.addMarket(
+		const tx = await ideaTokenFactory.addMarket(
 			'Twitter',
 			twitterHandleNameVerifierAddress,
 			deploymentParams.twitterBaseCost,
@@ -348,6 +393,7 @@ async function main() {
 			deploymentParams.twitterAllInterestToPlatform,
 			{ gasPrice: deploymentParams.gasPrice }
 		)
+		await tx.wait()
 		console.log('')
 	}
 
@@ -373,7 +419,7 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
 			deployerAccount
 		)
-		await ideaTokenFactory.addMarket(
+		const tx = await ideaTokenFactory.addMarket(
 			'Substack',
 			substackNameVerifierAddress,
 			deploymentParams.substackBaseCost,
@@ -384,6 +430,7 @@ async function main() {
 			deploymentParams.substackAllInterestToPlatform,
 			{ gasPrice: deploymentParams.gasPrice }
 		)
+		await tx.wait()
 		console.log('')
 	}
 
@@ -401,7 +448,7 @@ async function main() {
 		showtimeNameVerifierAddress = loadDeployedAddress(networkName, 'showtimeNameVerifier')
 	}
 
-	/*if (STAGE <= 15) {
+	if (STAGE <= 15) {
 		console.log('15. Add Showtime market')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
@@ -409,7 +456,7 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
 			deployerAccount
 		)
-		await ideaTokenFactory.addMarket(
+		const tx = await ideaTokenFactory.addMarket(
 			'Showtime',
 			showtimeNameVerifierAddress,
 			deploymentParams.showtimeBaseCost,
@@ -420,6 +467,7 @@ async function main() {
 			deploymentParams.showtimeAllInterestToPlatform,
 			{ gasPrice: deploymentParams.gasPrice }
 		)
+		await tx.wait()
 		console.log('')
 	}
 
@@ -431,9 +479,10 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
 			deployerAccount
 		)
-		await ideaTokenFactory.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		const tx = await ideaTokenFactory.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		await tx.wait()
 		console.log('')
-	}*/
+	}
 
 	let ideaTokenVaultProxyAddress
 	if (STAGE <= 17) {
@@ -477,6 +526,28 @@ async function main() {
 		const addMarketSpell = await deployContract('AddMarketSpell')
 		saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
 		saveDeployedABI(networkName, 'addMarketSpell', artifacts.readArtifactSync('AddMarketSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 22) {
+		console.log('22. Deploy ChangeLogic')
+		console.log('==============================================')
+		const changeLogicSpell = await deployContract('ChangeLogicSpell')
+		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
+		saveDeployedABI(networkName, 'changeLogicSpell', artifacts.readArtifactSync('ChangeLogicSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 23) {
+		console.log('23. Deploy ChangeLogicAndCallSpell')
+		console.log('==============================================')
+		const changeLogicAndCallSpell = await deployContract('ChangeLogicAndCallSpell')
+		saveDeployedAddress(networkName, 'changeLogicAndCallSpell', changeLogicAndCallSpell.address)
+		saveDeployedABI(
+			networkName,
+			'changeLogicAndCallSpell',
+			artifacts.readArtifactSync('ChangeLogicAndCallSpell').abi
+		)
 		console.log('')
 	}
 
@@ -542,47 +613,13 @@ async function deployContract(name, ...params) {
 	const contractFactory = await ethers.getContractFactory(name)
 	const deployed = await contractFactory.deploy(...params, { gasPrice: deploymentParams.gasPrice })
 	await deployed.deployed()
+
+	const networkName = (await ethers.provider.getNetwork()).name
+	if (networkName === 'kovan') {
+		await new Promise((resolve) => setTimeout(resolve, 1000))
+	}
+
 	return deployed
-}
-
-function loadDeployedAddress(network, contract) {
-	const path = 'deployed/deployed-' + network + '.json'
-	if (!fs.existsSync(path)) {
-		throw new Error('Deployed file does not exist')
-	}
-
-	const raw = fs.readFileSync(path)
-	const addresses = JSON.parse(raw)
-
-	if (!addresses || !addresses[contract]) {
-		throw new Error(`Address for contract ${contract} does not exist`)
-	}
-
-	return addresses[contract]
-}
-
-function saveDeployedAddress(network, contract, address) {
-	let addresses = {}
-	const path = 'deployed/deployed-' + network + '.json'
-	if (fs.existsSync(path)) {
-		const raw = fs.readFileSync(path)
-		addresses = JSON.parse(raw)
-	}
-
-	addresses[contract] = address
-	fs.writeFileSync(path, JSON.stringify(addresses, undefined, 4))
-}
-
-function saveDeployedABI(network, contract, abi) {
-	let abis = {}
-	const path = 'deployed/abis-' + network + '.json'
-	if (fs.existsSync(path)) {
-		const raw = fs.readFileSync(path)
-		abis = JSON.parse(raw)
-	}
-
-	abis[contract] = abi
-	fs.writeFileSync(path, JSON.stringify(abis))
 }
 
 main()
