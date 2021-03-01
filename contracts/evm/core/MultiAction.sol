@@ -1,14 +1,15 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.6.9;
+// @unsupported: ovm
+pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
+import "../../shared/weth/IWETH.sol";
+import "../../shared/uniswap/IUniswapV2Factory.sol";
+import "../../shared/uniswap/IUniswapV2Router02.sol";
+import "../../shared/core/interfaces/IIdeaTokenExchange.sol";
+import "../../shared/core/interfaces/IIdeaTokenFactory.sol";
+import "../../shared/core/interfaces/IIdeaTokenVault.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "../weth/IWETH.sol";
-import "../uniswap/IUniswapV2Factory.sol";
-import "../uniswap/IUniswapV2Router02.sol";
-import "./interfaces/IIdeaTokenExchange.sol";
-import "./interfaces/IIdeaTokenFactory.sol";
-import "./interfaces/IIdeaTokenVault.sol";
 
 /**
  * @title MultiAction

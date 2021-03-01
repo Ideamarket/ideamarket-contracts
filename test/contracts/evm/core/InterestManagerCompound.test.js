@@ -72,7 +72,9 @@ describe('core/InterestManagerCompound', () => {
 	})
 
 	it('fail invest too few dai', async () => {
-		await expect(interestManagerCompound.connect(adminAccount).invest(tenPow18)).to.be.revertedWith('insufficient-dai')
+		await expect(interestManagerCompound.connect(adminAccount).invest(tenPow18)).to.be.revertedWith(
+			'insufficient-dai'
+		)
 	})
 
 	it('can redeem', async () => {

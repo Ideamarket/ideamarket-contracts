@@ -15,7 +15,7 @@
 
 // Updated by Alexander Schlindwein
 
-pragma solidity 0.6.9;
+pragma solidity 0.6.12;
 
 import "./IDSPause.sol";
 import "./DSPauseProxy.sol";

@@ -1,6 +1,7 @@
 const { expect } = require('chai')
+const { l2ethers: ethers } = require('hardhat')
 
-describe('nameVerifiers/MirrorNameVerifier', () => {
+describe('ovm/nameVerifiers/MirrorNameVerifier', () => {
 	let MirrorNameVerifier
 	let nameVerifier
 
@@ -17,11 +18,11 @@ describe('nameVerifiers/MirrorNameVerifier', () => {
 	it('vitalik', async () => {
 		expect(await nameVerifier.verifyTokenName('vitalik')).to.be.true
 	})
-    it('vi-talik', async () => {
+	it('vi-talik', async () => {
 		expect(await nameVerifier.verifyTokenName('vi-talik')).to.be.true
 	})
 
-    it('v-i-t-a-l-i-k', async () => {
+	it('v-i-t-a-l-i-k', async () => {
 		expect(await nameVerifier.verifyTokenName('v-i-t-a-l-i-k')).to.be.true
 	})
 
@@ -29,15 +30,15 @@ describe('nameVerifiers/MirrorNameVerifier', () => {
 		expect(await nameVerifier.verifyTokenName('Vitalik')).to.be.false
 	})
 
-    it('-vitalik', async () => {
+	it('-vitalik', async () => {
 		expect(await nameVerifier.verifyTokenName('-vitalik')).to.be.false
 	})
 
-    it('vitalik-', async () => {
+	it('vitalik-', async () => {
 		expect(await nameVerifier.verifyTokenName('vitalik-')).to.be.false
 	})
 
-    it('-vitalik-', async () => {
+	it('-vitalik-', async () => {
 		expect(await nameVerifier.verifyTokenName('-vitalik-')).to.be.false
 	})
 
@@ -49,13 +50,17 @@ describe('nameVerifiers/MirrorNameVerifier', () => {
 		expect(await nameVerifier.verifyTokenName('12vitalik34')).to.be.true
 	})
 
-    it('(max length)', async () => {
-        const tooLong = Array.from(Array(63).keys()).map(v => 'o').join('')
+	it('(max length)', async () => {
+		const tooLong = Array.from(Array(63).keys())
+			.map((v) => 'o')
+			.join('')
 		expect(await nameVerifier.verifyTokenName(tooLong)).to.be.true
 	})
 
 	it('(too long)', async () => {
-        const tooLong = Array.from(Array(64).keys()).map(v => 'o').join('')
+		const tooLong = Array.from(Array(64).keys())
+			.map((v) => 'o')
+			.join('')
 		expect(await nameVerifier.verifyTokenName(tooLong)).to.be.false
 	})
 

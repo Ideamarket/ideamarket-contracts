@@ -377,7 +377,9 @@ describe('core/MultiAction', () => {
 	it('can buy/sell tokens 3-hop', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
-		const requiredInputForCost = (await router.getAmountsIn(buyCost, [someOtherToken.address, weth.address, dai.address]))[0]
+		const requiredInputForCost = (
+			await router.getAmountsIn(buyCost, [someOtherToken.address, weth.address, dai.address])
+		)[0]
 
 		await someOtherToken.mint(userAccount.address, requiredInputForCost)
 		await someOtherToken.approve(multiAction.address, requiredInputForCost)
@@ -395,7 +397,9 @@ describe('core/MultiAction', () => {
 		expect(tokenBalanceAfterBuy.eq(ideaTokenAmount)).to.be.true
 
 		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
-		const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, weth.address, someOtherToken.address]))[2]
+		const outputFromSell = (
+			await router.getAmountsOut(sellPrice, [dai.address, weth.address, someOtherToken.address])
+		)[2]
 
 		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
 		await multiAction.sellAndConvert(

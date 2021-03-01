@@ -1,6 +1,7 @@
 require('@nomiclabs/hardhat-waffle')
 require('@nomiclabs/hardhat-web3')
 require('@eth-optimism/plugins/hardhat/compiler')
+require('@eth-optimism/plugins/hardhat/ethers')
 require('solidity-coverage')
 require('dotenv').config()
 
@@ -17,13 +18,19 @@ module.exports = {
 		},
 	},
 	solidity: {
-		version: '0.6.9',
+		version: '0.6.12',
 		settings: {},
+	},
+	ovm: {
+		solcVersion: '0.6.12',
 	},
 	paths: {
 		sources: './contracts',
 		tests: './test/contracts',
 		cache: './cache',
 		artifacts: './build/contracts',
+	},
+	mocha: {
+		timeout: 200000, // 200s
 	},
 }

@@ -15,7 +15,7 @@
 
 // Updated by Alexander Schlindwein
 
-pragma solidity 0.6.9;
+pragma solidity 0.6.12;
 
 contract DSPauseProxy {
     address public _owner;
