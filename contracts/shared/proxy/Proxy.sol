@@ -49,6 +49,37 @@ abstract contract Proxy {
       // out and outsize are 0 because we don't know the size yet.
       let result := delegatecall(gas(), implementation, 0, calldatasize(), 0, 0)
 
+      /*
+        The below lines causes an OVM compiler warning:
+          Warning: OVM: Using RETURNDATASIZE or RETURNDATACOPY in user asm isn't guaranteed to work
+            
+        This warning does not apply to this case. From the OVM docs:
+
+          If any of the opcodes replaced by the OVM compiler
+          is between the CALL you originally made and your use of 
+          RETURNDATACOPY or RETURNDATASIZE then this will cause issues.
+                
+          For example:
+
+          assembly {
+            call(...)
+            let x := returndatasize()
+          }
+
+          will work. But if you do
+
+          assembly {
+            call(...)
+            let y := address()
+            let x := returndatasize()
+          }
+
+          then that will not work because address is transpiled into
+          a call to ovmADDRESS which changes returndatasize.
+
+        Here there is no call between the delegatecall and returndatacopy/returndatasize.  
+      */
+
       // Copy the returned data.
       returndatacopy(0, 0, returndatasize())
 
