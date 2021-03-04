@@ -114,7 +114,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param minPrice The minimum allowed price in Dai for selling `amount` IdeaTokens
      * @param recipient The recipient of the redeemed Dai
      */
-    function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
+    function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external virtual override {
 
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken);
         require(marketDetails.exists, "token-not-exist");
@@ -258,7 +258,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param cost The maximum allowed cost in Dai
      * @param recipient The recipient of the bought IdeaTokens
      */
-    function buyTokens(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external override {
+    function buyTokens(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external virtual override {
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken);
         require(marketDetails.exists, "token-not-exist");
         uint marketID = marketDetails.id;
@@ -396,7 +396,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param token The token from which the generated interest is to be withdrawn
      */
-    function withdrawTokenInterest(address token) external override {
+    function withdrawTokenInterest(address token) external virtual override {
         require(_tokenOwner[token] == msg.sender, "not-authorized");
         _interestManager.accrueInterest();
 
@@ -429,7 +429,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param token The token for which to authorize an address
      * @param owner The address to be set as owner
      */
-    function setTokenOwner(address token, address owner) external override {
+    function setTokenOwner(address token, address owner) external virtual override {
         address sender = msg.sender;
         address current = _tokenOwner[token];
 
@@ -447,7 +447,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param marketID The market id from which the generated interest is to be withdrawn
      */
-    function withdrawPlatformInterest(uint marketID) external override {
+    function withdrawPlatformInterest(uint marketID) external virtual override {
         address sender = msg.sender;
 
         require(_platformOwner[marketID] == sender, "not-authorized");
@@ -481,7 +481,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param marketID The market from which the generated platform fee is to be withdrawn
      */
-    function withdrawPlatformFee(uint marketID) external override {
+    function withdrawPlatformFee(uint marketID) external virtual override {
         address sender = msg.sender;
     
         require(_platformOwner[marketID] == sender, "not-authorized");
@@ -531,7 +531,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
     /**
      * Withdraws available trading fee
      */
-    function withdrawTradingFee() external override {
+    function withdrawTradingFee() external virtual override {
 
         uint invested = _tradingFeeInvested;
         if(invested == 0) {

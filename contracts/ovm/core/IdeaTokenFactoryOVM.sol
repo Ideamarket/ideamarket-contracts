@@ -50,6 +50,9 @@ contract IdeaTokenFactoryOVM is IIdeaTokenFactory, Initializable, Ownable {
     // The amount of existing markets.
     uint _numMarkets;
 
+    // TODO
+    address _bridge;
+
     event NewMarket(uint id,
                     string name,
                     uint baseCost,
@@ -65,17 +68,23 @@ contract IdeaTokenFactoryOVM is IIdeaTokenFactory, Initializable, Ownable {
     event NewPlatformFee(uint marketID, uint platformFeeRate);
     event NewNameVerifier(uint marketID, address nameVerifier);
 
+    modifier onlyBridge {
+        require(msg.sender == _bridge, "only-bridge");
+        _;
+    }
+
     /**
      * Initializes the contract with all required values
      *
      * @param owner The owner of the contract
      */
-    function initialize(address owner, address ideaTokenExchange, address ideaTokenLogic) external initializer {
-        require(ideaTokenExchange != address(0) && ideaTokenLogic != address(0), "invalid-params");
+    function initialize(address owner, address ideaTokenExchange, address ideaTokenLogic, address bridge) external initializer {
+        require(ideaTokenExchange != address(0) && ideaTokenLogic != address(0) && bridge != address(0), "invalid-params");
 
         setOwnerInternal(owner); // Checks owner to be non-zero
         _ideaTokenExchange = ideaTokenExchange;
         _ideaTokenLogic = ideaTokenLogic;
+        _bridge = bridge;
     }
 
     /**
@@ -145,7 +154,7 @@ contract IdeaTokenFactoryOVM is IIdeaTokenFactory, Initializable, Ownable {
      * @param marketID The ID of the market
      * @param lister The address of the account which off-chain software shall see as lister of this token. Only emitted, not stored
      */
-    function addToken(string calldata tokenName, uint marketID, address lister) external override {
+    function addToken(string calldata tokenName, uint marketID, address lister) external virtual override {
         MarketInfo storage marketInfo = _markets[marketID];
         require(marketInfo.marketDetails.exists, "market-not-exist");
         require(isValidTokenName(tokenName, marketID), "invalid-name");
