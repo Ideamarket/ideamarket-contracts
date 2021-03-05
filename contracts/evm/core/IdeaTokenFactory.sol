@@ -94,7 +94,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      */
     function addMarket(string calldata marketName, address nameVerifier,
                        uint baseCost, uint priceRise, uint hatchTokens,
-                       uint tradingFeeRate, uint platformFeeRate, bool allInterestToPlatform) external override onlyOwner {
+                       uint tradingFeeRate, uint platformFeeRate, bool allInterestToPlatform) external virtual override onlyOwner {
         require(_marketIDs[marketName] == 0, "market-exists");
 
         require(nameVerifier != address(0) &&
@@ -146,7 +146,7 @@ contract IdeaTokenFactory is IIdeaTokenFactory, Initializable, Ownable {
      * @param marketID The ID of the market
      * @param lister The address of the account which off-chain software shall see as lister of this token. Only emitted, not stored
      */
-    function addToken(string calldata tokenName, uint marketID, address lister) external override {
+    function addToken(string calldata tokenName, uint marketID, address lister) external virtual override {
         MarketInfo storage marketInfo = _markets[marketID];
         require(marketInfo.marketDetails.exists, "market-not-exist");
         require(isValidTokenName(tokenName, marketID), "invalid-name");

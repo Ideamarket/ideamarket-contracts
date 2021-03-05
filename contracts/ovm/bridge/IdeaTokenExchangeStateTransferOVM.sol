@@ -43,7 +43,7 @@ contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenEx
         ideaToken.mint(_bridge, supply);
     }
 
-    // --- Disabled function during state transfer ---
+    // --- Disabled functions during state transfer ---
     function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
         ideaToken;
         amount;

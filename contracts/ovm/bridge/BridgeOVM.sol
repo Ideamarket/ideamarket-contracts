@@ -22,9 +22,11 @@ contract BridgeOVM is Ownable, IBridgeOVM {
     IIdeaTokenExchangeStateTransferOVM public _l2Exchange;
     IIdeaTokenFactory public _l2Factory;
 
+    bool public _exchangeStaticVarsSet;
+    mapping(uint => bool) public _exchangePlatformVarsSet;
     mapping(uint => TMPTokenInfo[]) public _tmpTokenInfos;
 
-    modifier onlyL1Exchange() {
+    modifier onlyL1Exchange {
         address L1ORIGIN = msg.sender; // ----------------- TODO! This is not officially documented yet
         require(L1ORIGIN == _l1Exchange, "only-l1-exchange");
         _;
@@ -37,12 +39,14 @@ contract BridgeOVM is Ownable, IBridgeOVM {
     }
 
     function receiveExchangeStaticVars(uint tradingFeeInvested) external override onlyL1Exchange {
-        // TODO: Only allow once?
+        require(!_exchangeStaticVarsSet, "already-set");
+        _exchangeStaticVarsSet = true;
         _l2Exchange.setStaticVars(tradingFeeInvested);
     }
 
     function receiveExchangePlatformVars(uint marketID, uint dai, uint invested, uint platformFeeInvested) external override onlyL1Exchange {
-        // TODO: Only allow once?
+        require(!_exchangePlatformVarsSet[marketID], "already-set");
+        _exchangePlatformVarsSet[marketID] = true;
         _l2Exchange.setPlatformVars(marketID, dai, invested, platformFeeInvested);
     }
 
@@ -52,31 +56,31 @@ contract BridgeOVM is Ownable, IBridgeOVM {
                                       uint[] calldata supplies,
                                       uint[] calldata dais,
                                       uint[] calldata investeds) external override onlyL1Exchange {
+        {
         uint length = tokenIDs.length;
         require(length > 0, "length-0");
         require(length == names.length && length == dais.length && length == investeds.length && length == supplies.length, "length-mismatch");
-        
-        TMPTokenInfo[] storage tmpTokenInfos = _tmpTokenInfos[marketID];
-
-        uint firstID = tokenIDs[0];
-        require(firstID == tmpTokenInfos.length + 1, "storage-id-gap");
-
-        uint prevID = firstID;
-        for(uint i = 1; i < tokenIDs.length; i++) {
-            uint id = tokenIDs[i];
-
-            require(id == prevID + 1, "param-id-gap");
-            tmpTokenInfos.push(TMPTokenInfo({
-                tokenID: tokenIDs[i],
-                name: names[i],
-                supply: supplies[i],
-                dai: dais[i],
-                invested: investeds[i],
-                set: false
-            }));
-
-            prevID = id;
         }
+
+        TMPTokenInfo[] storage tmpTokenInfos = _tmpTokenInfos[marketID];
+        uint prevID = tmpTokenInfos.length;
+
+        for(uint i = 0; i < tokenIDs.length; i++) {
+            require(tokenIDs[i] == prevID + 1, "id-gap");
+            pushTMPTokenInfoInternal(tmpTokenInfos, tokenIDs[i], names[i], supplies[i], dais[i], investeds[i]);
+            prevID = tokenIDs[i];
+        }
+    }
+
+    function pushTMPTokenInfoInternal(TMPTokenInfo[] storage tmpTokenInfos, uint tokenID, string memory name, uint supply, uint dai, uint invested) internal {
+        tmpTokenInfos.push(TMPTokenInfo({
+            tokenID: tokenID,
+            name: name,
+            supply: supply,
+            dai: dai,
+            invested: invested,
+            set: false
+        }));
     }
 
     function setTokenVars(uint marketID, uint index) external override onlyOwner {
@@ -89,8 +93,14 @@ contract BridgeOVM is Ownable, IBridgeOVM {
         }
 
         _l2Factory.addToken(tmpTokenInfo.name, marketID, address(this));
+        _l2Exchange.setTokenVarsAndMint(marketID, tmpTokenInfo.tokenID, tmpTokenInfo.supply, tmpTokenInfo.dai, tmpTokenInfo.invested);
+    }
 
-        // MIIIIIINT
+    function receiveIdeaTokenTransfer(uint marketID, uint tokenID, uint amount, address to) external override onlyL1Exchange {
+        TokenInfo memory tokenInfo = _l2Factory.getTokenInfo(marketID, tokenID);
+        require(tokenInfo.exists, "not-exist");
+        tokenInfo.ideaToken.transfer(to, amount);
+        // TODO: EVENTS?
     }
 
     // --- For deployment ---
