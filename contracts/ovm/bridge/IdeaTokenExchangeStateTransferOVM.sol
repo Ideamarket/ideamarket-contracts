@@ -2,7 +2,8 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
-import "./IIdeaTokenExchangeStateTransferOVM.sol";
+import "./interfaces/IIdeaTokenExchangeStateTransferOVM.sol";
+import "./interfaces/IInterestManagerStateTransferOVM.sol";
 import "../core/IdeaTokenExchangeOVM.sol"; 
 
 contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenExchangeStateTransferOVM {
@@ -12,23 +13,21 @@ contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenEx
     */
 
     function setStaticVars(uint tradingFeeInvested) external override onlyBridge {
-        // TODO: Let interest manager know about tradingFeeInvested
         _tradingFeeInvested = tradingFeeInvested;
+        IInterestManagerStateTransferOVM(address(_interestManager)).addToTotalShares(tradingFeeInvested);
     }
 
     function setPlatformVars(uint marketID, uint dai, uint invested, uint platformFeeInvested) external override onlyBridge {
-        // TODO: Let interest manager know about invested + platformFeeInvested
-
         ExchangeInfo storage exchangeInfo = _platformsExchangeInfo[marketID];
         exchangeInfo.dai = dai;
         exchangeInfo.invested = invested;
 
         _platformFeeInvested[marketID] = platformFeeInvested;
+
+        IInterestManagerStateTransferOVM(address(_interestManager)).addToTotalShares(invested.add(platformFeeInvested));
     }
 
     function setTokenVarsAndMint(uint marketID, uint tokenID, uint supply, uint dai, uint invested) external override onlyBridge {
-        // TODO: Let interest manager know about invested
-
         TokenInfo memory tokenInfo = _ideaTokenFactory.getTokenInfo(marketID, tokenID);
         require(tokenInfo.exists, "not-exist");
 
@@ -40,6 +39,7 @@ contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenEx
             invested: invested
         });
 
+        IInterestManagerStateTransferOVM(address(_interestManager)).addToTotalShares(invested);
         ideaToken.mint(_bridge, supply);
     }
 

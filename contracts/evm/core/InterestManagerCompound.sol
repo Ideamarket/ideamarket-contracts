@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
+// @unsupported: ovm
 pragma solidity 0.6.12;
 
 import "./interfaces/IInterestManager.sol";
-import "../util/Ownable.sol";
-import "../compound/ICToken.sol";
-import "../compound/IComptroller.sol";
+import "../../shared/util/Ownable.sol";
+import "../../shared/compound/ICToken.sol";
+import "../../shared/compound/IComptroller.sol";
+import "../../shared/util/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "../util/Initializable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 /**

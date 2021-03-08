@@ -6,7 +6,7 @@ import "../../shared/util/Ownable.sol";
 import "../../shared/core/interfaces/IIdeaTokenExchange.sol";
 import "../../shared/core/interfaces/IIdeaToken.sol";
 import "../../shared/core/interfaces/IIdeaTokenFactory.sol";
-import "../../shared/core/interfaces/IInterestManager.sol";
+import "./interfaces/IInterestManagerBaseOVM.sol";
 import "../../shared/util/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -62,7 +62,7 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
     // IdeaTokenFactory contract
     IIdeaTokenFactory _ideaTokenFactory;
     // InterestManager contract
-    IInterestManager _interestManager;
+    IInterestManagerBaseOVM _interestManager;
     // Dai contract
     IERC20 _dai;
 
@@ -111,7 +111,7 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
         setOwnerInternal(owner); // Checks owner to be non-zero
         _authorizer = authorizer;
         _tradingFeeRecipient = tradingFeeRecipient;
-        _interestManager = IInterestManager(interestManager);
+        _interestManager = IInterestManagerBaseOVM(interestManager);
         _dai = IERC20(dai);
         _bridge = bridge;
     }
@@ -152,8 +152,8 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
         uint dai;
         {
         uint totalRedeemed = _interestManager.redeem(address(this), amounts.total);
-        uint tradingFeeRedeemed = _interestManager.underlyingToInvestmentToken(amounts.tradingFee);
-        uint platformFeeRedeemed = _interestManager.underlyingToInvestmentToken(amounts.platformFee);
+        uint tradingFeeRedeemed = _interestManager.daiToShares(amounts.tradingFee);
+        uint platformFeeRedeemed = _interestManager.daiToShares(amounts.platformFee);
 
         invested = exchangeInfo.invested.sub(totalRedeemed.add(tradingFeeRedeemed).add(platformFeeRedeemed));
         exchangeInfo.invested = invested;
@@ -301,10 +301,10 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
             exchangeInfo = _tokensExchangeInfo[ideaToken];
         }
 
-        exchangeInfo.invested = exchangeInfo.invested.add(_interestManager.underlyingToInvestmentToken(amounts.raw));
-        uint tradingFeeInvested = _tradingFeeInvested.add(_interestManager.underlyingToInvestmentToken(amounts.tradingFee));
+        exchangeInfo.invested = exchangeInfo.invested.add(_interestManager.daiToShares(amounts.raw));
+        uint tradingFeeInvested = _tradingFeeInvested.add(_interestManager.daiToShares(amounts.tradingFee));
         _tradingFeeInvested = tradingFeeInvested;
-        uint platformFeeInvested = _platformFeeInvested[marketID].add(_interestManager.underlyingToInvestmentToken(amounts.platformFee));
+        uint platformFeeInvested = _platformFeeInvested[marketID].add(_interestManager.daiToShares(amounts.platformFee));
         _platformFeeInvested[marketID] = platformFeeInvested;
         exchangeInfo.dai = exchangeInfo.dai.add(amounts.raw);
     
@@ -430,7 +430,7 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
      */
     function getInterestPayable(address token) public view override returns (uint) {
         ExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
-        return _interestManager.investmentTokenToUnderlying(exchangeInfo.invested).sub(exchangeInfo.dai);
+        return _interestManager.sharesToDai(exchangeInfo.invested).sub(exchangeInfo.dai);
     }
 
     /**
@@ -483,7 +483,7 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
      */
     function getPlatformInterestPayable(uint marketID) public view override returns (uint) {
         ExchangeInfo storage exchangeInfo = _platformsExchangeInfo[marketID];
-        return _interestManager.investmentTokenToUnderlying(exchangeInfo.invested).sub(exchangeInfo.dai);
+        return _interestManager.sharesToDai(exchangeInfo.invested).sub(exchangeInfo.dai);
     }
 
     /**
@@ -516,7 +516,7 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
      * @return The platform fee available to be paid out
      */
     function getPlatformFeePayable(uint marketID) public view override returns (uint) {
-        return _interestManager.investmentTokenToUnderlying(_platformFeeInvested[marketID]);
+        return _interestManager.sharesToDai(_platformFeeInvested[marketID]);
     }
 
     /**
@@ -551,7 +551,7 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
         _interestManager.accrueInterest();
 
         _tradingFeeInvested = 0;
-        uint redeem = _interestManager.investmentTokenToUnderlying(invested);
+        uint redeem = _interestManager.sharesToDai(invested);
         _interestManager.redeem(_tradingFeeRecipient, redeem);
 
         emit TradingFeeRedeemed(redeem);
@@ -563,7 +563,7 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
      * @return The trading fee available to be paid out
      */
     function getTradingFeePayable() public view override returns (uint) {
-        return _interestManager.investmentTokenToUnderlying(_tradingFeeInvested);
+        return _interestManager.sharesToDai(_tradingFeeInvested);
     }
 
     /**

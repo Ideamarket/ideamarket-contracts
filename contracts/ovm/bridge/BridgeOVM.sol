@@ -2,7 +2,7 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
-import "./IIdeaTokenExchangeStateTransferOVM.sol";
+import "./interfaces/IIdeaTokenExchangeStateTransferOVM.sol";
 import "../../shared/core/interfaces/IIdeaTokenFactory.sol";
 import "../../shared/bridge/IBridgeOVM.sol";
 import "../../shared/util/Ownable.sol";
