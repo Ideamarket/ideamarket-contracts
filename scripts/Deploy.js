@@ -428,7 +428,7 @@ async function main() {
 			{ gasPrice: deploymentParams.gasPrice }
 		)
 		console.log('')
-	}*/
+	}
 
 	let youtubeNameVerifierAddress
 	if (STAGE <= 16) {
@@ -464,7 +464,7 @@ async function main() {
 			{ gasPrice: deploymentParams.gasPrice }
 		)
 		console.log('')
-	}
+	}*/
 
 	if (STAGE <= 18) {
 		console.log('18. Set IdeaTokenFactory owner')
