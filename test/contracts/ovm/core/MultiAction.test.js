@@ -357,7 +357,7 @@ describe('ovm/core/MultiAction', () => {
 			ideaTokenFallbackAmount,
 			requiredInputForFallbackCost.add(BigNumber.from('1000')),
 			BigNumber.from('0'),
-			userAccount.address,
+			userAccount.address
 		)
 
 		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
@@ -378,7 +378,7 @@ describe('ovm/core/MultiAction', () => {
 			ideaTokenAmount,
 			requiredInputForCost,
 			YEAR_DURATION,
-			userAccount.address,
+			userAccount.address
 		)
 
 		const tokenBalanceAfterBuy = await ideaToken.balanceOf(userAccount.address)
@@ -515,7 +515,7 @@ describe('ovm/core/MultiAction', () => {
 			ideaTokenAmount,
 			requiredInputForCost,
 			BigNumber.from('0'),
-			userAccount.address,
+			userAccount.address
 		)
 
 		const id = await ideaTokenFactory.getTokenIDByName(newTokenName, marketID)
@@ -557,7 +557,7 @@ describe('ovm/core/MultiAction', () => {
 			ideaTokenFallbackAmount,
 			requiredInputForFallbackCost,
 			BigNumber.from('0'),
-			userAccount.address,
+			userAccount.address
 		)
 
 		const id = await ideaTokenFactory.getTokenIDByName(newTokenName, marketID)
@@ -590,7 +590,7 @@ describe('ovm/core/MultiAction', () => {
 			ideaTokenAmount,
 			requiredInputForCost,
 			YEAR_DURATION,
-			userAccount.address,
+			userAccount.address
 		)
 
 		const id = await ideaTokenFactory.getTokenIDByName(newTokenName, marketID)

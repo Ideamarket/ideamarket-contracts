@@ -1,8 +1,8 @@
 const { expect } = require('chai')
 const { BigNumber } = require('ethers')
-const { l2ethers: ethers } = require('hardhat')
+const { ethers } = require('hardhat')
 
-describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
+describe('core/IdeaTokenExchange', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
 	let TestCDai
@@ -32,7 +32,8 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 	let platformFeeReceiverAccount
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
 	const oneAddress = '0x0000000000000000000000000000000000000001'
-	const someAddress = '0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5' // random addr from etherscan
+	const twoAddress = '0x0000000000000000000000000000000000000002'
+	const threeAddress = '0x0000000000000000000000000000000000000003'
 
 	let domainNoSubdomainNameVerifier
 	let dai
@@ -62,15 +63,13 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 		TestCDai = await ethers.getContractFactory('TestCDai')
 		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
 		TestComptroller = await ethers.getContractFactory('TestComptroller')
-		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactoryOVM')
-		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchangeStateTransferOVM')
+		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactory')
+		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchangeStateTransfer')
 		IdeaToken = await ethers.getContractFactory('IdeaToken')
 	})
 
 	beforeEach(async () => {
-		console.log('1')
 		domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.deploy()
-		console.log('2')
 		await domainNoSubdomainNameVerifier.deployed()
 
 		dai = await TestERC20.deploy('DAI', 'DAI')
@@ -113,9 +112,12 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 				authorizerAccount.address,
 				tradingFeeAccount.address,
 				interestManagerCompound.address,
-				dai.address,
-				adminAccount.address
+				dai.address
 			)
+		await ideaTokenExchange
+			.connect(adminAccount)
+			.initializeStateTransfer(adminAccount.address, oneAddress, oneAddress)
+
 		await ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address)
 
 		await ideaTokenFactory
@@ -144,15 +146,89 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 		)
 	})
 
+	async function deployNewInstance() {
+		const exchange = await IdeaTokenExchange.deploy()
+		await exchange.deployed()
+		await exchange
+			.connect(adminAccount)
+			.initialize(
+				adminAccount.address,
+				authorizerAccount.address,
+				tradingFeeAccount.address,
+				interestManagerCompound.address,
+				dai.address
+			)
+		return exchange
+	}
+
+	it('admin is owner', async () => {
+		expect(adminAccount.address).to.be.equal(await ideaTokenExchange.getOwner())
+	})
+
+	it('has correct state vars', async () => {
+		const exchange = await deployNewInstance()
+		await exchange.connect(adminAccount).initializeStateTransfer(adminAccount.address, oneAddress, twoAddress)
+		expect(adminAccount.address).to.be.equal(await exchange._transferManager())
+		expect(oneAddress).to.be.equal(await exchange._l2Bridge())
+		expect(twoAddress).to.be.equal(await exchange._crossDomainMessenger())
+		expect(false).to.be.equal(await exchange._tokenTransferEnabled())
+	})
+
+	it('fail init twice', async () => {
+		await expect(ideaTokenExchange.initializeStateTransfer(oneAddress, oneAddress, oneAddress)).to.be.revertedWith(
+			'already-init'
+		)
+	})
+
+	it('fail user calls state transfer methods', async () => {
+		await expect(ideaTokenExchange.transferStaticVars()).to.be.revertedWith('only-transfer-manager')
+
+		await expect(ideaTokenExchange.transferPlatformVars(tenPow18)).to.be.revertedWith('only-transfer-manager')
+
+		await expect(ideaTokenExchange.transferTokenVars(tenPow18, [])).to.be.revertedWith('only-transfer-manager')
+
+		await expect(ideaTokenExchange.setTokenTransferEnabled()).to.be.revertedWith('only-transfer-manager')
+	})
+
+	it('fail user calls token transfer before enabled', async () => {
+		await expect(ideaTokenExchange.transferIdeaTokens(tenPow18, tenPow18, oneAddress)).to.be.revertedWith(
+			'not-enabled'
+		)
+	})
+
+	it('fail init invalid args', async () => {
+		const exchange = await deployNewInstance()
+
+		await expect(exchange.initializeStateTransfer(zeroAddress, oneAddress, oneAddress)).to.be.revertedWith(
+			'invalid-args'
+		)
+
+		await expect(exchange.initializeStateTransfer(oneAddress, zeroAddress, oneAddress)).to.be.revertedWith(
+			'invalid-args'
+		)
+
+		await expect(exchange.initializeStateTransfer(oneAddress, oneAddress, zeroAddress)).to.be.revertedWith(
+			'invalid-args'
+		)
+	})
+
 	it('disabled functions revert', async () => {
 		await expect(
-			ideaTokenExchange.sellTokens(
-				oneAddress,
-				BigNumber.from('1'),
-				BigNumber.from('1'),
-				BigNumber.from('1'),
-				oneAddress
-			)
+			ideaTokenExchange.sellTokens(zeroAddress, tenPow18, tenPow18, userAccount.address)
 		).to.be.revertedWith('state-transfer')
+
+		await expect(
+			ideaTokenExchange.buyTokens(zeroAddress, tenPow18, tenPow18, tenPow18, userAccount.address)
+		).to.be.revertedWith('state-transfer')
+
+		await expect(ideaTokenExchange.withdrawTokenInterest(zeroAddress)).to.be.revertedWith('state-transfer')
+
+		await expect(ideaTokenExchange.withdrawPlatformInterest(tenPow18)).to.be.revertedWith('state-transfer')
+
+		await expect(ideaTokenExchange.withdrawPlatformFee(tenPow18)).to.be.revertedWith('state-transfer')
+
+		await expect(ideaTokenExchange.withdrawTradingFee()).to.be.revertedWith('state-transfer')
+
+		await expect(ideaTokenExchange.setTokenOwner(oneAddress, oneAddress)).to.be.revertedWith('state-transfer')
 	})
 })

@@ -3,7 +3,7 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
-import "./IIdeaTokenExchangeStateTransfer.sol";
+import "./interfaces/IIdeaTokenExchangeStateTransfer.sol";
 import "./ICrossDomainMessenger.sol";
 import "../core/IdeaTokenExchange.sol"; 
 import "../../shared/bridge/IBridgeOVM.sol";
@@ -11,17 +11,21 @@ import "../../shared/bridge/IBridgeOVM.sol";
 contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchangeStateTransfer {
 
     /*
-        TODO: 
-            - Events
             - Interface
     */
 
     uint __gapStateTransfer__;
 
-    address _transferManager;
-    address _l2Bridge;
-    ICrossDomainMessenger _crossDomainMessenger;
-    bool _tokenTransferEnabled;
+    address public _transferManager;
+    address public _l2Bridge;
+    ICrossDomainMessenger public _crossDomainMessenger;
+    bool public _tokenTransferEnabled;
+
+    event StaticVarsTransferred();
+    event PlatformVarsTransferred(uint marketID);
+    event TokenVarsTransferred(uint marketID, uint tokenID);
+    event TokensTransferred(uint marketID, uint tokenID, address user, uint amount, address recipient);
+    event TokenTransferEnabled();
 
     modifier onlyTransferManager {
         require(msg.sender == _transferManager, "only-transfer-manager");
@@ -41,6 +45,8 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
         bytes4 selector = IBridgeOVM(_l2Bridge).receiveExchangeStaticVars.selector;
         bytes memory cdata = abi.encodeWithSelector(selector, _tradingFeeInvested);
         _crossDomainMessenger.sendMessage(_l2Bridge, cdata, uint32(-1) /* TODO: Gas limit */);
+
+        emit StaticVarsTransferred();
     }
 
     function transferPlatformVars(uint marketID) external override onlyTransferManager {
@@ -52,6 +58,8 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
         bytes4 selector = IBridgeOVM(_l2Bridge).receiveExchangePlatformVars.selector;
         bytes memory cdata = abi.encodeWithSelector(selector, marketID, exchangeInfo.dai, exchangeInfo.invested, _platformFeeInvested[marketID]);
         _crossDomainMessenger.sendMessage(_l2Bridge, cdata, uint32(-1) /* TODO: Gas limit */);
+
+        emit PlatformVarsTransferred(marketID);
     }
 
     function transferTokenVars(uint marketID, uint[] calldata tokenIDs) external override onlyTransferManager {
@@ -81,6 +89,8 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
             supplies[i] = ideaToken.totalSupply();
             dais[i] = exchangeInfo.dai;
             investeds[i] = exchangeInfo.invested;
+
+            emit TokenVarsTransferred(marketID, tokenID);
         }
 
         bytes4 selector = IBridgeOVM(_l2Bridge).receiveExchangeTokenVars.selector;
@@ -90,7 +100,8 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
 
     function transferIdeaTokens(uint marketID, uint tokenID, address l2Recipient) override external {
         
-        require(_tokenTransferEnabled, "not-complete");
+        require(_tokenTransferEnabled, "not-enabled");
+        require(l2Recipient != address(0), "zero-addr");
 
         TokenInfo memory tokenInfo = _ideaTokenFactory.getTokenInfo(marketID, tokenID);
         require(tokenInfo.exists, "not-exists");
@@ -106,10 +117,14 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
         bytes4 selector = IBridgeOVM(_l2Bridge).receiveIdeaTokenTransfer.selector;
         bytes memory cdata = abi.encodeWithSelector(selector, marketID, tokenID, balance, l2Recipient);
         _crossDomainMessenger.sendMessage(_l2Bridge, cdata, uint32(-1) /* TODO: Gas limit */);
+
+        emit TokensTransferred(marketID, tokenID, sender, balance, l2Recipient);
     }
 
     function setTokenTransferEnabled() external override onlyTransferManager {
         _tokenTransferEnabled = true;
+
+        emit TokenTransferEnabled();
     } 
 
     // --- Disabled function during state transfer ---

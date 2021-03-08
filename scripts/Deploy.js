@@ -157,7 +157,7 @@ async function main() {
 			deploymentParams = allDeploymentParams.rinkeby
 			externalContractAdresses = allExternalContractAddresses.rinkeby
 		}
-	} else if(networkName === 'homestead') {
+	} else if (networkName === 'homestead') {
 		networkName = 'mainnet'
 
 		console.log('Using Mainnet')
@@ -438,7 +438,11 @@ async function main() {
 
 		youtubeNameVerifierAddress = youtubeNameVerifier.address
 		saveDeployedAddress(networkName, 'youtubeNameVerifier', youtubeNameVerifier.address)
-		saveDeployedABI(networkName, 'youtubeNameVerifier', artifacts.readArtifactSync('YoutubeChannelNameVerifier').abi)
+		saveDeployedABI(
+			networkName,
+			'youtubeNameVerifier',
+			artifacts.readArtifactSync('YoutubeChannelNameVerifier').abi
+		)
 		console.log('')
 	} else {
 		youtubeNameVerifierAddress = loadDeployedAddress(networkName, 'youtubeNameVerifier')
@@ -569,8 +573,6 @@ async function main() {
 		saveDeployedABI(networkName, 'changeLogicSpell', artifacts.readArtifactSync('ChangeLogicSpell').abi)
 		console.log('')
 	}
-
-	
 }
 
 async function deployProxyContract(name, admin, ...params) {

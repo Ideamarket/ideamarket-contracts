@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 
 import "../core/IdeaTokenFactory.sol"; 
 
-contract IdeaTokenExchangeStateTransfer is IdeaTokenFactory {
+contract IdeaTokenFactoryStateTransfer is IdeaTokenFactory {
     function addMarket(string calldata marketName, address nameVerifier,
                        uint baseCost, uint priceRise, uint hatchTokens,
                        uint tradingFeeRate, uint platformFeeRate, bool allInterestToPlatform) external override onlyOwner {
