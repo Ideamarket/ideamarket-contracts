@@ -2,6 +2,10 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
+/**
+ * @title IBridgeOVM
+ * @author Alexander Schlindwein
+ */
 interface IBridgeOVM {
     function setL2Exchange(address l2Exchange) external;
     function setL2Factory(address l2Exchange) external;

@@ -3,6 +3,10 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
+/**
+ * @title IIdeaTokenExchangeStateTransfer
+ * @author Alexander Schlindwein
+ */
 interface IIdeaTokenExchangeStateTransfer {
     function initializeStateTransfer(address transferManager, address l2Bridge, address crossDomainMessenger) external;
     function transferStaticVars() external;

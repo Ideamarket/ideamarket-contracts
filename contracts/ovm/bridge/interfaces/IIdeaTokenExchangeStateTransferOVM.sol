@@ -2,6 +2,10 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
+/**
+ * @title IIdeaTokenExchangeStateTransferOVM
+ * @author Alexander Schlindwein
+ */
 interface IIdeaTokenExchangeStateTransferOVM {
     function setStaticVars(uint tradingFeeInvested) external;
     function setPlatformVars(uint marketID, uint dai, uint invested, uint platformFeeInvested) external;

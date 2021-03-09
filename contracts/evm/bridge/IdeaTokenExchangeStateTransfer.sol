@@ -4,7 +4,7 @@ pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 import "./interfaces/IIdeaTokenExchangeStateTransfer.sol";
-import "./ICrossDomainMessenger.sol";
+import "./interfaces/ICrossDomainMessenger.sol";
 import "../core/IdeaTokenExchange.sol"; 
 import "../../shared/bridge/IBridgeOVM.sol";
 
