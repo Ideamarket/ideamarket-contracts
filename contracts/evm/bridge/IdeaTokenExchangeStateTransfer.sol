@@ -8,17 +8,27 @@ import "./ICrossDomainMessenger.sol";
 import "../core/IdeaTokenExchange.sol"; 
 import "../../shared/bridge/IBridgeOVM.sol";
 
+/**
+ * @title IdeaTokenExchangeStateTransfer
+ * @author Alexander Schlindwein
+ *
+ * Replaces the L1 IdeaTokenExchange logic for the state transfer to Optimism L2.
+ * 
+ * This implementation will disable all state-altering methods and adds state transfer
+ * methods which can be called by a transfer manager EOA. State transfer methods will call 
+ * Optimism's CrossDomainMessenger contract to execute a transaction on L2.
+ */
 contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchangeStateTransfer {
-
-    /*
-            - Interface
-    */
 
     uint __gapStateTransfer__;
 
+    // EOA which is allowed to manage the state transfer
     address public _transferManager;
+    // Address of the BridgeOVM contract on L2
     address public _l2Bridge;
+    // Address of Optimism's CrossDomainMessenger contract on L1
     ICrossDomainMessenger public _crossDomainMessenger;
+    // Switch to enable token transfers once the initial state transfer is complete
     bool public _tokenTransferEnabled;
 
     event StaticVarsTransferred();
@@ -32,6 +42,13 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
         _;
     }
 
+    /**
+     * Initializes the contract's variables.
+     *
+     * @param transferManager EOA which is allowed to manage the state transfer
+     * @param l2Bridge Address of the BridgeOVM contract on L2
+     * @param crossDomainMessenger Address of Optimism's CrossDomainMessenger contract on L1
+     */
     function initializeStateTransfer(address transferManager, address l2Bridge, address crossDomainMessenger) external override {
         require(_transferManager == address(0), "already-init");
         require(transferManager != address(0) && l2Bridge != address(0) &&  crossDomainMessenger != address(0), "invalid-args");
@@ -41,6 +58,9 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
         _crossDomainMessenger = ICrossDomainMessenger(crossDomainMessenger);
     }
 
+    /**
+     * Transfers _tradingFeeInvested to L2.
+     */
     function transferStaticVars() external override onlyTransferManager {
         bytes4 selector = IBridgeOVM(_l2Bridge).receiveExchangeStaticVars.selector;
         bytes memory cdata = abi.encodeWithSelector(selector, _tradingFeeInvested);
@@ -49,6 +69,11 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
         emit StaticVarsTransferred();
     }
 
+    /**
+     * Transfers a market's state to L2.
+     *
+     * @param marketID The ID of the market
+     */
     function transferPlatformVars(uint marketID) external override onlyTransferManager {
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(marketID);
         require(marketDetails.exists, "not-exist");
@@ -62,6 +87,12 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
         emit PlatformVarsTransferred(marketID);
     }
 
+    /**
+     * Transfers token's state to L2.
+     *
+     * @param marketID The ID of the tokens' market
+     * @param tokenIDs The IDs of the tokens
+     */
     function transferTokenVars(uint marketID, uint[] calldata tokenIDs) external override onlyTransferManager {
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByID(marketID);
         require(marketDetails.exists, "market-not-exist");
@@ -98,6 +129,13 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
         _crossDomainMessenger.sendMessage(_l2Bridge, cdata, uint32(-1) /* TODO: Gas limit */);
     }
 
+    /**
+     * Transfers an user's IdeaTokens to L2.
+     *
+     * @param marketID The ID of the token's market
+     * @param tokenID The ID of the token
+     * @param l2Recipient The address of the recipient on L2
+     */
     function transferIdeaTokens(uint marketID, uint tokenID, address l2Recipient) override external {
         
         require(_tokenTransferEnabled, "not-enabled");
@@ -121,13 +159,16 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
         emit TokensTransferred(marketID, tokenID, sender, balance, l2Recipient);
     }
 
+    /**
+     * Enables transferIdeaTokens to be called.
+     */
     function setTokenTransferEnabled() external override onlyTransferManager {
         _tokenTransferEnabled = true;
 
         emit TokenTransferEnabled();
     } 
 
-    // --- Disabled function during state transfer ---
+    // --- Disabled functions ---
     function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
         ideaToken;
         amount;
