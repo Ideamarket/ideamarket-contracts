@@ -4,8 +4,21 @@ pragma experimental ABIEncoderV2;
 
 import "../core/IdeaTokenFactoryOVM.sol";
 
+/**
+ * @title IdeaTokenFactoryStateTransferOVM
+ * @author Alexander Schlindwein
+ *
+ * Replaces the L2 IdeaTokenFactory logic for the state transfer from L1.
+ */
 contract IdeaTokenFactoryStateTransferOVM is IdeaTokenFactoryOVM {
     
+    /**
+     * Adds a check to the addToken function which only allows it to be called by the bridge.
+     *
+     * @param tokenName The name of the token to be listed
+     * @param marketID The market's ID
+     * @param lister The address which off-chain applications should see as lister of this token
+     */
     function addToken(string calldata tokenName, uint marketID, address lister) external override onlyBridge {
         MarketInfo storage marketInfo = _markets[marketID];
         require(marketInfo.marketDetails.exists, "market-not-exist");

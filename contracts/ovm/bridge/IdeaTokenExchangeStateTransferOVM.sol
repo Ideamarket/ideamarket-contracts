@@ -6,17 +6,39 @@ import "./interfaces/IIdeaTokenExchangeStateTransferOVM.sol";
 import "./interfaces/IInterestManagerStateTransferOVM.sol";
 import "../core/IdeaTokenExchangeOVM.sol"; 
 
+/**
+ * @title IdeaTokenExchangeStateTransferOVM
+ * @author Alexander Schlindwein
+ *
+ * Replaces the L2 IdeaTokenExchange logic for the state transfer from L1.
+ * 
+ * This implementation will disable all state-altering methods and adds state transfer
+ * methods which can be called by the bridge contract.
+ */
 contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenExchangeStateTransferOVM {
 
     /*
         TODO: EVENTS
     */
 
+    /**
+     * Sets _tradingFeeInvested. Can only be called by the bridge.
+     *
+     * @param tradingFeeInvested The _tradingFeeInvested from L1
+     */
     function setStaticVars(uint tradingFeeInvested) external override onlyBridge {
         _tradingFeeInvested = tradingFeeInvested;
         IInterestManagerStateTransferOVM(address(_interestManager)).addToTotalShares(tradingFeeInvested);
     }
 
+    /**
+     * Sets a market's state. Can only be called by the bridge.
+     *
+     * @param marketID The market's ID
+     * @param dai The market's dai
+     * @param invested The market's invested
+     * @param platformFeeInvested The market's platformFeeInvested
+     */
     function setPlatformVars(uint marketID, uint dai, uint invested, uint platformFeeInvested) external override onlyBridge {
         ExchangeInfo storage exchangeInfo = _platformsExchangeInfo[marketID];
         exchangeInfo.dai = dai;
@@ -27,6 +49,15 @@ contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenEx
         IInterestManagerStateTransferOVM(address(_interestManager)).addToTotalShares(invested.add(platformFeeInvested));
     }
 
+    /**
+     * Sets a tokens state and mints the existing supply to the bridge. Can only be called by the bridge.
+     *
+     * @param marketID The market's ID
+     * @param tokenID The token's ID
+     * @param supply The token's supply
+     * @param dai The token's dai
+     * @param invested The token's invested
+     */
     function setTokenVarsAndMint(uint marketID, uint tokenID, uint supply, uint dai, uint invested) external override onlyBridge {
         TokenInfo memory tokenInfo = _ideaTokenFactory.getTokenInfo(marketID, tokenID);
         require(tokenInfo.exists, "not-exist");
@@ -40,7 +71,7 @@ contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenEx
         });
 
         IInterestManagerStateTransferOVM(address(_interestManager)).addToTotalShares(invested);
-        ideaToken.mint(_bridge, supply);
+        ideaToken.mint(msg.sender, supply);
     }
 
     // --- Disabled functions during state transfer ---
