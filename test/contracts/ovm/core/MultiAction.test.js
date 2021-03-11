@@ -1,13 +1,11 @@
 const { expect } = require('chai')
 const { BigNumber } = require('ethers')
-const { ethers } = require('hardhat')
+const { l2ethers: ethers } = require('hardhat')
 
 describe('ovm/core/MultiAction', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
-	let TestCDai
-	let InterestManagerCompound
-	let TestComptroller
+	let InterestManagerStateTransferOVM
 	let IdeaTokenFactory
 	let IdeaTokenExchange
 	let IdeaToken
@@ -39,12 +37,9 @@ describe('ovm/core/MultiAction', () => {
 
 	let domainNoSubdomainNameVerifier
 	let dai
-	let comp
-	let comptroller
 	let someToken
 	let someOtherToken
-	let cDai
-	let interestManagerCompound
+	let interestManagerStateTransfer
 	let ideaTokenLogic
 	let ideaTokenFactory
 	let ideaTokenExchange
@@ -66,9 +61,7 @@ describe('ovm/core/MultiAction', () => {
 
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
-		TestCDai = await ethers.getContractFactory('TestCDai')
-		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
-		TestComptroller = await ethers.getContractFactory('TestComptroller')
+		InterestManagerStateTransferOVM = await ethers.getContractFactory('InterestManagerStateTransferOVM')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactoryOVM')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchangeOVM')
 		IdeaToken = await ethers.getContractFactory('IdeaToken')
@@ -87,24 +80,14 @@ describe('ovm/core/MultiAction', () => {
 		dai = await TestERC20.deploy('DAI', 'DAI')
 		await dai.deployed()
 
-		comp = await TestERC20.deploy('COMP', 'COMP')
-		await comp.deployed()
-
-		comptroller = await TestComptroller.deploy()
-		await comptroller.deployed()
-
 		someToken = await TestERC20.deploy('SOME', 'SOME')
 		await someToken.deployed()
 
 		someOtherToken = await TestERC20.deploy('SOMEOTHER', 'SOMEOTHER')
 		await someOtherToken.deployed()
 
-		cDai = await TestCDai.deploy(dai.address, comp.address, comptroller.address)
-		await cDai.deployed()
-		await cDai.setExchangeRate(tenPow18)
-
-		interestManagerCompound = await InterestManagerCompound.deploy()
-		await interestManagerCompound.deployed()
+		interestManagerStateTransfer = await InterestManagerStateTransferOVM.deploy()
+		await interestManagerStateTransfer.deployed()
 
 		ideaTokenLogic = await IdeaToken.deploy()
 		await ideaTokenLogic.deployed()
@@ -127,8 +110,8 @@ describe('ovm/core/MultiAction', () => {
 		uniswapFactory = await TestUniswapV2Factory.deploy(zeroAddress)
 		await uniswapFactory.deployed()
 
-		router = await TestUniswapV2Router02.deploy(uniswapFactory.address, owETH.address)
-		await router.deployed()
+		/*router = await TestUniswapV2Router02.deploy(uniswapFactory.address, owETH.address)
+		await router.deployed()*/
 
 		ideaTokenVault = await IdeaTokenVault.deploy()
 		await ideaTokenVault.deployed()
@@ -138,17 +121,17 @@ describe('ovm/core/MultiAction', () => {
 			ideaTokenFactory.address,
 			ideaTokenVault.address,
 			dai.address,
-			router.address
+			oneAddress //router.address
 		)
 		await multiAction.deployed()
 
-		await interestManagerCompound
+		await interestManagerStateTransfer
 			.connect(adminAccount)
-			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, oneAddress)
+			.initializeStateTransfer(ideaTokenExchange.address, dai.address)
 
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address)
+			.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address, oneAddress)
 
 		await ideaTokenExchange
 			.connect(adminAccount)
@@ -156,8 +139,9 @@ describe('ovm/core/MultiAction', () => {
 				adminAccount.address,
 				adminAccount.address,
 				tradingFeeAccount.address,
-				interestManagerCompound.address,
-				dai.address
+				interestManagerStateTransfer.address,
+				dai.address,
+				oneAddress
 			)
 		await ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address)
 
@@ -190,7 +174,7 @@ describe('ovm/core/MultiAction', () => {
 
 		// Setup Uniswap pools
 		// ETH-DAI: 1 ETH, 200 DAI
-		const ethAmount = tenPow18
+		/*const ethAmount = tenPow18
 		let daiAmount = tenPow18.mul(BigNumber.from('200'))
 
 		await owETH.connect(adminAccount).mint(adminAccount.address, ethAmount)
@@ -254,9 +238,10 @@ describe('ovm/core/MultiAction', () => {
 				adminAccount.address,
 				BigNumber.from('9999999999999999999')
 			)
+			*/
 	})
 
-	it('can buy/sell tokens owETH', async () => {
+	/*it('can buy/sell tokens owETH', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
 		const requiredInputForCost = (await router.getAmountsIn(buyCost, [owETH.address, dai.address]))[0]
@@ -364,7 +349,7 @@ describe('ovm/core/MultiAction', () => {
 		expect(tokenBalanceAfterBuy.eq(ideaTokenFallbackAmount)).to.be.true
 	})
 
-	it('can buy and lock ETH', async () => {
+	/*it('can buy and lock ETH', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
 		const requiredInputForCost = (await router.getAmountsIn(buyCost, [owETH.address, dai.address]))[0]
@@ -495,7 +480,7 @@ describe('ovm/core/MultiAction', () => {
 		).to.be.true
 	})
 
-	it('can convert add and buy', async () => {
+	/*it('can convert add and buy', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(marketID)
 		const buyCost = (
@@ -661,5 +646,5 @@ describe('ovm/core/MultiAction', () => {
 				userAccount.address
 			)
 		).to.be.revertedWith('slippage')
-	})
+	})*/
 })

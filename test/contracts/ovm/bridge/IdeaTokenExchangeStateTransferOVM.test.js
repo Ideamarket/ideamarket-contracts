@@ -6,7 +6,7 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
 	let TestCDai
-	let InterestManagerCompound
+	let InterestManagerStateTransferOVM
 	let TestComptroller
 	let IdeaTokenFactory
 	let IdeaTokenExchange
@@ -38,7 +38,7 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 	let dai
 	let comp
 	let cDai
-	let interestManagerCompound
+	let interestManager
 	let comptroller
 	let ideaTokenFactory
 	let ideaTokenLogic
@@ -60,7 +60,7 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
 		TestCDai = await ethers.getContractFactory('TestCDai')
-		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
+		InterestManagerStateTransferOVM = await ethers.getContractFactory('InterestManagerStateTransferOVM')
 		TestComptroller = await ethers.getContractFactory('TestComptroller')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactoryOVM')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchangeStateTransferOVM')
@@ -68,9 +68,7 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 	})
 
 	beforeEach(async () => {
-		console.log('1')
 		domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.deploy()
-		console.log('2')
 		await domainNoSubdomainNameVerifier.deployed()
 
 		dai = await TestERC20.deploy('DAI', 'DAI')
@@ -86,8 +84,8 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 		await cDai.deployed()
 		await cDai.setExchangeRate(tenPow18)
 
-		interestManagerCompound = await InterestManagerCompound.deploy()
-		await interestManagerCompound.deployed()
+		interestManager = await InterestManagerStateTransferOVM.deploy()
+		await interestManager.deployed()
 
 		ideaTokenLogic = await IdeaToken.deploy()
 		await ideaTokenLogic.deployed()
@@ -98,13 +96,13 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 		ideaTokenExchange = await IdeaTokenExchange.deploy()
 		await ideaTokenExchange.deployed()
 
-		await interestManagerCompound
+		await interestManager
 			.connect(adminAccount)
-			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, oneAddress)
+			.initializeStateTransfer(adminAccount.address, oneAddress)
 
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address)
+			.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address, oneAddress)
 
 		await ideaTokenExchange
 			.connect(adminAccount)
@@ -112,7 +110,7 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 				adminAccount.address,
 				authorizerAccount.address,
 				tradingFeeAccount.address,
-				interestManagerCompound.address,
+				interestManager.address,
 				dai.address,
 				adminAccount.address
 			)
@@ -148,7 +146,6 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 		await expect(
 			ideaTokenExchange.sellTokens(
 				oneAddress,
-				BigNumber.from('1'),
 				BigNumber.from('1'),
 				BigNumber.from('1'),
 				oneAddress

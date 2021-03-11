@@ -38,7 +38,7 @@ describe('ovm/spells/SetPlatformOwnerSpell', () => {
 
 		await ideaTokenExchange
 			.connect(adminAccount)
-			.initialize(dsPauseProxyAddress, oneAddress, oneAddress, oneAddress, oneAddress)
+			.initialize(dsPauseProxyAddress, oneAddress, oneAddress, oneAddress, oneAddress, oneAddress)
 	})
 
 	it('can set new platform owner', async () => {

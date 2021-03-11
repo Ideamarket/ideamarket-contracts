@@ -286,13 +286,11 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
             require(amounts.total <= cost, "slippage");
         }
 
-        
         require(_dai.allowance(msg.sender, address(this)) >= amounts.total, "insufficient-allowance");
         require(_dai.transferFrom(msg.sender, address(_interestManager), amounts.total), "dai-transfer");
-        
+
         _interestManager.accrueInterest();
         _interestManager.invest(amounts.total);
-
 
         ExchangeInfo storage exchangeInfo;
         if(marketDetails.allInterestToPlatform) {
@@ -307,7 +305,7 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
         uint platformFeeInvested = _platformFeeInvested[marketID].add(_interestManager.daiToShares(amounts.platformFee));
         _platformFeeInvested[marketID] = platformFeeInvested;
         exchangeInfo.dai = exchangeInfo.dai.add(amounts.raw);
-    
+
         emit InvestedState(marketID, ideaToken, exchangeInfo.dai, exchangeInfo.invested, tradingFeeInvested, platformFeeInvested, amounts.total);
         IIdeaToken(ideaToken).mint(recipient, actualAmount);
     }

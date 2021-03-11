@@ -38,7 +38,7 @@ describe('ovm/spells/SetTokenOwnerSpell', () => {
 
 		await ideaTokenExchange
 			.connect(adminAccount)
-			.initialize(dsPauseProxyAddress, oneAddress, oneAddress, oneAddress, oneAddress)
+			.initialize(dsPauseProxyAddress, oneAddress, oneAddress, oneAddress, oneAddress, oneAddress)
 	})
 
 	it('can set new token owner', async () => {

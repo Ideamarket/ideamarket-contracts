@@ -43,7 +43,7 @@ describe('ovm/spells/SetTradingFeeSpell', () => {
 	it('can set trading fee', async () => {
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
-		await factory.initialize(adminAccount.address, oneAddress, oneAddress)
+		await factory.initialize(adminAccount.address, oneAddress, oneAddress, oneAddress)
 
 		await factory.addMarket(
 			marketName,

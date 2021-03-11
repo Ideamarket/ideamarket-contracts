@@ -36,18 +36,20 @@ contract InterestManagerStateTransferOVM is InterestManagerBaseOVM, IInterestMan
     }
 
     /**
-     * Invest an amount of Dai. Does nothing for now.
+     * Invest an amount of Dai. Does nothing for now, just holds the Dai.
      *
      * @param amount The amount of Dai to invest
      */
     function investInternal(uint amount) internal override {}
 
     /**
-     * Redeems an amount of Dai. Does nothing for now.
+     * Redeems an amount of Dai.
      *
      * @param amount The amount of Dai to redeem
      */
-    function redeemInternal(address recipient, uint amount) internal override {}
+    function redeemInternal(address recipient, uint amount) internal override {
+        _dai.transfer(recipient, amount);
+    }
 
     /**
      * Accrues interest. Does nothing for now.

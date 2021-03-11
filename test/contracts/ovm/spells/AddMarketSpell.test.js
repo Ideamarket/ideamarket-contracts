@@ -45,7 +45,7 @@ describe('ovm/spells/AddMarketSpell', () => {
 		const tag = await dsPause.soul(spell.address)
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
-		await factory.initialize(dsPauseProxyAddress, oneAddress, oneAddress)
+		await factory.initialize(dsPauseProxyAddress, oneAddress, oneAddress, oneAddress)
 
 		const fax = spell.interface.encodeFunctionData('execute', [
 			factory.address,

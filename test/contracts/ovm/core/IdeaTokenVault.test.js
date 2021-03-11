@@ -7,7 +7,7 @@ describe('ovm/core/IdeaTokenVault', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
 	let TestCDai
-	let InterestManagerCompound
+	let InterestManagerStateTransferOVM
 	let TestComptroller
 	let IdeaTokenFactory
 	let IdeaTokenExchange
@@ -38,7 +38,7 @@ describe('ovm/core/IdeaTokenVault', () => {
 	let comp
 	let comptroller
 	let cDai
-	let interestManagerCompound
+	let interestManagerStateTransfer
 	let ideaTokenLogic
 	let ideaTokenFactory
 	let ideaTokenExchange
@@ -60,7 +60,7 @@ describe('ovm/core/IdeaTokenVault', () => {
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
 		TestCDai = await ethers.getContractFactory('TestCDai')
-		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
+		InterestManagerStateTransferOVM = await ethers.getContractFactory('InterestManagerStateTransferOVM')
 		TestComptroller = await ethers.getContractFactory('TestComptroller')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactoryOVM')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchangeOVM')
@@ -85,8 +85,8 @@ describe('ovm/core/IdeaTokenVault', () => {
 		await cDai.deployed()
 		await cDai.setExchangeRate(tenPow18)
 
-		interestManagerCompound = await InterestManagerCompound.deploy()
-		await interestManagerCompound.deployed()
+		interestManagerStateTransfer = await InterestManagerStateTransferOVM.deploy()
+		await interestManagerStateTransfer.deployed()
 
 		ideaTokenLogic = await IdeaToken.deploy()
 		await ideaTokenLogic.deployed()
@@ -100,13 +100,13 @@ describe('ovm/core/IdeaTokenVault', () => {
 		ideaTokenVault = await IdeaTokenVault.deploy()
 		await ideaTokenVault.deployed()
 
-		await interestManagerCompound
+		await interestManagerStateTransfer
 			.connect(adminAccount)
-			.initialize(ideaTokenExchange.address, dai.address, cDai.address, comp.address, oneAddress)
+			.initializeStateTransfer(ideaTokenExchange.address, dai.address)
 
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address)
+			.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address, oneAddress)
 
 		await ideaTokenExchange
 			.connect(adminAccount)
@@ -114,8 +114,9 @@ describe('ovm/core/IdeaTokenVault', () => {
 				adminAccount.address,
 				authorizerAccount.address,
 				tradingFeeAccount.address,
-				interestManagerCompound.address,
-				dai.address
+				interestManagerStateTransfer.address,
+				dai.address,
+				oneAddress
 			)
 		await ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address)
 

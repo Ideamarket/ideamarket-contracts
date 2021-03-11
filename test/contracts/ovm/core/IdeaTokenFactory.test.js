@@ -45,7 +45,7 @@ describe('ovm/core/IdeaTokenFactory', () => {
 
 		await ideaTokenFactory
 			.connect(adminAccount)
-			.initialize(adminAccount.address, ideaTokenExchangeAddress, ideaTokenLogic.address)
+			.initialize(adminAccount.address, ideaTokenExchangeAddress, ideaTokenLogic.address, oneAddress)
 	})
 
 	it('admin is owner', async () => {

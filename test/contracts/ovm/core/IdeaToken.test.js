@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
 
-describe('core/IdeaToken', () => {
+describe('ovm/core/IdeaToken', () => {
 	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
 
 	let IdeaToken

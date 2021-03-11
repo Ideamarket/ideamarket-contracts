@@ -43,7 +43,7 @@ describe('ovm/spells/SetPlatformFeeSpell', () => {
 	it('can set platform fee', async () => {
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
-		await factory.initialize(adminAccount.address, oneAddress, oneAddress)
+		await factory.initialize(adminAccount.address, oneAddress, oneAddress, oneAddress)
 
 		await factory.addMarket(
 			marketName,
