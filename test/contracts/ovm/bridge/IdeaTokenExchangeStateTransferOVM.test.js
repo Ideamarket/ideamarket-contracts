@@ -96,9 +96,7 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 		ideaTokenExchange = await IdeaTokenExchange.deploy()
 		await ideaTokenExchange.deployed()
 
-		await interestManager
-			.connect(adminAccount)
-			.initializeStateTransfer(adminAccount.address, oneAddress)
+		await interestManager.connect(adminAccount).initializeStateTransfer(adminAccount.address, oneAddress)
 
 		await ideaTokenFactory
 			.connect(adminAccount)
@@ -144,12 +142,7 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 
 	it('disabled functions revert', async () => {
 		await expect(
-			ideaTokenExchange.sellTokens(
-				oneAddress,
-				BigNumber.from('1'),
-				BigNumber.from('1'),
-				oneAddress
-			)
+			ideaTokenExchange.sellTokens(oneAddress, BigNumber.from('1'), BigNumber.from('1'), oneAddress)
 		).to.be.revertedWith('state-transfer')
 	})
 })

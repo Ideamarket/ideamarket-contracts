@@ -16,6 +16,9 @@ module.exports = {
 			url: process.env.RINKEBY_RPC || '',
 			accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
 		},
+		ovm_local: {
+			url: 'http://localhost:9645',
+		},
 	},
 	solidity: {
 		version: '0.6.12',

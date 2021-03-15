@@ -1,36 +1,36 @@
-version: "3"
+version: '3'
 
 services:
-  integration_tests:
-    image: ethereumoptimism/integration-tests:${INTEGRATION_TESTS_TAG:-latest}
-    environment:
-      - "PKGS=${PKGS}"
+    integration_tests:
+        image: ethereumoptimism/integration-tests:${INTEGRATION_TESTS_TAG:-latest}
+        environment:
+            - 'PKGS=${PKGS}'
 
-  l1_chain:
-    image: ethereumoptimism/hardhat:${L1_CHAIN_TAG:-latest}
-    ports:
-      - 9545:9545
+    l1_chain:
+        image: ethereumoptimism/hardhat:${L1_CHAIN_TAG:-latest}
+        ports:
+            - 9545:9545
 
-  geth_l2:
-    image: ethereumoptimism/go-ethereum:${GETH_L2_TAG:-latest}
-    volumes:
-      - geth:/l2-node/l2:rw
-    ports:
-      - 9645:8545
-      - 9646:8546
+    geth_l2:
+        image: ethereumoptimism/go-ethereum:${GETH_L2_TAG:-latest}
+        volumes:
+            - geth:/l2-node/l2:rw
+        ports:
+            - 9645:8545
+            - 9646:8546
 
-  batch_submitter:
-    image: ethereumoptimism/batch-submitter:${BATCH_SUBMITTER_TAG:-latest}
+    batch_submitter:
+        image: ethereumoptimism/batch-submitter:${BATCH_SUBMITTER_TAG:-latest}
 
-  data_transport_layer:
-    image: ethereumoptimism/data-transport-layer:${DATA_TRANSPORT_LAYER_TAG:-latest}
-    ports:
-      - 9898:7878
+    data_transport_layer:
+        image: ethereumoptimism/data-transport-layer:${DATA_TRANSPORT_LAYER_TAG:-latest}
+        ports:
+            - 9898:7878
 
-  deployer:
-    image: ethereumoptimism/deployer:${DEPLOYER_TAG:-latest}
-    ports:
-      - 9080:8080
+    deployer:
+        image: ethereumoptimism/deployer:${DEPLOYER_TAG:-latest}
+        ports:
+            - 9080:8080
 
 volumes:
-  geth:
+    geth:
