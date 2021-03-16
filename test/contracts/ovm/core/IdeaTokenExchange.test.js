@@ -84,12 +84,10 @@ describe('ovm/core/IdeaTokenExchange', () => {
 		ideaTokenExchange = await IdeaTokenExchange.deploy()
 		await ideaTokenExchange.deployed()
 
-		console.log('waiting')
-		await new Promise((resolve) => {
-			setTimeout(resolve, 10000)
-		})
-
-		console.log(ideaTokenExchange.address)
+		const receipt = await ideaTokenExchange.deployTransaction.wait()
+		console.log('tx', await ethers.provider.getTransaction(receipt.transactionHash))
+		console.log('receipt', receipt)
+		console.log('code', await ethers.provider.getCode(ideaTokenExchange.address))
 		await ideaTokenExchange.getOwner()
 		return
 

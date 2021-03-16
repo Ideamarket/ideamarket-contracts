@@ -22,7 +22,7 @@ module.exports = {
 		const latestTs = await module.exports.latest()
 		const diff = to.sub(latestTs)
 
-		module.exports.increase(diff)
+		await module.exports.increase(diff)
 	},
 
 	duration: {

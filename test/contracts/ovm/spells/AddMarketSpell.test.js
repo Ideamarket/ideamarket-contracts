@@ -69,7 +69,7 @@ describe('ovm/spells/AddMarketSpell', () => {
 		expect(BigNumber.from('1').eq(await factory.getMarketIDByName(marketName))).to.be.true
 
 		const marketDetails = await factory.getMarketDetailsByID(BigNumber.from('1'))
-
+		
 		expect(marketDetails.exists).to.be.true
 		expect(marketDetails.id.eq(BigNumber.from('1'))).to.be.true
 		expect(marketDetails.name).to.be.equal(marketName)
@@ -80,5 +80,6 @@ describe('ovm/spells/AddMarketSpell', () => {
 		expect(marketDetails.hatchTokens.eq(hatchTokens)).to.be.true
 		expect(marketDetails.tradingFeeRate.eq(tradingFeeRate)).to.be.true
 		expect(marketDetails.platformFeeRate.eq(platformFeeRate)).to.be.true
+		console.log('4')
 	})
 })
