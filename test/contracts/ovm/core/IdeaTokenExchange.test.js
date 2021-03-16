@@ -2,12 +2,13 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
 
+const { expectRevert, waitForTx } = require('../../utils/tx')
+const { generateWallets } = require('../../utils/wallet')
+
 describe('ovm/core/IdeaTokenExchange', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
-	let TestCDai
 	let InterestManagerStateTransferOVM
-	let TestComptroller
 	let IdeaTokenFactory
 	let IdeaTokenExchange
 	let IdeaToken
@@ -36,10 +37,7 @@ describe('ovm/core/IdeaTokenExchange', () => {
 
 	let domainNoSubdomainNameVerifier
 	let dai
-	let comp
-	let cDai
 	let interestManagerStateTransferOVM
-	let comptroller
 	let ideaTokenFactory
 	let ideaTokenLogic
 	let ideaTokenExchange
@@ -51,17 +49,17 @@ describe('ovm/core/IdeaTokenExchange', () => {
 	before(async () => {
 		const accounts = await ethers.getSigners()
 		userAccount = accounts[0]
-		adminAccount = accounts[1]
-		authorizerAccount = accounts[2]
-		tradingFeeAccount = accounts[3]
-		interestReceiverAccount = accounts[4]
-		platformFeeReceiverAccount = accounts[5]
+		;[
+			adminAccount,
+			authorizerAccount,
+			tradingFeeAccount,
+			interestReceiverAccount,
+			platformFeeReceiverAccount,
+		] = generateWallets(ethers, 5)
 
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
-		TestCDai = await ethers.getContractFactory('TestCDai')
 		InterestManagerStateTransferOVM = await ethers.getContractFactory('InterestManagerStateTransferOVM')
-		TestComptroller = await ethers.getContractFactory('TestComptroller')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactoryOVM')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchangeOVM')
 		IdeaToken = await ethers.getContractFactory('IdeaToken')
@@ -73,16 +71,6 @@ describe('ovm/core/IdeaTokenExchange', () => {
 
 		dai = await TestERC20.deploy('DAI', 'DAI')
 		await dai.deployed()
-
-		comp = await TestERC20.deploy('COMP', 'COMP')
-		await comp.deployed()
-
-		comptroller = await TestComptroller.deploy()
-		await comptroller.deployed()
-
-		cDai = await TestCDai.deploy(dai.address, comp.address, comptroller.address)
-		await cDai.deployed()
-		await cDai.setExchangeRate(tenPow18)
 
 		interestManagerStateTransferOVM = await InterestManagerStateTransferOVM.deploy()
 		await interestManagerStateTransferOVM.deployed()
@@ -96,42 +84,59 @@ describe('ovm/core/IdeaTokenExchange', () => {
 		ideaTokenExchange = await IdeaTokenExchange.deploy()
 		await ideaTokenExchange.deployed()
 
-		await interestManagerStateTransferOVM
-			.connect(adminAccount)
-			.initializeStateTransfer(ideaTokenExchange.address, dai.address)
+		console.log('waiting')
+		await new Promise((resolve) => {
+			setTimeout(resolve, 10000)
+		})
 
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address, oneAddress)
+		console.log(ideaTokenExchange.address)
+		await ideaTokenExchange.getOwner()
+		return
 
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.initialize(
-				adminAccount.address,
-				authorizerAccount.address,
-				tradingFeeAccount.address,
-				interestManagerStateTransferOVM.address,
-				dai.address,
-				oneAddress
-			)
-		await ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address)
+		await waitForTx(
+			interestManagerStateTransferOVM
+				.connect(adminAccount)
+				.initializeStateTransfer(ideaTokenExchange.address, dai.address)
+		)
 
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(
-				marketName,
-				domainNoSubdomainNameVerifier.address,
-				baseCost,
-				priceRise,
-				hatchTokens,
-				tradingFeeRate,
-				platformFeeRate,
-				false
-			)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address, oneAddress)
+		)
+
+		await waitForTx(
+			ideaTokenExchange
+				.connect(adminAccount)
+				.initialize(
+					adminAccount.address,
+					authorizerAccount.address,
+					tradingFeeAccount.address,
+					interestManagerStateTransferOVM.address,
+					dai.address,
+					oneAddress
+				)
+		)
+		await waitForTx(ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address))
+
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					domainNoSubdomainNameVerifier.address,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
 		marketID = await ideaTokenFactory.getMarketIDByName(marketName)
 
-		await ideaTokenFactory.addToken(tokenName, marketID, userAccount.address)
+		await waitForTx(ideaTokenFactory.addToken(tokenName, marketID, userAccount.address))
 
 		tokenID = await ideaTokenFactory.getTokenIDByName(tokenName, marketID)
 
@@ -349,13 +354,14 @@ describe('ovm/core/IdeaTokenExchange', () => {
 		expect((await ideaTokenExchange.getTradingFeePayable()).eq(BigNumber.from('0'))).to.be.true
 	})*/
 
-	it('buy completely in hatch', async () => {
+	it.only('buy completely in hatch', async () => {
+		return
 		const amount = hatchTokens.div(2)
-		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
+		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount.toString())
 		expect(cost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
-		await dai.mint(userAccount.address, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, cost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
+		await waitForTx(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address))
 	})
 
 	it('buy full hatch', async () => {

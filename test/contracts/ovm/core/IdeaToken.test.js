@@ -3,31 +3,20 @@ const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
 
 const { expectRevert, waitForTx } = require('../../utils/tx')
+const { generateWallets } = require('../../utils/wallet')
 
 describe('ovm/core/IdeaToken', () => {
 	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
 
 	let IdeaToken
+	let adminAccount
 	let userAccount
 	let otherUserAccount
-	let adminAccount
-
 	let ideaToken
 
 	before(async () => {
 		IdeaToken = await ethers.getContractFactory('IdeaToken')
-		adminAccount = new ethers.Wallet(
-			'0x09e910621c2e988e9f7f6ffcd7024f54ec1461fa6e86a4b545e9e1fe21c28866',
-			ethers.provider
-		)
-		userAccount = new ethers.Wallet(
-			'0xce237946ccefcacb4a8956fa09fbf2c1526285871bccaf9cce2b6578103e757f',
-			ethers.provider
-		)
-		otherUserAccount = new ethers.Wallet(
-			'0x8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f',
-			ethers.provider
-		)
+		;[adminAccount, userAccount, otherUserAccount] = generateWallets(ethers, 3)
 	})
 
 	beforeEach(async () => {

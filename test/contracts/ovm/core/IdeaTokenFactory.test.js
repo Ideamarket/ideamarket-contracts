@@ -2,6 +2,9 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
 
+const { expectRevert, waitForTx } = require('../../utils/tx')
+const { generateWallets } = require('../../utils/wallet')
+
 describe('ovm/core/IdeaTokenFactory', () => {
 	let DomainNoSubdomainNameVerifier
 	let IdeaTokenFactory
@@ -28,8 +31,10 @@ describe('ovm/core/IdeaTokenFactory', () => {
 	before(async () => {
 		const accounts = await ethers.getSigners()
 		userAccount = accounts[0]
-		adminAccount = accounts[1]
-		ideaTokenExchangeAddress = accounts[2].address
+
+		let tmpWallet
+		;[adminAccount, tmpWallet] = generateWallets(ethers, 2)
+		ideaTokenExchangeAddress = tmpWallet.address
 
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactoryOVM')
@@ -43,9 +48,11 @@ describe('ovm/core/IdeaTokenFactory', () => {
 		ideaTokenLogic = await IdeaToken.deploy()
 		await ideaTokenLogic.deployed()
 
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.initialize(adminAccount.address, ideaTokenExchangeAddress, ideaTokenLogic.address, oneAddress)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.initialize(adminAccount.address, ideaTokenExchangeAddress, ideaTokenLogic.address, oneAddress)
+		)
 	})
 
 	it('admin is owner', async () => {
@@ -55,18 +62,20 @@ describe('ovm/core/IdeaTokenFactory', () => {
 	it('can add market', async () => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await nameVerifier.deployed()
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(
-				marketName,
-				nameVerifier.address,
-				baseCost,
-				priceRise,
-				hatchTokens,
-				tradingFeeRate,
-				platformFeeRate,
-				false
-			)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					nameVerifier.address,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
 		expect(BigNumber.from('1').eq(await ideaTokenFactory.getNumMarkets())).to.be.equal
 		expect(BigNumber.from('1').eq(await ideaTokenFactory.getMarketIDByName(marketName))).to.be.equal
@@ -100,20 +109,7 @@ describe('ovm/core/IdeaTokenFactory', () => {
 	it('fail add market with same name', async () => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await nameVerifier.deployed()
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(
-				marketName,
-				nameVerifier.address,
-				baseCost,
-				priceRise,
-				hatchTokens,
-				tradingFeeRate,
-				platformFeeRate,
-				false
-			)
-
-		await expect(
+		await waitForTx(
 			ideaTokenFactory
 				.connect(adminAccount)
 				.addMarket(
@@ -126,11 +122,26 @@ describe('ovm/core/IdeaTokenFactory', () => {
 					platformFeeRate,
 					false
 				)
-		).to.be.revertedWith('market-exists')
+		)
+
+		await expectRevert(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					nameVerifier.address,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 	})
 
 	it('checks parameters when adding market', async () => {
-		await expect(
+		await expectRevert(
 			ideaTokenFactory
 				.connect(adminAccount)
 				.addMarket(
@@ -143,9 +154,9 @@ describe('ovm/core/IdeaTokenFactory', () => {
 					platformFeeRate,
 					false
 				)
-		).to.be.revertedWith('invalid-params')
+		)
 
-		await expect(
+		await expectRevert(
 			ideaTokenFactory
 				.connect(adminAccount)
 				.addMarket(
@@ -158,11 +169,11 @@ describe('ovm/core/IdeaTokenFactory', () => {
 					platformFeeRate,
 					false
 				)
-		).to.be.revertedWith('invalid-params')
+		)
 	})
 
 	it('only admin can add market', async () => {
-		await expect(
+		await expectRevert(
 			ideaTokenFactory
 				.connect(userAccount)
 				.addMarket(
@@ -175,26 +186,28 @@ describe('ovm/core/IdeaTokenFactory', () => {
 					platformFeeRate,
 					false
 				)
-		).to.be.revertedWith('only-owner')
+		)
 	})
 
 	it('can add token', async () => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await nameVerifier.deployed()
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(
-				marketName,
-				nameVerifier.address,
-				baseCost,
-				priceRise,
-				hatchTokens,
-				tradingFeeRate,
-				platformFeeRate,
-				true
-			)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					nameVerifier.address,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					true
+				)
+		)
 
-		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)
+		await waitForTx(ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address))
 
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(BigNumber.from('1'))
 
@@ -222,155 +235,254 @@ describe('ovm/core/IdeaTokenFactory', () => {
 	it('fail add token with invalid name', async () => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await nameVerifier.deployed()
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(
-				marketName,
-				nameVerifier.address,
-				baseCost,
-				priceRise,
-				hatchTokens,
-				tradingFeeRate,
-				platformFeeRate,
-				false
-			)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					nameVerifier.address,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
-		await expect(
-			ideaTokenFactory.addToken('some.invalid.name', BigNumber.from('1'), userAccount.address)
-		).to.be.revertedWith('invalid-name')
+		await expectRevert(ideaTokenFactory.addToken('some.invalid.name', BigNumber.from('1'), userAccount.address))
 	})
 
 	it('fail add token with same name twice', async () => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await nameVerifier.deployed()
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(
-				marketName,
-				nameVerifier.address,
-				baseCost,
-				priceRise,
-				hatchTokens,
-				tradingFeeRate,
-				platformFeeRate,
-				false
-			)
-
-		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)
-		await expect(ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)).to.be.revertedWith(
-			'invalid-name'
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					nameVerifier.address,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
 		)
+
+		await waitForTx(ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address))
+		await expectRevert(ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address))
 	})
 
 	it('fail add token invalid market', async () => {
 		const nameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await nameVerifier.deployed()
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(
-				marketName,
-				nameVerifier.address,
-				baseCost,
-				priceRise,
-				hatchTokens,
-				tradingFeeRate,
-				platformFeeRate,
-				false
-			)
-
-		await ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address)
-		await expect(ideaTokenFactory.addToken(tokenName, BigNumber.from('2'), userAccount.address)).to.be.revertedWith(
-			'market-not-exist'
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					nameVerifier.address,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
 		)
+
+		await waitForTx(ideaTokenFactory.addToken(tokenName, BigNumber.from('1'), userAccount.address))
+		await expectRevert(ideaTokenFactory.addToken(tokenName, BigNumber.from('2'), userAccount.address))
 	})
 
 	it('can set trading fee', async () => {
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(marketName, oneAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate, false)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					oneAddress,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
-		await ideaTokenFactory.connect(adminAccount).setTradingFee(BigNumber.from('1'), BigNumber.from('123'))
+		await waitForTx(
+			ideaTokenFactory.connect(adminAccount).setTradingFee(BigNumber.from('1'), BigNumber.from('123'))
+		)
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(BigNumber.from('1'))
 		expect(marketDetails.tradingFeeRate).to.be.equal('123')
 	})
 
 	it('fail user sets trading fee', async () => {
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(marketName, oneAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate, false)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					oneAddress,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
-		await expect(
+		await expectRevert(
 			ideaTokenFactory.connect(userAccount).setTradingFee(BigNumber.from('1'), BigNumber.from('123'))
-		).to.be.revertedWith('only-owner')
+		)
 	})
 
 	it('fail set trading fee invalid market', async () => {
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(marketName, oneAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate, false)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					oneAddress,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
-		await expect(
+		await expectRevert(
 			ideaTokenFactory.connect(adminAccount).setTradingFee(BigNumber.from('2'), BigNumber.from('123'))
-		).to.be.revertedWith('market-not-exist')
+		)
 	})
 
 	it('can set platform fee', async () => {
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(marketName, oneAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate, false)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					oneAddress,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
-		await ideaTokenFactory.connect(adminAccount).setPlatformFee(BigNumber.from('1'), BigNumber.from('123'))
+		await waitForTx(
+			ideaTokenFactory.connect(adminAccount).setPlatformFee(BigNumber.from('1'), BigNumber.from('123'))
+		)
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(BigNumber.from('1'))
 		expect(marketDetails.platformFeeRate).to.equal('123')
 	})
 
 	it('fail user sets platform fee', async () => {
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(marketName, oneAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate, false)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					oneAddress,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
-		await expect(
+		await expectRevert(
 			ideaTokenFactory.connect(userAccount).setPlatformFee(BigNumber.from('1'), BigNumber.from('123'))
-		).to.be.revertedWith('only-owner')
+		)
 	})
 
 	it('fail set platform fee invalid market', async () => {
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(marketName, oneAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate, false)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					oneAddress,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
-		await expect(
+		await expectRevert(
 			ideaTokenFactory.connect(adminAccount).setPlatformFee(BigNumber.from('2'), BigNumber.from('123'))
-		).to.be.revertedWith('market-not-exist')
+		)
 	})
 
 	it('can set name verifier', async () => {
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(marketName, oneAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate, false)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					oneAddress,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
-		await ideaTokenFactory.connect(adminAccount).setNameVerifier(BigNumber.from('1'), someAddress)
+		await waitForTx(ideaTokenFactory.connect(adminAccount).setNameVerifier(BigNumber.from('1'), someAddress))
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByID(BigNumber.from('1'))
 		expect(marketDetails.nameVerifier).to.equal(someAddress)
 	})
 
 	it('fail user sets name verifier ', async () => {
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(marketName, oneAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate, false)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					oneAddress,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
-		await expect(
-			ideaTokenFactory.connect(userAccount).setNameVerifier(BigNumber.from('1'), someAddress)
-		).to.be.revertedWith('only-owner')
+		await expectRevert(ideaTokenFactory.connect(userAccount).setNameVerifier(BigNumber.from('1'), someAddress))
 	})
 
 	it('fail set name verifier invalid market', async () => {
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(marketName, oneAddress, baseCost, priceRise, hatchTokens, tradingFeeRate, platformFeeRate, false)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					oneAddress,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
-		await expect(
-			ideaTokenFactory.connect(adminAccount).setNameVerifier(BigNumber.from('2'), someAddress)
-		).to.be.revertedWith('market-not-exist')
+		await expectRevert(ideaTokenFactory.connect(adminAccount).setNameVerifier(BigNumber.from('2'), someAddress))
 	})
 })

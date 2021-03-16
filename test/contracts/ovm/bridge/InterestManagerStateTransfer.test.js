@@ -2,6 +2,9 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
 
+const { expectRevert, waitForTx } = require('../../utils/tx')
+const { generateWallets } = require('../../utils/wallet')
+
 describe('ovm/core/InterestManagerStateTransfer', () => {
 	let InterestManagerStateTransferOVM
 	let TestERC20
@@ -9,16 +12,15 @@ describe('ovm/core/InterestManagerStateTransfer', () => {
 	const zero = BigNumber.from('0')
 	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
 
-	let userAccount
 	let adminAccount
+	let userAccount
 
 	let interestManagerStateTransfer
 	let dai
 
 	before(async () => {
-		const accounts = await ethers.getSigners()
-		userAccount = accounts[0]
-		adminAccount = accounts[1]
+		adminAccount = (await ethers.getSigners())[0]
+		;[userAccount] = generateWallets(ethers, 1)
 
 		InterestManagerStateTransferOVM = await ethers.getContractFactory('InterestManagerStateTransferOVM')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
@@ -30,7 +32,7 @@ describe('ovm/core/InterestManagerStateTransfer', () => {
 
 		interestManagerStateTransfer = await InterestManagerStateTransferOVM.deploy()
 		await interestManagerStateTransfer.deployed()
-		await interestManagerStateTransfer.initializeStateTransfer(adminAccount.address, dai.address)
+		await waitForTx(interestManagerStateTransfer.initializeStateTransfer(adminAccount.address, dai.address))
 	})
 
 	it('admin is owner', async () => {
@@ -38,33 +40,31 @@ describe('ovm/core/InterestManagerStateTransfer', () => {
 	})
 
 	it('can invest', async () => {
-		await dai.mint(userAccount.address, tenPow18)
-		await dai.transfer(interestManagerStateTransfer.address, tenPow18)
-		await interestManagerStateTransfer.connect(adminAccount).invest(tenPow18)
+		await waitForTx(dai.mint(userAccount.address, tenPow18))
+		await waitForTx(dai.connect(userAccount).transfer(interestManagerStateTransfer.address, tenPow18))
+		await waitForTx(interestManagerStateTransfer.connect(adminAccount).invest(tenPow18))
 		expect(zero.eq(await dai.balanceOf(userAccount.address))).to.be.true
 		expect(tenPow18.eq(await dai.balanceOf(interestManagerStateTransfer.address))).to.be.true
 	})
 
 	it('can redeem', async () => {
-		await dai.mint(userAccount.address, tenPow18)
-		await dai.transfer(interestManagerStateTransfer.address, tenPow18)
-		await interestManagerStateTransfer.connect(adminAccount).invest(tenPow18)
+		await waitForTx(dai.mint(userAccount.address, tenPow18))
+		await waitForTx(dai.connect(userAccount).transfer(interestManagerStateTransfer.address, tenPow18))
+		await waitForTx(interestManagerStateTransfer.connect(adminAccount).invest(tenPow18))
 
 		const redeemAmount = tenPow18.div(BigNumber.from('2'))
-		await interestManagerStateTransfer.connect(adminAccount).redeem(adminAccount.address, redeemAmount)
+		await waitForTx(interestManagerStateTransfer.connect(adminAccount).redeem(adminAccount.address, redeemAmount))
 
 		expect(redeemAmount.eq(await dai.balanceOf(adminAccount.address))).to.be.true
 		expect(tenPow18.sub(redeemAmount).eq(await dai.balanceOf(interestManagerStateTransfer.address))).to.be.true
 	})
 
 	it('fail redeem not admin', async () => {
-		await dai.mint(userAccount.address, tenPow18)
-		await dai.transfer(interestManagerStateTransfer.address, tenPow18)
-		await interestManagerStateTransfer.connect(adminAccount).invest(tenPow18)
+		await waitForTx(dai.mint(userAccount.address, tenPow18))
+		await waitForTx(dai.connect(userAccount).transfer(interestManagerStateTransfer.address, tenPow18))
+		await waitForTx(interestManagerStateTransfer.connect(adminAccount).invest(tenPow18))
 
 		const redeemAmount = tenPow18.div(BigNumber.from('2'))
-		await expect(interestManagerStateTransfer.redeem(adminAccount.address, redeemAmount)).to.be.revertedWith(
-			'only-owner'
-		)
+		await expectRevert(interestManagerStateTransfer.connect(userAccount).redeem(adminAccount.address, redeemAmount))
 	})
 })

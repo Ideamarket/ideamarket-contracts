@@ -2,6 +2,9 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
 
+const { expectRevert, waitForTx } = require('../../utils/tx')
+const { generateWallets } = require('../../utils/wallet')
+
 describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
@@ -49,13 +52,14 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 	let ideaToken
 
 	before(async () => {
-		const accounts = await ethers.getSigners()
-		userAccount = accounts[0]
-		adminAccount = accounts[1]
-		authorizerAccount = accounts[2]
-		tradingFeeAccount = accounts[3]
-		interestReceiverAccount = accounts[4]
-		platformFeeReceiverAccount = accounts[5]
+		;[
+			userAccount,
+			adminAccount,
+			authorizerAccount,
+			tradingFeeAccount,
+			interestReceiverAccount,
+			platformFeeReceiverAccount,
+		] = generateWallets(ethers, 6)
 
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
@@ -82,7 +86,7 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 
 		cDai = await TestCDai.deploy(dai.address, comp.address, comptroller.address)
 		await cDai.deployed()
-		await cDai.setExchangeRate(tenPow18)
+		await waitForTx(cDai.setExchangeRate(tenPow18))
 
 		interestManager = await InterestManagerStateTransferOVM.deploy()
 		await interestManager.deployed()
@@ -96,40 +100,46 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 		ideaTokenExchange = await IdeaTokenExchange.deploy()
 		await ideaTokenExchange.deployed()
 
-		await interestManager.connect(adminAccount).initializeStateTransfer(adminAccount.address, oneAddress)
+		await waitForTx(interestManager.connect(adminAccount).initializeStateTransfer(adminAccount.address, oneAddress))
 
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address, oneAddress)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address, oneAddress)
+		)
 
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.initialize(
-				adminAccount.address,
-				authorizerAccount.address,
-				tradingFeeAccount.address,
-				interestManager.address,
-				dai.address,
-				adminAccount.address
-			)
-		await ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address)
+		await waitForTx(
+			ideaTokenExchange
+				.connect(adminAccount)
+				.initialize(
+					adminAccount.address,
+					authorizerAccount.address,
+					tradingFeeAccount.address,
+					interestManager.address,
+					dai.address,
+					adminAccount.address
+				)
+		)
+		await waitForTx(ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address))
 
-		await ideaTokenFactory
-			.connect(adminAccount)
-			.addMarket(
-				marketName,
-				domainNoSubdomainNameVerifier.address,
-				baseCost,
-				priceRise,
-				hatchTokens,
-				tradingFeeRate,
-				platformFeeRate,
-				false
-			)
+		await waitForTx(
+			ideaTokenFactory
+				.connect(adminAccount)
+				.addMarket(
+					marketName,
+					domainNoSubdomainNameVerifier.address,
+					baseCost,
+					priceRise,
+					hatchTokens,
+					tradingFeeRate,
+					platformFeeRate,
+					false
+				)
+		)
 
 		marketID = await ideaTokenFactory.getMarketIDByName(marketName)
 
-		await ideaTokenFactory.addToken(tokenName, marketID, userAccount.address)
+		await waitForTx(ideaTokenFactory.addToken(tokenName, marketID, userAccount.address))
 
 		tokenID = await ideaTokenFactory.getTokenIDByName(tokenName, marketID)
 
@@ -141,8 +151,8 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 	})
 
 	it('disabled functions revert', async () => {
-		await expect(
+		await expectRevert(
 			ideaTokenExchange.sellTokens(oneAddress, BigNumber.from('1'), BigNumber.from('1'), oneAddress)
-		).to.be.revertedWith('state-transfer')
+		)
 	})
 })
