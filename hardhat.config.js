@@ -7,6 +7,7 @@ require('dotenv').config()
 
 module.exports = {
 	networks: {
+		// --- EVM
 		hardhat: {},
 		mainnet: {
 			url: process.env.MAINNET_RPC || '',
@@ -20,8 +21,14 @@ module.exports = {
 			url: process.env.KOVAN_RPC || '',
 			accounts: process.env.KOVAN_PRIVATE_KEY ? [process.env.KOVAN_PRIVATE_KEY] : [],
 		},
+
+		// --- OVM
 		ovm_local: {
 			url: 'http://localhost:9645',
+		},
+		kovan_ovm: {
+			url: process.env.KOVAN_OVM_RPC || '',
+			accounts: process.env.KOVAN_OVM_PRIVATE_KEY ? [process.env.KOVAN_OVM_PRIVATE_KEY] : [],
 		},
 	},
 	solidity: {

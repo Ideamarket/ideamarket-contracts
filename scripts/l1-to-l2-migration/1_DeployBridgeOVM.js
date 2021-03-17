@@ -1,0 +1,48 @@
+const { l2ethers } = require('hardhat')
+const { read, loadDeployedAddress, saveDeployedAddress, saveDeployedABI } = require('../shared')
+
+const gasPrice = 0
+
+async function main() {
+	const deployerAccount = (await l2ethers.getSigners())[0]
+	const deployerAddress = deployerAccount.address
+	console.log(`Running from ${deployerAddress}`)
+	console.log('')
+
+	const chainID = (await ethers.provider.getNetwork()).chainId
+	let l1NetworkName = ''
+	let l2NetworkName = ''
+
+	if (chainID === 69) {
+		l1NetworkName = 'kovan'
+		l2NetworkName = 'kovan-ovm'
+	} else {
+		throw `unknown chain id: ${chainID}`
+	}
+
+	const l1ExchangeAddress = loadDeployedAddress(l1NetworkName, 'ideaTokenExchange')
+
+	console.log(`Networks (${l1NetworkName},${l2NetworkName})`)
+	console.log('L1 Exchange Address', l1ExchangeAddress)
+
+	const yn = await read('Correct? [Y/n]: ')
+	if (yn !== 'Y' && yn !== 'y') {
+		console.log('abort')
+		return
+	}
+
+	console.log(`Deploying contract BridgeOVM to OVM`)
+	const contractFactory = await l2ethers.getContractFactory('BridgeOVM')
+	const deployed = await contractFactory.deploy(l1ExchangeAddress, { gasPrice: gasPrice })
+	await deployed.deployed()
+
+	saveDeployedAddress(l2NetworkName, 'bridgeOVM', deployed.address)
+	saveDeployedABI(l2NetworkName, 'bridgeOVM', artifacts.readArtifactSync('BridgeOVM').abi)
+}
+
+main()
+	.then(() => process.exit(0))
+	.catch((error) => {
+		console.error(error)
+		process.exit(1)
+	})

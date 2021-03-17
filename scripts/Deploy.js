@@ -1,8 +1,7 @@
-const readline = require('readline')
-
 const { run, ethers, artifacts } = require('hardhat')
-const fs = require('fs')
 const { BigNumber } = require('ethers')
+
+const { read, loadDeployedAddress, saveDeployedAddress, saveDeployedABI } = require('./shared')
 
 const allDeploymentParams = {
 	mainnet: {
@@ -158,19 +157,6 @@ const allExternalContractAddresses = {
 		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
 		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
 	},
-}
-
-const rl = readline.createInterface({
-	input: process.stdin,
-	output: process.stdout,
-})
-
-async function read(question) {
-	return await new Promise((resolve) => {
-		rl.question(question, (answer) => {
-			return resolve(answer)
-		})
-	})
 }
 
 let deploymentParams
@@ -635,46 +621,6 @@ async function deployContract(name, ...params) {
 	const deployed = await contractFactory.deploy(...params, { gasPrice: deploymentParams.gasPrice })
 	await deployed.deployed()
 	return deployed
-}
-
-function loadDeployedAddress(network, contract) {
-	const path = 'deployed/deployed-' + network + '.json'
-	if (!fs.existsSync(path)) {
-		throw new Error('Deployed file does not exist')
-	}
-
-	const raw = fs.readFileSync(path)
-	const addresses = JSON.parse(raw)
-
-	if (!addresses || !addresses[contract]) {
-		throw new Error(`Address for contract ${contract} does not exist`)
-	}
-
-	return addresses[contract]
-}
-
-function saveDeployedAddress(network, contract, address) {
-	let addresses = {}
-	const path = 'deployed/deployed-' + network + '.json'
-	if (fs.existsSync(path)) {
-		const raw = fs.readFileSync(path)
-		addresses = JSON.parse(raw)
-	}
-
-	addresses[contract] = address
-	fs.writeFileSync(path, JSON.stringify(addresses, undefined, 4))
-}
-
-function saveDeployedABI(network, contract, abi) {
-	let abis = {}
-	const path = 'deployed/abis-' + network + '.json'
-	if (fs.existsSync(path)) {
-		const raw = fs.readFileSync(path)
-		abis = JSON.parse(raw)
-	}
-
-	abis[contract] = abi
-	fs.writeFileSync(path, JSON.stringify(abis))
 }
 
 main()
