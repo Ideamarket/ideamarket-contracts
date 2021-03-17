@@ -168,52 +168,121 @@ contract IdeaTokenExchangeStateTransfer is IdeaTokenExchange, IIdeaTokenExchange
         emit TokenTransferEnabled();
     } 
 
-    // --- Disabled functions ---
-    function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
-        ideaToken;
-        amount;
-        minPrice;
-        recipient;
+    /* **********************************************
+     * ************  Disabled functions  ************
+     * ********************************************** 
+     */
 
-        revert("state-transfer");
+    function initialize(address owner, address authorizer, address tradingFeeRecipient, address interestManager, address dai) external override {
+        owner; authorizer; tradingFeeRecipient; interestManager; dai;
+        revert("x");
+    }
+
+    function sellTokens(address ideaToken, uint amount, uint minPrice, address recipient) external override {
+        ideaToken; amount; minPrice; recipient;
+        revert("x");
+    }
+
+    function getPriceForSellingTokens(address ideaToken, uint amount) external view override returns (uint) {
+        ideaToken; amount;
+        revert("x");
+    }
+
+    function getPricesForSellingTokens(MarketDetails memory marketDetails, uint supply, uint amount, bool feesDisabled) public pure override returns (CostAndPriceAmounts memory) {
+        marketDetails; supply; amount; feesDisabled;
+        revert("x");
+    }
+
+    function getRawPriceForSellingTokens(uint baseCost, uint priceRise, uint hatchTokens, uint supply, uint amount) internal pure override returns (uint) {
+        baseCost; priceRise; hatchTokens; supply; amount;
+        revert("x");
     }
 
     function buyTokens(address ideaToken, uint amount, uint fallbackAmount, uint cost, address recipient) external override {
-        ideaToken;
-        amount;
-        fallbackAmount;
-        cost;
-        recipient;
+        ideaToken; amount; fallbackAmount; cost; recipient;
+        revert("x");
+    }
 
-        revert("state-transfer");
+    function getCostForBuyingTokens(address ideaToken, uint amount) external view override returns (uint) {
+        ideaToken; amount;
+        revert("x");
+    }
+
+    function getCostsForBuyingTokens(MarketDetails memory marketDetails, uint supply, uint amount, bool feesDisabled) public pure override returns (CostAndPriceAmounts memory) {
+        marketDetails; supply; amount; feesDisabled;
+        revert("x");
+    }
+
+    function getRawCostForBuyingTokens(uint baseCost, uint priceRise, uint hatchTokens, uint supply, uint amount) internal pure override returns (uint) {
+        baseCost; priceRise; hatchTokens; supply; amount;
+        revert("x");
     }
 
     function withdrawTokenInterest(address token) external override {
         token;
+        revert("x");
+    }
 
-        revert("state-transfer");
+    function getInterestPayable(address token) public view override returns (uint) {
+        token;
+        revert("x");
+    }
+
+    function setTokenOwner(address token, address owner) external virtual override {
+        token; owner;
+        revert("x");
     }
 
     function withdrawPlatformInterest(uint marketID) external override {
         marketID;
+        revert("x");
+    }
 
-        revert("state-transfer");
+    function getPlatformInterestPayable(uint marketID) public view override returns (uint) {
+        marketID;
+        revert("x");
     }
 
     function withdrawPlatformFee(uint marketID) external override {
         marketID;
+        revert("x");
+    }
 
-        revert("state-transfer");
+    function getPlatformFeePayable(uint marketID) public view override returns (uint) {
+        marketID;
+        revert("x");
+    }
+
+    function setPlatformOwner(uint marketID, address owner) external override {
+        marketID; owner;
+        revert("x");
     }
 
     function withdrawTradingFee() external override {
-        revert("state-transfer");
+        revert("x");
     }
 
-    function setTokenOwner(address token, address owner) external override {
-        token;
-        owner;
+    function getTradingFeePayable() public view override returns (uint) {
+        revert("x");
+    }
 
-        revert("state-transfer");
+    function setAuthorizer(address authorizer) external override {
+        authorizer;
+        revert("x");
+    }
+
+    function isTokenFeeDisabled(address ideaToken) external view override returns (bool) {
+        ideaToken;
+        revert("x");
+    }
+
+    function setTokenFeeKillswitch(address ideaToken, bool set) external override {
+        ideaToken; set;
+        revert("x");
+    }
+
+    function setIdeaTokenFactoryAddress(address factory) external override {
+        factory;
+        revert("x");
     }
 }

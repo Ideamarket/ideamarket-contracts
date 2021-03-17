@@ -92,7 +92,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
                         address authorizer,
                         address tradingFeeRecipient,
                         address interestManager,
-                        address dai) external initializer {
+                        address dai) external virtual initializer {
         require(authorizer != address(0) &&
                 tradingFeeRecipient != address(0) &&
                 interestManager != address(0) &&
@@ -168,7 +168,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The price in Dai for selling `amount` IdeaTokens
      */
-    function getPriceForSellingTokens(address ideaToken, uint amount) external view override returns (uint) {
+    function getPriceForSellingTokens(address ideaToken, uint amount) external virtual view override returns (uint) {
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken);
         return getPricesForSellingTokens(marketDetails, IERC20(ideaToken).totalSupply(), amount, _tokenFeeKillswitch[ideaToken]).total;
     }
@@ -182,7 +182,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return total cost, raw cost and trading fee
      */
-    function getPricesForSellingTokens(MarketDetails memory marketDetails, uint supply, uint amount, bool feesDisabled) public pure override returns (CostAndPriceAmounts memory) {
+    function getPricesForSellingTokens(MarketDetails memory marketDetails, uint supply, uint amount, bool feesDisabled) public virtual pure override returns (CostAndPriceAmounts memory) {
         
         uint rawPrice = getRawPriceForSellingTokens(marketDetails.baseCost,
                                                     marketDetails.priceRise,
@@ -219,7 +219,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The price selling `amount` IdeaTokens without any fees applied
      */
-    function getRawPriceForSellingTokens(uint baseCost, uint priceRise, uint hatchTokens, uint supply, uint amount) internal pure returns (uint) {
+    function getRawPriceForSellingTokens(uint baseCost, uint priceRise, uint hatchTokens, uint supply, uint amount) internal virtual pure returns (uint) {
 
         uint hatchPrice = 0;
         uint updatedAmount = amount;
@@ -310,7 +310,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The cost in Dai for buying `amount` IdeaTokens
      */
-    function getCostForBuyingTokens(address ideaToken, uint amount) external view override returns (uint) {
+    function getCostForBuyingTokens(address ideaToken, uint amount) external virtual view override returns (uint) {
         MarketDetails memory marketDetails = _ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken);
 
         return getCostsForBuyingTokens(marketDetails, IERC20(ideaToken).totalSupply(), amount, _tokenFeeKillswitch[ideaToken]).total;
@@ -325,7 +325,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return total cost, raw cost, trading fee, platform fee
      */
-    function getCostsForBuyingTokens(MarketDetails memory marketDetails, uint supply, uint amount, bool feesDisabled) public pure override returns (CostAndPriceAmounts memory) {
+    function getCostsForBuyingTokens(MarketDetails memory marketDetails, uint supply, uint amount, bool feesDisabled) public virtual pure override returns (CostAndPriceAmounts memory) {
         uint rawCost = getRawCostForBuyingTokens(marketDetails.baseCost,
                                                  marketDetails.priceRise,
                                                  marketDetails.hatchTokens,
@@ -361,7 +361,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The cost buying `amount` IdeaTokens without any fees applied
      */
-    function getRawCostForBuyingTokens(uint baseCost, uint priceRise, uint hatchTokens, uint supply, uint amount) internal pure returns (uint) {
+    function getRawCostForBuyingTokens(uint baseCost, uint priceRise, uint hatchTokens, uint supply, uint amount) internal virtual pure returns (uint) {
 
         uint hatchCost = 0;
         uint updatedAmount = amount;
@@ -418,7 +418,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The interest available to be paid out
      */
-    function getInterestPayable(address token) public view override returns (uint) {
+    function getInterestPayable(address token) public virtual view override returns (uint) {
         ExchangeInfo storage exchangeInfo = _tokensExchangeInfo[token];
         return _interestManager.investmentTokenToUnderlying(exchangeInfo.invested).sub(exchangeInfo.dai);
     }
@@ -471,7 +471,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The interest available to be paid out
      */
-    function getPlatformInterestPayable(uint marketID) public view override returns (uint) {
+    function getPlatformInterestPayable(uint marketID) public virtual view override returns (uint) {
         ExchangeInfo storage exchangeInfo = _platformsExchangeInfo[marketID];
         return _interestManager.investmentTokenToUnderlying(exchangeInfo.invested).sub(exchangeInfo.dai);
     }
@@ -505,7 +505,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The platform fee available to be paid out
      */
-    function getPlatformFeePayable(uint marketID) public view override returns (uint) {
+    function getPlatformFeePayable(uint marketID) public virtual view override returns (uint) {
         return _interestManager.investmentTokenToUnderlying(_platformFeeInvested[marketID]);
     }
 
@@ -515,7 +515,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param marketID The market for which to authorize an address
      * @param owner The address to be authorized
      */
-    function setPlatformOwner(uint marketID, address owner) external override {
+    function setPlatformOwner(uint marketID, address owner) external virtual override {
         address sender = msg.sender;
         address current = _platformOwner[marketID];
 
@@ -552,7 +552,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return The trading fee available to be paid out
      */
-    function getTradingFeePayable() public view override returns (uint) {
+    function getTradingFeePayable() public virtual view override returns (uint) {
         return _interestManager.investmentTokenToUnderlying(_tradingFeeInvested);
     }
 
@@ -561,7 +561,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param authorizer The new authorizer address
      */
-    function setAuthorizer(address authorizer) external override onlyOwner {
+    function setAuthorizer(address authorizer) external virtual override onlyOwner {
         require(authorizer != address(0), "invalid-params");
         _authorizer = authorizer;
     }
@@ -573,7 +573,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @return Whether or not fees are disabled for a specific IdeaToken
      */
-    function isTokenFeeDisabled(address ideaToken) external view override returns (bool) {
+    function isTokenFeeDisabled(address ideaToken) external virtual view override returns (bool) {
         return _tokenFeeKillswitch[ideaToken];
     }
 
@@ -583,7 +583,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      * @param ideaToken The IdeaToken
      * @param set Whether or not to enable the killswitch
      */
-    function setTokenFeeKillswitch(address ideaToken, bool set) external override onlyOwner {
+    function setTokenFeeKillswitch(address ideaToken, bool set) external virtual override onlyOwner {
         _tokenFeeKillswitch[ideaToken] = set;
     }
 
@@ -592,7 +592,7 @@ contract IdeaTokenExchange is IIdeaTokenExchange, Initializable, Ownable {
      *
      * @param factory The address of the IdeaTokenFactory 
      */
-    function setIdeaTokenFactoryAddress(address factory) external onlyOwner {
+    function setIdeaTokenFactoryAddress(address factory) external virtual onlyOwner {
         require(address(_ideaTokenFactory) == address(0));
         _ideaTokenFactory = IIdeaTokenFactory(factory);
     }

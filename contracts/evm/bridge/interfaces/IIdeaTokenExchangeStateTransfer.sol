@@ -8,7 +8,7 @@ pragma experimental ABIEncoderV2;
  * @author Alexander Schlindwein
  */
 interface IIdeaTokenExchangeStateTransfer {
-    function initializeStateTransfer(address transferManager, address l2Bridge, address crossDomainMessenger) external;
+    function initializeStateTransfer(address transferManager, address l2InterestManager, address daiBridge) external;
     function transferStaticVars() external;
     function transferPlatformVars(uint marketID) external;
     function transferTokenVars(uint marketID, uint[] calldata tokenIDs) external;
