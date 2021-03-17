@@ -55,6 +55,38 @@ const allDeploymentParams = {
 		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
 		mirrorAllInterestToPlatform: false,
 	},
+	kovan: {
+		timelockDelay: '1',
+		gasPrice: 1000000000, // 1 gwei
+
+		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
+		twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		twitterAllInterestToPlatform: false,
+
+		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
+		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		substackAllInterestToPlatform: false,
+
+		mirrorBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		mirrorPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		mirrorHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		mirrorTradingFeeRate: BigNumber.from('50'), // 0.50%
+		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		mirrorAllInterestToPlatform: false,
+
+		youtubeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		youtubePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		youtubeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		youtubeTradingFeeRate: BigNumber.from('50'), // 0.50%
+		youtubePlatformFeeRate: BigNumber.from('50'), // 0.50%
+		youtubeAllInterestToPlatform: false,
+	},
 	test: {
 		timelockDelay: '1',
 		gasPrice: 1000000000, // 1 gwei
@@ -91,13 +123,13 @@ const allDeploymentParams = {
 
 const allExternalContractAddresses = {
 	mainnet: {
-		multisig: '0x4905485d8B0Be42b317CCB4806b966aC0d4f4AE8', // TODO
-		authorizer: '0x78C15e4B4Ed9D8B4FFd031d0ec7BD09A55d02699', // TODO
-		dai: '0x6B175474E89094C44Da98b954EedeAC495271d0F', // TODO
-		cDai: '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', // TODO
-		comp: '0xc00e94Cb662C3520282E6f5717214004A7f26888', // TODO
-		weth: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // TODO
-		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', // TODO
+		multisig: '0x4905485d8B0Be42b317CCB4806b966aC0d4f4AE8',
+		authorizer: '0x78C15e4B4Ed9D8B4FFd031d0ec7BD09A55d02699',
+		dai: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+		cDai: '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643',
+		comp: '0xc00e94Cb662C3520282E6f5717214004A7f26888',
+		weth: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
 	},
 	rinkeby: {
 		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
@@ -106,6 +138,15 @@ const allExternalContractAddresses = {
 		cDai: '0x6D7F0754FFeb405d23C51CE938289d4835bE3b14',
 		comp: '0x0000000000000000000000000000000000000001', // Not deployed on Rinkeby
 		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+	},
+	kovan: {
+		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
+		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
+		dai: '0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa',
+		cDai: '0xf0d0eb522cfa50b716b3b1604c4f0fa6f04376ad',
+		comp: '0x61460874a7196d6a22d1ee4922473664b3e95270',
+		weth: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
 		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
 	},
 	test: {
@@ -157,6 +198,10 @@ async function main() {
 			deploymentParams = allDeploymentParams.rinkeby
 			externalContractAdresses = allExternalContractAddresses.rinkeby
 		}
+	} else if (networkName === 'kovan') {
+		console.log('Using Kovan')
+		deploymentParams = allDeploymentParams.kovan
+		externalContractAdresses = allExternalContractAddresses.kovan
 	} else if (networkName === 'homestead') {
 		networkName = 'mainnet'
 
@@ -428,7 +473,7 @@ async function main() {
 			{ gasPrice: deploymentParams.gasPrice }
 		)
 		console.log('')
-	}*/
+	}
 
 	let youtubeNameVerifierAddress
 	if (STAGE <= 16) {
@@ -468,7 +513,7 @@ async function main() {
 			{ gasPrice: deploymentParams.gasPrice }
 		)
 		console.log('')
-	}
+	}*/
 
 	if (STAGE <= 18) {
 		console.log('18. Set IdeaTokenFactory owner')

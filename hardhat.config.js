@@ -16,6 +16,10 @@ module.exports = {
 			url: process.env.RINKEBY_RPC || '',
 			accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
 		},
+		kovan: {
+			url: process.env.KOVAN_RPC || '',
+			accounts: process.env.KOVAN_PRIVATE_KEY ? [process.env.KOVAN_PRIVATE_KEY] : [],
+		},
 		ovm_local: {
 			url: 'http://localhost:9645',
 		},
