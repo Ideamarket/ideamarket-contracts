@@ -25,6 +25,8 @@ contract MultiActionOVM {
     IIdeaTokenVault _ideaTokenVault;
     // Dai contract
     IERC20 public _dai;
+    // ETH contract
+    IERC20 public _owETH;
     // IUniswapV2Factory contract
     IUniswapV2Factory public _uniswapV2Factory;
     // IUniswapV2Router02 contract
@@ -35,18 +37,21 @@ contract MultiActionOVM {
      * @param ideaTokenFactory The address of the IdeaTokenFactory contract
      * @param ideaTokenVault The address of the IdeaTokenVault contract
      * @param dai The address of the Dai token
+     * @param owETH The address of the ETH token
      * @param uniswapV2Router02 The address of the UniswapV2Router02 contract
      */
     constructor(address ideaTokenExchange,
                 address ideaTokenFactory,
                 address ideaTokenVault,
                 address dai,
+                address owETH,
                 address uniswapV2Router02) public {
 
         require(ideaTokenExchange != address(0) &&
                 ideaTokenFactory != address(0) &&
                 ideaTokenVault != address(0) &&
                 dai != address(0) &&
+                owETH != address(0) &&
                 uniswapV2Router02 != address(0),
                 "invalid-params");
 
@@ -54,6 +59,7 @@ contract MultiActionOVM {
         _ideaTokenFactory = IIdeaTokenFactory(ideaTokenFactory);
         _ideaTokenVault = IIdeaTokenVault(ideaTokenVault);
         _dai = IERC20(dai);
+        _owETH = IERC20(owETH);
         _uniswapV2Router02 = IUniswapV2Router02(uniswapV2Router02);
         _uniswapV2Factory = IUniswapV2Factory(IUniswapV2Router02(uniswapV2Router02).factory());
     }
@@ -278,7 +284,7 @@ contract MultiActionOVM {
         IIdeaTokenFactory factory = _ideaTokenFactory;
 
         factory.addToken(tokenName, marketID, msg.sender);
-        return address(factory.getTokenInfo(marketID, factory.getTokenIDByName(tokenName, marketID) ).ideaToken);
+        return address(factory.getTokenInfo(marketID, factory.getTokenIDByName(tokenName, marketID)).ideaToken);
     }
 
     /**
@@ -347,11 +353,31 @@ contract MultiActionOVM {
      */
     function getPathInternal(address inputCurrency, address outputCurrency) internal view returns (address[] memory) {
 
-        require(_uniswapV2Factory.getPair(inputCurrency, outputCurrency) != address(0), "no-path");
-        
-        address[] memory path = new address[](2);
+        address owETHAddress = address(_owETH);
+
+        IUniswapV2Factory uniswapFactory = _uniswapV2Factory;
+        if(uniswapFactory.getPair(inputCurrency, outputCurrency) != address(0)) {
+            // Direct path exists
+             address[] memory path = new address[](2);
+             path[0] = inputCurrency;
+             path[1] = outputCurrency;
+             return path;
+        }
+
+        // Direct path does not exist
+        // Check for 3-hop path: input -> owETH -> output
+        require(inputCurrency != owETHAddress &&
+                outputCurrency != owETHAddress &&
+                uniswapFactory.getPair(inputCurrency, owETHAddress) != address(0) &&
+                uniswapFactory.getPair(owETHAddress, outputCurrency) != address(0),
+                "no-path");
+
+
+        // 3-hop path exists
+        address[] memory path = new address[](3);
         path[0] = inputCurrency;
-        path[1] = outputCurrency;
+        path[1] = owETHAddress;
+        path[2] = outputCurrency;
 
         return path;
     }
