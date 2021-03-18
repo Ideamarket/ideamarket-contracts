@@ -1,5 +1,5 @@
-const { ethers, artifacts } = require('hardhat')
-const { read, loadDeployedAddress } = require('../shared')
+const { ethers } = require('hardhat')
+const { read, unixTimestampFromDateString, loadDeployedAddress, loadABI } = require('../shared')
 
 async function main() {
 	const deployerAccount = (await ethers.getSigners())[0]
@@ -11,21 +11,26 @@ async function main() {
 	let l1CrossDomainMessengerAddress = ''
 	let l1DaiBridgeAddress = ''
 
-	if (networkName === 'kovan') {
+	if (l1NetworkName === 'kovan') {
 		console.log('Using Kovan')
 
 		l2NetworkName = 'kovan-ovm'
-		l1CrossDomainMessengerAddress = ''
-		l1DaiBridgeAddress = ''
+		l1CrossDomainMessengerAddress = '0x0000000000000000000000000000000000000000'
+		l1DaiBridgeAddress = '0x0000000000000000000000000000000000000000'
 	} else {
 		throw 'cannot work with network: ' + l1NetworkName
 	}
 
-	const l2BridgeOVMAddress = loadDeployedAddress(l2NetworkName, 'proxyAdmin')
-	const l2InterestManagerAddress = loadDeployedAddress(l2NetworkName, 'interestManager')
+	console.log('')
+	const executionDate = await read('execution date (DAY-MONTH-YEAR HOUR:MINUTE:SECOND) in UTC time: ')
+	const executionTimestamp = unixTimestampFromDateString(executionDate)
+
+	const l1TimelockAddress = loadDeployedAddress(l1NetworkName, 'dsPause')
+	const l2BridgeOVMAddress = loadDeployedAddress(l2NetworkName, 'bridgeOVM')
+	const l2InterestManagerAddress = loadDeployedAddress(l2NetworkName, 'interestManagerOVM')
 
 	const l1ProxyAdminAddress = loadDeployedAddress(l1NetworkName, 'proxyAdmin')
-	const l1ChangeLogicSpellAddress = loadDeployedAddress(l1NetworkName, 'changeLogic')
+	const l1ChangeLogicSpellAddress = loadDeployedAddress(l1NetworkName, 'changeLogicSpell')
 	const l1ChangeLogicAndCallSpellAddress = loadDeployedAddress(l1NetworkName, 'changeLogicAndCallSpell')
 
 	const l1FactoryAddress = loadDeployedAddress(l1NetworkName, 'ideaTokenFactory')
@@ -35,11 +40,15 @@ async function main() {
 	const l1ExchangeNewLogicAddress = loadDeployedAddress(l1NetworkName, 'ideaTokenExchangeStateTransferLogic')
 
 	const l1InterestManagerCompoundAddress = loadDeployedAddress(l1NetworkName, 'interestManager')
-	const l1InterestManagerCompoundNewLogicAddress = loadDeployedAddress(l1NetworkName, 'interestManagerCompoundStateTransferLogic')
+	const l1InterestManagerCompoundNewLogicAddress = loadDeployedAddress(
+		l1NetworkName,
+		'interestManagerCompoundStateTransferLogic'
+	)
 
 	console.log('TransferManager', deployerAddress)
 	console.log('')
 
+	console.log('L1 Timelock', l1TimelockAddress)
 	console.log('L1 DaiBridge', l1DaiBridgeAddress)
 	console.log('L1 CrossDomainMessenger', l1CrossDomainMessengerAddress)
 	console.log('L2 BridgeOVM', l2BridgeOVMAddress)
@@ -69,11 +78,21 @@ async function main() {
 		return
 	}
 
-	const factory = await ethers.getContractFactory('IdeaTokenFactoryStateTransfer')
+	const timelockAbi = (await ethers.getContractFactory('DSPause')).interface.fragments
+	const timelockContract = new ethers.Contract(
+		l1TimelockAddress,
+		(await ethers.getContractFactory('DSPause')).interface,
+		deployerAccount
+	)
+
 	const exchange = await ethers.getContractFactory('IdeaTokenExchangeStateTransfer')
 	const interestManager = await ethers.getContractFactory('InterestManagerCompoundStateTransfer')
+
 	const changeLogicSpell = await ethers.getContractFactory('ChangeLogicSpell')
+	const changeLogicTag = await timelockContract.soul(l1ChangeLogicSpellAddress)
+
 	const changeLogicAndCallSpell = await ethers.getContractFactory('ChangeLogicAndCallSpell')
+	const changeLogicAndCallTag = await timelockContract.soul(l1ChangeLogicAndCallSpellAddress)
 
 	// Factory
 	const faxFactory = changeLogicSpell.interface.encodeFunctionData('execute', [
@@ -82,33 +101,59 @@ async function main() {
 		l1FactoryNewLogicAddress,
 	])
 
+	console.log('=============== FACTORY ===============')
+	console.log('To:', l1TimelockAddress)
+	console.log('Param usr:', l1ChangeLogicSpellAddress)
+	console.log('Param tag:', changeLogicTag)
+	console.log('Param fax:', faxFactory)
+	console.log('Param eta:', executionTimestamp.toString())
+	console.log('ABI:', JSON.stringify(timelockAbi))
+	console.log('')
+
 	// Exchange
 	const calldataExchange = exchange.interface.encodeFunctionData('initializeStateTransfer', [
 		deployerAddress,
 		l2BridgeOVMAddress,
-		l1CrossDomainMessengerAddress
+		l1CrossDomainMessengerAddress,
 	])
 
 	const faxExchange = changeLogicAndCallSpell.interface.encodeFunctionData('execute', [
 		l1ProxyAdminAddress,
 		l1ExchangeAddress,
 		l1ExchangeNewLogicAddress,
-		calldataExchange
-	]) 
+		calldataExchange,
+	])
+
+	console.log('=============== EXCHANGE ===============')
+	console.log('To:', l1TimelockAddress)
+	console.log('Param usr:', l1ChangeLogicAndCallSpellAddress)
+	console.log('Param tag:', changeLogicAndCallTag)
+	console.log('Param fax:', faxExchange)
+	console.log('Param eta:', executionTimestamp.toString())
+	console.log('ABI:', JSON.stringify(timelockAbi))
+	console.log('')
 
 	// InterestManager
-	const calldataInterestManager = exchange.interface.encodeFunctionData('initializeStateTransfer', [
+	const calldataInterestManager = interestManager.interface.encodeFunctionData('initializeStateTransfer', [
 		deployerAddress,
 		l2InterestManagerAddress,
-		l1DaiBridgeAddress
+		l1DaiBridgeAddress,
 	])
 
 	const faxInterestManager = changeLogicAndCallSpell.interface.encodeFunctionData('execute', [
 		l1ProxyAdminAddress,
 		l1InterestManagerCompoundAddress,
 		l1InterestManagerCompoundNewLogicAddress,
-		calldataInterestManager
+		calldataInterestManager,
 	])
+
+	console.log('=============== INTEREST MANAGER ===============')
+	console.log('To:', l1TimelockAddress)
+	console.log('Param usr:', l1ChangeLogicAndCallSpellAddress)
+	console.log('Param tag:', changeLogicAndCallTag)
+	console.log('Param fax:', faxInterestManager)
+	console.log('Param eta:', executionTimestamp.toString())
+	console.log('ABI:', JSON.stringify(timelockAbi))
 }
 
 main()

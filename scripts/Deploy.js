@@ -572,7 +572,11 @@ async function main() {
 		console.log('==============================================')
 		const changeLogicAndCallSpell = await deployContract('ChangeLogicAndCallSpell')
 		saveDeployedAddress(networkName, 'changeLogicAndCallSpell', changeLogicAndCallSpell.address)
-		saveDeployedABI(networkName, 'changeLogicAndCallSpell', artifacts.readArtifactSync('ChangeLogicAndCallSpell').abi)
+		saveDeployedABI(
+			networkName,
+			'changeLogicAndCallSpell',
+			artifacts.readArtifactSync('ChangeLogicAndCallSpell').abi
+		)
 		console.log('')
 	}
 

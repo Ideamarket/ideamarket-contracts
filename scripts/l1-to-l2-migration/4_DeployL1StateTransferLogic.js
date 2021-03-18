@@ -16,30 +16,41 @@ async function main() {
 		throw 'cannot work with network: ' + networkName
 	}
 
-    let contractFactory
-    let deployed
+	let contractFactory
+	let deployed
 
-    console.log('Deploying IdeaTokenFactoryStateTransfer')
-    contractFactory = await ethers.getContractFactory('IdeaTokenFactoryStateTransfer')
+	console.log('Deploying IdeaTokenFactoryStateTransfer')
+	contractFactory = await ethers.getContractFactory('IdeaTokenFactoryStateTransfer')
 	deployed = await contractFactory.deploy({ gasPrice: gasPrice })
 	await deployed.deployed()
 	saveDeployedAddress(networkName, 'ideaTokenFactoryStateTransferLogic', deployed.address)
-	saveDeployedABI(networkName, 'ideaTokenFactoryStateTransferLogic', artifacts.readArtifactSync('IdeaTokenFactoryStateTransfer').abi)
+	saveDeployedABI(
+		networkName,
+		'ideaTokenFactoryStateTransferLogic',
+		artifacts.readArtifactSync('IdeaTokenFactoryStateTransfer').abi
+	)
 
-    console.log('Deploying IdeaTokenExchangeStateTransfer')
-    contractFactory = await ethers.getContractFactory('IdeaTokenExchangeStateTransfer')
+	console.log('Deploying IdeaTokenExchangeStateTransfer')
+	contractFactory = await ethers.getContractFactory('IdeaTokenExchangeStateTransfer')
 	deployed = await contractFactory.deploy({ gasPrice: gasPrice })
 	await deployed.deployed()
 	saveDeployedAddress(networkName, 'ideaTokenExchangeStateTransferLogic', deployed.address)
-	saveDeployedABI(networkName, 'ideaTokenExchangeStateTransferLogic', artifacts.readArtifactSync('IdeaTokenExchangeStateTransfer').abi)
+	saveDeployedABI(
+		networkName,
+		'ideaTokenExchangeStateTransferLogic',
+		artifacts.readArtifactSync('IdeaTokenExchangeStateTransfer').abi
+	)
 
-    console.log('Deploying InterestManagerCompoundStateTransfer')
-    contractFactory = await ethers.getContractFactory('InterestManagerCompoundStateTransfer')
+	console.log('Deploying InterestManagerCompoundStateTransfer')
+	contractFactory = await ethers.getContractFactory('InterestManagerCompoundStateTransfer')
 	deployed = await contractFactory.deploy({ gasPrice: gasPrice })
 	await deployed.deployed()
 	saveDeployedAddress(networkName, 'interestManagerCompoundStateTransferLogic', deployed.address)
-	saveDeployedABI(networkName, 'interestManagerCompoundStateTransferLogic', artifacts.readArtifactSync('InterestManagerCompoundStateTransfer').abi)
-
+	saveDeployedABI(
+		networkName,
+		'interestManagerCompoundStateTransferLogic',
+		artifacts.readArtifactSync('InterestManagerCompoundStateTransfer').abi
+	)
 }
 
 main()
