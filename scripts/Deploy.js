@@ -198,7 +198,7 @@ async function main() {
 		throw 'cannot deploy to network: ' + networkName
 	}
 
-	const STAGE = 1
+	const STAGE = 12
 
 	let dsPauseProxyAddress
 	if (STAGE <= 1) {

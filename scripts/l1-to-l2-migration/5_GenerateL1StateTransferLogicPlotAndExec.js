@@ -15,8 +15,8 @@ async function main() {
 		console.log('Using Kovan')
 
 		l2NetworkName = 'kovan-ovm'
-		l1CrossDomainMessengerAddress = '0x0000000000000000000000000000000000000000'
-		l1DaiBridgeAddress = '0x0000000000000000000000000000000000000000'
+		l1CrossDomainMessengerAddress = '0x0000000000000000000000000000000000000001'
+		l1DaiBridgeAddress = '0x0000000000000000000000000000000000000001'
 	} else {
 		throw 'cannot work with network: ' + l1NetworkName
 	}

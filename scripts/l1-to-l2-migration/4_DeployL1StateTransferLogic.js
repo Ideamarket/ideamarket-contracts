@@ -1,7 +1,7 @@
 const { ethers, artifacts } = require('hardhat')
 const { saveDeployedAddress, saveDeployedABI } = require('../shared')
 
-const gasPrice = 10000000000 // 10 gwei
+const gasPrice = 1000000000 // 1 gwei
 
 async function main() {
 	const deployerAccount = (await ethers.getSigners())[0]

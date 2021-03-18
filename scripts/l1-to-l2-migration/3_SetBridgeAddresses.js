@@ -1,5 +1,5 @@
 const { l2ethers, artifacts } = require('hardhat')
-const { read, loadDeployedAddress, saveDeployedAddress, saveDeployedABI } = require('../shared')
+const { read, loadDeployedAddress } = require('../shared')
 
 const ethers = undefined
 
