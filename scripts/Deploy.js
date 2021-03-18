@@ -558,6 +558,24 @@ async function main() {
 		console.log('')
 	}
 
+	if (STAGE <= 22) {
+		console.log('22. Deploy ChangeLogic')
+		console.log('==============================================')
+		const changeLogicSpell = await deployContract('ChangeLogicSpell')
+		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
+		saveDeployedABI(networkName, 'changeLogicSpell', artifacts.readArtifactSync('ChangeLogicSpell').abi)
+		console.log('')
+	}
+
+	if (STAGE <= 23) {
+		console.log('22. Deploy ChangeLogicAndCallSpell')
+		console.log('==============================================')
+		const changeLogicAndCallSpell = await deployContract('ChangeLogicAndCallSpell')
+		saveDeployedAddress(networkName, 'changeLogicAndCallSpell', changeLogicAndCallSpell.address)
+		saveDeployedABI(networkName, 'changeLogicAndCallSpell', artifacts.readArtifactSync('ChangeLogicAndCallSpell').abi)
+		console.log('')
+	}
+
 	return
 
 	if (STAGE <= 22) {
