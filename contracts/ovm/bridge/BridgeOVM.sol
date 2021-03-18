@@ -179,7 +179,7 @@ contract BridgeOVM is Ownable, IBridgeOVM {
 
     function setL2Factory(address l2Factory) external override onlyOwner {
         require(l2Factory != address(0), "zero-addr");
-        require(address(_l2Factory) != address(0), "already-set");
+        require(address(_l2Factory) == address(0), "already-set");
         _l2Factory = IIdeaTokenFactory(l2Factory);
     }   
 }

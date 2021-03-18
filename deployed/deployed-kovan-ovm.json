@@ -1,0 +1,16 @@
+{
+    "bridgeOVM": "0xCDbC74646d3Ca7B47B3f421133051ca9655F6c04",
+    "proxyAdmin": "0x83aa0f7a553cB3510ad023a0Bd7593cd053CFf88",
+    "interestManagerOVM": "0x6F422ff46701D52BFD71a84B81E1D3c7CD0D62fF",
+    "interestManagerOVMLogic": "0x8e0eC89d642b8E83cA54E4Bd8440bD7144161c18",
+    "ideaTokenExchangeOVM": "0xC72393caf48bb69461B6DF1B61def3eb0FF9F307",
+    "ideaTokenExchangeOVMLogic": "0xe55b738e6f3Eec4cf02cc10B11C4F362847Bf633",
+    "ideaTokenLogic": "0x1ED12492070F8FdE1332B128aF0A1A8e275a3799",
+    "ideaTokenFactoryOVM": "0xddf79D9E333911126BE41b1c97c86fDC7E51cc05",
+    "ideaTokenFactoryOVMLogic": "0x24Cbb9030d1CF7E53f2dD0E54c598052Fcd68ADd",
+    "twitterHandleNameVerifier": "0x5FFE15f4975F6C481546090fF5635D2FB240EE22",
+    "substackNameVerifier": "0x70097614d92A913600A7a2Ddb69AA5eEb8faA102",
+    "ideaTokenVault": "0xbADfcCF0b0639Cf59314A0604A66AF33309b46f5",
+    "ideaTokenVaultLogic": "0x7607809293c9521fA3de9A535e7CfE41bFf46966",
+    "multiActionOVM": "0x66A103FA3f7a9F68e365D79E0bd441f85D7105c2"
+}
