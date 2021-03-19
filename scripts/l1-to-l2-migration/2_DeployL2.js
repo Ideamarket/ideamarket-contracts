@@ -64,6 +64,22 @@ async function main() {
 
 	const STAGE = 1
 
+	if (STAGE <= 1) {
+		console.log('1. Deploy Timelock')
+		console.log('==============================================')
+		const dsPause = await deployContract(
+			'DSPause',
+			deploymentParams.timelockDelay,
+			externalContractAdresses.multisig
+		)
+		const dsPauseProxyAddress = await dsPause._proxy()
+		saveDeployedAddress(l2NetworkName, 'dsPause', dsPause.address)
+		saveDeployedABI(l2NetworkName, 'dsPause', artifacts.readArtifactSync('DSPause').abi)
+		saveDeployedAddress(l2NetworkName, 'dsPauseProxy', dsPauseProxyAddress)
+		saveDeployedABI(l2NetworkName, 'dsPauseProxy', artifacts.readArtifactSync('DSPauseProxy').abi)
+		console.log('')
+	}
+
 	let proxyAdminAddress
 	if (STAGE <= 2) {
 		console.log('2. Deploy ProxyAdmin')
