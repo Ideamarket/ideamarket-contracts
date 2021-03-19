@@ -7,6 +7,8 @@ import "../../shared/core/interfaces/IIdeaTokenFactory.sol";
 import "../../shared/bridge/IBridgeOVM.sol";
 import "../../shared/util/Ownable.sol";
 
+import "../../shared/optimism/ICrossDomainMessenger.sol";
+
 /**
  * @title BridgeOVM
  * @author Alexander Schlindwein
@@ -25,6 +27,8 @@ contract BridgeOVM is Ownable, IBridgeOVM {
         bool set;
     }
 
+    // Address of Optimism's CrossDomainMessenger contract on L2
+    ICrossDomainMessenger public _l2CrossDomainMessenger;
     // Address of the IdeaTokenExchange on L1
     address public _l1Exchange;
     // Address of the IdeaTokenExchange on L2
@@ -40,8 +44,7 @@ contract BridgeOVM is Ownable, IBridgeOVM {
     mapping(uint => TMPTokenInfo[]) public _tmpTokenInfos;
 
     modifier onlyL1Exchange {
-        address L1ORIGIN = msg.sender; // ----------------- TODO! This is not officially documented yet
-        require(L1ORIGIN == _l1Exchange, "only-l1-exchange");
+        require(_l2CrossDomainMessenger.xDomainMessageSender() == _l1Exchange, "only-l1-exchange");
         _;
     } 
 
@@ -49,11 +52,13 @@ contract BridgeOVM is Ownable, IBridgeOVM {
      * Constructs a new instance and sets the owner as msg.sender
      *
      * @param l1Exchange The address of the IdeaTokenExchange on L1
+     * @param l2CrossDomainMessenger The address of Optimism's CrossDomainMessenger contract on L2
      */
-    constructor(address l1Exchange) public {
-        require(l1Exchange != address(0), "invalid-args");
+    constructor(address l1Exchange, address l2CrossDomainMessenger) public {
+        require(l1Exchange != address(0) && l2CrossDomainMessenger != address(0), "invalid-args");
         setOwnerInternal(msg.sender);
         _l1Exchange = l1Exchange;
+        _l2CrossDomainMessenger = ICrossDomainMessenger(l2CrossDomainMessenger);
     }
 
     /**

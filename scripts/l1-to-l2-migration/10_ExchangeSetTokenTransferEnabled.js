@@ -17,23 +17,22 @@ async function main() {
 		throw 'cannot work with network: ' + networkName
 	}
 
-	const interestManagerCompoundStateTransferAddress = loadDeployedAddress(networkName, 'interestManager')
+	const ideaTokenExchangeStateTransferAddress = loadDeployedAddress(networkName, 'ideaTokenExchange')
 
-	console.log('InterestManagerCompoundStateTransfer', interestManagerCompoundStateTransferAddress)
+	console.log('IdeaTokenExchangeStateTransferAddress', ideaTokenExchangeStateTransferAddress)
 	const yn = await read('Correct? [Y/n]: ')
 	if (yn !== 'Y' && yn !== 'y') {
 		console.log('abort')
 		return
 	}
 
-	const interestManagerCompoundStateTransfer = new ethers.Contract(
-		interestManagerCompoundStateTransferAddress,
-		(await ethers.getContractFactory('InterestManagerCompoundStateTransfer')).interface,
+	const ideaTokenExchangeStateTransfer = new ethers.Contract(
+		ideaTokenExchangeStateTransferAddress,
+		(await ethers.getContractFactory('IdeaTokenExchangeStateTransfer')).interface,
 		deployerAccount
 	)
 
-	console.log('Executing state transfer')
-	const tx = await interestManagerCompoundStateTransfer.executeStateTransfer({ gasPrice: gasPrice })
+	const tx = await ideaTokenExchangeStateTransfer.setTokenTransferEnabled({ gasPrice: gasPrice })
 	await tx.wait()
 }
 

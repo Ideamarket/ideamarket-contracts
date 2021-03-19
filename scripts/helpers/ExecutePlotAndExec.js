@@ -9,12 +9,12 @@ async function main() {
 	console.log(`Running from ${deployerAddress}`)
 	console.log('')
 
-    const to = await read('To: ')
-    const usr = await read('Param usr: ')
-    const tag = await read('Param tag: ')
-    const fax = await read('Param fax: ')
-    const eta = await read('Param eta: ')
-    console.log('')
+	const to = await read('To: ')
+	const usr = await read('Param usr: ')
+	const tag = await read('Param tag: ')
+	const fax = await read('Param fax: ')
+	const eta = await read('Param eta: ')
+	console.log('')
 
 	const timelockContract = new ethers.Contract(
 		to,
@@ -22,14 +22,14 @@ async function main() {
 		deployerAccount
 	)
 
-    console.log('Plot...')
-    await timelockContract.plot(usr, tag, fax, eta)
+	console.log('Plot...')
+	await timelockContract.plot(usr, tag, fax, eta)
 
-    await read('Plot confirmed. Press enter to continue with exec.')
+	await read('Plot confirmed. Press enter to continue with exec.')
 
-    console.log('')
-    console.log('Exec...')
-    await timelockContract.exec(usr, tag, fax, eta)
+	console.log('')
+	console.log('Exec...')
+	await timelockContract.exec(usr, tag, fax, eta)
 }
 
 main()

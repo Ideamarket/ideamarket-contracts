@@ -58,21 +58,33 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
         IERC20 comp = _comp;
 
         // Accrue Interest
-        require(_cDai.accrueInterest() == 0, "accrue");
+        require(cDai.accrueInterest() == 0, "accrue");
 
         // Claim COMP
         IComptroller(cDai.comptroller()).claimComp(addr);
-        require(comp.transfer(_compRecipient, comp.balanceOf(addr)), "comp-transfer");
+
+        uint bal = comp.balanceOf(addr);
+        if(bal > 0) {
+            require(comp.transfer(_compRecipient, bal), "comp-transfer");
+        }
+        
 
         // Redeem Dai from Compound
-        require(cDai.redeem(cDai.balanceOf(addr)) == 0, "redeem");
-
+        bal = cDai.balanceOf(addr);
+        if(bal > 0) {
+            require(cDai.redeem(bal) == 0, "redeem");
+        }
+        
         /*
         *   ----- TODO -----
         *   Here the Dai should be transferred to L2 using a Dai bridge
         *   Once there is info available on Maker's Dai bridge this will be properly implemented
         */
-        require(dai.transfer(address(0x1), dai.balanceOf(addr)), "dai-transfer"); // TODO: Implement transfer to bridge
+        bal = dai.balanceOf(addr);
+        if(bal > 0) {
+            require(dai.transfer(address(0x1), bal), "dai-transfer"); // TODO: Implement transfer to bridge
+        }
+        
     }
 
     /* **********************************************

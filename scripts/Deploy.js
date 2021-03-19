@@ -198,7 +198,7 @@ async function main() {
 		throw 'cannot deploy to network: ' + networkName
 	}
 
-	const STAGE = 12
+	const STAGE = 1
 
 	let dsPauseProxyAddress
 	if (STAGE <= 1) {
@@ -285,7 +285,10 @@ async function main() {
 			(await ethers.getContractFactory('InterestManagerCompound')).interface,
 			deployerAccount
 		)
-		await interestManagerCompound.setOwner(ideaTokenExchangeProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		const tx = await interestManagerCompound.setOwner(ideaTokenExchangeProxyAddress, {
+			gasPrice: deploymentParams.gasPrice,
+		})
+		await tx.wait()
 		console.log('')
 	}
 
@@ -331,9 +334,10 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenExchange')).interface,
 			deployerAccount
 		)
-		await ideaTokenExchange.setIdeaTokenFactoryAddress(ideaTokenFactoryProxyAddress, {
+		const tx = await ideaTokenExchange.setIdeaTokenFactoryAddress(ideaTokenFactoryProxyAddress, {
 			gasPrice: deploymentParams.gasPrice,
 		})
+		await tx.wait()
 		console.log('')
 	}
 
@@ -345,7 +349,8 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenExchange')).interface,
 			deployerAccount
 		)
-		await ideaTokenExchange.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		const tx = await ideaTokenExchange.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		await tx.wait()
 		console.log('')
 	}
 
@@ -375,7 +380,7 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
 			deployerAccount
 		)
-		await ideaTokenFactory.addMarket(
+		const tx = await ideaTokenFactory.addMarket(
 			'Twitter',
 			twitterHandleNameVerifierAddress,
 			deploymentParams.twitterBaseCost,
@@ -386,6 +391,7 @@ async function main() {
 			deploymentParams.twitterAllInterestToPlatform,
 			{ gasPrice: deploymentParams.gasPrice }
 		)
+		await tx.wait()
 		console.log('')
 	}
 
@@ -411,7 +417,7 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
 			deployerAccount
 		)
-		await ideaTokenFactory.addMarket(
+		const tx = await ideaTokenFactory.addMarket(
 			'Substack',
 			substackNameVerifierAddress,
 			deploymentParams.substackBaseCost,
@@ -422,6 +428,7 @@ async function main() {
 			deploymentParams.substackAllInterestToPlatform,
 			{ gasPrice: deploymentParams.gasPrice }
 		)
+		await tx.wait()
 		console.log('')
 	}
 
@@ -509,7 +516,8 @@ async function main() {
 			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
 			deployerAccount
 		)
-		await ideaTokenFactory.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		const tx = await ideaTokenFactory.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
+		await tx.wait()
 		console.log('')
 	}
 
@@ -642,6 +650,12 @@ async function deployContract(name, ...params) {
 	const contractFactory = await ethers.getContractFactory(name)
 	const deployed = await contractFactory.deploy(...params, { gasPrice: deploymentParams.gasPrice })
 	await deployed.deployed()
+
+	const networkName = (await ethers.provider.getNetwork()).name
+	if (networkName === 'kovan') {
+		await new Promise((resolve) => setTimeout(resolve, 1000))
+	}
+
 	return deployed
 }
 
