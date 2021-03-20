@@ -44,7 +44,7 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
     // marketID => owner. The owner of a platform.
     // This address is allowed to withdraw platform fee.
     // When allInterestToPlatform=true then this address can also withdraw the platform interest
-    mapping(uint => address) _platformOwner;
+    mapping(uint => address) public _platformOwner;
 
     // marketID => amount. The amount of "investment tokens" for the collected platform fee, e.g. cDai
     mapping(uint => uint) _platformFeeInvested;
@@ -55,7 +55,7 @@ contract IdeaTokenExchangeOVM is IIdeaTokenExchange, Initializable, Ownable {
 
     // IdeaToken address => owner. The owner of an IdeaToken.
     // This address is allowed to withdraw the interest for an IdeaToken
-    mapping(address => address) _tokenOwner;
+    mapping(address => address) public _tokenOwner;
     // IdeaToken address => ExchangeInfo. Stores ExchangeInfo structs for IdeaTokens
     mapping(address => ExchangeInfo) _tokensExchangeInfo;
 
