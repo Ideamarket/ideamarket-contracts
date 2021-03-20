@@ -33,7 +33,12 @@ module.exports = {
 	},
 	solidity: {
 		version: '0.6.12',
-		settings: {},
+		settings: {
+			optimizer: {
+			enabled: true,
+			runs: 1000
+		  }
+		}
 	},
 	ovm: {
 		solcVersion: '0.6.12',
