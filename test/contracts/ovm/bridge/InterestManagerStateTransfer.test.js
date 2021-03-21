@@ -19,8 +19,8 @@ describe('ovm/core/InterestManagerStateTransfer', () => {
 	let dai
 
 	before(async () => {
-		adminAccount = (await ethers.getSigners())[0]
-		;[userAccount] = generateWallets(ethers, 1)
+		userAccount = (await ethers.getSigners())[0]
+		;[adminAccount] = generateWallets(ethers, 1)
 
 		InterestManagerStateTransferOVM = await ethers.getContractFactory('InterestManagerStateTransferOVM')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
@@ -45,6 +45,7 @@ describe('ovm/core/InterestManagerStateTransfer', () => {
 		await waitForTx(interestManagerStateTransfer.connect(adminAccount).invest(tenPow18))
 		expect(zero.eq(await dai.balanceOf(userAccount.address))).to.be.true
 		expect(tenPow18.eq(await dai.balanceOf(interestManagerStateTransfer.address))).to.be.true
+		expect(tenPow18.eq(await interestManagerStateTransfer.sharesToDai(tenPow18))).to.be.true
 	})
 
 	it('can redeem', async () => {
@@ -57,6 +58,15 @@ describe('ovm/core/InterestManagerStateTransfer', () => {
 
 		expect(redeemAmount.eq(await dai.balanceOf(adminAccount.address))).to.be.true
 		expect(tenPow18.sub(redeemAmount).eq(await dai.balanceOf(interestManagerStateTransfer.address))).to.be.true
+	})
+
+	it('owner can add to total shares', async () => {
+		await waitForTx(interestManagerStateTransfer.connect(adminAccount).addToTotalShares(BigNumber.from('123')))
+		expect((await interestManagerStateTransfer._totalShares()).toNumber()).to.be.equal(123)
+	})
+
+	it('fail user cannot add to total shares', async () => {
+		await expectRevert(interestManagerStateTransfer.addToTotalShares(BigNumber.from('123')))
 	})
 
 	it('fail redeem not admin', async () => {

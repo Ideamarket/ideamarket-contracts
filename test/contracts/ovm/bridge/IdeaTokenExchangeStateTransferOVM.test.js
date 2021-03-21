@@ -7,15 +7,12 @@ const { generateWallets } = require('../../utils/wallet')
 
 describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 	let DomainNoSubdomainNameVerifier
-	let TestERC20
-	let TestCDai
+
 	let InterestManagerStateTransferOVM
-	let TestComptroller
 	let IdeaTokenFactory
 	let IdeaTokenExchange
 	let IdeaToken
 
-	const tenPow17 = BigNumber.from('10').pow(BigNumber.from('17'))
 	const tenPow18 = BigNumber.from('10').pow(BigNumber.from('18'))
 
 	const marketName = 'main'
@@ -33,16 +30,11 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 	let tradingFeeAccount
 	let interestReceiverAccount
 	let platformFeeReceiverAccount
-	const zeroAddress = '0x0000000000000000000000000000000000000000'
 	const oneAddress = '0x0000000000000000000000000000000000000001'
-	const someAddress = '0x52bc44d5378309EE2abF1539BF71dE1b7d7bE3b5' // random addr from etherscan
 
 	let domainNoSubdomainNameVerifier
 	let dai
-	let comp
-	let cDai
 	let interestManager
-	let comptroller
 	let ideaTokenFactory
 	let ideaTokenLogic
 	let ideaTokenExchange
@@ -63,30 +55,20 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
-		TestCDai = await ethers.getContractFactory('TestCDai')
 		InterestManagerStateTransferOVM = await ethers.getContractFactory('InterestManagerStateTransferOVM')
-		TestComptroller = await ethers.getContractFactory('TestComptroller')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactoryOVM')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchangeStateTransferOVM')
 		IdeaToken = await ethers.getContractFactory('IdeaToken')
+
+		await reset()
 	})
 
-	beforeEach(async () => {
+	async function reset() {
 		domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await domainNoSubdomainNameVerifier.deployed()
 
 		dai = await TestERC20.deploy('DAI', 'DAI')
 		await dai.deployed()
-
-		comp = await TestERC20.deploy('COMP', 'COMP')
-		await comp.deployed()
-
-		comptroller = await TestComptroller.deploy()
-		await comptroller.deployed()
-
-		cDai = await TestCDai.deploy(dai.address, comp.address, comptroller.address)
-		await cDai.deployed()
-		await waitForTx(cDai.setExchangeRate(tenPow18))
 
 		interestManager = await InterestManagerStateTransferOVM.deploy()
 		await interestManager.deployed()
@@ -100,7 +82,9 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 		ideaTokenExchange = await IdeaTokenExchange.deploy()
 		await ideaTokenExchange.deployed()
 
-		await waitForTx(interestManager.connect(adminAccount).initializeStateTransfer(adminAccount.address, oneAddress))
+		await waitForTx(
+			interestManager.connect(adminAccount).initializeStateTransfer(ideaTokenExchange.address, oneAddress)
+		)
 
 		await waitForTx(
 			ideaTokenFactory
@@ -139,7 +123,7 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 
 		marketID = await ideaTokenFactory.getMarketIDByName(marketName)
 
-		await waitForTx(ideaTokenFactory.addToken(tokenName, marketID, userAccount.address))
+		await ideaTokenFactory.addToken(tokenName, marketID, userAccount.address)
 
 		tokenID = await ideaTokenFactory.getTokenIDByName(tokenName, marketID)
 
@@ -148,11 +132,100 @@ describe('ovm/core/IdeaTokenExchangeStateTransfer', () => {
 			IdeaToken.interface,
 			IdeaToken.signer
 		)
-	})
+	}
 
 	it('disabled functions revert', async () => {
 		await expectRevert(
 			ideaTokenExchange.sellTokens(oneAddress, BigNumber.from('1'), BigNumber.from('1'), oneAddress)
+		)
+
+		await expectRevert(
+			ideaTokenExchange.buyTokens(
+				oneAddress,
+				BigNumber.from('1'),
+				BigNumber.from('1'),
+				BigNumber.from('1'),
+				oneAddress
+			)
+		)
+
+		await expectRevert(ideaTokenExchange.withdrawTokenInterest(oneAddress))
+
+		await expectRevert(ideaTokenExchange.withdrawPlatformInterest(BigNumber.from('1')))
+
+		await expectRevert(ideaTokenExchange.withdrawPlatformFee(BigNumber.from('1')))
+
+		await expectRevert(ideaTokenExchange.withdrawTradingFee())
+
+		await expectRevert(ideaTokenExchange.setTokenOwner(oneAddress, oneAddress))
+	})
+
+	it('can set static vars', async () => {
+		const before = await interestManager._totalShares()
+		await waitForTx(ideaTokenExchange.connect(adminAccount).setStaticVars(BigNumber.from('123')))
+		const after = await interestManager._totalShares()
+		expect(after.toNumber() - before.toNumber()).to.be.equal(123)
+	})
+
+	it('fail user cannot set static vars', async () => {
+		await expectRevert(ideaTokenExchange.setStaticVars(BigNumber.from('123')))
+	})
+
+	it('can set platform vars', async () => {
+		const before = await interestManager._totalShares()
+		await waitForTx(
+			ideaTokenExchange
+				.connect(adminAccount)
+				.setPlatformVars(
+					BigNumber.from('1'),
+					BigNumber.from('123'),
+					BigNumber.from('123'),
+					BigNumber.from('123')
+				)
+		)
+		const after = await interestManager._totalShares()
+		expect(after.toNumber() - before.toNumber()).to.be.equal(123 + 123)
+	})
+
+	it('fail user cannot set platform vars', async () => {
+		await expectRevert(
+			ideaTokenExchange.setPlatformVars(
+				BigNumber.from('1'),
+				BigNumber.from('123'),
+				BigNumber.from('123'),
+				BigNumber.from('123')
+			)
+		)
+	})
+
+	it('can set token vars and mint', async () => {
+		const before = await interestManager._totalShares()
+		await waitForTx(
+			ideaTokenExchange
+				.connect(adminAccount)
+				.setTokenVarsAndMint(
+					marketID,
+					tokenID,
+					BigNumber.from('500'),
+					BigNumber.from('100'),
+					BigNumber.from('123')
+				)
+		)
+		const after = await interestManager._totalShares()
+		expect(after.toNumber() - before.toNumber()).to.be.equal(123)
+		expect((await ideaToken.totalSupply()).toNumber()).to.be.equal(500)
+		expect((await ideaToken.balanceOf(adminAccount.address)).toNumber()).to.be.equal(500)
+	})
+
+	it('fail user cannot set token vars and mint', async () => {
+		await expectRevert(
+			ideaTokenExchange.setTokenVarsAndMint(
+				marketID,
+				tokenID,
+				BigNumber.from('500'),
+				BigNumber.from('100'),
+				BigNumber.from('123')
+			)
 		)
 	})
 })

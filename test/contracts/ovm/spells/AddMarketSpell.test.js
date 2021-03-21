@@ -30,9 +30,10 @@ describe('ovm/spells/AddMarketSpell', () => {
 		const accounts = await ethers.getSigners()
 		adminAccount = accounts[0].address
 
-		DSPause = await ethers.getContractFactory('DSPause')
-		dsPause = await DSPause.deploy(delay, adminAccount)
+		DSPause = await ethers.getContractFactory('DSPauseOVM')
+		dsPause = await DSPause.deploy()
 		await dsPause.deployed()
+		await waitForTx(dsPause.initialize(delay, adminAccount))
 		dsPauseProxyAddress = await dsPause._proxy()
 
 		AddMarketSpell = await ethers.getContractFactory('AddMarketSpell')

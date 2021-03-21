@@ -63,9 +63,11 @@ describe('ovm/core/IdeaTokenExchange', () => {
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactoryOVM')
 		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchangeOVM')
 		IdeaToken = await ethers.getContractFactory('IdeaToken')
+
+		await reset()
 	})
 
-	beforeEach(async () => {
+	async function reset() {
 		domainNoSubdomainNameVerifier = await DomainNoSubdomainNameVerifier.deploy()
 		await domainNoSubdomainNameVerifier.deployed()
 
@@ -84,12 +86,12 @@ describe('ovm/core/IdeaTokenExchange', () => {
 		ideaTokenExchange = await IdeaTokenExchange.deploy()
 		await ideaTokenExchange.deployed()
 
-		const receipt = await ideaTokenExchange.deployTransaction.wait()
+		/*const receipt = await ideaTokenExchange.deployTransaction.wait()
 		console.log('tx', await ethers.provider.getTransaction(receipt.transactionHash))
 		console.log('receipt', receipt)
 		console.log('code', await ethers.provider.getCode(ideaTokenExchange.address))
 		await ideaTokenExchange.getOwner()
-		return
+		return*/
 
 		await waitForTx(
 			interestManagerStateTransferOVM
@@ -143,7 +145,7 @@ describe('ovm/core/IdeaTokenExchange', () => {
 			IdeaToken.interface,
 			IdeaToken.signer
 		)
-	})
+	}
 
 	it('admin is owner', async () => {
 		expect(adminAccount.address).to.be.equal(await ideaTokenExchange.getOwner())
@@ -151,6 +153,9 @@ describe('ovm/core/IdeaTokenExchange', () => {
 
 	// TODO
 	/*it('can buy and sell 500 tokens with correct interest', async () => {
+
+		await reset()
+
 		const amount = BigNumber.from('250').mul(tenPow18)
 		const initialExchangeRate = tenPow18
 		const firstCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
@@ -352,8 +357,7 @@ describe('ovm/core/IdeaTokenExchange', () => {
 		expect((await ideaTokenExchange.getTradingFeePayable()).eq(BigNumber.from('0'))).to.be.true
 	})*/
 
-	it.only('buy completely in hatch', async () => {
-		return
+	it('buy completely in hatch', async () => {
 		const amount = hatchTokens.div(2)
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount.toString())
 		expect(cost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
@@ -366,82 +370,84 @@ describe('ovm/core/IdeaTokenExchange', () => {
 		const amount = hatchTokens
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
 		expect(cost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
-		await dai.mint(userAccount.address, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, cost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
+		await waitForTx(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address))
 	})
 
 	it('buy partially in hatch', async () => {
 		const amount = hatchTokens.mul(2)
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
 		expect(cost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
-		await dai.mint(userAccount.address, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, cost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
+		await waitForTx(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address))
 	})
 
 	it('buy completely outside hatch', async () => {
 		const hatchCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, hatchTokens)
-		await dai.mint(userAccount.address, hatchCost)
-		await dai.approve(ideaTokenExchange.address, hatchCost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, hatchTokens, hatchTokens, hatchCost, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, hatchCost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, hatchCost))
+		await waitForTx(
+			ideaTokenExchange.buyTokens(ideaToken.address, hatchTokens, hatchTokens, hatchCost, userAccount.address)
+		)
 
 		const amount = hatchTokens.mul(2)
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
 		expect(cost.eq(await getCostForBuyingTokens(ideaToken, amount))).to.be.true
-		await dai.mint(userAccount.address, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, cost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
+		await waitForTx(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address))
 	})
 
 	it('sell completely in hatch', async () => {
 		const amount = hatchTokens.div(2)
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
-		await dai.mint(userAccount.address, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, cost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
+		await waitForTx(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address))
 
 		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
 		expect(price.eq(await getPriceForSellingTokens(ideaToken, amount))).to.be.true
-		await ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address)
+		await waitForTx(ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address))
 	})
 
 	it('sell full hatch', async () => {
 		const amount = hatchTokens
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
-		await dai.mint(userAccount.address, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, cost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
+		await waitForTx(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address))
 
 		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
 		expect(price.eq(await getPriceForSellingTokens(ideaToken, amount))).to.be.true
-		await ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address)
+		await waitForTx(ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address))
 	})
 
 	it('sell partially in hatch', async () => {
 		const buyAmount = hatchTokens.add(tenPow18.mul(100))
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, buyAmount)
-		await dai.mint(userAccount.address, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, buyAmount, buyAmount, cost, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, cost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
+		await waitForTx(ideaTokenExchange.buyTokens(ideaToken.address, buyAmount, buyAmount, cost, userAccount.address))
 
 		const amount = tenPow18.mul(200)
 		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
 		expect(price.eq(await getPriceForSellingTokens(ideaToken, amount))).to.be.true
-		await ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address)
+		await waitForTx(ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address))
 	})
 
 	it('sell completely outside hatch', async () => {
 		const buyAmount = hatchTokens.add(tenPow18.mul(200))
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, buyAmount)
-		await dai.mint(userAccount.address, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, buyAmount, buyAmount, cost, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, cost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
+		await waitForTx(ideaTokenExchange.buyTokens(ideaToken.address, buyAmount, buyAmount, cost, userAccount.address))
 
 		const amount = tenPow18.mul(100)
 		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, amount)
 		expect(price.eq(await getPriceForSellingTokens(ideaToken, amount))).to.be.true
-		await ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address)
+		await waitForTx(ideaTokenExchange.sellTokens(ideaToken.address, amount, price, userAccount.address))
 	})
 
 	it('can fallback on buy', async () => {
@@ -449,29 +455,27 @@ describe('ovm/core/IdeaTokenExchange', () => {
 		const tooHighAmount = amount.mul(BigNumber.from('2'))
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
 
-		await dai.mint(userAccount.address, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
+		await waitForTx(dai.mint(userAccount.address, cost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
 
-		await expect(
+		await expectRevert(
 			ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, tooHighAmount, cost, userAccount.address)
-		).to.be.revertedWith('slippage')
-		await ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, amount, cost, userAccount.address)
+		)
+		await waitForTx(
+			ideaTokenExchange.buyTokens(ideaToken.address, tooHighAmount, amount, cost, userAccount.address)
+		)
 	})
 
 	it('fail buy/sell - invalid token', async () => {
-		await expect(
-			ideaTokenExchange.buyTokens(zeroAddress, tenPow18, tenPow18, tenPow18, userAccount.address)
-		).to.be.revertedWith('token-not-exist')
-		await expect(
-			ideaTokenExchange.sellTokens(zeroAddress, tenPow18, tenPow18, userAccount.address)
-		).to.be.revertedWith('token-not-exist')
+		await expectRevert(ideaTokenExchange.buyTokens(zeroAddress, tenPow18, tenPow18, tenPow18, userAccount.address))
+		await expectRevert(ideaTokenExchange.sellTokens(zeroAddress, tenPow18, tenPow18, userAccount.address))
 	})
 
 	it('fail buy/sell - max cost / minPrice', async () => {
 		const amount = tenPow18
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
 
-		await expect(
+		await expectRevert(
 			ideaTokenExchange.buyTokens(
 				ideaToken.address,
 				amount,
@@ -479,53 +483,53 @@ describe('ovm/core/IdeaTokenExchange', () => {
 				cost.sub(BigNumber.from('1')),
 				userAccount.address
 			)
-		).to.be.revertedWith('slippage')
+		)
 
-		await dai.mint(userAccount.address, cost)
-		await dai.approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, cost))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
+		await waitForTx(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address))
 
 		const price = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tenPow18)
 
-		await expect(
+		await expectRevert(
 			ideaTokenExchange.sellTokens(ideaToken.address, amount, price.add(BigNumber.from('1')), userAccount.address)
-		).to.be.revertedWith('below-min-price')
+		)
 	})
 
 	it('fail buy - not enough allowance', async () => {
 		const amount = tenPow18
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
-		await dai.mint(userAccount.address, cost)
+		await waitForTx(dai.mint(userAccount.address, cost))
 
-		await expect(
-			ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
-		).to.be.revertedWith('insufficient-allowance')
+		await expectRevert(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address))
 	})
 
 	it('fail buy/sell - not enough tokens', async () => {
+		await reset()
+
 		const amount = tenPow18
 		const cost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, tenPow18)
-		await dai.mint(userAccount.address, cost.sub(BigNumber.from('1')))
-		await dai.approve(ideaTokenExchange.address, cost)
+		await waitForTx(dai.mint(userAccount.address, cost.sub(BigNumber.from('1'))))
+		await waitForTx(dai.approve(ideaTokenExchange.address, cost))
 
-		await expect(
-			ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address)
-		).to.be.revertedWith('ERC20: transfer amount exceeds balance')
+		await expectRevert(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, cost, userAccount.address))
 
-		await dai.mint(adminAccount.address, cost)
-		await dai.connect(adminAccount).approve(ideaTokenExchange.address, cost)
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.buyTokens(ideaToken.address, amount, amount, cost, adminAccount.address)
+		await waitForTx(dai.mint(adminAccount.address, cost))
+		await waitForTx(dai.connect(adminAccount).approve(ideaTokenExchange.address, cost))
+		await waitForTx(
+			ideaTokenExchange
+				.connect(adminAccount)
+				.buyTokens(ideaToken.address, amount, amount, cost, adminAccount.address)
+		)
 
-		await expect(
+		await expectRevert(
 			ideaTokenExchange.sellTokens(
 				ideaToken.address,
 				BigNumber.from('1'),
 				BigNumber.from('0'),
 				userAccount.address
 			)
-		).to.be.revertedWith('insufficient-tokens')
+		)
 	})
 
 	/* TODO
@@ -577,176 +581,201 @@ describe('ovm/core/IdeaTokenExchange', () => {
 	})*/
 
 	it('no trading fee available', async () => {
+		await reset()
+
 		expect((await ideaTokenExchange.getTradingFeePayable()).eq(BigNumber.from('0'))).to.be.true
-		await ideaTokenExchange.withdrawTradingFee()
+		await waitForTx(ideaTokenExchange.withdrawTradingFee())
 		expect((await dai.balanceOf(tradingFeeAccount.address)).eq(BigNumber.from('0'))).to.be.true
 	})
 
 	it('no platform fee available', async () => {
-		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, platformFeeReceiverAccount.address)
+		await reset()
+		await waitForTx(
+			ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, platformFeeReceiverAccount.address)
+		)
 
 		expect((await ideaTokenExchange.getPlatformFeePayable(marketID)).eq(BigNumber.from('0'))).to.be.true
-		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformFee(marketID)
+		await waitForTx(ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformFee(marketID))
 		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(BigNumber.from('0'))).to.be.true
 	})
 
 	it('no platform interest available', async () => {
-		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, platformFeeReceiverAccount.address)
+		await waitForTx(
+			ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, platformFeeReceiverAccount.address)
+		)
 
 		expect((await ideaTokenExchange.getPlatformInterestPayable(marketID)).eq(BigNumber.from('0'))).to.be.true
-		await ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformInterest(marketID)
+		await waitForTx(ideaTokenExchange.connect(platformFeeReceiverAccount).withdrawPlatformInterest(marketID))
 		expect((await dai.balanceOf(platformFeeReceiverAccount.address)).eq(BigNumber.from('0'))).to.be.true
 	})
 
 	it('no interest available', async () => {
-		await ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, interestReceiverAccount.address)
+		await waitForTx(
+			ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, interestReceiverAccount.address)
+		)
 
 		expect((await ideaTokenExchange.getInterestPayable(ideaToken.address)).eq(BigNumber.from('0'))).to.be.true
-		await ideaTokenExchange.connect(interestReceiverAccount).withdrawTokenInterest(ideaToken.address)
+		await waitForTx(ideaTokenExchange.connect(interestReceiverAccount).withdrawTokenInterest(ideaToken.address))
 		expect((await dai.balanceOf(interestReceiverAccount.address)).eq(BigNumber.from('0'))).to.be.true
 	})
 
 	it('fail authorize interest withdrawer not authorized', async () => {
-		await expect(
-			ideaTokenExchange.setTokenOwner(ideaToken.address, interestReceiverAccount.address)
-		).to.be.revertedWith('not-authorized')
+		await expectRevert(ideaTokenExchange.setTokenOwner(ideaToken.address, interestReceiverAccount.address))
 	})
 
 	it('fail withdraw interest not authorized', async () => {
-		await expect(ideaTokenExchange.withdrawTokenInterest(ideaToken.address)).to.be.revertedWith('not-authorized')
+		await expectRevert(ideaTokenExchange.withdrawTokenInterest(ideaToken.address))
 	})
 
 	it('fail withdraw platform fee not authorized', async () => {
-		await expect(ideaTokenExchange.withdrawPlatformFee(marketID)).to.be.revertedWith('not-authorized')
+		await expectRevert(ideaTokenExchange.withdrawPlatformFee(marketID))
 	})
 
 	it('fail withdraw platform interest not authorized', async () => {
-		await expect(ideaTokenExchange.withdrawPlatformInterest(marketID)).to.be.revertedWith('not-authorized')
+		await expectRevert(ideaTokenExchange.withdrawPlatformInterest(marketID))
 	})
 
 	it('fail authorize platform fee withdrawer not authorized', async () => {
-		await expect(
-			ideaTokenExchange.setPlatformOwner(marketID, platformFeeReceiverAccount.address)
-		).to.be.revertedWith('not-authorized')
+		await expectRevert(ideaTokenExchange.setPlatformOwner(marketID, platformFeeReceiverAccount.address))
 	})
 
 	it('can set factory address on init', async () => {
 		const exchange = await IdeaTokenExchange.deploy()
 		await exchange.deployed()
 
-		await exchange
-			.connect(adminAccount)
-			.initialize(
-				adminAccount.address,
-				oneAddress,
-				tradingFeeAccount.address,
-				interestManagerStateTransferOVM.address,
-				dai.address,
-				oneAddress
-			)
+		await waitForTx(
+			exchange
+				.connect(adminAccount)
+				.initialize(
+					adminAccount.address,
+					oneAddress,
+					tradingFeeAccount.address,
+					interestManagerStateTransferOVM.address,
+					dai.address,
+					oneAddress
+				)
+		)
 
-		await exchange.connect(adminAccount).setIdeaTokenFactoryAddress(someAddress)
+		await waitForTx(exchange.connect(adminAccount).setIdeaTokenFactoryAddress(someAddress))
 	})
 
 	it('fail only owner can set factory address', async () => {
 		const exchange = await IdeaTokenExchange.deploy()
 		await exchange.deployed()
 
-		await exchange
-			.connect(adminAccount)
-			.initialize(
-				adminAccount.address,
-				oneAddress,
-				tradingFeeAccount.address,
-				interestManagerStateTransferOVM.address,
-				dai.address,
-				oneAddress
-			)
+		await waitForTx(
+			exchange
+				.connect(adminAccount)
+				.initialize(
+					adminAccount.address,
+					oneAddress,
+					tradingFeeAccount.address,
+					interestManagerStateTransferOVM.address,
+					dai.address,
+					oneAddress
+				)
+		)
 
-		await expect(exchange.setIdeaTokenFactoryAddress(someAddress)).to.be.revertedWith('only-owner')
+		await expectRevert(exchange.setIdeaTokenFactoryAddress(someAddress))
 	})
 
 	it('fail cannot set factory address twice', async () => {
 		const exchange = await IdeaTokenExchange.deploy()
 		await exchange.deployed()
 
-		await exchange
-			.connect(adminAccount)
-			.initialize(
-				adminAccount.address,
-				oneAddress,
-				tradingFeeAccount.address,
-				interestManagerStateTransferOVM.address,
-				dai.address,
-				oneAddress
-			)
+		await waitForTx(
+			exchange
+				.connect(adminAccount)
+				.initialize(
+					adminAccount.address,
+					oneAddress,
+					tradingFeeAccount.address,
+					interestManagerStateTransferOVM.address,
+					dai.address,
+					oneAddress
+				)
+		)
 
-		await exchange.connect(adminAccount).setIdeaTokenFactoryAddress(someAddress)
+		await waitForTx(exchange.connect(adminAccount).setIdeaTokenFactoryAddress(someAddress))
 
-		await expect(exchange.connect(adminAccount).setIdeaTokenFactoryAddress(someAddress)).to.be.reverted
+		await expectRevert(exchange.connect(adminAccount).setIdeaTokenFactoryAddress(someAddress))
 	})
 
 	it('admin can set authorizer', async () => {
-		await ideaTokenExchange.connect(adminAccount).setAuthorizer(oneAddress)
+		await waitForTx(ideaTokenExchange.connect(adminAccount).setAuthorizer(oneAddress))
 	})
 
 	it('fail user cannot set authorizer', async () => {
-		await expect(ideaTokenExchange.setAuthorizer(oneAddress)).to.be.revertedWith('only-owner')
+		await expectRevert(ideaTokenExchange.setAuthorizer(oneAddress))
 	})
 
 	it('authorizer can set interest withdrawer', async () => {
-		await ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, someAddress)
+		await reset()
+
+		await waitForTx(ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, someAddress))
 	})
 
 	it('interest withdrawer can set new interest withdrawer', async () => {
-		await ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, tradingFeeAccount.address)
-		await ideaTokenExchange.connect(tradingFeeAccount).setTokenOwner(ideaToken.address, someAddress)
+		await reset()
+
+		await waitForTx(
+			ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, tradingFeeAccount.address)
+		)
+		await waitForTx(ideaTokenExchange.connect(tradingFeeAccount).setTokenOwner(ideaToken.address, someAddress))
 	})
 
 	it('fail authorizer cannot set interest withdrawer twice', async () => {
-		await ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, someAddress)
-		await expect(
-			ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, someAddress)
-		).to.be.revertedWith('not-authorized')
+		await reset()
+
+		await waitForTx(ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, someAddress))
+		await expectRevert(ideaTokenExchange.connect(authorizerAccount).setTokenOwner(ideaToken.address, someAddress))
 	})
 
 	it('admin can set interest withdrawer twice', async () => {
-		await ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, someAddress)
-		await ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, someAddress)
+		await waitForTx(ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, someAddress))
+		await waitForTx(ideaTokenExchange.connect(adminAccount).setTokenOwner(ideaToken.address, someAddress))
 	})
 
 	it('authorizer can set platform fee withdrawer', async () => {
-		await ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, someAddress)
+		await reset()
+
+		await waitForTx(ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, someAddress))
 	})
 
 	it('platform fee withdrawer can set new platform fee withdrawer', async () => {
-		await ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, tradingFeeAccount.address)
-		await ideaTokenExchange.connect(tradingFeeAccount).setPlatformOwner(marketID, someAddress)
+		await reset()
+
+		await waitForTx(
+			ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, tradingFeeAccount.address)
+		)
+		await waitForTx(ideaTokenExchange.connect(tradingFeeAccount).setPlatformOwner(marketID, someAddress))
 	})
 
 	it('fail authorizer cannot set platform fee withdrawer twice', async () => {
-		await ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, someAddress)
-		await expect(
-			ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, someAddress)
-		).to.be.revertedWith('not-authorized')
+		await reset()
+
+		await waitForTx(ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, someAddress))
+		await expectRevert(ideaTokenExchange.connect(authorizerAccount).setPlatformOwner(marketID, someAddress))
 	})
 
 	it('admin can set platform fee withdrawer twice', async () => {
-		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, someAddress)
-		await ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, someAddress)
+		await waitForTx(ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, someAddress))
+		await waitForTx(ideaTokenExchange.connect(adminAccount).setPlatformOwner(marketID, someAddress))
 	})
 
 	it('admin can disable fees for specific token', async () => {
 		expect(await ideaTokenExchange.isTokenFeeDisabled(ideaToken.address)).to.be.false
-		await ideaTokenExchange.connect(adminAccount).setTokenFeeKillswitch(ideaToken.address, true)
+		await waitForTx(ideaTokenExchange.connect(adminAccount).setTokenFeeKillswitch(ideaToken.address, true))
 		expect(await ideaTokenExchange.isTokenFeeDisabled(ideaToken.address)).to.be.true
 	})
 
 	it('fail user cannot disable fees for specific token', async () => {
-		await expect(ideaTokenExchange.setTokenFeeKillswitch(ideaToken.address, true)).to.be.revertedWith('only-owner')
+		await expectRevert(ideaTokenExchange.setTokenFeeKillswitch(ideaToken.address, true))
 	})
 
 	it('correct costs when buying with fee disabled', async () => {
+		await reset()
+
 		const amount = tenPow18.mul(BigNumber.from('2000'))
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken.address)
 
@@ -779,11 +808,13 @@ describe('ovm/core/IdeaTokenExchange', () => {
 	})
 
 	it('correct prices when selling with fee disabled', async () => {
+		await reset()
+
 		const amount = tenPow18.mul(BigNumber.from('2000'))
 		const costToBuy = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, amount)
-		await dai.mint(userAccount.address, costToBuy)
-		await dai.approve(ideaTokenExchange.address, costToBuy)
-		await ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, costToBuy, userAccount.address)
+		await waitForTx(dai.mint(userAccount.address, costToBuy))
+		await waitForTx(dai.approve(ideaTokenExchange.address, costToBuy))
+		await waitForTx(ideaTokenExchange.buyTokens(ideaToken.address, amount, amount, costToBuy, userAccount.address))
 
 		const marketDetails = await ideaTokenFactory.getMarketDetailsByTokenAddress(ideaToken.address)
 
