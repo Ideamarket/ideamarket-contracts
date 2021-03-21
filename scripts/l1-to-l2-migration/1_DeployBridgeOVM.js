@@ -1,5 +1,5 @@
 const { l2ethers, artifacts } = require('hardhat')
-const { read, loadDeployedAddress, saveDeployedAddress, saveDeployedABI } = require('../shared')
+const { read, saveDeployedAddress, saveDeployedABI } = require('../shared')
 
 const ethers = undefined
 
@@ -15,21 +15,14 @@ async function main() {
 	let l1NetworkName = ''
 	let l2NetworkName = ''
 
-	let l2CrossDomainMessengerAddress = ''
-
 	if (chainID === 69) {
 		l1NetworkName = 'kovan'
 		l2NetworkName = 'kovan-ovm'
-		l2CrossDomainMessengerAddress = '0x6f78cde001182d5DCBc63D3C4b8051f2059E79D8'
 	} else {
 		throw `unknown chain id: ${chainID}`
 	}
 
-	const l1ExchangeAddress = loadDeployedAddress(l1NetworkName, 'ideaTokenExchange')
-
 	console.log(`Networks (${l1NetworkName},${l2NetworkName})`)
-	console.log('L1 Exchange Address', l1ExchangeAddress)
-	console.log('L2 CrossDomainMessenger', l2CrossDomainMessengerAddress)
 
 	const yn = await read('Correct? [Y/n]: ')
 	if (yn !== 'Y' && yn !== 'y') {
@@ -39,9 +32,7 @@ async function main() {
 
 	console.log(`Deploying contract BridgeOVM to OVM`)
 	const contractFactory = await l2ethers.getContractFactory('BridgeOVM')
-	const deployed = await contractFactory.deploy(l1ExchangeAddress, l2CrossDomainMessengerAddress, {
-		gasPrice: gasPrice,
-	})
+	const deployed = await contractFactory.deploy({ gasPrice: gasPrice })
 	await deployed.deployed()
 
 	saveDeployedAddress(l2NetworkName, 'bridgeOVM', deployed.address)

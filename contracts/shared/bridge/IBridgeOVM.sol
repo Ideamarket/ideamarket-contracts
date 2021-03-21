@@ -7,8 +7,7 @@ pragma experimental ABIEncoderV2;
  * @author Alexander Schlindwein
  */
 interface IBridgeOVM {
-    function setL2Exchange(address l2Exchange) external;
-    function setL2Factory(address l2Exchange) external;
+    function initialize(address l1Exchange, address l2CrossDomainMessenger, address l2Exchange, address l2Factory) external;
     function receiveExchangeStaticVars(uint tradingFeeInvested) external;
     function receiveExchangePlatformVars(uint marketID, uint dai, uint invested, uint platformFeeInvested) external;
     function receiveExchangeTokenVars(uint marketID, uint[] calldata tokenIDs, string[] calldata names, uint[] calldata supplies, uint[] calldata dais, uint[] calldata investeds) external;

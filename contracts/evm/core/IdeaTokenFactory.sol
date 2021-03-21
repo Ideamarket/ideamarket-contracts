@@ -3,13 +3,13 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
+import "../util/MinimalProxy.sol";
 import "../../shared/util/Initializable.sol";
 import "../../shared/util/Ownable.sol";
 import "../../shared/core/interfaces/IIdeaTokenFactory.sol";
 import "../../shared/core/IdeaToken.sol";
 import "../../shared/core/interfaces/IIdeaToken.sol";
 import "../../shared/core/nameVerifiers/IIdeaTokenNameVerifier.sol";
-import "../../shared/util/MinimalProxy.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 /**

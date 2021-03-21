@@ -1,3 +1,4 @@
+// @unsupported: ovm
 // Copyright (C) 2019 David Terry <me@xwvvvvwx.com>
 //
 // This program is free software: you can redistribute it and/or modify
@@ -17,8 +18,9 @@
 
 pragma solidity 0.6.12;
 
-import "./IDSPause.sol";
-import "./DSPauseProxy.sol";
+
+import "../../shared/timelock/DSPauseProxy.sol";
+import "../../shared/timelock/IDSPause.sol";
 
 contract DSPause is IDSPause {
 

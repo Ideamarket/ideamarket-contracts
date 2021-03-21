@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
+// @unsupported: ovm
 // https://github.com/OpenZeppelin/openzeppelin-upgrades/blob/master/packages/core/contracts/proxy/ProxyAdmin.sol
 
 pragma solidity 0.6.12;
 
-import "../util/Ownable.sol";
+import "../../shared/util/Ownable.sol";
 import "./AdminUpgradeabilityProxy.sol";
 
 /**

@@ -51,7 +51,6 @@ async function main() {
 	console.log('')
 
 	const chainID = (await l2ethers.provider.getNetwork()).chainId
-	let l1NetworkName = ''
 	let l2NetworkName = ''
 
 	if (chainID === 69) {
@@ -62,21 +61,21 @@ async function main() {
 		throw `unknown chain id: ${chainID}`
 	}
 
-	const STAGE = 1
+	const STAGE = 16
 
 	if (STAGE <= 1) {
 		console.log('1. Deploy Timelock')
 		console.log('==============================================')
-		const dsPause = await deployContract(
-			'DSPause',
-			deploymentParams.timelockDelay,
-			externalContractAdresses.multisig
-		)
+		const dsPause = await deployContract('DSPauseOVM')
 		const dsPauseProxyAddress = await dsPause._proxy()
-		saveDeployedAddress(l2NetworkName, 'dsPause', dsPause.address)
-		saveDeployedABI(l2NetworkName, 'dsPause', artifacts.readArtifactSync('DSPause').abi)
-		saveDeployedAddress(l2NetworkName, 'dsPauseProxy', dsPauseProxyAddress)
-		saveDeployedABI(l2NetworkName, 'dsPauseProxy', artifacts.readArtifactSync('DSPauseProxy').abi)
+
+		const tx = await dsPause.initialize(deploymentParams.timelockDelay, externalContractAdresses.multisig)
+		await tx.wait()
+
+		saveDeployedAddress(l2NetworkName, 'dsPauseOVM', dsPause.address)
+		saveDeployedABI(l2NetworkName, 'dsPauseOVM', artifacts.readArtifactSync('DSPause').abi)
+		saveDeployedAddress(l2NetworkName, 'dsPauseOVMProxy', dsPauseProxyAddress)
+		saveDeployedABI(l2NetworkName, 'dsPauseOVMProxy', artifacts.readArtifactSync('DSPauseProxy').abi)
 		console.log('')
 	}
 
@@ -84,12 +83,12 @@ async function main() {
 	if (STAGE <= 2) {
 		console.log('2. Deploy ProxyAdmin')
 		console.log('==============================================')
-		proxyAdminAddress = (await deployContract('ProxyAdmin', deployerAddress)).address
-		saveDeployedAddress(l2NetworkName, 'proxyAdmin', proxyAdminAddress)
-		saveDeployedABI(l2NetworkName, 'proxyAdmin', artifacts.readArtifactSync('ProxyAdmin').abi)
+		proxyAdminAddress = (await deployContract('ProxyAdminOVM')).address
+		saveDeployedAddress(l2NetworkName, 'proxyAdminOVM', proxyAdminAddress)
+		saveDeployedABI(l2NetworkName, 'proxyAdminOVM', artifacts.readArtifactSync('ProxyAdminOVM').abi)
 		console.log('')
 	} else {
-		proxyAdminAddress = loadDeployedAddress(l2NetworkName, 'proxyAdmin')
+		proxyAdminAddress = loadDeployedAddress(l2NetworkName, 'proxyAdminOVM')
 	}
 
 	let interestManagerProxyAddress
@@ -319,8 +318,10 @@ async function main() {
 	if (STAGE <= 16) {
 		console.log('16. Deploy MultiActionOVM')
 		console.log('==============================================')
-		const multiAction = await deployContract(
+		const [multiActionOVMProxy, multiActionOVMLogic] = await deployProxyContract(
 			'MultiActionOVM',
+			'initialize',
+			proxyAdminAddress,
 			ideaTokenExchangeProxyAddress,
 			ideaTokenFactoryProxyAddress,
 			ideaTokenVaultProxyAddress,
@@ -328,8 +329,10 @@ async function main() {
 			externalContractAdresses.oweth,
 			externalContractAdresses.uniswapV2Router02
 		)
-		saveDeployedAddress(l2NetworkName, 'multiActionOVM', multiAction.address)
+
+		saveDeployedAddress(l2NetworkName, 'multiActionOVM', multiActionOVMProxy.address)
 		saveDeployedABI(l2NetworkName, 'multiActionOVM', artifacts.readArtifactSync('MultiActionOVM').abi)
+		saveDeployedAddress(l2NetworkName, 'multiActionOVMLogic', multiActionOVMLogic.address)
 		console.log('')
 	}
 }
@@ -338,7 +341,11 @@ async function deployProxyContract(name, initializer, admin, ...params) {
 	const logic = await deployContract(name)
 
 	const data = logic.interface.encodeFunctionData(initializer, [...params])
-	const proxy = await deployContract('AdminUpgradeabilityProxy', logic.address, admin, data)
+	const proxy = await deployContract('AdminUpgradeabilityProxyOVM')
+
+	console.log('Initializing AdminUpgradeabilityProxyOVM')
+	const init = await proxy.initialize(logic.address, admin, data)
+	await init.wait()
 
 	return [proxy, logic]
 }

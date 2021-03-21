@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.6.12;
 
-import "../proxy/ProxyAdmin.sol";
-import "../proxy/AdminUpgradeabilityProxy.sol";
+import "../proxy/IProxyAdmin.sol";
 
 /**
  * @title ChangeLogicAndCallSpell
@@ -21,6 +20,6 @@ contract ChangeLogicAndCallSpell {
      * @param data The calldata for the call
      */
     function execute(address proxyAdmin, address payable proxy, address newLogic, bytes calldata data) external {
-        ProxyAdmin(proxyAdmin).upgradeAndCall(AdminUpgradeabilityProxy(proxy), newLogic, data);
+        IProxyAdmin(proxyAdmin).upgradeAndCall(proxy, newLogic, data);
     }
 }

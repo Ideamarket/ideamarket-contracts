@@ -2,13 +2,13 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
+import "../util/MinimalProxyOVM.sol";
 import "../../shared/util/Initializable.sol";
 import "../../shared/util/Ownable.sol";
 import "../../shared/core/interfaces/IIdeaTokenFactory.sol";
 import "../../shared/core/IdeaToken.sol";
 import "../../shared/core/interfaces/IIdeaToken.sol";
 import "../../shared/core/nameVerifiers/IIdeaTokenNameVerifier.sol";
-import "../../shared/util/MinimalProxy.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 /**
@@ -159,7 +159,9 @@ contract IdeaTokenFactoryOVM is IIdeaTokenFactory, Initializable, Ownable {
         require(marketInfo.marketDetails.exists, "market-not-exist");
         require(isValidTokenName(tokenName, marketID), "invalid-name");
 
-        IIdeaToken ideaToken = IIdeaToken(address(new MinimalProxy(_ideaTokenLogic)));
+        MinimalProxyOVM minimalProxy = new MinimalProxyOVM();
+        minimalProxy.__initialize_implementation_slot(_ideaTokenLogic);
+        IIdeaToken ideaToken = IIdeaToken(address(minimalProxy));
         ideaToken.initialize(string(abi.encodePacked(marketInfo.marketDetails.name, ": ", tokenName)), _ideaTokenExchange);
 
         uint tokenID = ++marketInfo.marketDetails.numTokens;

@@ -3,7 +3,7 @@
 
 pragma solidity 0.6.12;
 
-import "./Proxy.sol";
+import "../../shared/proxy/Proxy.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
 /**
@@ -12,24 +12,7 @@ import "@openzeppelin/contracts/utils/Address.sol";
  * implementation address to which it will delegate.
  * Such a change is called an implementation upgrade.
  */
-contract UpgradeabilityProxy is Proxy {
-  /**
-   * @dev Contract constructor.
-   * @param _logic Address of the initial implementation.
-   * @param _data Data to send as msg.data to the implementation to initialize the proxied contract.
-   * It should include the signature and the parameters of the function to be called, as described in
-   * https://solidity.readthedocs.io/en/v0.4.24/abi-spec.html#function-selector-and-argument-encoding.
-   * This parameter is optional, if no data is given the initialization call to proxied contract will be skipped.
-   */
-  constructor(address _logic, bytes memory _data) public payable {
-    assert(IMPLEMENTATION_SLOT == bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1));
-    _setImplementation(_logic);
-    if(_data.length > 0) {
-      (bool success,) = _logic.delegatecall(_data);
-      require(success);
-    }
-  }  
-
+abstract contract UpgradeabilityProxyOVM is Proxy {
   /**
    * @dev Emitted when the implementation is upgraded.
    * @param implementation Address of the new implementation.

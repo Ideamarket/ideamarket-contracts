@@ -35,10 +35,10 @@ module.exports = {
 		version: '0.6.12',
 		settings: {
 			optimizer: {
-			enabled: true,
-			runs: 200
-		  }
-		}
+				enabled: true,
+				runs: 200,
+			},
+		},
 	},
 	ovm: {
 		solcVersion: '0.6.12',

@@ -23,27 +23,19 @@ async function main() {
 	let contractFactory
 	let deployed
 
-    console.log('Deploying IdeaTokenExchangeOVM')
+	console.log('Deploying IdeaTokenExchangeOVM')
 	contractFactory = await l2ethers.getContractFactory('IdeaTokenExchangeOVM')
 	deployed = await contractFactory.deploy()
 	await deployed.deployed()
 	saveDeployedAddress(l2NetworkName, 'ideaTokenExchangeOVMLogic', deployed.address)
-	saveDeployedABI(
-		l2NetworkName,
-		'ideaTokenExchangeOVM',
-		artifacts.readArtifactSync('IdeaTokenExchangeOVM').abi
-	)
+	saveDeployedABI(l2NetworkName, 'ideaTokenExchangeOVM', artifacts.readArtifactSync('IdeaTokenExchangeOVM').abi)
 
 	console.log('Deploying IdeaTokenFactoryOVM')
 	contractFactory = await l2ethers.getContractFactory('IdeaTokenFactoryOVM')
 	deployed = await contractFactory.deploy()
 	await deployed.deployed()
 	saveDeployedAddress(l2NetworkName, 'ideaTokenFactoryOVMLogic', deployed.address)
-	saveDeployedABI(
-		l2NetworkName,
-		'ideaTokenFactoryOVM',
-		artifacts.readArtifactSync('IdeaTokenFactoryOVM').abi
-	)
+	saveDeployedABI(l2NetworkName, 'ideaTokenFactoryOVM', artifacts.readArtifactSync('IdeaTokenFactoryOVM').abi)
 }
 
 main()

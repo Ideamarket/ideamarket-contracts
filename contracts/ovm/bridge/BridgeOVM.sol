@@ -6,7 +6,7 @@ import "./interfaces/IIdeaTokenExchangeStateTransferOVM.sol";
 import "../../shared/core/interfaces/IIdeaTokenFactory.sol";
 import "../../shared/bridge/IBridgeOVM.sol";
 import "../../shared/util/Ownable.sol";
-
+import "../../shared/util/Initializable.sol";
 import "../../shared/optimism/ICrossDomainMessenger.sol";
 
 /**
@@ -16,7 +16,7 @@ import "../../shared/optimism/ICrossDomainMessenger.sol";
  * Handles the state transfer from L1 to L2.
  * This contract is deployed on L2.
  */
-contract BridgeOVM is Ownable, IBridgeOVM {
+contract BridgeOVM is Ownable, Initializable, IBridgeOVM {
 
     struct TMPTokenInfo {
         uint tokenID;
@@ -49,16 +49,20 @@ contract BridgeOVM is Ownable, IBridgeOVM {
     } 
 
     /**
-     * Constructs a new instance and sets the owner as msg.sender
+     * Initializes the contract
      *
      * @param l1Exchange The address of the IdeaTokenExchange on L1
      * @param l2CrossDomainMessenger The address of Optimism's CrossDomainMessenger contract on L2
+     * @param l2Exchange The address of the IdeaTokenExchange on L2
+     * @param l2Factory The address of the IdeaTokenFactory on L2
      */
-    constructor(address l1Exchange, address l2CrossDomainMessenger) public {
-        require(l1Exchange != address(0) && l2CrossDomainMessenger != address(0), "invalid-args");
+    function initialize(address l1Exchange, address l2CrossDomainMessenger, address l2Exchange, address l2Factory) external override initializer {
+        require(l1Exchange != address(0) && l2CrossDomainMessenger != address(0) && l2Exchange != address(0) && l2Factory != address(0), "invalid-args");
         setOwnerInternal(msg.sender);
         _l1Exchange = l1Exchange;
         _l2CrossDomainMessenger = ICrossDomainMessenger(l2CrossDomainMessenger);
+        _l2Exchange = IIdeaTokenExchangeStateTransferOVM(l2Exchange);
+        _l2Factory = IIdeaTokenFactory(l2Factory);
     }
 
     /**
@@ -174,17 +178,4 @@ contract BridgeOVM is Ownable, IBridgeOVM {
         tokenInfo.ideaToken.transfer(to, amount);
         // TODO: EVENTS?
     }
-
-    // --- For deployment ---
-    function setL2Exchange(address l2Exchange) external override onlyOwner {
-        require(l2Exchange != address(0), "zero-addr");
-        require(address(_l2Exchange) == address(0), "already-set");
-        _l2Exchange = IIdeaTokenExchangeStateTransferOVM(l2Exchange);
-    }
-
-    function setL2Factory(address l2Factory) external override onlyOwner {
-        require(l2Factory != address(0), "zero-addr");
-        require(address(_l2Factory) == address(0), "already-set");
-        _l2Factory = IIdeaTokenFactory(l2Factory);
-    }   
 }

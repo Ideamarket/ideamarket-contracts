@@ -7,6 +7,7 @@ import "../../shared/uniswap/IUniswapV2Router02.sol";
 import "../../shared/core/interfaces/IIdeaTokenExchange.sol";
 import "../../shared/core/interfaces/IIdeaTokenFactory.sol";
 import "../../shared/core/interfaces/IIdeaTokenVault.sol";
+import "../../shared/util/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
@@ -15,7 +16,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  *
  * Allows to bundle multiple actions into one tx
  */
-contract MultiActionOVM {
+contract MultiActionOVM is Initializable {
 
     // IdeaTokenExchange contract
     IIdeaTokenExchange _ideaTokenExchange;
@@ -33,6 +34,7 @@ contract MultiActionOVM {
     IUniswapV2Router02 public _uniswapV2Router02;
 
     /**
+     * Contract initializer
      * @param ideaTokenExchange The address of the IdeaTokenExchange contract
      * @param ideaTokenFactory The address of the IdeaTokenFactory contract
      * @param ideaTokenVault The address of the IdeaTokenVault contract
@@ -40,12 +42,13 @@ contract MultiActionOVM {
      * @param owETH The address of the ETH token
      * @param uniswapV2Router02 The address of the UniswapV2Router02 contract
      */
-    constructor(address ideaTokenExchange,
+    function initialize(
+                address ideaTokenExchange,
                 address ideaTokenFactory,
                 address ideaTokenVault,
                 address dai,
                 address owETH,
-                address uniswapV2Router02) public {
+                address uniswapV2Router02) external initializer {
 
         require(ideaTokenExchange != address(0) &&
                 ideaTokenFactory != address(0) &&

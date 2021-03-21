@@ -1,4 +1,4 @@
-const { l2ethers, artifacts } = require('hardhat')
+const { l2ethers } = require('hardhat')
 const { read, loadDeployedAddress } = require('../shared')
 
 const ethers = undefined
@@ -15,19 +15,26 @@ async function main() {
 	let l1NetworkName = ''
 	let l2NetworkName = ''
 
+	let l2CrossDomainMessengerAddress = ''
+
 	if (chainID === 69) {
 		l1NetworkName = 'kovan'
 		l2NetworkName = 'kovan-ovm'
+		l2CrossDomainMessengerAddress = '0x6f78cde001182d5DCBc63D3C4b8051f2059E79D8'
 	} else {
 		throw `unknown chain id: ${chainID}`
 	}
 
 	const bridgeOVMAddress = loadDeployedAddress(l2NetworkName, 'bridgeOVM')
+	const l1ExchangeAddress = loadDeployedAddress(l1NetworkName, 'ideaTokenExchange')
 	const l2ExchangeAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenExchangeOVM')
 	const l2FactoryAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenFactoryOVM')
 
 	console.log(`Networks (${l1NetworkName},${l2NetworkName})`)
 	console.log('L2 Bridge Address', bridgeOVMAddress)
+	console.log('L2 Bridge Owner', deployerAddress)
+	console.log('L1 Exchange Address', l1ExchangeAddress)
+	console.log('L2 CrossDomainMessenger', l2CrossDomainMessengerAddress)
 	console.log('l2 IdeaTokenExchange Address', l2ExchangeAddress)
 	console.log('L2 IdeaTokenFactory Address', l2FactoryAddress)
 
@@ -43,12 +50,13 @@ async function main() {
 		deployerAccount
 	)
 
-	console.log('Setting IdeaTokenExchange address')
-	let tx = await bridgeOVM.setL2Exchange(l2ExchangeAddress)
-	await tx.wait()
-
-	console.log('Setting IdeaTokenFactory address')
-	tx = await bridgeOVM.setL2Factory(l2FactoryAddress)
+	const tx = await bridgeOVM.initialize(
+		l1ExchangeAddress,
+		l2CrossDomainMessengerAddress,
+		l2ExchangeAddress,
+		l2FactoryAddress,
+		{ gasPrice: gasPrice }
+	)
 	await tx.wait()
 }
 

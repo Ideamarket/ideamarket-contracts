@@ -24,7 +24,9 @@ contract IdeaTokenFactoryStateTransferOVM is IdeaTokenFactoryOVM {
         require(marketInfo.marketDetails.exists, "market-not-exist");
         require(isValidTokenName(tokenName, marketID), "invalid-name");
 
-        IIdeaToken ideaToken = IIdeaToken(address(new MinimalProxy(_ideaTokenLogic)));
+        MinimalProxyOVM minimalProxy = new MinimalProxyOVM();
+        minimalProxy.__initialize_implementation_slot(_ideaTokenLogic);
+        IIdeaToken ideaToken = IIdeaToken(address(minimalProxy));
         ideaToken.initialize(string(abi.encodePacked(marketInfo.marketDetails.name, ": ", tokenName)), _ideaTokenExchange);
 
         uint tokenID = ++marketInfo.marketDetails.numTokens;

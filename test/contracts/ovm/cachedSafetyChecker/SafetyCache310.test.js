@@ -1,7 +1,6 @@
 const { l2ethers: ethers } = require('hardhat')
 
 describe('ovm/cachedSafetyChecker/SafetyCache310', () => {
-
 	let SafetyCache310OVM
 	let SafetyChecker310OVM
 	let IdeaTokenExchangeOVM

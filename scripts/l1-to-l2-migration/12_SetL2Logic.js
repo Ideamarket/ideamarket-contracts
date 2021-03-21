@@ -20,17 +20,16 @@ async function main() {
 		throw `unknown chain id: ${chainID}`
 	}
 
-	
 	const l2ProxyAdminAddress = loadDeployedAddress(l2NetworkName, 'proxyAdmin')
 
-    const l2ExchangeAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenExchangeOVM')
+	const l2ExchangeAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenExchangeOVM')
 	const l2ExchangeNewLogicAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenExchangeOVMLogic')
 
 	const l2FactoryAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenFactoryOVM')
 	const l2FactoryNewLogicAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenFactoryOVMLogic')
 
 	console.log('')
-    console.log('L2 ProxyAdmin', l2ProxyAdminAddress)
+	console.log('L2 ProxyAdmin', l2ProxyAdminAddress)
 
 	console.log('')
 	console.log('L2 IdeaTokenExchange', l2ExchangeAddress)
@@ -53,14 +52,14 @@ async function main() {
 		deployerAccount
 	)
 
-    let tx
-    console.log('Setting IdeaTokenExchange logic')
-    tx = await proxyAdminContract.upgrade(l2ExchangeAddress, l2ExchangeNewLogicAddress)
-    await tx.wait()
+	let tx
+	console.log('Setting IdeaTokenExchange logic')
+	tx = await proxyAdminContract.upgrade(l2ExchangeAddress, l2ExchangeNewLogicAddress)
+	await tx.wait()
 
-    console.log('Setting IdeaTokenFactory logic')
-    tx = await proxyAdminContract.upgrade(l2FactoryAddress, l2FactoryNewLogicAddress)
-    await tx.wait()
+	console.log('Setting IdeaTokenFactory logic')
+	tx = await proxyAdminContract.upgrade(l2FactoryAddress, l2FactoryNewLogicAddress)
+	await tx.wait()
 }
 
 main()
