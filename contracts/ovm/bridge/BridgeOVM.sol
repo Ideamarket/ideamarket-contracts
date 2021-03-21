@@ -24,8 +24,9 @@ contract BridgeOVM is Ownable, Initializable, IBridgeOVM {
         uint supply;
         uint dai;
         uint invested;
-        bool set;
     }
+
+    event TokensRedeemed(uint marketID, uint tokenID, uint amount, address to);
 
     // Address of Optimism's CrossDomainMessenger contract on L2
     ICrossDomainMessenger public _l2CrossDomainMessenger;
@@ -134,34 +135,34 @@ contract BridgeOVM is Ownable, Initializable, IBridgeOVM {
             name: name,
             supply: supply,
             dai: dai,
-            invested: invested,
-            set: false
+            invested: invested
         }));
     }
 
     /**
-     * Sets previously received tokens vars on L2.
+     * Sets previously received token vars on L2.
      * May only be called by the owner.
      * 
      * @param marketID The market's ID
-     * @param tokenID The ID of the token
+     * @param tokenIDs The IDs of the tokens
      */
-    function setTokenVars(uint marketID, uint tokenID) external override onlyOwner {
-        require(tokenID > 0, "tokenid-0");
-        uint index = tokenID - 1;
+    function setTokenVars(uint marketID, uint[] calldata tokenIDs) external override onlyOwner {
+        uint length = tokenIDs.length;
+        require(length > 0, "zero-length");
+        require(tokenIDs[0] > 0, "tokenid-0");
 
-        TMPTokenInfo storage tmpTokenInfo = _tmpTokenInfos[marketID][index];
-        require(!tmpTokenInfo.set, "already-set");
-        tmpTokenInfo.set = true;
+        MarketDetails memory marketDetails = _l2Factory.getMarketDetailsByID(marketID);
+        require(marketDetails.exists, "invalid-market");
+        uint numTokens = marketDetails.numTokens;
 
-        if(index > 0) {
-            require(_tmpTokenInfos[marketID][index - 1].set, "prev-not-set");
-        } else {
-            require(!_tmpTokenInfos[marketID][0].set, "0-set");
+        for(uint i = 0; i < length; i++) {
+            uint tokenID = tokenIDs[i];
+            require(numTokens + i + 1 == tokenID, "gap");
+
+            TMPTokenInfo memory tmpTokenInfo = _tmpTokenInfos[marketID][tokenID - 1];
+            _l2Factory.addToken(tmpTokenInfo.name, marketID, address(this));
+            _l2Exchange.setTokenVarsAndMint(marketID, tmpTokenInfo.tokenID, tmpTokenInfo.supply, tmpTokenInfo.dai, tmpTokenInfo.invested);
         }
-
-        _l2Factory.addToken(tmpTokenInfo.name, marketID, address(this));
-        _l2Exchange.setTokenVarsAndMint(marketID, tmpTokenInfo.tokenID, tmpTokenInfo.supply, tmpTokenInfo.dai, tmpTokenInfo.invested);
     }
 
     /**
@@ -176,6 +177,7 @@ contract BridgeOVM is Ownable, Initializable, IBridgeOVM {
         TokenInfo memory tokenInfo = _l2Factory.getTokenInfo(marketID, tokenID);
         require(tokenInfo.exists, "not-exist");
         tokenInfo.ideaToken.transfer(to, amount);
-        // TODO: EVENTS?
+        
+        emit TokensRedeemed(marketID, tokenID, amount, to);
     }
 }

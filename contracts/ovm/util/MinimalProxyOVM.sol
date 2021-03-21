@@ -36,7 +36,7 @@ contract MinimalProxyOVM {
     /**
      * Every call is delegated to the implementation
      */
-    fallback() payable external {
+    fallback() external {
         bytes32 slot = IMPLEMENTATION_SLOT;
         assembly {
           calldatacopy(0, 0, calldatasize())

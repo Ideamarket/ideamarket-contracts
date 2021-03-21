@@ -17,9 +17,9 @@ import "../core/IdeaTokenExchangeOVM.sol";
  */
 contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenExchangeStateTransferOVM {
 
-    /*
-        TODO: EVENTS
-    */
+    event StaticVarsSet(uint tradingFeeInvested);
+    event PlatformVarsSet(uint marketID, uint dai, uint invested, uint platformFeeInvested);
+    event TokenVarsSet(uint marketID, uint tokenID, uint supply, uint dai, uint invested);
 
     /**
      * Sets _tradingFeeInvested. Can only be called by the bridge.
@@ -29,6 +29,8 @@ contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenEx
     function setStaticVars(uint tradingFeeInvested) external override onlyBridge {
         _tradingFeeInvested = tradingFeeInvested;
         IInterestManagerStateTransferOVM(address(_interestManager)).addToTotalShares(tradingFeeInvested);
+
+        emit StaticVarsSet(tradingFeeInvested);
     }
 
     /**
@@ -47,6 +49,8 @@ contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenEx
         _platformFeeInvested[marketID] = platformFeeInvested;
 
         IInterestManagerStateTransferOVM(address(_interestManager)).addToTotalShares(invested.add(platformFeeInvested));
+
+        emit PlatformVarsSet(marketID, dai, invested, platformFeeInvested);
     }
 
     /**
@@ -72,6 +76,8 @@ contract IdeaTokenExchangeStateTransferOVM is IdeaTokenExchangeOVM, IIdeaTokenEx
 
         IInterestManagerStateTransferOVM(address(_interestManager)).addToTotalShares(invested);
         ideaToken.mint(msg.sender, supply);
+
+        emit TokenVarsSet(marketID, tokenID, supply, dai, invested);
     }
 
     // --- Disabled functions during state transfer ---
