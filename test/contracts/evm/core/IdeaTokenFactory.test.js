@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('core/IdeaTokenFactory', () => {
+describe('evm/core/IdeaTokenFactory', () => {
 	let DomainNoSubdomainNameVerifier
 	let IdeaTokenFactory
 	let IdeaToken

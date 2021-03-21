@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 
-describe('nameVerifiers/YoutubeChannelNameVerifier', () => {
+describe('evm/nameVerifiers/YoutubeChannelNameVerifier', () => {
 	let YoutubeChannelNameVerifier
 	let nameVerifier
 

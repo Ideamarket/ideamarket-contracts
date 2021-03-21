@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 
-describe('nameVerifiers/DomainNoSubdomainNameVerifier', () => {
+describe('evm/nameVerifiers/DomainNoSubdomainNameVerifier', () => {
 	let DomainNoSubdomainNameVerifier
 	let nameVerifier
 

@@ -2,7 +2,7 @@ const { time } = require('@openzeppelin/test-helpers')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('spells/SetPlatformOwnerSpell', () => {
+describe('evm/spells/SetPlatformOwnerSpell', () => {
 	let DSPause
 	let IdeaTokenExchange
 	let SetPlatformOwnerSpell

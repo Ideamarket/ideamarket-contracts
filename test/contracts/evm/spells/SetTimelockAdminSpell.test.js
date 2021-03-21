@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('spells/SetTimelockAdminSpell', () => {
+describe('evm/spells/SetTimelockAdminSpell', () => {
 	let DSPause
 	let SetTimelockAdminSpell
 

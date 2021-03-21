@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 
-describe('nameVerifiers/SubstackNameVerifier', () => {
+describe('evm/nameVerifiers/SubstackNameVerifier', () => {
 	let SubstackNameVerifier
 	let nameVerifier
 

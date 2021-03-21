@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('spells/SetTimelockDelaySpell', () => {
+describe('evm/spells/SetTimelockDelaySpell', () => {
 	let DSPause
 	let SetTimelockDelaySpell
 

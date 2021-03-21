@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('spells/ChangeLogicSpell', () => {
+describe('evm/spells/ChangeLogicSpell', () => {
 	let DSPause
 	let ChangeLogicSpell
 	let IdeaTokenFactory

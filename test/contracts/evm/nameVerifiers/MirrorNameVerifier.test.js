@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 
-describe('nameVerifiers/MirrorNameVerifier', () => {
+describe('evm/nameVerifiers/MirrorNameVerifier', () => {
 	let MirrorNameVerifier
 	let nameVerifier
 

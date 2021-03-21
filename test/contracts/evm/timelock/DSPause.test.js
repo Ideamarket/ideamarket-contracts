@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('timelock/DSPause', () => {
+describe('evm/timelock/DSPause', () => {
 	let DSPause
 	let AddMarketSpell
 	let IdeaTokenFactory

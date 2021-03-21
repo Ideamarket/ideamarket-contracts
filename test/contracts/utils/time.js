@@ -1,5 +1,6 @@
 const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
+const { generateWallets } = require('./wallet')
 
 module.exports = {
 	latest: async () => {
@@ -11,7 +12,23 @@ module.exports = {
 			secs = BigNumber.from(secs.toString())
 		}
 
-		await ethers.provider.send('evm_increaseTime', [secs.toNumber()])
+		console.log('sleep', (secs.toNumber() + 5) * 1000)
+		await new Promise((resolve) => {
+			setTimeout(resolve, (secs.toNumber() + 5) * 1000)
+		})
+		console.log('done')
+		//const [account] = await generateWallets(ethers, 1)
+
+		const [account] = await ethers.getSigners()
+		const params = {
+			to: '0x0000000000000000000000000000000000000001',
+			value: 0,
+		}
+		const tx = await account.sendTransaction(params)
+		await tx.wait()
+
+		console.log((await module.exports.latest()).toString())
+		//await ethers.provider.send('evm_increaseTime', [secs.toNumber()])
 	},
 
 	increaseTo: async (to) => {
@@ -21,6 +38,8 @@ module.exports = {
 
 		const latestTs = await module.exports.latest()
 		const diff = to.sub(latestTs)
+
+		console.log(latestTs.toString(), to.toString())
 
 		await module.exports.increase(diff)
 	},

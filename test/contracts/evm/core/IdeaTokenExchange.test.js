@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('core/IdeaTokenExchange', () => {
+describe('evm/core/IdeaTokenExchange', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
 	let TestCDai

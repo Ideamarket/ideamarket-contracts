@@ -14,7 +14,7 @@ describe('ovm/spells/AddMarketSpell', () => {
 	let dsPauseProxyAddress
 	let spell
 
-	const delay = 86400
+	const delay = 5
 	const oneAddress = '0x0000000000000000000000000000000000000001'
 	let adminAccount
 
@@ -44,7 +44,7 @@ describe('ovm/spells/AddMarketSpell', () => {
 	})
 
 	it('can add new market', async () => {
-		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
+		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 1).toString())
 		const tag = await dsPause.soul(spell.address)
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
@@ -64,8 +64,9 @@ describe('ovm/spells/AddMarketSpell', () => {
 
 		await waitForTx(dsPause.plot(spell.address, tag, fax, eta))
 		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
+		console.log('execing')
 		await waitForTx(dsPause.exec(spell.address, tag, fax, eta))
-
+		console.log('done')
 		expect(BigNumber.from('1').eq(await factory.getNumMarkets())).to.be.true
 		expect(BigNumber.from('1').eq(await factory.getMarketIDByName(marketName))).to.be.true
 
@@ -81,6 +82,5 @@ describe('ovm/spells/AddMarketSpell', () => {
 		expect(marketDetails.hatchTokens.eq(hatchTokens)).to.be.true
 		expect(marketDetails.tradingFeeRate.eq(tradingFeeRate)).to.be.true
 		expect(marketDetails.platformFeeRate.eq(platformFeeRate)).to.be.true
-		console.log('4')
 	})
 })

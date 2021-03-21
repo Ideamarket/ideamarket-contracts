@@ -2,13 +2,16 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('core/IdeaTokenExchange', () => {
+describe('evm/bridge/IdeaTokenExchange', () => {
+	let ProxyAdmin
+	let AdminUpgradeabilityProxy
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
 	let TestCDai
 	let InterestManagerCompound
 	let TestComptroller
 	let IdeaTokenFactory
+	let IdeaTokenExchangeStateTransfer
 	let IdeaTokenExchange
 	let IdeaToken
 
@@ -58,13 +61,16 @@ describe('core/IdeaTokenExchange', () => {
 		interestReceiverAccount = accounts[4]
 		platformFeeReceiverAccount = accounts[5]
 
+		ProxyAdmin = await ethers.getContractFactory('ProxyAdmin')
+		AdminUpgradeabilityProxy = await ethers.getContractFactory('AdminUpgradeabilityProxy')
 		DomainNoSubdomainNameVerifier = await ethers.getContractFactory('DomainNoSubdomainNameVerifier')
 		TestERC20 = await ethers.getContractFactory('TestERC20')
 		TestCDai = await ethers.getContractFactory('TestCDai')
 		InterestManagerCompound = await ethers.getContractFactory('InterestManagerCompound')
 		TestComptroller = await ethers.getContractFactory('TestComptroller')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactory')
-		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchangeStateTransfer')
+		IdeaTokenExchangeStateTransfer = await ethers.getContractFactory('IdeaTokenExchangeStateTransfer')
+		IdeaTokenExchange = await ethers.getContractFactory('IdeaTokenExchange')
 		IdeaToken = await ethers.getContractFactory('IdeaToken')
 	})
 
@@ -94,8 +100,31 @@ describe('core/IdeaTokenExchange', () => {
 		ideaTokenFactory = await IdeaTokenFactory.deploy()
 		await ideaTokenFactory.deployed()
 
-		ideaTokenExchange = await IdeaTokenExchange.deploy()
+		const proxyAdmin = await ProxyAdmin.deploy(adminAccount.address)
+		await proxyAdmin.deployed()
+
+		const ideaTokenExchangeLogic = await IdeaTokenExchange.deploy()
+		await ideaTokenExchangeLogic.deployed()
+
+		const ideaTokenExchangeInitCall = ideaTokenExchangeLogic.interface.encodeFunctionData('initialize', [
+			adminAccount.address,
+			authorizerAccount.address,
+			tradingFeeAccount.address,
+			interestManagerCompound.address,
+			dai.address,
+		])
+
+		ideaTokenExchange = await AdminUpgradeabilityProxy.deploy(
+			ideaTokenExchangeLogic.address,
+			proxyAdmin.address,
+			ideaTokenExchangeInitCall
+		)
 		await ideaTokenExchange.deployed()
+		ideaTokenExchange = new ethers.Contract(
+			ideaTokenExchange.address,
+			IdeaTokenExchange.interface,
+			IdeaTokenExchange.signer
+		)
 
 		await interestManagerCompound
 			.connect(adminAccount)
@@ -105,20 +134,28 @@ describe('core/IdeaTokenExchange', () => {
 			.connect(adminAccount)
 			.initialize(adminAccount.address, ideaTokenExchange.address, ideaTokenLogic.address)
 
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.initialize(
-				adminAccount.address,
-				authorizerAccount.address,
-				tradingFeeAccount.address,
-				interestManagerCompound.address,
-				dai.address
-			)
-		await ideaTokenExchange
-			.connect(adminAccount)
-			.initializeStateTransfer(adminAccount.address, oneAddress, oneAddress)
-
 		await ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address)
+
+		const ideaTokenExchangeStateTransferLogic = await IdeaTokenExchangeStateTransfer.deploy()
+		await ideaTokenExchangeStateTransferLogic.deployed()
+
+		const ideaTokenExchangeStateTransferInitCall = ideaTokenExchangeStateTransferLogic.interface.encodeFunctionData(
+			'initializeStateTransfer',
+			[adminAccount.address, oneAddress, oneAddress]
+		)
+
+		await proxyAdmin
+			.connect(adminAccount)
+			.upgradeAndCall(
+				ideaTokenExchange.address,
+				ideaTokenExchangeStateTransferLogic.address,
+				ideaTokenExchangeStateTransferInitCall
+			)
+		ideaTokenExchange = new ethers.Contract(
+			ideaTokenExchange.address,
+			IdeaTokenExchangeStateTransfer.interface,
+			IdeaTokenExchangeStateTransfer.signer
+		)
 
 		await ideaTokenFactory
 			.connect(adminAccount)
@@ -147,18 +184,47 @@ describe('core/IdeaTokenExchange', () => {
 	})
 
 	async function deployNewInstance() {
-		const exchange = await IdeaTokenExchange.deploy()
-		await exchange.deployed()
-		await exchange
+		const proxyAdmin = await ProxyAdmin.deploy(adminAccount.address)
+		await proxyAdmin.deployed()
+
+		const ideaTokenExchangeLogic = await IdeaTokenExchange.deploy()
+		await ideaTokenExchangeLogic.deployed()
+
+		const ideaTokenExchangeInitCall = ideaTokenExchangeLogic.interface.encodeFunctionData('initialize', [
+			adminAccount.address,
+			authorizerAccount.address,
+			tradingFeeAccount.address,
+			interestManagerCompound.address,
+			dai.address,
+		])
+
+		ideaTokenExchange = await AdminUpgradeabilityProxy.deploy(
+			ideaTokenExchangeLogic.address,
+			proxyAdmin.address,
+			ideaTokenExchangeInitCall
+		)
+		await ideaTokenExchange.deployed()
+		ideaTokenExchange = new ethers.Contract(
+			ideaTokenExchange.address,
+			IdeaTokenExchange.interface,
+			IdeaTokenExchange.signer
+		)
+
+		await ideaTokenExchange.connect(adminAccount).setIdeaTokenFactoryAddress(ideaTokenFactory.address)
+
+		const ideaTokenExchangeStateTransferLogic = await IdeaTokenExchangeStateTransfer.deploy()
+		await ideaTokenExchangeStateTransferLogic.deployed()
+
+		await proxyAdmin
 			.connect(adminAccount)
-			.initialize(
-				adminAccount.address,
-				authorizerAccount.address,
-				tradingFeeAccount.address,
-				interestManagerCompound.address,
-				dai.address
-			)
-		return exchange
+			.upgrade(ideaTokenExchange.address, ideaTokenExchangeStateTransferLogic.address)
+		ideaTokenExchange = new ethers.Contract(
+			ideaTokenExchange.address,
+			IdeaTokenExchangeStateTransfer.interface,
+			IdeaTokenExchangeStateTransfer.signer
+		)
+
+		return ideaTokenExchange
 	}
 
 	it('admin is owner', async () => {
@@ -170,7 +236,7 @@ describe('core/IdeaTokenExchange', () => {
 		await exchange.connect(adminAccount).initializeStateTransfer(adminAccount.address, oneAddress, twoAddress)
 		expect(adminAccount.address).to.be.equal(await exchange._transferManager())
 		expect(oneAddress).to.be.equal(await exchange._l2Bridge())
-		expect(twoAddress).to.be.equal(await exchange._crossDomainMessenger())
+		expect(twoAddress).to.be.equal(await exchange._l1CrossDomainMessenger())
 		expect(false).to.be.equal(await exchange._tokenTransferEnabled())
 	})
 
@@ -215,20 +281,20 @@ describe('core/IdeaTokenExchange', () => {
 	it('disabled functions revert', async () => {
 		await expect(
 			ideaTokenExchange.sellTokens(zeroAddress, tenPow18, tenPow18, userAccount.address)
-		).to.be.revertedWith('state-transfer')
+		).to.be.revertedWith('x')
 
 		await expect(
 			ideaTokenExchange.buyTokens(zeroAddress, tenPow18, tenPow18, tenPow18, userAccount.address)
-		).to.be.revertedWith('state-transfer')
+		).to.be.revertedWith('x')
 
-		await expect(ideaTokenExchange.withdrawTokenInterest(zeroAddress)).to.be.revertedWith('state-transfer')
+		await expect(ideaTokenExchange.withdrawTokenInterest(zeroAddress)).to.be.revertedWith('x')
 
-		await expect(ideaTokenExchange.withdrawPlatformInterest(tenPow18)).to.be.revertedWith('state-transfer')
+		await expect(ideaTokenExchange.withdrawPlatformInterest(tenPow18)).to.be.revertedWith('x')
 
-		await expect(ideaTokenExchange.withdrawPlatformFee(tenPow18)).to.be.revertedWith('state-transfer')
+		await expect(ideaTokenExchange.withdrawPlatformFee(tenPow18)).to.be.revertedWith('x')
 
-		await expect(ideaTokenExchange.withdrawTradingFee()).to.be.revertedWith('state-transfer')
+		await expect(ideaTokenExchange.withdrawTradingFee()).to.be.revertedWith('x')
 
-		await expect(ideaTokenExchange.setTokenOwner(oneAddress, oneAddress)).to.be.revertedWith('state-transfer')
+		await expect(ideaTokenExchange.setTokenOwner(oneAddress, oneAddress)).to.be.revertedWith('x')
 	})
 })

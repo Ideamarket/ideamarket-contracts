@@ -3,7 +3,7 @@ const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 const { time } = require('@openzeppelin/test-helpers')
 
-describe('core/IdeaTokenVault', () => {
+describe('evm/core/IdeaTokenVault', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
 	let TestCDai
