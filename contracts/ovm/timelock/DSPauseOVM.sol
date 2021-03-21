@@ -79,8 +79,8 @@ contract DSPauseOVM is Initializable, IDSPause {
         returns (bytes memory out)
     {
         require(_plans[hash(usr, tag, fax, eta)], "ds-pause-unplotted-plan");
-        require(soul(usr) == tag,                   "ds-pause-wrong-codehash");
-        require(now >= eta,                          "ds-pause-premature-exec");
+        require(soul(usr) == tag,                 "ds-pause-wrong-codehash");
+        require(now >= eta,                       "ds-pause-premature-exec");
 
         _plans[hash(usr, tag, fax, eta)] = false;
 

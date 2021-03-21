@@ -3,7 +3,7 @@ const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
 
 const time = require('../../utils/time')
-const { expectRevert, waitForTx } = require('../../utils/tx')
+const { waitForTx } = require('../../utils/tx')
 
 describe('ovm/spells/AddMarketSpell', () => {
 	let DSPause
@@ -14,7 +14,7 @@ describe('ovm/spells/AddMarketSpell', () => {
 	let dsPauseProxyAddress
 	let spell
 
-	const delay = 5
+	const delay = 0
 	const oneAddress = '0x0000000000000000000000000000000000000001'
 	let adminAccount
 
@@ -44,7 +44,7 @@ describe('ovm/spells/AddMarketSpell', () => {
 	})
 
 	it('can add new market', async () => {
-		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 1).toString())
+		const eta = await time.latest()
 		const tag = await dsPause.soul(spell.address)
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
@@ -63,10 +63,7 @@ describe('ovm/spells/AddMarketSpell', () => {
 		])
 
 		await waitForTx(dsPause.plot(spell.address, tag, fax, eta))
-		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
-		console.log('execing')
 		await waitForTx(dsPause.exec(spell.address, tag, fax, eta))
-		console.log('done')
 		expect(BigNumber.from('1').eq(await factory.getNumMarkets())).to.be.true
 		expect(BigNumber.from('1').eq(await factory.getMarketIDByName(marketName))).to.be.true
 

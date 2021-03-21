@@ -1,6 +1,7 @@
 const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
+const { waitForTx } = require('../../utils/tx')
 const time = require('../../utils/time')
 
 describe('ovm/spells/SetTradingFeeSpell', () => {
@@ -12,7 +13,7 @@ describe('ovm/spells/SetTradingFeeSpell', () => {
 	let dsPauseProxyAddress
 	let spell
 
-	const delay = 86400
+	const delay = 0
 	const oneAddress = '0x0000000000000000000000000000000000000001'
 	let adminAccount
 
@@ -28,12 +29,13 @@ describe('ovm/spells/SetTradingFeeSpell', () => {
 		const accounts = await ethers.getSigners()
 		adminAccount = accounts[0]
 
-		DSPause = await ethers.getContractFactory('DSPause')
+		DSPause = await ethers.getContractFactory('DSPauseOVM')
 		SetTradingFeeSpell = await ethers.getContractFactory('SetTradingFeeSpell')
 		IdeaTokenFactory = await ethers.getContractFactory('IdeaTokenFactoryOVM')
 
-		dsPause = await DSPause.deploy(delay, adminAccount.address)
+		dsPause = await DSPause.deploy()
 		await dsPause.deployed()
+		await waitForTx(dsPause.initialize(delay, adminAccount.address))
 		dsPauseProxyAddress = await dsPause._proxy()
 
 		spell = await SetTradingFeeSpell.deploy()
@@ -43,29 +45,30 @@ describe('ovm/spells/SetTradingFeeSpell', () => {
 	it('can set trading fee', async () => {
 		const factory = await IdeaTokenFactory.deploy()
 		await factory.deployed()
-		await factory.initialize(adminAccount.address, oneAddress, oneAddress, oneAddress)
+		await waitForTx(factory.initialize(adminAccount.address, oneAddress, oneAddress, oneAddress))
 
-		await factory.addMarket(
-			marketName,
-			nameVerifierAddress,
-			baseCost,
-			priceRise,
-			hatchTokens,
-			tradingFeeRate,
-			platformFeeRate,
-			false
+		await waitForTx(
+			factory.addMarket(
+				marketName,
+				nameVerifierAddress,
+				baseCost,
+				priceRise,
+				hatchTokens,
+				tradingFeeRate,
+				platformFeeRate,
+				false
+			)
 		)
 
-		await factory.setOwner(dsPauseProxyAddress)
+		await waitForTx(factory.setOwner(dsPauseProxyAddress))
 
-		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
+		const eta = await time.latest()
 		const tag = await dsPause.soul(spell.address)
 
 		const fax = spell.interface.encodeFunctionData('execute', [factory.address, '1', '123'])
 
-		await dsPause.plot(spell.address, tag, fax, eta)
-		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
-		await dsPause.exec(spell.address, tag, fax, eta)
+		await waitForTx(dsPause.plot(spell.address, tag, fax, eta))
+		await waitForTx(dsPause.exec(spell.address, tag, fax, eta))
 
 		const tradingFee = (await factory.getMarketDetailsByID('1')).tradingFeeRate
 

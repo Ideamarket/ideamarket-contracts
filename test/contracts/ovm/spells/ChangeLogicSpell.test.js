@@ -1,6 +1,6 @@
-const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
 const time = require('../../utils/time')
+const { waitForTx } = require('../../utils/tx')
 
 describe('ovm/spells/ChangeLogicSpell', () => {
 	let DSPause
@@ -15,7 +15,7 @@ describe('ovm/spells/ChangeLogicSpell', () => {
 	let proxy
 	let proxyAdmin
 
-	const delay = 86400
+	const delay = 0
 	const oneAddress = '0x0000000000000000000000000000000000000001'
 	let adminAccount
 
@@ -23,9 +23,10 @@ describe('ovm/spells/ChangeLogicSpell', () => {
 		const accounts = await ethers.getSigners()
 		adminAccount = accounts[0].address
 
-		DSPause = await ethers.getContractFactory('DSPause')
-		dsPause = await DSPause.deploy(delay, adminAccount)
+		DSPause = await ethers.getContractFactory('DSPauseOVM')
+		dsPause = await DSPause.deploy()
 		await dsPause.deployed()
+		await waitForTx(dsPause.initialize(delay, adminAccount))
 		dsPauseProxyAddress = await dsPause._proxy()
 
 		ChangeLogicSpell = await ethers.getContractFactory('ChangeLogicSpell')
@@ -36,19 +37,20 @@ describe('ovm/spells/ChangeLogicSpell', () => {
 		const logic = await IdeaTokenFactory.deploy()
 		await logic.deployed()
 
-		ProxyAdmin = await ethers.getContractFactory('ProxyAdmin')
-		proxyAdmin = await ProxyAdmin.deploy(dsPauseProxyAddress)
+		ProxyAdmin = await ethers.getContractFactory('ProxyAdminOVM')
+		proxyAdmin = await ProxyAdmin.deploy()
 		await proxyAdmin.deployed()
 
-		AdminUpgradeabilityProxy = await ethers.getContractFactory('AdminUpgradeabilityProxy')
+		AdminUpgradeabilityProxy = await ethers.getContractFactory('AdminUpgradeabilityProxyOVM')
 		const data = logic.interface.encodeFunctionData('initialize', [
 			dsPauseProxyAddress,
 			oneAddress,
 			oneAddress,
 			oneAddress,
 		])
-		proxy = await AdminUpgradeabilityProxy.deploy(logic.address, proxyAdmin.address, data)
+		proxy = await AdminUpgradeabilityProxy.deploy()
 		await proxy.deployed()
+		await waitForTx(proxy.initialize(logic.address, proxyAdmin.address, data))
 	})
 
 	it('can change logic', async () => {
@@ -57,11 +59,10 @@ describe('ovm/spells/ChangeLogicSpell', () => {
 
 		const fax = spell.interface.encodeFunctionData('execute', [proxyAdmin.address, proxy.address, newLogic.address])
 
-		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
+		const eta = await time.latest()
 		const tag = await dsPause.soul(spell.address)
 
 		await dsPause.plot(spell.address, tag, fax, eta)
-		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
 		await dsPause.exec(spell.address, tag, fax, eta)
 	})
 })
