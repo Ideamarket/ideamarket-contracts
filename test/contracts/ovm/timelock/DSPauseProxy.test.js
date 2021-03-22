@@ -1,6 +1,5 @@
-const { expect } = require('chai')
-const { BigNumber } = require('ethers')
 const { l2ethers: ethers } = require('hardhat')
+const { waitForTx, expectRevert } = require('../../utils/tx')
 const time = require('../../utils/time')
 
 describe('ovm/timelock/DSPauseProxy', () => {
@@ -12,7 +11,7 @@ describe('ovm/timelock/DSPauseProxy', () => {
 	let dsPauseProxy
 	let spell
 
-	const delay = 86400
+	const delay = 0
 	const zeroAddress = '0x0000000000000000000000000000000000000000'
 	let adminAccount
 
@@ -20,14 +19,15 @@ describe('ovm/timelock/DSPauseProxy', () => {
 		const accounts = await ethers.getSigners()
 		adminAccount = accounts[0]
 
-		DSPause = await ethers.getContractFactory('DSPause')
+		DSPause = await ethers.getContractFactory('DSPauseOVM')
 		DSPauseProxy = await ethers.getContractFactory('DSPauseProxy')
 		AddMarketSpell = await ethers.getContractFactory('AddMarketSpell')
 	})
 
 	beforeEach(async () => {
-		dsPause = await DSPause.deploy(delay, adminAccount.address)
+		dsPause = await DSPause.deploy()
 		await dsPause.deployed()
+		await waitForTx(dsPause.initialize(delay, adminAccount.address))
 
 		dsPauseProxy = new ethers.Contract(await dsPause._proxy(), DSPauseProxy.interface, DSPauseProxy.signer)
 
@@ -36,11 +36,11 @@ describe('ovm/timelock/DSPauseProxy', () => {
 	})
 
 	it('fail unauthorized exec', async () => {
-		await expect(dsPauseProxy.exec(zeroAddress, [])).to.be.revertedWith('ds-pause-proxy-unauthorized')
+		await expectRevert(dsPauseProxy.exec(zeroAddress, []))
 	})
 
 	it('fail delegatecall error', async () => {
-		const eta = BigNumber.from((parseInt(await time.latest()) + delay + 100).toString())
+		const eta = await time.latest()
 		const tag = await dsPause.soul(spell.address)
 
 		const fax = spell.interface.encodeFunctionData('execute', [
@@ -55,8 +55,7 @@ describe('ovm/timelock/DSPauseProxy', () => {
 			false,
 		])
 
-		await dsPause.plot(spell.address, tag, fax, eta)
-		await time.increaseTo(eta.add(BigNumber.from('1')).toString())
-		await expect(dsPause.exec(spell.address, tag, fax, eta)).to.be.revertedWith('ds-pause-delegatecall-error')
+		await waitForTx(dsPause.plot(spell.address, tag, fax, eta))
+		await expectRevert(dsPause.exec(spell.address, tag, fax, eta))
 	})
 })

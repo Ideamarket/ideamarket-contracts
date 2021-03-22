@@ -4,7 +4,9 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test:evm": "npx hardhat test test/contracts/evm/**/*"
+		"test:evm": "npx hardhat test test/contracts/evm/**/*",
+		"test:ovm": "npx hardhat test --network ovm_local test/contracts/ovm/**/*",
+		"test": "npm run test:evm && npm run test:ovm"
 	},
 	"repository": {
 		"type": "git",
