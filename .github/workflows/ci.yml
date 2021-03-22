@@ -13,9 +13,6 @@ jobs:
       - name: Install dependencies
         run: |
             npm install
-      - name: Run tests
+      - name: Run EVM tests
         run: |
-            ./optimism-integration/up.sh &
             npm run test:evm
-            ./optimism-integration/wait.sh
-            npm run test:ovm
