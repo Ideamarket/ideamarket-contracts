@@ -16,4 +16,6 @@ jobs:
       - name: Run tests
         run: |
             ./optimism-integration/up.sh &
-            npm run test
+            npm run test:evm
+            ./optimism-integration/wait.sh
+            npm run test:ovm
