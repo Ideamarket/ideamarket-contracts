@@ -20,7 +20,7 @@ async function main() {
 		throw `unknown chain id: ${chainID}`
 	}
 
-	const l2ProxyAdminAddress = loadDeployedAddress(l2NetworkName, 'proxyAdmin')
+	const l2ProxyAdminAddress = loadDeployedAddress(l2NetworkName, 'proxyAdminOVM')
 
 	const l2ExchangeAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenExchangeOVM')
 	const l2ExchangeNewLogicAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenExchangeOVMLogic')
@@ -46,9 +46,9 @@ async function main() {
 		return
 	}
 
-	const proxyAdminContract = new ethers.Contract(
+	const proxyAdminContract = new l2ethers.Contract(
 		l2ProxyAdminAddress,
-		(await ethers.getContractFactory('ProxyAdmin')).interface,
+		(await l2ethers.getContractFactory('ProxyAdminOVM')).interface,
 		deployerAccount
 	)
 
