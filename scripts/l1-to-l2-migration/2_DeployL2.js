@@ -61,16 +61,15 @@ async function main() {
 		throw `unknown chain id: ${chainID}`
 	}
 
-	const STAGE = 16
+	const STAGE = 1
 
 	if (STAGE <= 1) {
 		console.log('1. Deploy Timelock')
 		console.log('==============================================')
 		const dsPause = await deployContract('DSPauseOVM')
-		const dsPauseProxyAddress = await dsPause._proxy()
-
 		const tx = await dsPause.initialize(deploymentParams.timelockDelay, externalContractAdresses.multisig)
 		await tx.wait()
+		const dsPauseProxyAddress = await dsPause._proxy()
 
 		saveDeployedAddress(l2NetworkName, 'dsPauseOVM', dsPause.address)
 		saveDeployedABI(l2NetworkName, 'dsPauseOVM', artifacts.readArtifactSync('DSPause').abi)
