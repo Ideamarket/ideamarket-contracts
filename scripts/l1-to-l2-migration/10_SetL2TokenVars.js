@@ -1,24 +1,21 @@
 const { l2ethers } = require('hardhat')
+const config = require('./config')
 
-const ethers = undefined
-const gasPrice = 0
 const batchSize = 5
 
 async function main() {
 	const deployerAccount = (await l2ethers.getSigners())[0]
 	const deployerAddress = deployerAccount.address
-	console.log(`Running from ${deployerAddress}`)
-	console.log('')
 
 	const chainID = (await l2ethers.provider.getNetwork()).chainId
 	let l2NetworkName = ''
-
 	if (chainID === 69) {
 		l2NetworkName = 'kovan-ovm'
 	} else {
 		throw `unknown chain id: ${chainID}`
 	}
 
+	const deploymentParams = config.deploymentParams[l2NetworkName]
 	const bridgeAddress = loadDeployedAddress(l2NetworkName, 'bridgeOVM')
 	const ideaTokenFactoryAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenFactoryOVM')
 
@@ -35,6 +32,10 @@ async function main() {
 
 	const numMarkets = await ideaTokenFactory.getNumMarkets()
 
+	console.log('Network', l2NetworkName)
+	console.log('Deployer ', deployerAddress)
+	console.log('Gas Price', deploymentParams.gasPrice)
+	console.log('')
 	console.log('BridgeOVM', bridgeAddress)
 	console.log('IdeaTokenFactoryOVM', ideaTokenFactoryAddress)
 	console.log('Num markets', numMarkets.toString())
@@ -44,6 +45,7 @@ async function main() {
 		console.log('abort')
 		return
 	}
+	console.log('')
 
 	for (let i = 1; i <= numMarkets.toNumber(); i++) {
 		const numTokens = (await ideaTokenFactory.getMarketDetailsByID(i)).numTokens
@@ -62,7 +64,7 @@ async function main() {
 			}
 
 			console.log('Setting token vars. Market', i, 'Tokens', tokenIDs)
-			const tx = await bridge.setTokenVars(i, tokenIDs, { gasPrice: gasPrice })
+			const tx = await bridge.setTokenVars(i, tokenIDs, { gasPrice: deploymentParams.gasPrice })
 			await tx.wait()
 		}
 	}

@@ -1,48 +1,9 @@
 const { l2ethers, artifacts } = require('hardhat')
-const { BigNumber } = require('ethers')
 const { read, loadDeployedAddress, saveDeployedAddress, saveDeployedABI } = require('../shared')
+const config = require('./config')
 
-const ethers = undefined
-
-const deploymentParams = {
-	timelockDelay: '86400', // 24 hours
-	gasPrice: 0,
-
-	twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-	twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-	twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-	twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
-	twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
-	twitterAllInterestToPlatform: false,
-
-	substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-	substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-	substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-	substackTradingFeeRate: BigNumber.from('50'), // 0.50%
-	substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
-	substackAllInterestToPlatform: false,
-}
-
-const allExternalContractAddresses = {
-	mainnet: {
-		multisig: '0x0000000000000000000000000000000000000001',
-		authorizer: '0x0000000000000000000000000000000000000001',
-		dai: '0x0000000000000000000000000000000000000001',
-		cDai: '0x0000000000000000000000000000000000000001',
-		oweth: '0x0000000000000000000000000000000000000001',
-		uniswapV2Router02: '0x0000000000000000000000000000000000000001',
-	},
-	kovan: {
-		multisig: '0x0000000000000000000000000000000000000001',
-		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-		dai: '0x0000000000000000000000000000000000000001',
-		cDai: '0x0000000000000000000000000000000000000001',
-		oweth: '0x0000000000000000000000000000000000000001',
-		uniswapV2Router02: '0x0000000000000000000000000000000000000001',
-	},
-}
-
-let externalContractAdresses
+let deploymentParams
+let externalContractAddresses
 
 async function main() {
 	const deployerAccount = (await l2ethers.getSigners())[0]
@@ -54,20 +15,35 @@ async function main() {
 	let l2NetworkName = ''
 
 	if (chainID === 69) {
-		l1NetworkName = 'kovan'
 		l2NetworkName = 'kovan-ovm'
-		externalContractAdresses = allExternalContractAddresses.kovan
 	} else {
 		throw `unknown chain id: ${chainID}`
 	}
 
+	deploymentParams = config.deploymentParams[l2NetworkName]
+	externalContractAddresses = config.externalContractAddresses[l2NetworkName]
+
 	const STAGE = 1
+
+	console.log('Network', l2NetworkName)
+	console.log('Deployer ', deployerAddress)
+	console.log('Gas Price', deploymentParams.gasPrice)
+	console.log('')
+	console.log('Stage', STAGE)
+	const yn = await read('Correct? [Y/n]: ')
+	if (yn !== 'Y' && yn !== 'y') {
+		console.log('abort')
+		return
+	}
+	console.log('')
 
 	if (STAGE <= 1) {
 		console.log('1. Deploy Timelock')
 		console.log('==============================================')
 		const dsPause = await deployContract('DSPauseOVM')
-		const tx = await dsPause.initialize(deploymentParams.timelockDelay, externalContractAdresses.multisig)
+		const tx = await dsPause.initialize(deploymentParams.timelockDelay, externalContractAddresses.multisig, {
+			gasPrice: deploymentParams.gasPrice,
+		})
 		await tx.wait()
 		const dsPauseProxyAddress = await dsPause._proxy()
 
@@ -99,7 +75,7 @@ async function main() {
 			'initializeStateTransfer',
 			proxyAdminAddress,
 			deployerAddress, // owner - this will be changed to the exchange later
-			externalContractAdresses.dai
+			externalContractAddresses.dai
 		)
 
 		interestManagerProxyAddress = interestManagerProxy.address
@@ -126,10 +102,10 @@ async function main() {
 			'initialize',
 			proxyAdminAddress,
 			deployerAddress,
-			externalContractAdresses.authorizer,
-			externalContractAdresses.multisig,
+			externalContractAddresses.authorizer,
+			externalContractAddresses.multisig,
 			interestManagerProxyAddress,
-			externalContractAdresses.dai,
+			externalContractAddresses.dai,
 			bridgeOVMAddress
 		)
 
@@ -324,9 +300,9 @@ async function main() {
 			ideaTokenExchangeProxyAddress,
 			ideaTokenFactoryProxyAddress,
 			ideaTokenVaultProxyAddress,
-			externalContractAdresses.dai,
-			externalContractAdresses.oweth,
-			externalContractAdresses.uniswapV2Router02
+			externalContractAddresses.dai,
+			externalContractAddresses.oweth,
+			externalContractAddresses.uniswapV2Router02
 		)
 
 		saveDeployedAddress(l2NetworkName, 'multiActionOVM', multiActionOVMProxy.address)
@@ -343,7 +319,7 @@ async function deployProxyContract(name, initializer, admin, ...params) {
 	const proxy = await deployContract('AdminUpgradeabilityProxyOVM')
 
 	console.log('Initializing AdminUpgradeabilityProxyOVM')
-	const init = await proxy.initialize(logic.address, admin, data)
+	const init = await proxy.initialize(logic.address, admin, data, { gasPrice: deploymentParams.gasPrice })
 	await init.wait()
 
 	return [proxy, logic]

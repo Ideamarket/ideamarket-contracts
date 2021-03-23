@@ -1,5 +1,6 @@
 const { ethers } = require('hardhat')
 const { read, unixTimestampFromDateString, loadDeployedAddress, loadABI } = require('../shared')
+const config = require('./config')
 
 async function main() {
 	const deployerAccount = (await ethers.getSigners())[0]
@@ -8,18 +9,14 @@ async function main() {
 	let l1NetworkName = (await ethers.provider.getNetwork()).name
 	let l2NetworkName = ''
 
-	let l1CrossDomainMessengerAddress = ''
-	let l1DaiBridgeAddress = ''
-
 	if (l1NetworkName === 'kovan') {
 		console.log('Using Kovan')
-
 		l2NetworkName = 'kovan-ovm'
-		l1CrossDomainMessengerAddress = '0x19da6C4945f18F5E720054FECC50D6b5E015bd40'
-		l1DaiBridgeAddress = '0x0000000000000000000000000000000000000001'
 	} else {
 		throw 'cannot work with network: ' + l1NetworkName
 	}
+
+	const externalContractAddresses = config.deploymentParams[l1NetworkName]
 
 	console.log('')
 	const executionDate = await read('execution date (DAY-MONTH-YEAR HOUR:MINUTE:SECOND) in UTC time: ')
@@ -45,12 +42,15 @@ async function main() {
 		'interestManagerCompoundStateTransferLogic'
 	)
 
+	console.log(`Networks (${l1NetworkName},${l2NetworkName})`)
+	console.log('Deployer ', deployerAddress)
+	console.log('')
 	console.log('TransferManager', deployerAddress)
 	console.log('')
 
 	console.log('L1 Timelock', l1TimelockAddress)
-	console.log('L1 DaiBridge', l1DaiBridgeAddress)
-	console.log('L1 CrossDomainMessenger', l1CrossDomainMessengerAddress)
+	console.log('L1 DaiBridge', externalContractAddresses.daiBridge)
+	console.log('L1 CrossDomainMessenger', externalContractAddresses.crossDomainMessenger)
 	console.log('L2 BridgeOVM', l2BridgeOVMAddress)
 	console.log('L2 InterestManager', l2InterestManagerAddress)
 	console.log('')
@@ -77,6 +77,7 @@ async function main() {
 		console.log('abort')
 		return
 	}
+	console.log('')
 
 	const timelockAbi = (await ethers.getContractFactory('DSPause')).interface.fragments
 	const timelockContract = new ethers.Contract(
@@ -114,7 +115,7 @@ async function main() {
 	const calldataExchange = exchange.interface.encodeFunctionData('initializeStateTransfer', [
 		deployerAddress,
 		l2BridgeOVMAddress,
-		l1CrossDomainMessengerAddress,
+		externalContractAddresses.crossDomainMessenger,
 	])
 
 	const faxExchange = changeLogicAndCallSpell.interface.encodeFunctionData('execute', [
@@ -137,7 +138,7 @@ async function main() {
 	const calldataInterestManager = interestManager.interface.encodeFunctionData('initializeStateTransfer', [
 		deployerAddress,
 		l2InterestManagerAddress,
-		l1DaiBridgeAddress,
+		externalContractAddresses.daiBridge,
 	])
 
 	const faxInterestManager = changeLogicAndCallSpell.interface.encodeFunctionData('execute', [

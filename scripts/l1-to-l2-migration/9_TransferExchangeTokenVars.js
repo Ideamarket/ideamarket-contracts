@@ -1,23 +1,21 @@
 const { ethers } = require('hardhat')
 const { read, loadDeployedAddress } = require('../shared')
+const config = require('./config')
 
-const gasPrice = 1000000000 // 1 gwei
 const batchSize = 20
 
 async function main() {
 	const deployerAccount = (await ethers.getSigners())[0]
 	const deployerAddress = deployerAccount.address
-	console.log(`Running from ${deployerAddress}`)
-	console.log('')
 
 	let networkName = (await ethers.provider.getNetwork()).name
-
 	if (networkName === 'kovan') {
 		console.log('Using Kovan')
 	} else {
 		throw 'cannot work with network: ' + networkName
 	}
 
+	const deploymentParams = config.deploymentParams[networkName]
 	const ideaTokenFactoryAddress = loadDeployedAddress(networkName, 'ideaTokenFactory')
 	const ideaTokenFactory = new ethers.Contract(
 		ideaTokenFactoryAddress,
@@ -27,6 +25,10 @@ async function main() {
 	const numMarkets = await ideaTokenFactory.getNumMarkets()
 	const ideaTokenExchangeStateTransferAddress = loadDeployedAddress(networkName, 'ideaTokenExchange')
 
+	console.log('Network', l2NetworkName)
+	console.log('Deployer ', deployerAddress)
+	console.log('Gas Price', deploymentParams.gasPrice)
+	console.log('')
 	console.log('IdeaTokenExchangeStateTransferAddress', ideaTokenExchangeStateTransferAddress)
 	console.log('IdeaTokenFactory', ideaTokenFactoryAddress)
 	console.log('Num markets', numMarkets.toString())
@@ -36,6 +38,7 @@ async function main() {
 		console.log('abort')
 		return
 	}
+	console.log('')
 
 	const ideaTokenExchangeStateTransfer = new ethers.Contract(
 		ideaTokenExchangeStateTransferAddress,
@@ -60,7 +63,9 @@ async function main() {
 			}
 
 			console.log('Executing token vars transfer. Market', i, 'Tokens', tokenIDs)
-			const tx = await ideaTokenExchangeStateTransfer.transferTokenVars(i, tokenIDs, { gasPrice: gasPrice })
+			const tx = await ideaTokenExchangeStateTransfer.transferTokenVars(i, tokenIDs, {
+				gasPrice: deploymentParams.gasPrice,
+			})
 			await tx.wait()
 		}
 	}

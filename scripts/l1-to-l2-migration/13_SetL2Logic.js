@@ -1,24 +1,21 @@
 const { l2ethers } = require('hardhat')
 const { read, loadDeployedAddress } = require('../shared')
-
-const ethers = undefined
+const config = require('./config')
 
 async function main() {
 	const deployerAccount = (await l2ethers.getSigners())[0]
 	const deployerAddress = deployerAccount.address
-	console.log(`Running from ${deployerAddress}`)
-	console.log('')
 
 	const chainID = (await l2ethers.provider.getNetwork()).chainId
-	let l1NetworkName = ''
 	let l2NetworkName = ''
 
 	if (chainID === 69) {
-		l1NetworkName = 'kovan'
 		l2NetworkName = 'kovan-ovm'
 	} else {
 		throw `unknown chain id: ${chainID}`
 	}
+
+	const deploymentParams = config.deploymentParams[l2NetworkName]
 
 	const l2ProxyAdminAddress = loadDeployedAddress(l2NetworkName, 'proxyAdminOVM')
 
@@ -28,6 +25,9 @@ async function main() {
 	const l2FactoryAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenFactoryOVM')
 	const l2FactoryNewLogicAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenFactoryOVMLogic')
 
+	console.log('Network', l2NetworkName)
+	console.log('Deployer ', deployerAddress)
+	console.log('Gas Price', deploymentParams.gasPrice)
 	console.log('')
 	console.log('L2 ProxyAdmin', l2ProxyAdminAddress)
 
@@ -45,6 +45,7 @@ async function main() {
 		console.log('abort')
 		return
 	}
+	console.log('')
 
 	const proxyAdminContract = new l2ethers.Contract(
 		l2ProxyAdminAddress,
@@ -54,11 +55,15 @@ async function main() {
 
 	let tx
 	console.log('Setting IdeaTokenExchange logic')
-	tx = await proxyAdminContract.upgrade(l2ExchangeAddress, l2ExchangeNewLogicAddress)
+	tx = await proxyAdminContract.upgrade(l2ExchangeAddress, l2ExchangeNewLogicAddress, {
+		gasPrice: deploymentParams.gasPrice,
+	})
 	await tx.wait()
 
 	console.log('Setting IdeaTokenFactory logic')
-	tx = await proxyAdminContract.upgrade(l2FactoryAddress, l2FactoryNewLogicAddress)
+	tx = await proxyAdminContract.upgrade(l2FactoryAddress, l2FactoryNewLogicAddress, {
+		gasPrice: deploymentParams.gasPrice,
+	})
 	await tx.wait()
 }
 

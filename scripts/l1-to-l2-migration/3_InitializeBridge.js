@@ -1,29 +1,24 @@
 const { l2ethers } = require('hardhat')
 const { read, loadDeployedAddress } = require('../shared')
-
-const ethers = undefined
-
-const gasPrice = 0
+const config = require('./config')
 
 async function main() {
 	const deployerAccount = (await l2ethers.getSigners())[0]
 	const deployerAddress = deployerAccount.address
-	console.log(`Running from ${deployerAddress}`)
-	console.log('')
 
 	const chainID = (await l2ethers.provider.getNetwork()).chainId
 	let l1NetworkName = ''
 	let l2NetworkName = ''
 
-	let l2CrossDomainMessengerAddress = ''
-
 	if (chainID === 69) {
 		l1NetworkName = 'kovan'
 		l2NetworkName = 'kovan-ovm'
-		l2CrossDomainMessengerAddress = '0x6f78cde001182d5DCBc63D3C4b8051f2059E79D8'
 	} else {
 		throw `unknown chain id: ${chainID}`
 	}
+
+	const deploymentParams = config.deploymentParams[l2NetworkName]
+	const externalContractAddresses = config.externalContractAddresses[l2NetworkName]
 
 	const bridgeOVMAddress = loadDeployedAddress(l2NetworkName, 'bridgeOVM')
 	const l1ExchangeAddress = loadDeployedAddress(l1NetworkName, 'ideaTokenExchange')
@@ -31,10 +26,13 @@ async function main() {
 	const l2FactoryAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenFactoryOVM')
 
 	console.log(`Networks (${l1NetworkName},${l2NetworkName})`)
+	console.log('Deployer ', deployerAddress)
+	console.log('Gas Price', deploymentParams.gasPrice)
+	console.log('')
 	console.log('L2 Bridge Address', bridgeOVMAddress)
 	console.log('L2 Bridge Owner', deployerAddress)
 	console.log('L1 Exchange Address', l1ExchangeAddress)
-	console.log('L2 CrossDomainMessenger', l2CrossDomainMessengerAddress)
+	console.log('L2 CrossDomainMessenger', externalContractAddresses.l2CrossDomainMessengerAddress)
 	console.log('l2 IdeaTokenExchange Address', l2ExchangeAddress)
 	console.log('L2 IdeaTokenFactory Address', l2FactoryAddress)
 
@@ -43,6 +41,7 @@ async function main() {
 		console.log('abort')
 		return
 	}
+	console.log('')
 
 	const bridgeOVM = new l2ethers.Contract(
 		bridgeOVMAddress,
@@ -52,10 +51,10 @@ async function main() {
 
 	const tx = await bridgeOVM.initialize(
 		l1ExchangeAddress,
-		l2CrossDomainMessengerAddress,
+		externalContractAddresses.l2CrossDomainMessengerAddress,
 		l2ExchangeAddress,
 		l2FactoryAddress,
-		{ gasPrice: gasPrice }
+		{ gasPrice: deploymentParams.gasPrice }
 	)
 	await tx.wait()
 }

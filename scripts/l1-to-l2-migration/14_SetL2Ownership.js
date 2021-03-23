@@ -1,15 +1,12 @@
 const { l2ethers } = require('hardhat')
 const { read, loadDeployedAddress } = require('../shared')
+const config = require('./config')
 
-const ethers = undefined
-const gasPrice = 0
 const batchSize = 5
 
 async function main() {
 	const deployerAccount = (await l2ethers.getSigners())[0]
 	const deployerAddress = deployerAccount.address
-	console.log(`Running from ${deployerAddress}`)
-	console.log('')
 
 	const chainID = (await l2ethers.provider.getNetwork()).chainId
 	let l2NetworkName = ''
@@ -20,22 +17,27 @@ async function main() {
 		throw `unknown chain id: ${chainID}`
 	}
 
+	const deploymentParams = config.deploymentParams[l2NetworkName]
+
 	const l2DSPauseProxyAddress = loadDeployedAddress(l2NetworkName, 'dsPauseOVMProxy')
 	const l2ProxyAdminAddress = loadDeployedAddress(l2NetworkName, 'proxyAdminOVM')
 	const l2ExchangeAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenExchangeOVM')
 	const l2FactoryAddress = loadDeployedAddress(l2NetworkName, 'ideaTokenFactoryOVM')
 
+	console.log('Network', l2NetworkName)
+	console.log('Deployer ', deployerAddress)
+	console.log('Gas Price', deploymentParams.gasPrice)
 	console.log('')
 	console.log('L2 DSPauseProxy', l2DSPauseProxyAddress)
 	console.log('L2 ProxyAdmin', l2ProxyAdminAddress)
 	console.log('L2 IdeaTokenExchange', l2ExchangeAddress)
 	console.log('L2 IdeaTokenFactory', l2FactoryAddress)
-
 	const yn = await read('Correct? [Y/n]: ')
 	if (yn !== 'Y' && yn !== 'y') {
 		console.log('abort')
 		return
 	}
+	console.log('')
 
 	const proxyAdminContract = new l2ethers.Contract(
 		l2ProxyAdminAddress,
@@ -57,15 +59,15 @@ async function main() {
 
 	let tx
 	console.log('Setting IdeaTokenExchange owner')
-	tx = await ideaTokenExchangeContract.setOwner(l2DSPauseProxyAddress)
+	tx = await ideaTokenExchangeContract.setOwner(l2DSPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
 	await tx.wait()
 
 	console.log('Setting IdeaTokenFactory owner')
-	tx = await ideaTokenFactoryContract.setOwner(l2DSPauseProxyAddress)
+	tx = await ideaTokenFactoryContract.setOwner(l2DSPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
 	await tx.wait()
 
 	console.log('Setting ProxyAdmin owner')
-	tx = await proxyAdminContract.setOwner(l2DSPauseProxyAddress)
+	tx = await proxyAdminContract.setOwner(l2DSPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
 	await tx.wait()
 }
 

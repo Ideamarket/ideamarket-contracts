@@ -1,13 +1,10 @@
 const { ethers } = require('hardhat')
 const { read, loadDeployedAddress } = require('../shared')
-
-const gasPrice = 1000000000 // 1 gwei
+const config = require('./config')
 
 async function main() {
 	const deployerAccount = (await ethers.getSigners())[0]
 	const deployerAddress = deployerAccount.address
-	console.log(`Running from ${deployerAddress}`)
-	console.log('')
 
 	let networkName = (await ethers.provider.getNetwork()).name
 
@@ -17,14 +14,20 @@ async function main() {
 		throw 'cannot work with network: ' + networkName
 	}
 
+	const deploymentParams = config.deploymentParams[networkName]
 	const interestManagerCompoundStateTransferAddress = loadDeployedAddress(networkName, 'interestManager')
 
+	console.log('Network', networkName)
+	console.log('Deployer ', deployerAddress)
+	console.log('Gas Price', deploymentParams.gasPrice)
+	console.log('')
 	console.log('InterestManagerCompoundStateTransfer', interestManagerCompoundStateTransferAddress)
 	const yn = await read('Correct? [Y/n]: ')
 	if (yn !== 'Y' && yn !== 'y') {
 		console.log('abort')
 		return
 	}
+	console.log('')
 
 	const interestManagerCompoundStateTransfer = new ethers.Contract(
 		interestManagerCompoundStateTransferAddress,
@@ -33,7 +36,7 @@ async function main() {
 	)
 
 	console.log('Executing state transfer')
-	const tx = await interestManagerCompoundStateTransfer.executeStateTransfer({ gasPrice: gasPrice })
+	const tx = await interestManagerCompoundStateTransfer.executeStateTransfer({ gasPrice: deploymentParams.gasPrice })
 	await tx.wait()
 }
 
