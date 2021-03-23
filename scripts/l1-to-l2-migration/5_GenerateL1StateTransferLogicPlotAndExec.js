@@ -16,7 +16,7 @@ async function main() {
 		throw 'cannot work with network: ' + l1NetworkName
 	}
 
-	const externalContractAddresses = config.deploymentParams[l1NetworkName]
+	const externalContractAddresses = config.externalContractAddresses[l1NetworkName]
 
 	console.log('')
 	const executionDate = await read('execution date (DAY-MONTH-YEAR HOUR:MINUTE:SECOND) in UTC time: ')

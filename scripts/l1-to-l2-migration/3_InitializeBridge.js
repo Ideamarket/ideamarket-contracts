@@ -32,7 +32,7 @@ async function main() {
 	console.log('L2 Bridge Address', bridgeOVMAddress)
 	console.log('L2 Bridge Owner', deployerAddress)
 	console.log('L1 Exchange Address', l1ExchangeAddress)
-	console.log('L2 CrossDomainMessenger', externalContractAddresses.l2CrossDomainMessengerAddress)
+	console.log('L2 CrossDomainMessenger', externalContractAddresses.crossDomainMessenger)
 	console.log('l2 IdeaTokenExchange Address', l2ExchangeAddress)
 	console.log('L2 IdeaTokenFactory Address', l2FactoryAddress)
 
@@ -51,7 +51,7 @@ async function main() {
 
 	const tx = await bridgeOVM.initialize(
 		l1ExchangeAddress,
-		externalContractAddresses.l2CrossDomainMessengerAddress,
+		externalContractAddresses.crossDomainMessenger,
 		l2ExchangeAddress,
 		l2FactoryAddress,
 		{ gasPrice: deploymentParams.gasPrice }

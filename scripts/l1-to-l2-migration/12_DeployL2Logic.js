@@ -15,8 +15,11 @@ async function main() {
 		throw `unknown chain id: ${chainID}`
 	}
 
+	const deploymentParams = config.deploymentParams[l2NetworkName]
+
 	console.log('Network', l2NetworkName)
 	console.log('Deployer ', deployerAddress)
+	console.log('Gas Price', deploymentParams.gasPrice)
 	const yn = await read('Correct? [Y/n]: ')
 	if (yn !== 'Y' && yn !== 'y') {
 		console.log('abort')
@@ -29,14 +32,14 @@ async function main() {
 
 	console.log('Deploying IdeaTokenExchangeOVM')
 	contractFactory = await l2ethers.getContractFactory('IdeaTokenExchangeOVM')
-	deployed = await contractFactory.deploy()
+	deployed = await contractFactory.deploy({ gasPrice: deploymentParams.gasPrice })
 	await deployed.deployed()
 	saveDeployedAddress(l2NetworkName, 'ideaTokenExchangeOVMLogic', deployed.address)
 	saveDeployedABI(l2NetworkName, 'ideaTokenExchangeOVM', artifacts.readArtifactSync('IdeaTokenExchangeOVM').abi)
 
 	console.log('Deploying IdeaTokenFactoryOVM')
 	contractFactory = await l2ethers.getContractFactory('IdeaTokenFactoryOVM')
-	deployed = await contractFactory.deploy()
+	deployed = await contractFactory.deploy({ gasPrice: deploymentParams.gasPrice })
 	await deployed.deployed()
 	saveDeployedAddress(l2NetworkName, 'ideaTokenFactoryOVMLogic', deployed.address)
 	saveDeployedABI(l2NetworkName, 'ideaTokenFactoryOVM', artifacts.readArtifactSync('IdeaTokenFactoryOVM').abi)

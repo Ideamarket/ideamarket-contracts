@@ -15,9 +15,9 @@
     "ideaTokenVaultLogic": "0x5191A87524f4CdA9E7b3CC612B1cf45e7d270A04",
     "multiAction": "0x5338f72D3849e12b8c420e11540035bB7e893F7d",
     "addMarketSpell": "0x1b64B26Ca2a2fB84CE1aB159a1b52B4Db3Bc7064",
-    "ideaTokenFactoryStateTransferLogic": "0xfe58e00bC752C9663c7132aD7Fa26d0F30Da0D1b",
-    "ideaTokenExchangeStateTransferLogic": "0xD878a54c399B7c8D95FB3f529e7Ddd8a4BD78028",
-    "interestManagerCompoundStateTransferLogic": "0x383B84773512E71f055edF570584ed50E56E57a7",
+    "ideaTokenFactoryStateTransferLogic": "0x39A0C4011C9ae9c7Bc8D194b9aA426053167616F",
+    "ideaTokenExchangeStateTransferLogic": "0x09348adA984fd0EB21dDA3a09ea4147C5118ccFd",
+    "interestManagerCompoundStateTransferLogic": "0x3D63F1a016488F71c1DF4ee75B8dD8ae5E5BFa06",
     "changeLogicAndCallSpell": "0x19794a6155618246C89EB1E76Ee712b32C0B0FE6",
     "changeLogicSpell": "0xe253DD1cadDaa766bbC1B0E6E9F385a264A6730e"
 }

@@ -8,8 +8,6 @@ let externalContractAddresses
 async function main() {
 	const deployerAccount = (await l2ethers.getSigners())[0]
 	const deployerAddress = deployerAccount.address
-	console.log(`Running from ${deployerAddress}`)
-	console.log('')
 
 	const chainID = (await l2ethers.provider.getNetwork()).chainId
 	let l2NetworkName = ''

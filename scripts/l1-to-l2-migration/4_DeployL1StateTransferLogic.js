@@ -1,5 +1,5 @@
 const { ethers, artifacts } = require('hardhat')
-const { saveDeployedAddress, saveDeployedABI } = require('../shared')
+const { read, saveDeployedAddress, saveDeployedABI } = require('../shared')
 const config = require('./config')
 
 async function main() {
