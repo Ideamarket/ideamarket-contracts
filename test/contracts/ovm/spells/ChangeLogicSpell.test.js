@@ -40,6 +40,7 @@ describe('ovm/spells/ChangeLogicSpell', () => {
 		ProxyAdmin = await ethers.getContractFactory('ProxyAdminOVM')
 		proxyAdmin = await ProxyAdmin.deploy()
 		await proxyAdmin.deployed()
+		await waitForTx(proxyAdmin.setOwner(dsPauseProxyAddress))
 
 		AdminUpgradeabilityProxy = await ethers.getContractFactory('AdminUpgradeabilityProxyOVM')
 		const data = logic.interface.encodeFunctionData('initialize', [
@@ -62,7 +63,7 @@ describe('ovm/spells/ChangeLogicSpell', () => {
 		const eta = await time.latest()
 		const tag = await dsPause.soul(spell.address)
 
-		await dsPause.plot(spell.address, tag, fax, eta)
-		await dsPause.exec(spell.address, tag, fax, eta)
+		await waitForTx(dsPause.plot(spell.address, tag, fax, eta))
+		await waitForTx(dsPause.exec(spell.address, tag, fax, eta))
 	})
 })

@@ -55,7 +55,7 @@ describe('ovm/spells/SetPlatformOwnerSpell', () => {
 			withdrawer.address,
 		])
 
-		await dsPause.plot(spell.address, tag, fax, eta)
-		await dsPause.exec(spell.address, tag, fax, eta)
+		await waitForTx(dsPause.plot(spell.address, tag, fax, eta))
+		await waitForTx(dsPause.exec(spell.address, tag, fax, eta))
 	})
 })
