@@ -157,7 +157,7 @@ async function main() {
 			deploymentParams = allDeploymentParams.rinkeby
 			externalContractAdresses = allExternalContractAddresses.rinkeby
 		}
-	} else if(networkName === 'homestead') {
+	} else if (networkName === 'homestead') {
 		networkName = 'mainnet'
 
 		console.log('Using Mainnet')
@@ -569,8 +569,6 @@ async function main() {
 		saveDeployedABI(networkName, 'changeLogicSpell', artifacts.readArtifactSync('ChangeLogicSpell').abi)
 		console.log('')
 	}
-
-	
 }
 
 async function deployProxyContract(name, admin, ...params) {

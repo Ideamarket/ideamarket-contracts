@@ -1,12 +1,12 @@
 const { expect } = require('chai')
 
-describe('nameVerifiers/YoutubeChannelNameVerifier', () => {
-	let YoutubeChannelNameVerifier
+describe('nameVerifiers/ShowtimeNameVerifier', () => {
+	let ShowtimeNameVerifier
 	let nameVerifier
 
 	before(async () => {
-		YoutubeChannelNameVerifier = await ethers.getContractFactory('YoutubeChannelNameVerifier')
-		nameVerifier = await YoutubeChannelNameVerifier.deploy()
+		ShowtimeNameVerifier = await ethers.getContractFactory('ShowtimeNameVerifier')
+		nameVerifier = await ShowtimeNameVerifier.deploy()
 		await nameVerifier.deployed()
 	})
 
@@ -22,16 +22,16 @@ describe('nameVerifiers/YoutubeChannelNameVerifier', () => {
 		expect(await nameVerifier.verifyTokenName('A')).to.be.false
 	})
 
-	it('aaaaaaaaaaaaaaa', async () => {
-		expect(await nameVerifier.verifyTokenName('aaaaaaaaaaaaaaa')).to.be.true
+	it('0x1a1853db0905c759b28bb1d7b84cd5cbaa31794b', async () => {
+		expect(await nameVerifier.verifyTokenName('0x1a1853db0905c759b28bb1d7b84cd5cbaa31794b')).to.be.true
 	})
 
-	it('abcdefghijklmnopqrstuvwxyzäöü', async () => {
-		expect(await nameVerifier.verifyTokenName('abcdefghijklmnopqrstuvwxyzäöü')).to.be.true
+	it('abcdefghijklmnopqrstuvwxyz', async () => {
+		expect(await nameVerifier.verifyTokenName('abcdefghijklmnopqrstuvwxyz')).to.be.true
 	})
 
 	it('(too long)', async () => {
-		expect(await nameVerifier.verifyTokenName('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')).to.be.false
+		expect(await nameVerifier.verifyTokenName('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')).to.be.false
 	})
 
 	it('ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ', async () => {
@@ -45,12 +45,10 @@ describe('nameVerifiers/YoutubeChannelNameVerifier', () => {
 	it('@{unallowed ascii char}', async () => {
 		for (let i = 0; i < 255; i++) {
 			if (
-				!(i >= 0x61 && i <= 0x7a) && //a-z
-				i != 0xe4 && // ä
-				i != 0xf6 && // ö
-				i != 0xfc
+				!(i >= 0x61 && i <= 0x7a) && // a-z
+				!(i >= 0x30 && i <= 0x39)
 			) {
-				// ü
+				// 0-9
 				expect(await nameVerifier.verifyTokenName(String.fromCharCode(i))).to.be.false
 			}
 		}
@@ -59,12 +57,10 @@ describe('nameVerifiers/YoutubeChannelNameVerifier', () => {
 	it('@{allowed ascii char}', async () => {
 		for (let i = 0; i < 255; i++) {
 			if (
-				(i >= 0x61 && i <= 0x7a) || //a-z
-				(i == 0xe4 && // ä
-					i == 0xf6 && // ö
-					i == 0xfc)
+				(i >= 0x61 && i <= 0x7a) || // a-z
+				(i >= 0x30 && i <= 0x39)
 			) {
-				// ü
+				// 0-9
 				expect(await nameVerifier.verifyTokenName(String.fromCharCode(i))).to.be.true
 			}
 		}
