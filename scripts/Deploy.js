@@ -23,12 +23,12 @@ const allDeploymentParams = {
 		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
 		substackAllInterestToPlatform: false,
 
-		mirrorBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		mirrorPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		mirrorHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		mirrorTradingFeeRate: BigNumber.from('50'), // 0.50%
-		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		mirrorAllInterestToPlatform: false,
+		showtimeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		showtimePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		showtimeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
+		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
+		showtimeAllInterestToPlatform: false,
 	},
 	rinkeby: {
 		timelockDelay: '1',
@@ -48,12 +48,12 @@ const allDeploymentParams = {
 		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
 		substackAllInterestToPlatform: false,
 
-		mirrorBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		mirrorPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		mirrorHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		mirrorTradingFeeRate: BigNumber.from('50'), // 0.50%
-		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		mirrorAllInterestToPlatform: false,
+		showtimeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		showtimePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		showtimeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
+		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
+		showtimeAllInterestToPlatform: false,
 	},
 	test: {
 		timelockDelay: '1',
@@ -73,19 +73,12 @@ const allDeploymentParams = {
 		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
 		substackAllInterestToPlatform: false,
 
-		mirrorBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		mirrorPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		mirrorHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		mirrorTradingFeeRate: BigNumber.from('50'), // 0.50%
-		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		mirrorAllInterestToPlatform: false,
-
-		youtubeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		youtubePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		youtubeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		youtubeTradingFeeRate: BigNumber.from('50'), // 0.50%
-		youtubePlatformFeeRate: BigNumber.from('50'), // 0.50%
-		youtubeAllInterestToPlatform: false,
+		showtimeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		showtimePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		showtimeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
+		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
+		showtimeAllInterestToPlatform: false,
 	},
 }
 
@@ -394,22 +387,22 @@ async function main() {
 		console.log('')
 	}
 
-	/*let mirrorNameVerifierAddress
+	let showtimeNameVerifierAddress
 	if (STAGE <= 14) {
-		console.log('14. Deploy MirrorNameVerifier')
+		console.log('12. Deploy ShowtimeNameVerifier')
 		console.log('==============================================')
-		const mirrorNameVerifier = await deployContract('MirrorNameVerifier')
+		const showtimeNameVerifier = await deployContract('ShowtimeNameVerifier')
 
-		mirrorNameVerifierAddress = mirrorNameVerifier.address
-		saveDeployedAddress(networkName, 'mirrorNameVerifier', mirrorNameVerifier.address)
-		saveDeployedABI(networkName, 'mirrorNameVerifier', artifacts.readArtifactSync('MirrorNameVerifier').abi)
+		showtimeNameVerifierAddress = showtimeNameVerifier.address
+		saveDeployedAddress(networkName, 'showtimeNameVerifier', showtimeNameVerifier.address)
+		saveDeployedABI(networkName, 'showtimeNameVerifier', artifacts.readArtifactSync('ShowtimeNameVerifier').abi)
 		console.log('')
 	} else {
-		mirrorNameVerifierAddress = loadDeployedAddress(networkName, 'mirrorNameVerifier')
+		showtimeNameVerifierAddress = loadDeployedAddress(networkName, 'showtimeNameVerifier')
 	}
 
 	if (STAGE <= 15) {
-		console.log('15. Add Mirror market')
+		console.log('15. Add Showtime market')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -417,57 +410,21 @@ async function main() {
 			deployerAccount
 		)
 		await ideaTokenFactory.addMarket(
-			'Mirror',
-			mirrorNameVerifierAddress,
-			deploymentParams.mirrorBaseCost,
-			deploymentParams.mirrorPriceRise,
-			deploymentParams.mirrorHatchTokens,
-			deploymentParams.mirrorTradingFeeRate,
-			deploymentParams.mirrorPlatformFeeRate,
-			deploymentParams.mirrorAllInterestToPlatform,
+			'Showtime',
+			showtimeNameVerifierAddress,
+			deploymentParams.showtimeBaseCost,
+			deploymentParams.showtimePriceRise,
+			deploymentParams.showtimeHatchTokens,
+			deploymentParams.showtimeTradingFeeRate,
+			deploymentParams.showtimePlatformFeeRate,
+			deploymentParams.showtimeAllInterestToPlatform,
 			{ gasPrice: deploymentParams.gasPrice }
 		)
 		console.log('')
 	}
 
-	let youtubeNameVerifierAddress
 	if (STAGE <= 16) {
-		console.log('16. Deploy YoutubeChannelNameVerifier')
-		console.log('==============================================')
-		const youtubeNameVerifier = await deployContract('YoutubeChannelNameVerifier')
-
-		youtubeNameVerifierAddress = youtubeNameVerifier.address
-		saveDeployedAddress(networkName, 'youtubeNameVerifier', youtubeNameVerifier.address)
-		saveDeployedABI(networkName, 'youtubeNameVerifier', artifacts.readArtifactSync('YoutubeChannelNameVerifier').abi)
-		console.log('')
-	} else {
-		youtubeNameVerifierAddress = loadDeployedAddress(networkName, 'youtubeNameVerifier')
-	}
-
-	if (STAGE <= 17) {
-		console.log('17. Add Youtube market')
-		console.log('==============================================')
-		const ideaTokenFactory = new ethers.Contract(
-			ideaTokenFactoryProxyAddress,
-			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
-			deployerAccount
-		)
-		await ideaTokenFactory.addMarket(
-			'Youtube',
-			youtubeNameVerifierAddress,
-			deploymentParams.youtubeBaseCost,
-			deploymentParams.youtubePriceRise,
-			deploymentParams.youtubeHatchTokens,
-			deploymentParams.youtubeTradingFeeRate,
-			deploymentParams.youtubePlatformFeeRate,
-			deploymentParams.youtubeAllInterestToPlatform,
-			{ gasPrice: deploymentParams.gasPrice }
-		)
-		console.log('')
-	}*/
-
-	if (STAGE <= 18) {
-		console.log('18. Set IdeaTokenFactory owner')
+		console.log('16. Set IdeaTokenFactory owner')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -479,8 +436,8 @@ async function main() {
 	}
 
 	let ideaTokenVaultProxyAddress
-	if (STAGE <= 19) {
-		console.log('19. Deploy IdeaTokenVault')
+	if (STAGE <= 17) {
+		console.log('17. Deploy IdeaTokenVault')
 		console.log('==============================================')
 		const [ideaTokenVaultProxy, ideaTokenVaultLogic] = await deployProxyContract(
 			'IdeaTokenVault',
@@ -497,8 +454,8 @@ async function main() {
 		ideaTokenVaultProxyAddress = loadDeployedAddress(networkName, 'ideaTokenVault')
 	}
 
-	if (STAGE <= 20) {
-		console.log('20. Deploy MultiAction')
+	if (STAGE <= 18) {
+		console.log('18. Deploy MultiAction')
 		console.log('==============================================')
 		const multiAction = await deployContract(
 			'MultiAction',
@@ -514,8 +471,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 21) {
-		console.log('21. Deploy AddMarketSpell')
+	if (STAGE <= 19) {
+		console.log('19. Deploy AddMarketSpell')
 		console.log('==============================================')
 		const addMarketSpell = await deployContract('AddMarketSpell')
 		saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
@@ -525,8 +482,8 @@ async function main() {
 
 	return
 
-	if (STAGE <= 22) {
-		console.log('22. Deploy SetTokenOwnerSpell')
+	if (STAGE <= 20) {
+		console.log('20. Deploy SetTokenOwnerSpell')
 		console.log('==============================================')
 		const setTokenOwnerSpell = await deployContract('SetTokenOwnerSpell')
 		saveDeployedAddress(networkName, 'setTokenOwnerSpell', setTokenOwnerSpell.address)
@@ -534,8 +491,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 23) {
-		console.log('23. Deploy SetPlatformOwnerSpell')
+	if (STAGE <= 21) {
+		console.log('21. Deploy SetPlatformOwnerSpell')
 		console.log('==============================================')
 		const setPlatformOwnerSpell = await deployContract('SetPlatformOwnerSpell')
 		saveDeployedAddress(networkName, 'setPlatformOwnerSpell', setPlatformOwnerSpell.address)
@@ -543,8 +500,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 24) {
-		console.log('24. Deploy SetTradingFeeSpell')
+	if (STAGE <= 22) {
+		console.log('22. Deploy SetTradingFeeSpell')
 		console.log('==============================================')
 		const setTradingFeeSpell = await deployContract('SetTradingFeeSpell')
 		saveDeployedAddress(networkName, 'setTradingFeeSpell', setTradingFeeSpell.address)
@@ -552,8 +509,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 25) {
-		console.log('25. Deploy SetPlatformFeeSpell')
+	if (STAGE <= 23) {
+		console.log('23. Deploy SetPlatformFeeSpell')
 		console.log('==============================================')
 		const setPlatformFeeSpell = await deployContract('SetPlatformFeeSpell')
 		saveDeployedAddress(networkName, 'setPlatformFeeSpell', setPlatformFeeSpell.address)
@@ -561,8 +518,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 26) {
-		console.log('26. Deploy ChangeLogicSpell')
+	if (STAGE <= 24) {
+		console.log('24. Deploy ChangeLogicSpell')
 		console.log('==============================================')
 		const changeLogicSpell = await deployContract('ChangeLogicSpell')
 		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
