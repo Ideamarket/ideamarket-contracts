@@ -13,6 +13,11 @@ async function run() {
 		} else {
 			console.log('Using Rinkeby')
 		}
+	} else if (network === 'homestead') {
+		network = 'mainnet'
+		console.log('Using mainnet')
+	} else {
+		throw 'Unknown network: ' + network
 	}
 
 	const marketName = await shared.getInput('market name')
@@ -22,7 +27,17 @@ async function run() {
 	const rawHatchTokens = await shared.getInput('hatch tokens')
 	const rawTradingFee = await shared.getInput('trading fee in percent')
 	const rawPlatformFee = await shared.getInput('platform fee in percent')
+	const rawAllInterestToPlatform = await shared.getInput('all interest to platform? [Y/n]')
 	const executionDate = await shared.getInput('execution date (DAY-MONTH-YEAR HOUR:MINUTE:SECOND) in UTC time')
+
+	let allInterestToPlatform
+	if (rawAllInterestToPlatform === 'Y' || rawAllInterestToPlatform === 'y') {
+		allInterestToPlatform = true
+	} else if (rawAllInterestToPlatform === 'N' || rawAllInterestToPlatform === 'n') {
+		allInterestToPlatform = false
+	} else {
+		throw 'Invalid input for rawAllInterestToPlatform'
+	}
 
 	const factoryAddress = shared.loadDeployedAddress(network, 'ideaTokenFactory')
 	const nameVerifier = shared.loadDeployedAddress(
@@ -54,6 +69,7 @@ async function run() {
 	console.log('hatch tokens:', hatchTokens.toString())
 	console.log('trading fee rate:', tradingFee.toString())
 	console.log('platform fee rate:', platformFee.toString())
+	console.log('all interest to platform', allInterestToPlatform)
 	console.log('execution timestamp:', executionTimestamp.toString())
 	console.log('timelock address:', timelockAddress)
 	console.log('spell address:', spellAddress)
@@ -72,6 +88,7 @@ async function run() {
 		hatchTokens,
 		tradingFee,
 		platformFee,
+		allInterestToPlatform,
 	])
 
 	console.log('')
