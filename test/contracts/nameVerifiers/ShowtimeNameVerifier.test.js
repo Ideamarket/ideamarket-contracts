@@ -15,41 +15,45 @@ describe('nameVerifiers/ShowtimeNameVerifier', () => {
 	})
 
 	it('a', async () => {
-		expect(await nameVerifier.verifyTokenName('a')).to.be.true
+		expect(await nameVerifier.verifyTokenName('a')).to.be.false
 	})
 
 	it('A', async () => {
 		expect(await nameVerifier.verifyTokenName('A')).to.be.false
 	})
 
+	it('aa', async () => {
+		expect(await nameVerifier.verifyTokenName('aa')).to.be.true
+	})
+
 	it('0x1a1853db0905c759b28bb1d7b84cd5cbaa31794b', async () => {
 		expect(await nameVerifier.verifyTokenName('0x1a1853db0905c759b28bb1d7b84cd5cbaa31794b')).to.be.true
 	})
 
-	it('abcdefghijklmnopqrstuvwxyz', async () => {
-		expect(await nameVerifier.verifyTokenName('abcdefghijklmnopqrstuvwxyz')).to.be.true
+	it('abcdefghijklmnopqrstuvwxyz_', async () => {
+		expect(await nameVerifier.verifyTokenName('abcdefghijklmnopqrstuvwxyz_')).to.be.true
 	})
 
 	it('(too long)', async () => {
 		expect(await nameVerifier.verifyTokenName('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')).to.be.false
 	})
 
-	it('ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ', async () => {
-		expect(await nameVerifier.verifyTokenName('ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ')).to.be.false
+	it('ABCDEFGHIJKLMNOPQRSTUVWXYZ', async () => {
+		expect(await nameVerifier.verifyTokenName('ABCDEFGHIJKLMNOPQRSTUVWXYZ')).to.be.false
 	})
 
 	it('123456789_', async () => {
-		expect(await nameVerifier.verifyTokenName('123456789_')).to.be.false
+		expect(await nameVerifier.verifyTokenName('123456789_')).to.be.true
 	})
 
 	it('@{unallowed ascii char}', async () => {
 		for (let i = 0; i < 255; i++) {
 			if (
 				!(i >= 0x61 && i <= 0x7a) && // a-z
-				!(i >= 0x30 && i <= 0x39)
+				!(i >= 0x30 && i <= 0x39) && // 0-9
+				!(i == 0x5f) // _
 			) {
-				// 0-9
-				expect(await nameVerifier.verifyTokenName(String.fromCharCode(i))).to.be.false
+				expect(await nameVerifier.verifyTokenName(String.fromCharCode(i) + String.fromCharCode(i))).to.be.false
 			}
 		}
 	})
@@ -58,10 +62,10 @@ describe('nameVerifiers/ShowtimeNameVerifier', () => {
 		for (let i = 0; i < 255; i++) {
 			if (
 				(i >= 0x61 && i <= 0x7a) || // a-z
-				(i >= 0x30 && i <= 0x39)
+				(i >= 0x30 && i <= 0x39) || // 0-9
+				i == 0x5f // _
 			) {
-				// 0-9
-				expect(await nameVerifier.verifyTokenName(String.fromCharCode(i))).to.be.true
+				expect(await nameVerifier.verifyTokenName(String.fromCharCode(i) + String.fromCharCode(i))).to.be.true
 			}
 		}
 	})
