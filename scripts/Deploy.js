@@ -401,7 +401,7 @@ async function main() {
 		showtimeNameVerifierAddress = loadDeployedAddress(networkName, 'showtimeNameVerifier')
 	}
 
-	if (STAGE <= 15) {
+	/*if (STAGE <= 15) {
 		console.log('15. Add Showtime market')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
@@ -433,7 +433,7 @@ async function main() {
 		)
 		await ideaTokenFactory.setOwner(dsPauseProxyAddress, { gasPrice: deploymentParams.gasPrice })
 		console.log('')
-	}
+	}*/
 
 	let ideaTokenVaultProxyAddress
 	if (STAGE <= 17) {
