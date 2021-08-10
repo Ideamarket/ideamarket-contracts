@@ -45,6 +45,8 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
     /**
      * Transfers Dai to the L2 InterestManager
      *
+     * @param gasLimit The gas limit for the L2 tx
+     * @param maxSubmissionCost The maximum cost to submit this tx to L2
      * @param l2GasPriceBid Gas price for the L2 tx
      *
      * @return L1 -> L2 tx ticket id
