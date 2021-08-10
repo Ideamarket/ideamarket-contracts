@@ -182,7 +182,7 @@ contract BridgeAVM is Ownable, Initializable, IBridgeAVM {
     function receiveIdeaTokenTransfer(uint marketID, uint tokenID, uint amount, address to) external override onlyL1Exchange {
         TokenInfo memory tokenInfo = _l2Factory.getTokenInfo(marketID, tokenID);
         require(tokenInfo.exists, "not-exist");
-        tokenInfo.ideaToken.transfer(to, amount);
+        require(tokenInfo.ideaToken.transfer(to, amount), "transfer");
         
         emit TokensRedeemed(marketID, tokenID, amount, to);
     }
