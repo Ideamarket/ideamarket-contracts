@@ -56,7 +56,32 @@ const allDeploymentParams = {
 	},
 	test: {
 		timelockDelay: '1',
-		gasPrice: 1000000000, // 1 gwei
+		gasPrice: 10000000000, // 10 gwei
+
+		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
+		twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		twitterAllInterestToPlatform: false,
+
+		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
+		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		substackAllInterestToPlatform: false,
+
+		showtimeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		showtimePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		showtimeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
+		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
+		showtimeAllInterestToPlatform: false,
+	},
+	'test-avm-l1': {
+		timelockDelay: '1',
+		gasPrice: 10000000000, // 10 gwei
 
 		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
 		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
@@ -109,6 +134,15 @@ const allExternalContractAddresses = {
 		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
 		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
 	},
+	'test-avm-l1': {
+		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
+		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
+		dai: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
+		cDai: '0x6D7F0754FFeb405d23C51CE938289d4835bE3b14',
+		comp: '0x0000000000000000000000000000000000000001', // Not deployed on Rinkeby
+		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+	},
 }
 
 let deploymentParams
@@ -124,17 +158,24 @@ async function main() {
 
 	let networkName = (await ethers.provider.getNetwork()).name
 	if (networkName === 'rinkeby') {
-		const input = await read('Use test network? [y/n] ')
+		const input = await read('[1: rinkeby, 2: test, 3: test-avm-l1] ')
 
-		if (input === 'Y' || input === 'y') {
-			console.log('Using test network')
+		if(input === '1') {
+			console.log('Using rinkeby')
+			deploymentParams = allDeploymentParams.rinkeby
+			externalContractAdresses = allExternalContractAddresses.rinkeby
+		} else if (input === '2') {
+			console.log('Using test')
 			networkName = 'test'
 			deploymentParams = allDeploymentParams.test
 			externalContractAdresses = allExternalContractAddresses.test
+		} else if (input === '3') {
+			console.log('Using test-avm-l1')
+			networkName = 'test-avm-l1'
+			deploymentParams = allDeploymentParams['test-avm-l1']
+			externalContractAdresses = allExternalContractAddresses['test-avm-l1']
 		} else {
-			console.log('Using Rinkeby')
-			deploymentParams = allDeploymentParams.rinkeby
-			externalContractAdresses = allExternalContractAddresses.rinkeby
+			throw new Error('Unknown network')
 		}
 	} else if (networkName === 'homestead') {
 		networkName = 'mainnet'
@@ -478,7 +519,7 @@ async function main() {
 	}
 
 	if (STAGE <= 20) {
-		console.log('20. Deploy ChangeLogic')
+		console.log('20. Deploy ChangeLogicSpell')
 		console.log('==============================================')
 		const changeLogicSpell = await deployContract('ChangeLogicSpell')
 		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
