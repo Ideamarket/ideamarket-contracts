@@ -28,6 +28,13 @@ const allDeploymentParams = {
 		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
 		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
 		showtimeAllInterestToPlatform: false,
+
+		twitchBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		twitchPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		twitchHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		twitchTradingFeeRate: BigNumber.from('50'), // 0.50%
+		twitchPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		twitchAllInterestToPlatform: false,
 	},
 	rinkeby: {
 		timelockDelay: '1',
@@ -53,6 +60,13 @@ const allDeploymentParams = {
 		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
 		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
 		showtimeAllInterestToPlatform: false,
+
+		twitchBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		twitchPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		twitchHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		twitchTradingFeeRate: BigNumber.from('50'), // 0.50%
+		twitchPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		twitchAllInterestToPlatform: false,
 	},
 	kovan: {
 		timelockDelay: '1',
@@ -117,6 +131,13 @@ const allDeploymentParams = {
 		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
 		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
 		showtimeAllInterestToPlatform: false,
+
+		twitchBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		twitchPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		twitchHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		twitchTradingFeeRate: BigNumber.from('50'), // 0.50%
+		twitchPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		twitchAllInterestToPlatform: false,
 	},
 }
 
@@ -436,7 +457,7 @@ async function main() {
 
 	let showtimeNameVerifierAddress
 	if (STAGE <= 14) {
-		console.log('12. Deploy ShowtimeNameVerifier')
+		console.log('14. Deploy ShowtimeNameVerifier')
 		console.log('==============================================')
 		const showtimeNameVerifier = await deployContract('ShowtimeNameVerifier')
 
@@ -471,8 +492,44 @@ async function main() {
 		console.log('')
 	}
 
+	let twitchNameVerifierAddress
 	if (STAGE <= 16) {
-		console.log('16. Set IdeaTokenFactory owner')
+		console.log('16. Deploy TwitchNameVerifier')
+		console.log('==============================================')
+		const twitchNameVerifier = await deployContract('TwitchNameVerifier')
+
+		twitchNameVerifierAddress = twitchNameVerifier.address
+		saveDeployedAddress(networkName, 'twitchNameVerifier', twitchNameVerifier.address)
+		saveDeployedABI(networkName, 'twitchNameVerifier', artifacts.readArtifactSync('TwitchNameVerifier').abi)
+		console.log('')
+	} else {
+		twitchNameVerifierAddress = loadDeployedAddress(networkName, 'twitchNameVerifier')
+	}
+
+	if (STAGE <= 17) {
+		console.log('17. Add Twitch market')
+		console.log('==============================================')
+		const ideaTokenFactory = new ethers.Contract(
+			ideaTokenFactoryProxyAddress,
+			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
+			deployerAccount
+		)
+		await ideaTokenFactory.addMarket(
+			'Twitch',
+			twitchNameVerifierAddress,
+			deploymentParams.twitchBaseCost,
+			deploymentParams.twitchPriceRise,
+			deploymentParams.twitchHatchTokens,
+			deploymentParams.twitchTradingFeeRate,
+			deploymentParams.twitchPlatformFeeRate,
+			deploymentParams.twitchAllInterestToPlatform,
+			{ gasPrice: deploymentParams.gasPrice }
+		)
+		console.log('')
+	}
+
+	if (STAGE <= 18) {
+		console.log('18. Set IdeaTokenFactory owner')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -485,8 +542,8 @@ async function main() {
 	}
 
 	let ideaTokenVaultProxyAddress
-	if (STAGE <= 17) {
-		console.log('17. Deploy IdeaTokenVault')
+	if (STAGE <= 19) {
+		console.log('19. Deploy IdeaTokenVault')
 		console.log('==============================================')
 		const [ideaTokenVaultProxy, ideaTokenVaultLogic] = await deployProxyContract(
 			'IdeaTokenVault',
@@ -503,8 +560,8 @@ async function main() {
 		ideaTokenVaultProxyAddress = loadDeployedAddress(networkName, 'ideaTokenVault')
 	}
 
-	if (STAGE <= 18) {
-		console.log('18. Deploy MultiAction')
+	if (STAGE <= 20) {
+		console.log('20. Deploy MultiAction')
 		console.log('==============================================')
 		const multiAction = await deployContract(
 			'MultiAction',
@@ -520,8 +577,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 19) {
-		console.log('19. Deploy AddMarketSpell')
+	if (STAGE <= 21) {
+		console.log('21. Deploy AddMarketSpell')
 		console.log('==============================================')
 		const addMarketSpell = await deployContract('AddMarketSpell')
 		saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
