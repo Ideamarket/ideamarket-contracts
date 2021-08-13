@@ -31,7 +31,10 @@ async function main() {
 	console.log('Gas Price', deploymentParams.gasPrice)
 	console.log('')
 	console.log('L2 Gas Limit per token', deploymentParams.gasLimitExchangeTokensVarsTransferPerToken.toString())
-	console.log('L2 Submission Cost per token', deploymentParams.maxSubmissionCostExchangeTokenVarsTransferPerToken.toString())
+	console.log(
+		'L2 Submission Cost per token',
+		deploymentParams.maxSubmissionCostExchangeTokenVarsTransferPerToken.toString()
+	)
 	console.log('L2 Gas price bid', deploymentParams.l2GasPriceBidExchangeTokenVarsTransferPerToken.toString())
 	console.log('IdeaTokenExchangeStateTransferAddress', ideaTokenExchangeStateTransferAddress)
 	console.log('IdeaTokenFactory', ideaTokenFactoryAddress)
@@ -68,9 +71,15 @@ async function main() {
 				tokenIDs.push(c)
 			}
 
-			const maxSubmissionCost = BigNumber.from(tokenIDs.length.toString()).mul(deploymentParams.maxSubmissionCostExchangeTokenVarsTransferPerToken)
-			const maxGas = BigNumber.from(tokenIDs.length.toString()).mul(deploymentParams.gasLimitExchangeTokensVarsTransferPerToken)
-			const value = maxSubmissionCost.add(maxGas.mul(deploymentParams.l2GasPriceBidExchangeTokenVarsTransferPerToken)) 				
+			const maxSubmissionCost = BigNumber.from(tokenIDs.length.toString()).mul(
+				deploymentParams.maxSubmissionCostExchangeTokenVarsTransferPerToken
+			)
+			const maxGas = BigNumber.from(tokenIDs.length.toString()).mul(
+				deploymentParams.gasLimitExchangeTokensVarsTransferPerToken
+			)
+			const value = maxSubmissionCost.add(
+				maxGas.mul(deploymentParams.l2GasPriceBidExchangeTokenVarsTransferPerToken)
+			)
 
 			console.log('Executing token vars transfer. Market', i, 'Tokens', tokenIDs, 'Value', value.toString())
 			const yn = await read('Correct? [Y/n]: ')

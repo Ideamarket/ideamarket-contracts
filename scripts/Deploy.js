@@ -28,13 +28,6 @@ const allDeploymentParams = {
 		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
 		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
 		showtimeAllInterestToPlatform: false,
-
-		twitchBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		twitchPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		twitchHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		twitchTradingFeeRate: BigNumber.from('50'), // 0.50%
-		twitchPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		twitchAllInterestToPlatform: false,
 	},
 	rinkeby: {
 		timelockDelay: '1',
@@ -60,52 +53,6 @@ const allDeploymentParams = {
 		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
 		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
 		showtimeAllInterestToPlatform: false,
-
-		twitchBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		twitchPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		twitchHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		twitchTradingFeeRate: BigNumber.from('50'), // 0.50%
-		twitchPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		twitchAllInterestToPlatform: false,
-	},
-	kovan: {
-		timelockDelay: '1',
-		gasPrice: 1000000000, // 1 gwei
-
-		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
-		twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		twitterAllInterestToPlatform: false,
-
-		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
-		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		substackAllInterestToPlatform: false,
-
-		mirrorBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		mirrorPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		mirrorHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		mirrorTradingFeeRate: BigNumber.from('50'), // 0.50%
-		mirrorPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		mirrorAllInterestToPlatform: false,
-
-		showtimeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		showtimePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		showtimeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
-		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
-		showtimeAllInterestToPlatform: false,
-
-		youtubeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		youtubePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		youtubeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		youtubeTradingFeeRate: BigNumber.from('50'), // 0.50%
-		youtubePlatformFeeRate: BigNumber.from('50'), // 0.50%
-		youtubeAllInterestToPlatform: false,
 	},
 	test: {
 		timelockDelay: '1',
@@ -131,13 +78,6 @@ const allDeploymentParams = {
 		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
 		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
 		showtimeAllInterestToPlatform: false,
-
-		twitchBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		twitchPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		twitchHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		twitchTradingFeeRate: BigNumber.from('50'), // 0.50%
-		twitchPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		twitchAllInterestToPlatform: false,
 	},
 }
 
@@ -158,15 +98,6 @@ const allExternalContractAddresses = {
 		cDai: '0x6D7F0754FFeb405d23C51CE938289d4835bE3b14',
 		comp: '0x0000000000000000000000000000000000000001', // Not deployed on Rinkeby
 		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-	},
-	kovan: {
-		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-		dai: '0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa',
-		cDai: '0xf0d0eb522cfa50b716b3b1604c4f0fa6f04376ad',
-		comp: '0x61460874a7196d6a22d1ee4922473664b3e95270',
-		weth: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
 		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
 	},
 	test: {
@@ -205,10 +136,6 @@ async function main() {
 			deploymentParams = allDeploymentParams.rinkeby
 			externalContractAdresses = allExternalContractAddresses.rinkeby
 		}
-	} else if (networkName === 'kovan') {
-		console.log('Using Kovan')
-		deploymentParams = allDeploymentParams.kovan
-		externalContractAdresses = allExternalContractAddresses.kovan
 	} else if (networkName === 'homestead') {
 		networkName = 'mainnet'
 
@@ -492,44 +419,8 @@ async function main() {
 		console.log('')
 	}
 
-	let twitchNameVerifierAddress
 	if (STAGE <= 16) {
-		console.log('16. Deploy TwitchNameVerifier')
-		console.log('==============================================')
-		const twitchNameVerifier = await deployContract('TwitchNameVerifier')
-
-		twitchNameVerifierAddress = twitchNameVerifier.address
-		saveDeployedAddress(networkName, 'twitchNameVerifier', twitchNameVerifier.address)
-		saveDeployedABI(networkName, 'twitchNameVerifier', artifacts.readArtifactSync('TwitchNameVerifier').abi)
-		console.log('')
-	} else {
-		twitchNameVerifierAddress = loadDeployedAddress(networkName, 'twitchNameVerifier')
-	}
-
-	if (STAGE <= 17) {
-		console.log('17. Add Twitch market')
-		console.log('==============================================')
-		const ideaTokenFactory = new ethers.Contract(
-			ideaTokenFactoryProxyAddress,
-			(await ethers.getContractFactory('IdeaTokenFactory')).interface,
-			deployerAccount
-		)
-		await ideaTokenFactory.addMarket(
-			'Twitch',
-			twitchNameVerifierAddress,
-			deploymentParams.twitchBaseCost,
-			deploymentParams.twitchPriceRise,
-			deploymentParams.twitchHatchTokens,
-			deploymentParams.twitchTradingFeeRate,
-			deploymentParams.twitchPlatformFeeRate,
-			deploymentParams.twitchAllInterestToPlatform,
-			{ gasPrice: deploymentParams.gasPrice }
-		)
-		console.log('')
-	}
-
-	if (STAGE <= 18) {
-		console.log('18. Set IdeaTokenFactory owner')
+		console.log('16. Set IdeaTokenFactory owner')
 		console.log('==============================================')
 		const ideaTokenFactory = new ethers.Contract(
 			ideaTokenFactoryProxyAddress,
@@ -542,8 +433,8 @@ async function main() {
 	}
 
 	let ideaTokenVaultProxyAddress
-	if (STAGE <= 19) {
-		console.log('19. Deploy IdeaTokenVault')
+	if (STAGE <= 17) {
+		console.log('17. Deploy IdeaTokenVault')
 		console.log('==============================================')
 		const [ideaTokenVaultProxy, ideaTokenVaultLogic] = await deployProxyContract(
 			'IdeaTokenVault',
@@ -560,8 +451,8 @@ async function main() {
 		ideaTokenVaultProxyAddress = loadDeployedAddress(networkName, 'ideaTokenVault')
 	}
 
-	if (STAGE <= 20) {
-		console.log('20. Deploy MultiAction')
+	if (STAGE <= 18) {
+		console.log('18. Deploy MultiAction')
 		console.log('==============================================')
 		const multiAction = await deployContract(
 			'MultiAction',
@@ -577,8 +468,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 21) {
-		console.log('21. Deploy AddMarketSpell')
+	if (STAGE <= 19) {
+		console.log('19. Deploy AddMarketSpell')
 		console.log('==============================================')
 		const addMarketSpell = await deployContract('AddMarketSpell')
 		saveDeployedAddress(networkName, 'addMarketSpell', addMarketSpell.address)
@@ -586,8 +477,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 22) {
-		console.log('22. Deploy ChangeLogic')
+	if (STAGE <= 20) {
+		console.log('20. Deploy ChangeLogic')
 		console.log('==============================================')
 		const changeLogicSpell = await deployContract('ChangeLogicSpell')
 		saveDeployedAddress(networkName, 'changeLogicSpell', changeLogicSpell.address)
@@ -595,8 +486,8 @@ async function main() {
 		console.log('')
 	}
 
-	if (STAGE <= 23) {
-		console.log('23. Deploy ChangeLogicAndCallSpell')
+	if (STAGE <= 21) {
+		console.log('21. Deploy ChangeLogicAndCallSpell')
 		console.log('==============================================')
 		const changeLogicAndCallSpell = await deployContract('ChangeLogicAndCallSpell')
 		saveDeployedAddress(networkName, 'changeLogicAndCallSpell', changeLogicAndCallSpell.address)
@@ -670,11 +561,6 @@ async function deployContract(name, ...params) {
 	const contractFactory = await ethers.getContractFactory(name)
 	const deployed = await contractFactory.deploy(...params, { gasPrice: deploymentParams.gasPrice })
 	await deployed.deployed()
-
-	const networkName = (await ethers.provider.getNetwork()).name
-	if (networkName === 'kovan') {
-		await new Promise((resolve) => setTimeout(resolve, 1000))
-	}
 
 	return deployed
 }

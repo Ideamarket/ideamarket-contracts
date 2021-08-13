@@ -16,7 +16,9 @@ async function main() {
 	const deploymentParams = config.deploymentParams[networkName]
 
 	const value = deploymentParams.maxSubmissionCostExchangePlatformVarsTransfer.add(
-		deploymentParams.gasLimitExchangePlatformVarsTransfer.mul(deploymentParams.l2GasPriceBidExchangePlatformVarsTransfer)
+		deploymentParams.gasLimitExchangePlatformVarsTransfer.mul(
+			deploymentParams.l2GasPriceBidExchangePlatformVarsTransfer
+		)
 	)
 
 	const ideaTokenFactoryAddress = loadDeployedAddress(networkName, 'ideaTokenFactory')
@@ -53,10 +55,16 @@ async function main() {
 
 	for (let i = 1; i <= numMarkets.toNumber(); i++) {
 		console.log('Executing platform vars state transfer: marketID', i)
-		const tx = await ideaTokenExchangeStateTransfer.transferPlatformVars(i, deploymentParams.gasLimitExchangePlatformVarsTransfer, deploymentParams.maxSubmissionCostExchangePlatformVarsTransfer, deploymentParams.l2GasPriceBidExchangePlatformVarsTransfer, {
-			gasPrice: deploymentParams.gasPrice,
-			value: value,
-		})
+		const tx = await ideaTokenExchangeStateTransfer.transferPlatformVars(
+			i,
+			deploymentParams.gasLimitExchangePlatformVarsTransfer,
+			deploymentParams.maxSubmissionCostExchangePlatformVarsTransfer,
+			deploymentParams.l2GasPriceBidExchangePlatformVarsTransfer,
+			{
+				gasPrice: deploymentParams.gasPrice,
+				value: value,
+			}
+		)
 		await tx.wait()
 	}
 }

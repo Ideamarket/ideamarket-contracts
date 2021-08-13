@@ -59,10 +59,12 @@ describe('evm/bridge/InterestManagerCompoundStateTransfer', () => {
 		const interestManagerCompoundStateTransferLogic = await InterestManagerCompoundStateTransfer.deploy()
 		await interestManagerCompoundStateTransferLogic.deployed()
 
-		const interestManagerCompoundStateTransferInitCall = interestManagerCompoundStateTransferLogic.interface.encodeFunctionData(
-			'initializeStateTransfer',
-			[adminAccount.address, oneAddress, oneAddress]
-		)
+		const interestManagerCompoundStateTransferInitCall =
+			interestManagerCompoundStateTransferLogic.interface.encodeFunctionData('initializeStateTransfer', [
+				adminAccount.address,
+				oneAddress,
+				oneAddress,
+			])
 
 		await proxyAdmin
 			.connect(adminAccount)

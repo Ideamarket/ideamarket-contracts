@@ -15,20 +15,6 @@ module.exports = {
 			url: process.env.RINKEBY_RPC || '',
 			accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
 		},
-		kovan: {
-			url: process.env.KOVAN_RPC || '',
-			accounts: process.env.KOVAN_PRIVATE_KEY ? [process.env.KOVAN_PRIVATE_KEY] : [],
-		},
-
-		// --- AVM
-		avm_local: {
-			url: 'http://localhost:8547',
-		},
-		kovan_avm: {
-			url: process.env.KOVAN_AVM_RPC || '',
-			accounts: process.env.KOVAN_AVM_PRIVATE_KEY ? [process.env.KOVAN_AVM_PRIVATE_KEY] : [],
-			timeout: 60000,
-		},
 	},
 	solidity: {
 		version: '0.6.9',
