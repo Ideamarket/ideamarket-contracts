@@ -48,6 +48,7 @@ async function main() {
 		deploymentParams.l2GasPriceBidInterestManagerStateTransfer,
 		{
 			gasPrice: deploymentParams.gasPrice,
+			gasLimit: '4000000',
 			value: value,
 		}
 	)

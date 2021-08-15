@@ -89,9 +89,10 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
     function transferDaiInternal(IERC20 dai, uint amount, uint gasLimit, uint l2GasPriceBid) internal returns (bytes memory) {
 
         IL1GatewayRouter l1GatewayRouter = _l1GatewayRouter;
+        
         address gateway = l1GatewayRouter.getGateway(address(dai));
         require(gateway != address(0), "zero-gateway");
-        require(dai.approve(address(l1GatewayRouter), amount), "dai-approve");
+        require(dai.approve(address(gateway), amount), "dai-approve");
 
         return l1GatewayRouter.outboundTransfer{value: msg.value}(
             address(dai),           // ERC20 address
