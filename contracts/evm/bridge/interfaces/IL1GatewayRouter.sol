@@ -14,4 +14,6 @@ interface IL1GatewayRouter {
         uint256 _gasPriceBid,
         bytes calldata _data
     ) external payable returns (bytes memory);
+
+    function getGateway(address _token) external view returns (address gateway);
 }
