@@ -2,8 +2,8 @@ const { BigNumber } = require('ethers')
 
 module.exports = {
 	deploymentParams: {
-		kovan: {
-			gasPrice: 1000000000, // 1 gwei
+		'test-avm-l1': {
+			gasPrice: 10000000000, // 10 gwei
 
 			gasLimitInterestManagerStateTransfer: BigNumber.from('1500000'), // 1.5MM
 			maxSubmissionCostInterestManagerStateTransfer: BigNumber.from('1000000000000000'), // 0.001 ETH
@@ -21,7 +21,7 @@ module.exports = {
 			maxSubmissionCostExchangeTokenVarsTransferPerToken: BigNumber.from('1000000000000000'), // 0.001 ETH
 			l2GasPriceBidExchangeTokenVarsTransferPerToken: BigNumber.from('1000000000'), // 1 gwei
 		},
-		'kovan-avm': {
+		'test-avm-l2': {
 			timelockDelay: '86400', // 24 hours
 			gasPrice: 500000000, // 0.5 gwei
 
@@ -48,14 +48,14 @@ module.exports = {
 		},
 	},
 	externalContractAddresses: {
-		kovan: {
-			daiBridge: '0x1d750369c91b129524B68f308512b0FE2C903d71',
-			inbox: '0x76bF1345224fE606E2aB38B8E52B83512328A9DF',
+		'test-avm-l1': {
+			daiBridge: '0x91169Dbb45e6804743F94609De50D511C437572E',
+			inbox: '0x578BAde599406A8fE3d24Fd7f7211c0911F5B29e',
 		},
-		'kovan-avm': {
+		'test-avm-l2': {
 			multisig: '0x0000000000000000000000000000000000000001',
 			authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-			dai: '0xF8C456486B54a5e095c37805F5428191852b4E4F',
+			dai: '0x5364Dc963c402aAF150700f38a8ef52C1D7D7F14',
 			cDai: '0x0000000000000000000000000000000000000001',
 			weth: '0x0000000000000000000000000000000000000001',
 			uniswapV2Router02: '0x0000000000000000000000000000000000000001',

@@ -7,8 +7,8 @@ async function main() {
 	const deployerAddress = deployerAccount.address
 
 	let networkName = (await ethers.provider.getNetwork()).name
-	if (networkName === 'kovan') {
-		console.log('Using Kovan')
+	if (networkName === 'rinkeby') {
+		networkName = 'test-avm-l1'
 	} else {
 		throw 'cannot work with network: ' + networkName
 	}

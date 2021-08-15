@@ -10,9 +10,9 @@ async function main() {
 	let l1NetworkName = ''
 	let l2NetworkName = ''
 
-	if (chainID === 144545313136048) {
-		l1NetworkName = 'kovan'
-		l2NetworkName = 'kovan-avm'
+	if (chainID === 421611) {
+		l1NetworkName = 'test-avm-l1'
+		l2NetworkName = 'test-avm-l2'
 	} else {
 		throw `unknown chain id: ${chainID}`
 	}

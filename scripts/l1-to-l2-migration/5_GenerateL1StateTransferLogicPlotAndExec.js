@@ -9,9 +9,9 @@ async function main() {
 	let l1NetworkName = (await ethers.provider.getNetwork()).name
 	let l2NetworkName = ''
 
-	if (l1NetworkName === 'kovan') {
-		console.log('Using Kovan')
-		l2NetworkName = 'kovan-avm'
+	if (l1NetworkName === 'rinkeby') {
+		l1NetworkName = 'test-avm-l1'
+		l2NetworkName = 'test-avm-l2'
 	} else {
 		throw 'cannot work with network: ' + l1NetworkName
 	}

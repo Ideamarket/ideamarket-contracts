@@ -11,8 +11,8 @@ async function main() {
 	const chainID = (await ethers.provider.getNetwork()).chainId
 	let l2NetworkName = ''
 
-	if (chainID === 144545313136048) {
-		l2NetworkName = 'kovan-avm'
+	if (chainID === 421611) {
+		l2NetworkName = 'test-avm-l2'
 	} else {
 		throw `unknown chain id: ${chainID}`
 	}
