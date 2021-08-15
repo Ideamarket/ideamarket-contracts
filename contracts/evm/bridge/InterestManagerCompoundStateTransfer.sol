@@ -68,12 +68,12 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
         require(cDai.accrueInterest() == 0, "accrue");
 
         // Claim COMP
-        IComptroller(cDai.comptroller()).claimComp(addr);
+        //IComptroller(cDai.comptroller()).claimComp(addr);
 
-        uint bal = comp.balanceOf(addr);
+        uint bal = 0; /*= comp.balanceOf(addr);
         if(bal > 0) {
             require(comp.transfer(_compRecipient, bal), "comp-transfer");
-        }
+        }*/
         
         // Redeem Dai from Compound
         bal = cDai.balanceOf(addr);

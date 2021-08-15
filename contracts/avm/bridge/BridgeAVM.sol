@@ -46,13 +46,8 @@ contract BridgeAVM is Ownable, Initializable, IBridgeAVM {
     // Stores the array lengths of the above mapping
     mapping(uint => uint) public _numTokensInMarket;
 
-    /*
-        NOTE:
-        This modifier is currently partially commented-out because `IArbSys(100).isTopLevelCall()` 
-        will only become available after Arbitrum's first mainnet upgrade scheduled for early june.
-    */
     modifier onlyL1Exchange {
-        require(/*IArbSys(100).isTopLevelCall() && */msg.sender == _l1Exchange, "only-l1-exchange");
+        require(IArbSys(100).isTopLevelCall() && msg.sender == _l1Exchange, "only-l1-exchange");
         _;
     } 
 
