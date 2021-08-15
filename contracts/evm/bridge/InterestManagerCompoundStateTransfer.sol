@@ -2,7 +2,7 @@
 pragma solidity 0.6.9;
 
 import "./interfaces/IInterestManagerCompoundStateTransfer.sol";
-import "./interfaces/IERC20Bridge.sol";
+import "./interfaces/IL1GatewayRouter.sol";
 import "../core/InterestManagerCompound.sol"; 
 
 /**
@@ -21,8 +21,8 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
     address public _transferManager;
     // Address of the interest manager contract on L2
     address public _l2InterestManager;
-    // Arbitrum's ERC20 bridge
-    IERC20Bridge public _erc20Bridge;
+    // Arbitrum's token bridge router
+    IL1GatewayRouter public _l1GatewayRouter;
     // Whether the state transfer has been executed
     bool public _stateTransferExecuted;
 
@@ -31,31 +31,30 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
      *
      * @param transferManager EOA which is allowed to manage the state transfer
      * @param l2InterestManager Address of the interest manager contract on L2
-     * @param erc20Bridge Address of Arbitrum's ERC20 bridge
+     * @param l1GatewayRouter Address of Arbitrum's GatewayRouter
      */
-    function initializeStateTransfer(address transferManager, address l2InterestManager, address erc20Bridge) external override {
+    function initializeStateTransfer(address transferManager, address l2InterestManager, address l1GatewayRouter) external override {
         require(_transferManager == address(0), "already-init");
-        require(transferManager != address(0) && l2InterestManager != address(0) && erc20Bridge != address(0), "invalid-args");
+        require(transferManager != address(0) && l2InterestManager != address(0) && l1GatewayRouter != address(0), "invalid-args");
 
         _transferManager = transferManager;
         _l2InterestManager = l2InterestManager;
-        _erc20Bridge = IERC20Bridge(erc20Bridge);
+        _l1GatewayRouter = IL1GatewayRouter(l1GatewayRouter);
     }
 
     /**
      * Transfers Dai to the L2 InterestManager
      *
      * @param gasLimit The gas limit for the L2 tx
-     * @param maxSubmissionCost The maximum cost to submit this tx to L2
      * @param l2GasPriceBid Gas price for the L2 tx
      *
      * @return L1 -> L2 tx ticket id
      */
-    function executeStateTransfer(uint gasLimit, uint maxSubmissionCost, uint l2GasPriceBid) external payable override returns (uint) {
+    function executeStateTransfer(uint gasLimit, uint l2GasPriceBid) external payable override returns (bytes memory) {
         require(msg.sender == _transferManager, "only-transfer-manager");
         require(!_stateTransferExecuted, "already-executed");
 
-        require(msg.value == maxSubmissionCost.add(gasLimit.mul(l2GasPriceBid)), "value");
+        require(msg.value == gasLimit.mul(l2GasPriceBid), "value");
         
         _stateTransferExecuted = true;
 
@@ -83,26 +82,23 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
         
         bal = dai.balanceOf(addr);
 
-        return transferDaiInternal(dai, bal, gasLimit, maxSubmissionCost, l2GasPriceBid);
+        return transferDaiInternal(dai, bal, gasLimit, l2GasPriceBid);
     }
 
     // Stack too deep
-    function transferDaiInternal(IERC20 dai, uint amount, uint gasLimit, uint maxSubmissionCost, uint l2GasPriceBid) internal returns (uint) {
+    function transferDaiInternal(IERC20 dai, uint amount, uint gasLimit, uint l2GasPriceBid) internal returns (bytes memory) {
 
-        IERC20Bridge erc20Bridge = _erc20Bridge;
-        require(dai.approve(address(erc20Bridge), amount), "dai-approve");
+        IL1GatewayRouter l1GatewayRouter = _l1GatewayRouter;
+        require(dai.approve(address(l1GatewayRouter), amount), "dai-approve");
 
-        (uint seq, ) = erc20Bridge.deposit{value: msg.value}(
+        return l1GatewayRouter.outboundTransfer{value: msg.value}(
             address(dai),           // ERC20 address
             _l2InterestManager,     // L2 recipient
             amount,                 // Amount
-            maxSubmissionCost,      // max submission cost
             gasLimit,               // l2 tx gas limit
             l2GasPriceBid,          // l2 tx gas price
             ""                      // l2 calldata
         );
-        
-        return seq;
     }
 
     /* **********************************************

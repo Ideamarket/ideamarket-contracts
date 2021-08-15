@@ -7,6 +7,6 @@ pragma solidity 0.6.9;
  */
 interface IInterestManagerCompoundStateTransfer {
     function initializeStateTransfer(address transferManager, address l2Bridge, address erc20Bridge) external;
-    function executeStateTransfer(uint gasLimit, uint maxSubmissionCost, uint l2GasPriceBid) external payable returns (uint);
+    function executeStateTransfer(uint gasLimit, uint l2GasPriceBid) external payable returns (bytes memory);
 }
 

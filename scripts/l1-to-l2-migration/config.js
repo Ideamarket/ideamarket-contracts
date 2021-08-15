@@ -6,7 +6,6 @@ module.exports = {
 			gasPrice: 10000000000, // 10 gwei
 
 			gasLimitInterestManagerStateTransfer: BigNumber.from('1500000'), // 1.5MM
-			maxSubmissionCostInterestManagerStateTransfer: BigNumber.from('1000000000000000'), // 0.001 ETH
 			l2GasPriceBidInterestManagerStateTransfer: BigNumber.from('1000000000'), // 1 gwei
 
 			gasLimitExchangeStaticVarsTransfer: BigNumber.from('1000000'), // 1MM
@@ -49,7 +48,7 @@ module.exports = {
 	},
 	externalContractAddresses: {
 		'test-avm-l1': {
-			daiBridge: '0x91169Dbb45e6804743F94609De50D511C437572E',
+			daiBridge: '0x70C143928eCfFaf9F5b406f7f4fC28Dc43d68380',
 			inbox: '0x578BAde599406A8fE3d24Fd7f7211c0911F5B29e',
 		},
 		'test-avm-l2': {
