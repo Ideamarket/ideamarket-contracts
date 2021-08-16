@@ -50,11 +50,11 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
      *
      * @return L1 -> L2 tx ticket id
      */
-    function executeStateTransfer(uint gasLimit, uint l2GasPriceBid) external payable override returns (bytes memory) {
+    function executeStateTransfer(uint gasLimit, uint maxSubmissionCost, uint l2GasPriceBid) external payable override returns (bytes memory) {
         require(msg.sender == _transferManager, "only-transfer-manager");
         require(!_stateTransferExecuted, "already-executed");
 
-        require(msg.value == gasLimit.mul(l2GasPriceBid), "value");
+        require(msg.value == maxSubmissionCost.add(gasLimit.mul(l2GasPriceBid)), "value");
         
         _stateTransferExecuted = true;
 
@@ -82,11 +82,11 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
         
         bal = dai.balanceOf(addr);
 
-        return transferDaiInternal(dai, bal, gasLimit, l2GasPriceBid);
+        return transferDaiInternal(dai, bal, gasLimit, maxSubmissionCost, l2GasPriceBid);
     }
 
     // Stack too deep
-    function transferDaiInternal(IERC20 dai, uint amount, uint gasLimit, uint l2GasPriceBid) internal returns (bytes memory) {
+    function transferDaiInternal(IERC20 dai, uint amount, uint gasLimit, uint maxSubmissionCost, uint l2GasPriceBid) internal returns (bytes memory) {
 
         IL1GatewayRouter l1GatewayRouter = _l1GatewayRouter;
         
@@ -94,13 +94,16 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
         require(gateway != address(0), "zero-gateway");
         require(dai.approve(address(gateway), amount), "dai-approve");
 
+        bytes memory empty = "";
+        bytes memory data = abi.encode(maxSubmissionCost, empty);
+
         return l1GatewayRouter.outboundTransfer{value: msg.value}(
             address(dai),           // ERC20 address
             _l2InterestManager,     // L2 recipient
             amount,                 // Amount
             gasLimit,               // l2 tx gas limit
             l2GasPriceBid,          // l2 tx gas price
-            ""                      // l2 calldata
+            data                    // max submission cost and extra data
         );
     }
 

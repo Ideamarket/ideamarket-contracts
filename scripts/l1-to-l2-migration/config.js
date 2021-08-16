@@ -6,6 +6,7 @@ module.exports = {
 			gasPrice: 10000000000, // 10 gwei
 
 			gasLimitInterestManagerStateTransfer: BigNumber.from('1500000'), // 1.5MM
+			maxSubmissionCostInterestManagerStateTransfer: BigNumber.from('1000000000000000'), // 0.001 ETH
 			l2GasPriceBidInterestManagerStateTransfer: BigNumber.from('1000000000'), // 1 gwei
 
 			gasLimitExchangeStaticVarsTransfer: BigNumber.from('1000000'), // 1MM

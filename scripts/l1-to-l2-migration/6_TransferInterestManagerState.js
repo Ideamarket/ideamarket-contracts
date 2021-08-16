@@ -17,8 +17,10 @@ async function main() {
 	const deploymentParams = config.deploymentParams[networkName]
 	const interestManagerCompoundStateTransferAddress = loadDeployedAddress(networkName, 'interestManager')
 
-	const value = deploymentParams.gasLimitInterestManagerStateTransfer.mul(
-		deploymentParams.l2GasPriceBidInterestManagerStateTransfer
+	const value = deploymentParams.maxSubmissionCostInterestManagerStateTransfer.add(
+		deploymentParams.gasLimitInterestManagerStateTransfer.mul(
+			deploymentParams.l2GasPriceBidInterestManagerStateTransfer
+		)
 	)
 
 	console.log('Network', networkName)
@@ -26,6 +28,7 @@ async function main() {
 	console.log('Gas Price', deploymentParams.gasPrice)
 	console.log('')
 	console.log('L2 Gas Limit', deploymentParams.gasLimitInterestManagerStateTransfer.toString())
+	console.log('L2 Submission Cost', deploymentParams.maxSubmissionCostInterestManagerStateTransfer.toString())
 	console.log('L2 Gas price bid', deploymentParams.l2GasPriceBidInterestManagerStateTransfer.toString())
 	console.log('Value', value.toString())
 	console.log('InterestManagerCompoundStateTransfer', interestManagerCompoundStateTransferAddress)
@@ -45,10 +48,10 @@ async function main() {
 	console.log('Executing state transfer')
 	const tx = await interestManagerCompoundStateTransfer.executeStateTransfer(
 		deploymentParams.gasLimitInterestManagerStateTransfer,
+		deploymentParams.maxSubmissionCostInterestManagerStateTransfer,
 		deploymentParams.l2GasPriceBidInterestManagerStateTransfer,
 		{
 			gasPrice: deploymentParams.gasPrice,
-			gasLimit: '4000000',
 			value: value,
 		}
 	)
