@@ -18,7 +18,7 @@
     "addMarketSpell": "0x3Be6E3D53C64831F3958AB5a44aC5B4873a92640",
     "changeLogicSpell": "0xB5A52578E50374d7820F8ddA9A5B74EF79E9b5D1",
     "changeLogicAndCallSpell": "0xC7959b78037BE1b422eb82091ce400985Af49C2d",
-    "ideaTokenFactoryStateTransferLogic": "0x599de6E41f69FbB0e5E1F982aB3AE7aCd6917333",
-    "ideaTokenExchangeStateTransferLogic": "0xEA694090350D1Cfa14E2153Dd838f2d974b54366",
-    "interestManagerCompoundStateTransferLogic": "0xcf703e14f866276b212BC995237ea71C1820C4D0"
+    "ideaTokenFactoryStateTransferLogic": "0xAD2571cacFF2193260AF0Ac8b206170fc8Eae0D1",
+    "ideaTokenExchangeStateTransferLogic": "0x249BDCc34A44629e6A2D5D22Bc13fA6C05729Cda",
+    "interestManagerCompoundStateTransferLogic": "0x58aDa2EAC66A7620580c7Bbbc2f7aa1f37a7Ce09"
 }
