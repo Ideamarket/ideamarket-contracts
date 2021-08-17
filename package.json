@@ -45,6 +45,7 @@
 	},
 	"dependencies": {
 		"@openzeppelin/cli": "^2.8.2",
+		"arb-ts": "^0.0.29",
 		"bignumber.js": "^9.0.1",
 		"dotenv": "^8.2.0",
 		"moment": "^2.29.1",
