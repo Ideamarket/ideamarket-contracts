@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('vesting/TokenVesting', () => {
+describe('vesting/Delegatee', () => {
 	let Delegatee
 	let IMO
 

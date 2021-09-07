@@ -52,6 +52,7 @@ contract DelegateableTokenVesting is TokenVesting {
 
     /**
      * Delegates `amount` voting power to `delegatee`.
+     * If the `delegatee` already has delegated voting power the amount is added.
      * May only be called by the `beneficiary`.
      *
      * @param delegatee The address to receive the voting power
@@ -71,7 +72,7 @@ contract DelegateableTokenVesting is TokenVesting {
         _delegateAmount[delegatee] = amount;
         _totalDelegated = _totalDelegated.add(amount);
 
-        require(token.transfer(delegateContract, amount), "transfer");
+        require(token.transfer(delegateContract, amount), "transfer-failed");
 
         emit Delegate(delegatee, amount);
     }
@@ -84,7 +85,7 @@ contract DelegateableTokenVesting is TokenVesting {
      */
     function undelegate(address delegatee) public onlyBeneficiary returns (uint) {
         address delegateContract = _delegateContract[delegatee];
-        require(delegateContract != address(0), "no-delegatee");
+        require(delegateContract != address(0), "invalid-delegatee");
 
         Delegatee(delegateContract).withdraw();
 
