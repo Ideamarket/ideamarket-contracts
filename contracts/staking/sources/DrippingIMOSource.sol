@@ -47,7 +47,7 @@ contract DrippingIMOSource is ISource, Ownable {
     /**
      * Releases IMO to the target address.
      */
-    function pull() external override {
+    function pull() public override {
         uint currentBlock = block.number;
         uint lastBlock = _lastBlock;
         if(currentBlock <= lastBlock) {
@@ -84,6 +84,7 @@ contract DrippingIMOSource is ISource, Ownable {
      * @param rate The per-block release rate to be set.
      */
     function setRate(uint rate) external onlyOwner {
+        pull();
         setRateInternal(rate);
     }
 

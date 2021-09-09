@@ -56,6 +56,7 @@ contract IMOStaking is ERC20, Ownable {
      * @return The amount of shares minted
      */
     function deposit(uint amount) external returns (uint) {
+        require(amount > 0, "invalid-amount");
         pull();
 
         IERC20 imo = _imo;
@@ -86,6 +87,7 @@ contract IMOStaking is ERC20, Ownable {
      * @return The amount of IMO paid out
      */
     function withdraw(uint shares) external returns (uint) {
+        require(shares > 0, "invalid-shares");
         pull();
 
         IERC20 imo = _imo;
@@ -94,7 +96,7 @@ contract IMOStaking is ERC20, Ownable {
         uint currentShares = totalSupply();
         uint payoutAmount = shares.mul(currentBalance).div(currentShares);
 
-        _burn(user, payoutAmount);
+        _burn(user, shares);
         imo.transfer(user, payoutAmount);
 
         emit Withdraw(user, payoutAmount, shares);
