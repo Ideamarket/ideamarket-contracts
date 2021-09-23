@@ -61,7 +61,7 @@ contract BridgeAVM is Ownable, Initializable, IBridgeAVM {
     function initialize(address l1Exchange, address l2Exchange, address l2Factory) external override initializer {
         require(l1Exchange != address(0) && l2Exchange != address(0) && l2Factory != address(0), "invalid-args");
         setOwnerInternal(msg.sender);
-        _l1Exchange = l1Exchange;
+        _l1Exchange = address(uint160(l1Exchange) + uint160(0x1111000000000000000000000000000000001111));
         _l2Exchange = IIdeaTokenExchangeStateTransferAVM(l2Exchange);
         _l2Factory = IIdeaTokenFactory(l2Factory);
     }
