@@ -61,7 +61,6 @@ contract InterestManagerCompoundStateTransfer is InterestManagerCompound, IInter
         address addr = address(this);
         ICToken cDai = _cDai;
         IERC20 dai = _dai;
-        IERC20 comp = _comp;
 
         // Accrue Interest
         require(cDai.accrueInterest() == 0, "accrue");
