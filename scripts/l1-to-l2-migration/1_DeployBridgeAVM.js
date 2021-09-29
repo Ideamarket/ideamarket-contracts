@@ -11,6 +11,8 @@ async function main() {
 
 	if (chainID === 421611) {
 		l2NetworkName = 'test-avm-l2'
+	} else if(chainID === 42161) {
+		l2NetworkName = 'avm'
 	} else {
 		throw `unknown chain id: ${chainID}`
 	}

@@ -11,6 +11,10 @@ module.exports = {
 			url: process.env.MAINNET_RPC || '',
 			accounts: process.env.MAINNET_PRIVATE_KEY ? [process.env.MAINNET_PRIVATE_KEY] : [],
 		},
+		avm: {
+			url: process.env.AVM_RPC || '',
+			accounts: process.env.AVM_PRIVATE_KEY ? [process.env.AVM_PRIVATE_KEY] : [],
+		},
 		rinkeby: {
 			url: process.env.RINKEBY_RPC || '',
 			accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
