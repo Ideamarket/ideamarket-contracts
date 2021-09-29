@@ -4,7 +4,7 @@ require('dotenv').config()
 module.exports = {
 	deploymentParams: {
 		'mainnet': {
-			gasPrice: 10000000000, // 10 gwei
+			gasPrice: 65000000000, // 65 gwei
 
 			gasLimitInterestManagerStateTransfer: BigNumber.from('3000000'), // 1.5MM
 			maxSubmissionCostInterestManagerStateTransfer: BigNumber.from('2000000000000000'), // 0.002 ETH

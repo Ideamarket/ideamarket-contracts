@@ -9,6 +9,8 @@ async function main() {
 	let networkName = (await ethers.provider.getNetwork()).name
 	if (networkName === 'rinkeby') {
 		networkName = 'test-avm-l1'
+	} else if(networkName === 'homestead') {
+		networkName = 'mainnet'
 	} else {
 		throw 'cannot work with network: ' + networkName
 	}
