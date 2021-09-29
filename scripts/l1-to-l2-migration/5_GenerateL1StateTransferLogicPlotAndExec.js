@@ -12,6 +12,9 @@ async function main() {
 	if (l1NetworkName === 'rinkeby') {
 		l1NetworkName = 'test-avm-l1'
 		l2NetworkName = 'test-avm-l2'
+	} else if(l1NetworkName === 'homestead') {
+		l1NetworkName = 'mainnet'
+		l2NetworkName = 'avm'
 	} else {
 		throw 'cannot work with network: ' + l1NetworkName
 	}
