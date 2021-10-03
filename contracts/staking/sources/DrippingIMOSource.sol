@@ -46,6 +46,7 @@ contract DrippingIMOSource is ISource, Ownable {
 
     /**
      * Releases IMO to the target address.
+     * May be called by anyone.
      */
     function pull() public override {
         uint currentBlock = block.number;
@@ -64,14 +65,21 @@ contract DrippingIMOSource is ISource, Ownable {
 
         IERC20 imo = _imo;
         uint balance = imo.balanceOf(address(this));
-        if(balance < payout) {
+
+        if(balance == 0) {
             // The contract has paid out all funds.
             // We do not revert in this situation and simply
             // don't pay out anything.
-            //
+
             // When more funds are sent to this contract the
             // payouts will continue.
             return;
+        }
+
+        if(balance < payout) {
+            // The contract has paid out almost all funds.
+            // Send all remaining funds.
+            payout = balance;
         }
 
         require(imo.transfer(_target, payout), "transfer-failed");

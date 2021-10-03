@@ -4,7 +4,7 @@
 // https://github.com/fei-protocol/fei-protocol-core/blob/master/contracts/dao/TimelockedDelegator.sol
 // 
 // Modified to
-// - use `TokenVesting`
+// - use our `TokenVesting` contract
 // - remove TRIBE hardcoding
 
 pragma solidity 0.6.9;

@@ -41,10 +41,8 @@ contract IMOStaking is ERC20, Ownable {
         setOwnerInternal(owner); // Checks owner to be non zero
         _imo = IERC20(imo);
 
-        // ERC20
-        // TODO: Symbol and name
         _name = "Staked IMO";
-        _symbol = "sIMO";
+        _symbol = "xIMO";
         _decimals = 18;
     }
 
