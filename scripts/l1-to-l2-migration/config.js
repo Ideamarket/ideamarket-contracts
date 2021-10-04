@@ -4,23 +4,23 @@ require('dotenv').config()
 module.exports = {
 	deploymentParams: {
 		'mainnet': {
-			gasPrice: 65000000000, // 65 gwei
+			gasPrice: 85000000000, // 85 gwei
 
 			gasLimitInterestManagerStateTransfer: BigNumber.from('3000000'), // 1.5MM
 			maxSubmissionCostInterestManagerStateTransfer: BigNumber.from('2000000000000000'), // 0.002 ETH
-			l2GasPriceBidInterestManagerStateTransfer: BigNumber.from('1000000000'), // 1 gwei
+			l2GasPriceBidInterestManagerStateTransfer: BigNumber.from('2000000000'), // 2 gwei
 
 			gasLimitExchangeStaticVarsTransfer: BigNumber.from('2000000'), // 2MM
 			maxSubmissionCostExchangeStaticVarsTransfer: BigNumber.from('2000000000000000'), // 0.002 ETH
-			l2GasPriceBidExchangeStaticVarsTransfer: BigNumber.from('1000000000'), // 1 gwei
+			l2GasPriceBidExchangeStaticVarsTransfer: BigNumber.from('2000000000'), // 2 gwei
 
 			gasLimitExchangePlatformVarsTransfer: BigNumber.from('2000000'), // 2MM
 			maxSubmissionCostExchangePlatformVarsTransfer: BigNumber.from('2000000000000000'), // 0.002 ETH
-			l2GasPriceBidExchangePlatformVarsTransfer: BigNumber.from('1000000000'), // 1 gwei
+			l2GasPriceBidExchangePlatformVarsTransfer: BigNumber.from('2000000000'), // 2 gwei
 
 			gasLimitExchangeTokensVarsTransferPerToken: BigNumber.from('500000'), // 500K
 			maxSubmissionCostExchangeTokenVarsTransferPerToken: BigNumber.from('2000000000000000'), // 0.002 ETH
-			l2GasPriceBidExchangeTokenVarsTransferPerToken: BigNumber.from('1000000000'), // 1 gwei
+			l2GasPriceBidExchangeTokenVarsTransferPerToken: BigNumber.from('2000000000'), // 2 gwei
 		},
 		'test-avm-l1': {
 			gasPrice: 10000000000, // 10 gwei
@@ -44,7 +44,7 @@ module.exports = {
 
 		'avm': {
 			timelockDelay: '86400', // 24 hours
-			gasPrice: 2000000000, // 2 gwei
+			gasPrice: 750000000, // 0.75 gwei
 
 			twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
 			twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
