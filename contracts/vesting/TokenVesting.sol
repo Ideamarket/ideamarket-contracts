@@ -194,7 +194,7 @@ contract TokenVesting {
             return;
         }
 
-        require(IERC20(_lockedToken).transfer(to, amount), "transfer");
+        require(IERC20(_lockedToken).transfer(to, amount), "transfer-failed");
         emit Release(_beneficiary, to, amount);
     }
 
