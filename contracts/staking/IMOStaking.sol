@@ -95,7 +95,7 @@ contract IMOStaking is ERC20, Ownable {
         uint payoutAmount = shares.mul(currentBalance).div(currentShares);
 
         _burn(user, shares);
-        imo.transfer(user, payoutAmount);
+        require(imo.transfer(user, payoutAmount), "transfer-failed");
 
         emit Withdraw(user, payoutAmount, shares);
     
