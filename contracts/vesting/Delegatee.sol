@@ -33,7 +33,7 @@ contract Delegatee is Ownable {
      * Withdraws tokens back to the `DelegateableTokenVesting` contract and selfdestructs.
      * May only be called by `DelegateableTokenVesting`.
      */
-    function withdraw() public onlyOwner {
+    function withdraw() external onlyOwner {
         IDelegateableERC20 token = _token;
         uint balance = token.balanceOf(address(this));
         require(token.transfer(_owner, balance), "transfer-failed");
