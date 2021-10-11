@@ -36,7 +36,7 @@ contract Delegatee is Ownable {
     function withdraw() public onlyOwner {
         IDelegateableERC20 token = _token;
         uint balance = token.balanceOf(address(this));
-        token.transfer(_owner, balance);
+        require(token.transfer(_owner, balance), "transfer-failed");
         selfdestruct(payable(_owner));
     }
 }
