@@ -15,5 +15,6 @@
     "showtimeNameVerifier": "0x6C6cD7DaBC0bbF0b99DB209C74aaD4dc0e1d27F3",
     "ideaTokenVault": "0xeC4E1A014fAf0D966332E62970CD7c6553671d76",
     "ideaTokenVaultLogic": "0xd2a2830B2B381Eb2bcA5584c5d96732FDC83FFe9",
-    "multiAction": "0xF48F4074EEf4f784745551b07e022b779f82a74b"
+    "multiAction": "0xF48F4074EEf4f784745551b07e022b779f82a74b",
+    "changeTimelockOwnerSpell": "0x5e2a18eb368a6466ABb693AdabbbBd32B4d87c65"
 }
