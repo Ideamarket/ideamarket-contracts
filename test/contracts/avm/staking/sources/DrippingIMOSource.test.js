@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('staking/sources/DrippingIMOSource', () => {
+describe('avm/staking/sources/DrippingIMOSource', () => {
 	let IMO
 	let DrippingIMOSource
 	

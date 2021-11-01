@@ -11,7 +11,7 @@ pragma solidity 0.6.9;
 
 import "./TokenVesting.sol";
 import "./Delegatee.sol";
-import "../erc20/IDelegateableERC20.sol";
+import "../../shared/erc20/IDelegateableERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 /**

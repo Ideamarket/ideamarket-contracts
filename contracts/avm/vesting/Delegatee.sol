@@ -5,8 +5,8 @@
 
 pragma solidity 0.6.9;
 
-import "../util/Ownable.sol";
-import "../erc20/IDelegateableERC20.sol";
+import "../../shared/util/Ownable.sol";
+import "../../shared/erc20/IDelegateableERC20.sol";
 
 /**
  * @title Delegatee

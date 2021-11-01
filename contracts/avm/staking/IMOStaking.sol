@@ -3,8 +3,8 @@ pragma solidity 0.6.9;
 pragma experimental ABIEncoderV2;
 
 import "./sources/ISource.sol";
-import "../erc20/ERC20.sol";
-import "../util/Ownable.sol";
+import "../../shared/erc20/ERC20.sol";
+import "../../shared/util/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/EnumerableSet.sol";

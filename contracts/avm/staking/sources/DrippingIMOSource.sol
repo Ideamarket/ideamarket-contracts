@@ -2,7 +2,7 @@
 pragma solidity 0.6.9;
 
 import "./ISource.sol";
-import "../../util/Ownable.sol";
+import "../../../shared/util/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 

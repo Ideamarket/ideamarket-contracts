@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
-describe('vesting/TokenVesting', () => {
+describe('avm/vesting/TokenVesting', () => {
 	let TokenVesting
 	let TestERC20
 
