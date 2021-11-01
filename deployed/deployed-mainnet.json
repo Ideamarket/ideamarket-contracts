@@ -16,5 +16,9 @@
     "multiAction": "0xB41bd4C99dA73510d9e081C5FADBE7A27Ac1F814",
     "addMarketSpell": "0x58D63AeAd5B593B4974be0ef34AfbA77F144553d",
     "showtimeNameVerifier": "0x6315d29F8928DdAaf478B4b7D5ae635235661be1",
-    "twitchNameVerifier": "0xcd149973D82631BC8153EAD072669C68A34AfE07"
+    "ideaTokenFactoryStateTransferLogic": "0x8cD552d578cF6388292D10773baaE04CC82ce99e",
+    "ideaTokenExchangeStateTransferLogic": "0x046cD6012D7F59808e8E647B2C34C00604F10C00",
+    "interestManagerCompoundStateTransferLogic": "0x906b3B03beb34C93d959834d1737a7563550A8c5",
+    "changeLogicSpell": "0x9f79FeaE013017a0830E04BcEC67EA084a7C0c9c",
+    "changeLogicAndCallSpell": "0x93E6EdaD24daaF1554539133462e99A9cfC7851a"
 }

@@ -13,6 +13,13 @@ jobs:
       - name: Install dependencies
         run: |
             npm install
-      - name: Run tests
+      - name: Run EVM tests
         run: |
-            npx hardhat test
+            npm run test:evm
+      - name: Run AVM tests
+        run: |
+            mkdir ~/kovan4
+            curl https://raw.githubusercontent.com/OffchainLabs/arb-os/3c28bc5a6d5510678572b7e231c54e34d7138ebc/arb_os/arbos.mexe --output ~/kovan4/arbos.mexe
+            docker run -d -p 127.0.0.1:8547:8547 --entrypoint /home/user/go/bin/arb-dev-node -v ~/kovan4:/home/user/arb-os/arb_os offchainlabs/arb-validator:v0.8.1-dev2
+            sleep 20
+            npm run test:avm
