@@ -8,7 +8,7 @@ const tenPow18 = BigNumber.from('1000000000000000000')
 // ----------------- UPDATE THESE -----------------
 const allDeploymentParams = {
 	avm: {
-		gasPrice: 2000000000, // 1 gwei
+		gasPrice: 2000000000, // 2 gwei
 		drippingIMOSourceRate: BigNumber.from('4').mul(tenPow18),
 		amountIMOToSource: BigNumber.from('10000000').mul(tenPow18)
 	},
@@ -47,6 +47,10 @@ async function runDeployIMO() {
 		networkName = 'test-avm-l2'
 		deploymentParams = allDeploymentParams['test-avm-l2']
 		externalContractAddresses = allExternalContractAddresses['test-avm-l2']
+    } else if (chainID === 42161) {
+		networkName = 'avm'
+		deploymentParams = allDeploymentParams.avm
+		externalContractAddresses = allExternalContractAddresses.avm
     } else {
 		throw `unknown chain id: ${chainID}`
 	}
@@ -55,7 +59,7 @@ async function runDeployIMO() {
 	saveDeployedAddress(networkName, 'imo', imo.address)
 	saveDeployedABI(networkName, 'imo', artifacts.readArtifactSync('IMO').abi)
 	console.log('')
-	
+
 	const staking = await deployContract('IMOStaking', imo.address, deployerAddress)
 	saveDeployedAddress(networkName, 'imoStaking', staking.address)
 	saveDeployedABI(networkName, 'imoStaking', artifacts.readArtifactSync('IMOStaking').abi)
