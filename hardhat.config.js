@@ -30,7 +30,7 @@ module.exports = {
 		version: '0.6.9',
 		settings: {
 			optimizer: {
-				enabled: false,
+				enabled: true,
 			},
 		},
 	},

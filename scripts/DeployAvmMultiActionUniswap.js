@@ -3,12 +3,8 @@ const { ethers } = require('hardhat')
 const { BigNumber } = require('ethers')
 const shared = require('./shared')
 const { encodePriceSqrt, encodePath, getToken0Token1 } = require('../test/utils.js')
-
-
-//const PositionManager = artifacts.require('@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json')
-//require("@uniswap/v3-periphery/contracts/NonfungiblePositionManager.sol")
 const { abi } = require('@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json')
-//const PositionManager = artifacts.require("@uniswap/v3-periphery/artifacts/contracts/lens/NonfungiblePositionManager.sol/NonfungiblePositionManager.json");
+
 let dai
 let someToken
 let someOtherToken
@@ -38,8 +34,6 @@ async function run() {
 			console.log('Using Rinkeby')
 		}
 	}
-
-
 
 	const deployed = await deployContract('contracts/avm/core/MultiAction.sol:MultiAction')
 	console.log(`[$]: npx hardhat verify --network <> ${deployed.address}`);
@@ -108,7 +102,7 @@ async function run() {
 	daiAmount = tenPow18.mul(BigNumber.from('100'))
 	await someToken.mint(deployer, someAmount)
 	await dai.mint(deployer, daiAmount, { gasLimit: ethers.BigNumber.from(6000000)})
-
+	console.log('pass1')
 	await someToken.approve('0xC36442b4a4522E871399CD717aBDD847Ab11FE88', someAmount, { gasLimit: ethers.BigNumber.from(6000000)})
 	await dai.approve('0xC36442b4a4522E871399CD717aBDD847Ab11FE88', daiAmount, { gasLimit: ethers.BigNumber.from(6000000)})
 	;[token0, token1, token0Amount, token1Amount] = getToken0Token1(
@@ -180,13 +174,13 @@ async function run() {
 		deadline: BigNumber.from('9999999999999999999'),
 	}
 	await positionManager.mint(mintParams, { gasLimit: ethers.BigNumber.from(6000000)})
-	
+	console.log('pass5')
 }
 
 async function deployContract(name) {
 	console.log(`Deploying contract ${name}`)
 	const contractFactory = await ethers.getContractFactory(name)
-	const deployed = await contractFactory.deploy('0x5338f72D3849e12b8c420e11540035bB7e893F7d', '0xc07efAEF14518008b7D5009d360492C89e09C9Cb', '0xFB0bb88d355B9783358e72464Cb768011fEbC780', '0x5364Dc963c402aAF150700f38a8ef52C1D7D7F14',
+	const deployed = await contractFactory.deploy('0xc07efAEF14518008b7D5009d360492C89e09C9Cb', '0x5338f72D3849e12b8c420e11540035bB7e893F7d', '0xFB0bb88d355B9783358e72464Cb768011fEbC780', '0x5364Dc963c402aAF150700f38a8ef52C1D7D7F14',
 	 '0xE592427A0AEce92De3Edee1F18E0157C05861564', '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6', '0xb47e6a5f8b33b3f17603c83a0535a9dcd7e32681', { gasLimit: ethers.BigNumber.from(200000000)})
 	await deployed.deployed()
 	return deployed
