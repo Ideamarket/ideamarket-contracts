@@ -199,7 +199,7 @@ async function main() {
 		deploymentParams = allDeploymentParams['test-avm-l2']
 		externalContractAdresses = allExternalContractAddresses['test-avm-l2']
 	} else {
-		//throw 'cannot deploy to network: ' + networkName
+		// if network is not one of the above, manually input data here
 		console.log('Using test-avm-l2')
 		networkName = 'test-avm-l2'
 		deploymentParams = allDeploymentParams['test-avm-l1']

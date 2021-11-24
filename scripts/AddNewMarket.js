@@ -18,7 +18,7 @@ async function run() {
 		console.log('Using mainnet')
 	} else {
 		network = 'test-avm-l2'
-		console.log('network')
+		console.log(network)
 	}
 
 	/*
@@ -42,17 +42,18 @@ async function run() {
 		throw 'Invalid input for rawAllInterestToPlatform'
 	}
 
-	const factoryAddress = shared.loadDeployedAddress(network, 'ideaTokenFactory')
+	const factoryAddress = shared.loadDeployedAddress(network, 'ideaTokenFactoryAVM')
+	console.log(nameVerifierName.charAt(0).toLowerCase() + nameVerifierName.slice(1))
 	const nameVerifier = shared.loadDeployedAddress(
 		network,
 		nameVerifierName.charAt(0).toLowerCase() + nameVerifierName.slice(1)
 	)
 	
-	const baseCost = BigNumber.from('100000000000000000')
-	const priceRise = BigNumber.from('100000000000000')
-	const hatchTokens = BigNumber.from('1000000000000000000000')
-	const tradingFee = BigNumber.from('50')
-	const platformFee = BigNumber.from('50')
+	const baseCost = ethers.BigNumber.from('100000000000000000')
+	const priceRise = ethers.BigNumber.from('100000000000000')
+	const hatchTokens = ethers.BigNumber.from('1000000000000000000000')
+	const tradingFee = ethers.BigNumber.from('50')
+	const platformFee = ethers.BigNumber.from('50')
 
 	const executionTimestamp = shared.unixTimestampFromDateString(executionDate)
 
@@ -81,7 +82,7 @@ async function run() {
 	console.log('network:', network)
 
 	console.log('')
-	await shared.getInput('press enter to continue')
+	await shared.read('press enter to continue')
 
 	const fax = spell.interface.encodeFunctionData('execute', [
 		factoryAddress,
@@ -101,7 +102,8 @@ async function run() {
 	console.log('Param tag:', tag)
 	console.log('Param fax:', fax)
 	console.log('Param eta:', executionTimestamp.toString())
-	console.log('ABI:', JSON.stringify(DSPause.interface.fragments))
+	//console.log('ABI:', JSON.stringify(DSPause.interface.fragments))
+	await timelockContract.plot(spellAddress, tag, fax, executionTimestamp)
 }
 
 run()

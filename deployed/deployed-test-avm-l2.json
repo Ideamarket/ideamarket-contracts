@@ -17,6 +17,7 @@
     "mindsNameVerifier": "0xe7aeFed7C98F2b9B5d4e07543859cD80fa7748f0",
     "ideaTokenVault": "0xb348f1F9070361A66Df1778F9382c69696cB03Aa",
     "ideaTokenVaultLogic": "0x928Ebf93258799443dd069135bFF0E1274fcD646",
+    "multiAction": "0x09E52cBF534c4FE42b5Fb1aEE4BD070A1F27a05D",
     "addMarketSpell": "0x2EF2120B938103c7Ea6E73b51221d0e980B5D4e5",
     "changeLogicSpell": "0x4127dF0871B5D684bB3a164C4875abEabba145Dc",
     "changeLogicAndCallSpell": "0xd25F7F2E18a20d7CEB2dab6Ef8cAC053507BE4FD"

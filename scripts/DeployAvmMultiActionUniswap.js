@@ -180,7 +180,7 @@ async function run() {
 async function deployContract(name) {
 	console.log(`Deploying contract ${name}`)
 	const contractFactory = await ethers.getContractFactory(name)
-	const deployed = await contractFactory.deploy('0xc07efAEF14518008b7D5009d360492C89e09C9Cb', '0x5338f72D3849e12b8c420e11540035bB7e893F7d', '0xFB0bb88d355B9783358e72464Cb768011fEbC780', '0x5364Dc963c402aAF150700f38a8ef52C1D7D7F14',
+	const deployed = await contractFactory.deploy('0x3615aedf6b9DaB2578abA615C1447AaCD0d104ec', '0x0A37DD68F9bEAd344dFC8b42F8AF4934e200E604', '0xb348f1F9070361A66Df1778F9382c69696cB03Aa', '0x5364Dc963c402aAF150700f38a8ef52C1D7D7F14',
 	 '0xE592427A0AEce92De3Edee1F18E0157C05861564', '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6', '0xb47e6a5f8b33b3f17603c83a0535a9dcd7e32681', { gasLimit: ethers.BigNumber.from(200000000)})
 	await deployed.deployed()
 	return deployed
