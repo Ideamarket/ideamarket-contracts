@@ -103,6 +103,13 @@ const allDeploymentParams = {
 		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
 		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
 		showtimeAllInterestToPlatform: false,
+
+		mindsBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
+		mindsPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
+		mindsHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
+		mindsTradingFeeRate: BigNumber.from('50'), // 0.50%
+		mindsPlatformFeeRate: BigNumber.from('50'), // 0.50%
+		mindsAllInterestToPlatform: false,
 	},
 }
 
@@ -156,7 +163,7 @@ const allExternalContractAddresses = {
 }
 
 let deploymentParams
-let externalContractAdresses
+let externalContractAddresses
 
 async function main() {
 	const deployerAccount = (await ethers.getSigners())[0]
@@ -173,17 +180,17 @@ async function main() {
 		if(input === '1') {
 			console.log('Using rinkeby')
 			deploymentParams = allDeploymentParams.rinkeby
-			externalContractAdresses = allExternalContractAddresses.rinkeby
+			externalContractAddresses = allExternalContractAddresses.rinkeby
 		} else if (input === '2') {
 			console.log('Using test')
 			networkName = 'test'
 			deploymentParams = allDeploymentParams.test
-			externalContractAdresses = allExternalContractAddresses.test
+			externalContractAddresses = allExternalContractAddresses.test
 		} else if (input === '3') {
 			console.log('Using test-avm-l1')
 			networkName = 'test-avm-l1'
 			deploymentParams = allDeploymentParams['test-avm-l1']
-			externalContractAdresses = allExternalContractAddresses['test-avm-l1']
+			externalContractAddresses = allExternalContractAddresses['test-avm-l1']
 		} else {
 			throw new Error('Unknown network')
 		}
@@ -192,18 +199,18 @@ async function main() {
 
 		console.log('Using Mainnet')
 		deploymentParams = allDeploymentParams.mainnet
-		externalContractAdresses = allExternalContractAddresses.mainnet
+		externalContractAddresses = allExternalContractAddresses.mainnet
 	} else if (networkName === 'rinkeby_avm') {
 		console.log('Using test-avm-l2')
 		networkName = 'test-avm-l2'
 		deploymentParams = allDeploymentParams['test-avm-l2']
-		externalContractAdresses = allExternalContractAddresses['test-avm-l2']
+		externalContractAddresses = allExternalContractAddresses['test-avm-l2']
 	} else {
 		// if network is not one of the above, manually input data here
 		console.log('Using test-avm-l2')
 		networkName = 'test-avm-l2'
 		deploymentParams = allDeploymentParams['test-avm-l1']
-		externalContractAdresses = allExternalContractAddresses['test-avm-l2']
+		externalContractAddresses = allExternalContractAddresses['test-avm-l2']
 	}
 
 	console.log('Block', await ethers.provider.getBlockNumber())
@@ -217,7 +224,7 @@ async function main() {
 		const dsPause = await deployContract(
 			'DSPause',
 			deploymentParams.timelockDelay,
-			externalContractAdresses.multisig
+			externalContractAddresses.multisig
 		)
 		dsPauseProxyAddress = await dsPause._proxy()
 		saveDeployedAddress(networkName, 'dsPause', dsPause.address)
@@ -241,27 +248,23 @@ async function main() {
 		proxyAdminAddress = loadDeployedAddress(networkName, 'proxyAdmin')
 	}
 
-	let interestManagerCompoundProxyAddress
+	let interestManagerProxyAddress
 	if (STAGE <= 3) {
-		console.log('3. Deploy InterestManagerCompound')
+		console.log('3. Deploy InterestManagerStateTransferAVM')
 		console.log('==============================================')
-		const [interestManagerCompoundProxy, interestManagerCompoundLogic] = await deployProxyContract(
-			'InterestManagerCompound',
-			proxyAdminAddress,
-			deployerAddress, // owner - this will be changed to the exchange later
-			externalContractAdresses.dai,
-			externalContractAdresses.cDai,
-			externalContractAdresses.comp,
-			externalContractAdresses.multisig
-		)
+		let interestManagerLogic = await deployContract('InterestManagerStateTransferAVM')
 
-		interestManagerCompoundProxyAddress = interestManagerCompoundProxy.address
-		saveDeployedAddress(networkName, 'interestManager', interestManagerCompoundProxyAddress)
-		saveDeployedABI(networkName, 'interestManager', artifacts.readArtifactSync('InterestManagerCompound').abi)
-		saveDeployedAddress(networkName, 'interestManagerLogic', interestManagerCompoundLogic.address)
+		const data = interestManagerLogic.interface.encodeFunctionData('initializeStateTransfer', 
+			[deployerAddress, externalContractAddresses.dai])
+		let interestManagerProxy = await deployContract('AdminUpgradeabilityProxy', interestManagerLogic.address, proxyAdminAddress, data)
+
+		interestManagerProxyAddress = interestManagerProxy.address
+		saveDeployedAddress(networkName, 'interestManager', interestManagerProxyAddress)
+		saveDeployedABI(networkName, 'interestManager', artifacts.readArtifactSync('InterestManagerStateTransferAVM').abi)
+		saveDeployedAddress(networkName, 'interestManagerLogic', interestManagerLogic.address)
 		console.log('')
 	} else {
-		interestManagerCompoundProxyAddress = loadDeployedAddress(networkName, 'interestManager')
+		interestManagerProxyAddress = loadDeployedAddress(networkName, 'interestManager')
 	}
 
 	let ideaTokenExchangeProxyAddress
@@ -272,11 +275,11 @@ async function main() {
 			'IdeaTokenExchangeAVM',
 			proxyAdminAddress,
 			deployerAddress, // owner - this will be changed to the exchange later
-			externalContractAdresses.authorizer,
-			externalContractAdresses.multisig,
-			interestManagerCompoundProxyAddress,
-			externalContractAdresses.dai,
-			externalContractAdresses.bridgeAVM,
+			externalContractAddresses.authorizer,
+			externalContractAddresses.multisig,
+			interestManagerProxyAddress,
+			externalContractAddresses.dai,
+			externalContractAddresses.bridgeAVM,
 		)
 
 		ideaTokenExchangeProxyAddress = ideaTokenExchangeProxy.address
@@ -289,14 +292,14 @@ async function main() {
 	}
 
 	if (STAGE <= 5) {
-		console.log('5. Set InterestManagerCompound owner')
+		console.log('5. Set InterestManager owner')
 		console.log('==============================================')
-		const interestManagerCompound = new ethers.Contract(
-			interestManagerCompoundProxyAddress,
-			(await ethers.getContractFactory('InterestManagerCompound')).interface,
+		const interestManager = new ethers.Contract(
+			interestManagerProxyAddress,
+			(await ethers.getContractFactory('InterestManagerStateTransferAVM')).interface,
 			deployerAccount
 		)
-		const tx = await interestManagerCompound.setOwner(ideaTokenExchangeProxyAddress, {
+		const tx = await interestManager.setOwner(ideaTokenExchangeProxyAddress, {
 			gasPrice: deploymentParams.gasPrice,
 		})
 		await tx.wait()
@@ -326,7 +329,7 @@ async function main() {
 			deployerAddress, // owner - this will be changed to the dsPauseProxy later
 			ideaTokenExchangeProxyAddress,
 			ideaTokenLogicAddress,
-			externalContractAdresses.bridgeAVM,
+			externalContractAddresses.bridgeAVM,
 		)
 
 		ideaTokenFactoryProxyAddress = ideaTokenFactoryProxy.address
@@ -401,6 +404,24 @@ async function main() {
 		wikipediaNameVerifierAddress = loadDeployedAddress(networkName, 'wikipediaNameVerifier')
 	}
 
+	let mindsNameVerifierAddress
+	if (STAGE <= 10) {
+		console.log('10. Deploy MindsNameVerifier')
+		console.log('==============================================')
+		const mindsNameVerifier = await deployContract('MindsNameVerifier')
+
+		mindsNameVerifierAddress = mindsNameVerifier.address
+		saveDeployedAddress(networkName, 'mindsNameVerifier', mindsNameVerifier.address)
+		saveDeployedABI(
+			networkName,
+			'mindsNameVerifier',
+			artifacts.readArtifactSync('MindsNameVerifier').abi
+		)
+		console.log('')
+	} else {
+		mindsNameVerifierAddress = loadDeployedAddress(networkName, 'mindsNameVerifier')
+	}
+
 	if (STAGE <= 11) {
 		console.log('11. Add Twitter market')
 		console.log('==============================================')
@@ -442,6 +463,29 @@ async function main() {
 			deploymentParams.twitterPlatformFeeRate,
 			true,
 			{ gasPrice: deploymentParams.gasPrice, gasLimit: ethers.BigNumber.from(6000000) }
+		)
+		await tx.wait()
+		console.log('')
+	}
+
+	if (STAGE <= 11) {
+		console.log('11. Add Minds market')
+		console.log('==============================================')
+		const ideaTokenFactory = new ethers.Contract(
+			ideaTokenFactoryProxyAddress,
+			(await ethers.getContractFactory('IdeaTokenFactoryAVM')).interface,
+			deployerAccount
+		)
+		const tx = await ideaTokenFactory.addMarket(
+			'Minds',
+			mindsNameVerifierAddress,
+			deploymentParams.mindsBaseCost,
+			deploymentParams.mindsPriceRise,
+			deploymentParams.mindsHatchTokens,
+			deploymentParams.mindsTradingFeeRate,
+			deploymentParams.mindsPlatformFeeRate,
+			deploymentParams.mindsAllInterestToPlatform,
+			{ gasPrice: deploymentParams.gasPrice }
 		)
 		await tx.wait()
 		console.log('')
@@ -561,9 +605,9 @@ async function main() {
 			ideaTokenExchangeProxyAddress,
 			ideaTokenFactoryProxyAddress,
 			ideaTokenVaultProxyAddress,
-			externalContractAdresses.dai,
-			externalContractAdresses.uniswapV2Router02,
-			externalContractAdresses.weth
+			externalContractAddresses.dai,
+			externalContractAddresses.uniswapV2Router02,
+			externalContractAddresses.weth
 		)
 		saveDeployedAddress(networkName, 'multiAction', multiAction.address)
 		saveDeployedABI(networkName, 'multiAction', artifacts.readArtifactSync('MultiAction').abi)
