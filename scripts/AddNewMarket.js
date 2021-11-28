@@ -17,7 +17,7 @@ async function run() {
 		network = 'mainnet'
 		console.log('Using mainnet')
 	} else {
-		network = 'test-avm-l2'
+		network = await shared.read("network: ")
 		console.log(network)
 	}
 
@@ -28,10 +28,10 @@ async function run() {
 	const rawTradingFee = await shared.getInput('trading fee in percent')
 	const rawPlatformFee = await shared.getInput('platform fee in percent')
 	*/
-	const marketName = await shared.read('market name')
-	const nameVerifierName = await shared.read('name of name verifier')
-	const rawAllInterestToPlatform = await shared.read('all interest to platform? [Y/n]')
-	const executionDate = await shared.read('execution date (DAY-MONTH-YEAR HOUR:MINUTE:SECOND) in UTC time')
+	const marketName = await shared.read('market name: ')
+	const nameVerifierName = await shared.read('name of name verifier: ')
+	const rawAllInterestToPlatform = await shared.read('all interest to platform? [Y/n] ')
+	const executionDate = await shared.read('execution date (DAY-MONTH-YEAR HOUR:MINUTE:SECOND) in UTC time: ')
 
 	let allInterestToPlatform
 	if (rawAllInterestToPlatform === 'Y' || rawAllInterestToPlatform === 'y') {
@@ -43,7 +43,6 @@ async function run() {
 	}
 
 	const factoryAddress = shared.loadDeployedAddress(network, 'ideaTokenFactoryAVM')
-	console.log(nameVerifierName.charAt(0).toLowerCase() + nameVerifierName.slice(1))
 	const nameVerifier = shared.loadDeployedAddress(
 		network,
 		nameVerifierName.charAt(0).toLowerCase() + nameVerifierName.slice(1)
@@ -102,8 +101,7 @@ async function run() {
 	console.log('Param tag:', tag)
 	console.log('Param fax:', fax)
 	console.log('Param eta:', executionTimestamp.toString())
-	//console.log('ABI:', JSON.stringify(DSPause.interface.fragments))
-	await timelockContract.plot(spellAddress, tag, fax, executionTimestamp)
+	console.log('ABI:', JSON.stringify(DSPause.interface.fragments))
 }
 
 run()

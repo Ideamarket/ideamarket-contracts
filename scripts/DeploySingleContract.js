@@ -6,7 +6,7 @@ async function run() {
 	let network = (await ethers.provider.getNetwork()).name
 
 	if (network === 'rinkeby') {
-		const input = await shared.getInput('Use test network? [y/n] ')
+		const input = await shared.read('Use test network? [y/n] ')
 
 		if (input === 'Y' || input === 'y') {
 			console.log('Using test network')
@@ -16,7 +16,7 @@ async function run() {
 		}
 	}
 
-	const contractName = await shared.getInput('contract name')
+	const contractName = await shared.read('contract name: ')
 	const deployed = await deployContract(contractName)
 	console.log(`Deploy to ${deployed.address}`)
 }

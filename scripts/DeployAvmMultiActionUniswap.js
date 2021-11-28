@@ -102,7 +102,6 @@ async function run() {
 	daiAmount = tenPow18.mul(BigNumber.from('100'))
 	await someToken.mint(deployer, someAmount)
 	await dai.mint(deployer, daiAmount, { gasLimit: ethers.BigNumber.from(6000000)})
-	console.log('pass1')
 	await someToken.approve('0xC36442b4a4522E871399CD717aBDD847Ab11FE88', someAmount, { gasLimit: ethers.BigNumber.from(6000000)})
 	await dai.approve('0xC36442b4a4522E871399CD717aBDD847Ab11FE88', daiAmount, { gasLimit: ethers.BigNumber.from(6000000)})
 	;[token0, token1, token0Amount, token1Amount] = getToken0Token1(
@@ -174,14 +173,14 @@ async function run() {
 		deadline: BigNumber.from('9999999999999999999'),
 	}
 	await positionManager.mint(mintParams, { gasLimit: ethers.BigNumber.from(6000000)})
-	console.log('pass5')
 }
 
 async function deployContract(name) {
 	console.log(`Deploying contract ${name}`)
 	const contractFactory = await ethers.getContractFactory(name)
-	const deployed = await contractFactory.deploy("0xCDb4B5f350f894954F4947D0788534a33404d9b4", "0x19e1a1772228618BFFe8d1196249d75d301411c2", "0xB2746F67FCb2Ef827a322F1D5eDCA16bf20b7588", '0x5364Dc963c402aAF150700f38a8ef52C1D7D7F14',
-	 '0xE592427A0AEce92De3Edee1F18E0157C05861564', '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6', '0xb47e6a5f8b33b3f17603c83a0535a9dcd7e32681', { gasLimit: ethers.BigNumber.from(200000000)})
+	// avm mainnet addresses
+	const deployed = await contractFactory.deploy("0x15ae05599809AF9D1A04C10beF217bc04060dD81", "0xE490A4517F1e8A1551ECb03aF5eB116C6Bbd450b" , "0xeC4E1A014fAf0D966332E62970CD7c6553671d76" , '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
+	 '0xE592427A0AEce92De3Edee1F18E0157C05861564', '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6', '0x82af49447d8a07e3bd95bd0d56f35241523fbab1', { gasLimit: ethers.BigNumber.from(200000000)})
 	await deployed.deployed()
 	return deployed
 }
