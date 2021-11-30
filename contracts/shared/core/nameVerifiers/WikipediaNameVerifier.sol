@@ -8,7 +8,7 @@ import "./IIdeaTokenNameVerifier.sol";
  * @author Kelton Madden
  *
  * Verifies a string to be a wikipedia article title name.
- * Allowed characters all utf-8 supported characters excluding at the beginning and end.
+ * Allows all utf-8 supported characters with a few special exceptions at the beginning and end.
  * Maximum length of 256 bytes.
  */
 contract WikipediaNameVerifier is IIdeaTokenNameVerifier {
@@ -40,8 +40,7 @@ contract WikipediaNameVerifier is IIdeaTokenNameVerifier {
             bytes1 char = b[i];
             if (char == 0x20 || char == 0x3C || char == 0x3E || char == 0x5B || char == 0x5D
                 || char == 0x7B || char == 0x7D || char == 0x7C) {
-                // char == 0x7F || char <= 0x31) {
-                // string cannot include <> {} [] | space or any char 0-31
+                // string cannot include <> {} [] or space
                 return false;
             }
         }
