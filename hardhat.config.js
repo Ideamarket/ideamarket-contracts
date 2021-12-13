@@ -1,6 +1,5 @@
 require('@nomiclabs/hardhat-waffle')
 require('@nomiclabs/hardhat-web3')
-require("@nomiclabs/hardhat-truffle4");
 require('solidity-coverage')
 require('dotenv').config()
 // Include the Etherscan contract verifier.
