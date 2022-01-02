@@ -376,10 +376,16 @@ contract MultiAction {
             path[0] = inputCurrency;
             path[1] = outputCurrency;
             fees[0] = LOW_POOL_FEE;
-            cheapestAmountIn = _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, outputCurrency, LOW_POOL_FEE, outputAmount, 0);
+
+            try _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, outputCurrency, LOW_POOL_FEE, outputAmount, 0) returns (uint256 result) {
+                cheapestAmountIn = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
         }
         if(_uniswapV3Factory.getPool(inputCurrency, outputCurrency, MEDIUM_POOL_FEE) != address(0)) {
-            amountIn = _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, outputCurrency, MEDIUM_POOL_FEE, outputAmount, 0);
+            try _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, outputCurrency, MEDIUM_POOL_FEE, outputAmount, 0) returns (uint256 result) {
+              amountIn = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+            
             if(cheapestAmountIn == 0 || amountIn < cheapestAmountIn) {
                 cheapestAmountIn = amountIn;
                 path[0] = inputCurrency;
@@ -388,7 +394,10 @@ contract MultiAction {
             }
         }
         if(_uniswapV3Factory.getPool(inputCurrency, outputCurrency, HIGH_POOL_FEE) != address(0)) {
-            amountIn = _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, outputCurrency, HIGH_POOL_FEE, outputAmount, 0);
+            try _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, outputCurrency, HIGH_POOL_FEE, outputAmount, 0) returns (uint256 result) {
+              amountIn = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
             if(cheapestAmountIn == 0 || amountIn < cheapestAmountIn) {
                 cheapestAmountIn = amountIn;
                 path[0] = inputCurrency;
@@ -406,17 +415,25 @@ contract MultiAction {
         uint cheapestAmountInForWethToDai;
         if(_uniswapV3Factory.getPool(address(_weth), outputCurrency, LOW_POOL_FEE) != address(0)) {
             hopFees[1] = LOW_POOL_FEE;
-            cheapestAmountInForWethToDai = _uniswapV3Quoter.quoteExactOutputSingle(address(_weth), outputCurrency, LOW_POOL_FEE, outputAmount, 0);
+            try _uniswapV3Quoter.quoteExactOutputSingle(address(_weth), outputCurrency, LOW_POOL_FEE, outputAmount, 0) returns (uint256 result) {
+              cheapestAmountInForWethToDai = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
         } 
         if(_uniswapV3Factory.getPool(address(_weth), outputCurrency, MEDIUM_POOL_FEE) != address(0)){
-            amountIn = _uniswapV3Quoter.quoteExactOutputSingle(address(_weth), outputCurrency, MEDIUM_POOL_FEE, outputAmount, 0);
+            try _uniswapV3Quoter.quoteExactOutputSingle(address(_weth), outputCurrency, MEDIUM_POOL_FEE, outputAmount, 0) returns (uint256 result) {
+              amountIn = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
             if(cheapestAmountInForWethToDai == 0 || amountIn < cheapestAmountInForWethToDai) {
                 hopFees[1] = MEDIUM_POOL_FEE;
                 cheapestAmountInForWethToDai = amountIn;
             }
         }
         if(_uniswapV3Factory.getPool(address(_weth), outputCurrency, HIGH_POOL_FEE) != address(0)) {
-            amountIn = _uniswapV3Quoter.quoteExactOutputSingle(address(_weth), outputCurrency, HIGH_POOL_FEE, outputAmount, 0);
+            try _uniswapV3Quoter.quoteExactOutputSingle(address(_weth), outputCurrency, HIGH_POOL_FEE, outputAmount, 0) returns (uint256 result) {
+              amountIn = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
             if(cheapestAmountInForWethToDai == 0 || amountIn < cheapestAmountInForWethToDai) {
                 hopFees[1] = HIGH_POOL_FEE;
                 cheapestAmountInForWethToDai = amountIn;
@@ -429,17 +446,25 @@ contract MultiAction {
         if (cheapestAmountInForWethToDai != 0) {
             if(_uniswapV3Factory.getPool(inputCurrency, address(_weth), LOW_POOL_FEE) != address(0)) {
                 hopFees[0] = LOW_POOL_FEE;
-                cheapestAmountInForWeth = _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, address(_weth), LOW_POOL_FEE, cheapestAmountInForWethToDai, 0);
+                try _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, address(_weth), LOW_POOL_FEE, cheapestAmountInForWethToDai, 0) returns (uint256 result) {
+                  cheapestAmountInForWeth = result;
+                } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
             }
             if(_uniswapV3Factory.getPool(inputCurrency, address(_weth), MEDIUM_POOL_FEE) != address(0)) {
-                amountIn = _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, address(_weth), MEDIUM_POOL_FEE, cheapestAmountInForWethToDai, 0);
+                try _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, address(_weth), MEDIUM_POOL_FEE, cheapestAmountInForWethToDai, 0) returns (uint256 result) {
+                  amountIn = result;
+                } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
                 if(cheapestAmountInForWeth == 0 || amountIn < cheapestAmountInForWeth) {
                     hopFees[0] = MEDIUM_POOL_FEE;
                     cheapestAmountInForWeth = amountIn;
                 }
             }
             if(_uniswapV3Factory.getPool(inputCurrency, address(_weth), HIGH_POOL_FEE) != address(0)) {
-                amountIn = _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, address(_weth), HIGH_POOL_FEE, cheapestAmountInForWethToDai, 0);
+                try _uniswapV3Quoter.quoteExactOutputSingle(inputCurrency, address(_weth), HIGH_POOL_FEE, cheapestAmountInForWethToDai, 0) returns (uint256 result) {
+                  amountIn = result;
+                } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
                 if(cheapestAmountInForWeth == 0 || amountIn < cheapestAmountInForWeth) {
                     hopFees[0] = HIGH_POOL_FEE;
                     cheapestAmountInForWeth = amountIn;
@@ -502,10 +527,16 @@ contract MultiAction {
             path[0] = inputCurrency;
             path[1] = outputCurrency;
             fees[0] = LOW_POOL_FEE;
-            cheapestAmountOut = _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, outputCurrency, LOW_POOL_FEE, inputAmount, 0);
+
+            try _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, outputCurrency, LOW_POOL_FEE, inputAmount, 0) returns (uint256 result) {
+              cheapestAmountOut = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
         }
         if(_uniswapV3Factory.getPool(inputCurrency, outputCurrency, MEDIUM_POOL_FEE) != address(0)) {
-            amountOut = _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, outputCurrency, MEDIUM_POOL_FEE, inputAmount, 0);
+            try _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, outputCurrency, MEDIUM_POOL_FEE, inputAmount, 0) returns (uint256 result) {
+              amountOut = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
             if(amountOut > cheapestAmountOut) {
                 cheapestAmountOut = amountOut;
                 path[0] = inputCurrency;
@@ -514,7 +545,10 @@ contract MultiAction {
             }
         }
         if(_uniswapV3Factory.getPool(inputCurrency, outputCurrency, HIGH_POOL_FEE) != address(0)) {
-            amountOut = _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, outputCurrency, HIGH_POOL_FEE, inputAmount, 0);
+            try _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, outputCurrency, HIGH_POOL_FEE, inputAmount, 0) returns (uint256 result) {
+              amountOut = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
             if(amountOut > cheapestAmountOut) {
                 cheapestAmountOut = amountOut;
                 path[0] = inputCurrency;
@@ -529,17 +563,25 @@ contract MultiAction {
         uint cheapestAmountOutForInputToWeth;
         if(_uniswapV3Factory.getPool(inputCurrency, address(_weth), LOW_POOL_FEE) != address(0)) {
             hopFees[0] = LOW_POOL_FEE;
-            cheapestAmountOutForInputToWeth = _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, address(_weth), LOW_POOL_FEE, inputAmount, 0);
+            try _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, address(_weth), LOW_POOL_FEE, inputAmount, 0) returns (uint256 result) {
+              cheapestAmountOutForInputToWeth = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
         } 
         if(_uniswapV3Factory.getPool(inputCurrency, address(_weth), MEDIUM_POOL_FEE) != address(0)) {
-            amountOut = _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, address(_weth), MEDIUM_POOL_FEE, inputAmount, 0);
+            try _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, address(_weth), MEDIUM_POOL_FEE, inputAmount, 0) returns (uint256 result) {
+              amountOut = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
             if(amountOut > cheapestAmountOutForInputToWeth) {
                 hopFees[0] = MEDIUM_POOL_FEE;
                 cheapestAmountOutForInputToWeth = amountOut;
             }
         }
         if(_uniswapV3Factory.getPool(inputCurrency, address(_weth), HIGH_POOL_FEE) != address(0)) {
-            amountOut = _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, address(_weth), HIGH_POOL_FEE, inputAmount, 0);
+            try _uniswapV3Quoter.quoteExactInputSingle(inputCurrency, address(_weth), HIGH_POOL_FEE, inputAmount, 0) returns (uint256 result) {
+              amountOut = result;
+            } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
             if(amountOut > cheapestAmountOutForInputToWeth) {
                 hopFees[0] = HIGH_POOL_FEE;
                 cheapestAmountOutForInputToWeth = amountOut;
@@ -554,17 +596,25 @@ contract MultiAction {
         if (cheapestAmountOutForInputToWeth != 0) {
             if(_uniswapV3Factory.getPool(address(_weth), outputCurrency, LOW_POOL_FEE) != address(0)) {
                 hopFees[1] = LOW_POOL_FEE;
-                cheapestAmountOutForWeth = _uniswapV3Quoter.quoteExactInputSingle(address(_weth), outputCurrency, LOW_POOL_FEE, cheapestAmountOutForInputToWeth, 0);
+                try _uniswapV3Quoter.quoteExactInputSingle(address(_weth), outputCurrency, LOW_POOL_FEE, cheapestAmountOutForInputToWeth, 0) returns (uint256 result) {
+                  cheapestAmountOutForWeth = result;
+                } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
             }
             if(_uniswapV3Factory.getPool(address(_weth), outputCurrency, MEDIUM_POOL_FEE) != address(0)) {
-                amountOut = _uniswapV3Quoter.quoteExactInputSingle(address(_weth), outputCurrency, MEDIUM_POOL_FEE, cheapestAmountOutForInputToWeth, 0);
+                try _uniswapV3Quoter.quoteExactInputSingle(address(_weth), outputCurrency, MEDIUM_POOL_FEE, cheapestAmountOutForInputToWeth, 0) returns (uint256 result) {
+                  amountOut = result;
+                } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
                 if(amountOut > cheapestAmountOutForWeth) {
                     hopFees[1] = MEDIUM_POOL_FEE;
                     cheapestAmountOutForWeth = amountOut;
                 }
             }
             if(_uniswapV3Factory.getPool(address(_weth), outputCurrency, HIGH_POOL_FEE) != address(0)) {
-                amountOut = _uniswapV3Quoter.quoteExactInputSingle(address(_weth), outputCurrency, HIGH_POOL_FEE, cheapestAmountOutForInputToWeth, 0);
+                try _uniswapV3Quoter.quoteExactInputSingle(address(_weth), outputCurrency, HIGH_POOL_FEE, cheapestAmountOutForInputToWeth, 0) returns (uint256 result) {
+                  amountOut = result;
+                } catch Error(string memory /*reason*/) { } catch (bytes memory /*lowLevelData*/) { }
+
                 if(amountOut > cheapestAmountOutForWeth) {
                     hopFees[1] = HIGH_POOL_FEE;
                     cheapestAmountOutForWeth = amountOut;
