@@ -37,7 +37,7 @@ async function run() {
 
 	const deployed = await deployContract('contracts/avm/core/MultiAction.sol:MultiAction')
 	console.log(`[$]: npx hardhat verify --network <> ${deployed.address}`);
-
+/*
 	const signers = (await ethers.getSigners())[0]
 	const addresses = await Promise.all([signers].map(async signer => signer.getAddress()));
 	const deployer = addresses[0]
@@ -173,6 +173,7 @@ async function run() {
 		deadline: BigNumber.from('9999999999999999999'),
 	}
 	await positionManager.mint(mintParams, { gasLimit: ethers.BigNumber.from(6000000)})
+	*/
 }
 
 async function deployContract(name) {
