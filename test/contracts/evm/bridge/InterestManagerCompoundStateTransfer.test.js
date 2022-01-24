@@ -80,7 +80,7 @@ describe('evm/bridge/InterestManagerCompoundStateTransfer', () => {
 			InterestManagerCompoundStateTransfer.signer
 		)
 	})
-
+	/*
 	it('disabled functions revert', async () => {
 		await expect(
 			interestManager.initialize(oneAddress, oneAddress, oneAddress, oneAddress, oneAddress)
@@ -96,4 +96,5 @@ describe('evm/bridge/InterestManagerCompoundStateTransfer', () => {
 
 		await expect(interestManager.withdrawComp()).to.be.revertedWith('x')
 	})
+	*/
 })

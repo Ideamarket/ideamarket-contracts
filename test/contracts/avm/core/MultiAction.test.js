@@ -2,6 +2,10 @@ const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
+const UniswapV3Deployer = require('uniswap-v3-deploy-plugin/dist/deployer/UniswapV3Deployer').UniswapV3Deployer
+const Quoter = require('@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json')
+const { encodePriceSqrt, encodePath, getToken0Token1 } = require('../../../utils')
+
 describe('avm/core/MultiAction', () => {
 	let DomainNoSubdomainNameVerifier
 	let TestERC20
@@ -9,11 +13,6 @@ describe('avm/core/MultiAction', () => {
 	let IdeaTokenFactoryAVM
 	let IdeaTokenExchangeAVM
 	let IdeaToken
-	let TestWETH
-	let TestTransferHelperLib
-	let TestUniswapV2Lib
-	let TestUniswapV2Factory
-	let TestUniswapV2Router02
 	let IdeaTokenVault
 	let MultiAction
 
@@ -47,12 +46,23 @@ describe('avm/core/MultiAction', () => {
 	let weth
 	let uniswapFactory
 	let router
+	let quoter
+	let positionManager
 	let ideaTokenVault
 	let multiAction
 
 	let marketID
 	let tokenID
 	let ideaToken
+
+	let token0
+	let token1
+	let token0Amount
+	let token1Amount
+	let mintParams
+
+	const LOW_POOL_FEE = 500
+	const MEDIUM_POOL_FEE = 3000
 
 	before(async () => {
 		const accounts = await ethers.getSigners()
@@ -66,13 +76,9 @@ describe('avm/core/MultiAction', () => {
 		IdeaTokenFactoryAVM = await ethers.getContractFactory('IdeaTokenFactoryAVM')
 		IdeaTokenExchangeAVM = await ethers.getContractFactory('IdeaTokenExchangeAVM')
 		IdeaToken = await ethers.getContractFactory('IdeaToken')
-		TestWETH = await ethers.getContractFactory('TestWETH')
-		TestTransferHelperLib = await ethers.getContractFactory('TestTransferHelper')
-		TestUniswapV2Lib = await ethers.getContractFactory('TestUniswapV2Library')
-		TestUniswapV2Factory = await ethers.getContractFactory('TestUniswapV2Factory')
-		TestUniswapV2Router02 = await ethers.getContractFactory('TestUniswapV2Router02')
+		UniswapV3Quoter = await ethers.getContractFactory(Quoter.abi, Quoter.bytecode)
 		IdeaTokenVault = await ethers.getContractFactory('IdeaTokenVault')
-		MultiAction = await ethers.getContractFactory('MultiAction')
+		MultiAction = await ethers.getContractFactory('contracts/avm/core/MultiAction.sol:MultiAction')
 	})
 
 	beforeEach(async () => {
@@ -100,20 +106,16 @@ describe('avm/core/MultiAction', () => {
 		ideaTokenExchange = await IdeaTokenExchangeAVM.deploy()
 		await ideaTokenExchange.deployed()
 
-		weth = await TestWETH.deploy('WETH', 'WETH')
-		await weth.deployed()
+		// Deploy Uniswap V3 contracts
+		;({ weth9, factory: uniswapFactory, router, positionManager } = await UniswapV3Deployer.deploy(adminAccount))
 
-		const transferHelperLib = await TestTransferHelperLib.deploy()
-		await transferHelperLib.deployed()
+		// There seems to be some error in setting allowance when using weth9 directly
+		// So fetching the contract again using address
+		weth = await ethers.getContractAt('TestWETH', weth9.address)
 
-		const uniswapV2Lib = await TestUniswapV2Lib.deploy()
-		await uniswapV2Lib.deployed()
-
-		uniswapFactory = await TestUniswapV2Factory.deploy(zeroAddress)
-		await uniswapFactory.deployed()
-
-		router = await TestUniswapV2Router02.deploy(uniswapFactory.address, weth.address)
-		await router.deployed()
+		// Quoter is not deployed by the uniswap-v3-deploy-plugin
+		quoter = await UniswapV3Quoter.deploy(uniswapFactory.address, weth.address)
+		await quoter.deployed()
 
 		ideaTokenVault = await IdeaTokenVault.deploy()
 		await ideaTokenVault.deployed()
@@ -124,6 +126,7 @@ describe('avm/core/MultiAction', () => {
 			ideaTokenVault.address,
 			dai.address,
 			router.address,
+			quoter.address,
 			weth.address
 		)
 		await multiAction.deployed()
@@ -180,21 +183,37 @@ describe('avm/core/MultiAction', () => {
 
 		await weth.connect(adminAccount).deposit({ value: ethAmount })
 		await dai.connect(adminAccount).mint(adminAccount.address, daiAmount)
-		await weth.connect(adminAccount).approve(router.address, ethAmount)
-		await dai.connect(adminAccount).approve(router.address, daiAmount)
-		await uniswapFactory.connect(adminAccount).createPair(weth.address, dai.address)
-		await router
+		await weth.connect(adminAccount).approve(positionManager.address, ethAmount)
+		await dai.connect(adminAccount).approve(positionManager.address, daiAmount)
+
+		// Uniswap V3 requires token0 < token1 in PoolInitializer
+		;[token0, token1, token0Amount, token1Amount] = getToken0Token1(dai.address, weth.address, daiAmount, ethAmount)
+
+		// Create and initialize pool
+		await positionManager
 			.connect(adminAccount)
-			.addLiquidity(
-				weth.address,
-				dai.address,
-				ethAmount,
-				daiAmount,
-				ethAmount,
-				daiAmount,
-				adminAccount.address,
-				BigNumber.from('9999999999999999999')
+			.createAndInitializePoolIfNecessary(
+				token0,
+				token1,
+				LOW_POOL_FEE,
+				encodePriceSqrt(token1Amount, token0Amount)
 			)
+
+		// Mint a liquidity position
+		mintParams = {
+			token0,
+			token1,
+			fee: LOW_POOL_FEE,
+			tickLower: -887270, // requires tick % tickSpacing == 0
+			tickUpper: 887270, // feeAmountTickSpacing[500] = 10; MIN_TICK = -887272; MAX_TICK = -MIN_TICK;
+			amount0Desired: token0Amount,
+			amount1Desired: token1Amount,
+			amount0Min: 0, // There will always be a slight slippage during adding liquidity in UniV3
+			amount1Min: 0, // due to the use of ticks
+			recipient: adminAccount.address,
+			deadline: BigNumber.from('9999999999999999999'),
+		}
+		await positionManager.connect(adminAccount).mint(mintParams)
 
 		// SOME-DAI: 1000 SOME, 100 DAI
 		const someAmount = tenPow18.mul(BigNumber.from('1000'))
@@ -202,49 +221,88 @@ describe('avm/core/MultiAction', () => {
 		await someToken.connect(adminAccount).mint(adminAccount.address, someAmount)
 		await dai.connect(adminAccount).mint(adminAccount.address, daiAmount)
 
-		await someToken.connect(adminAccount).approve(router.address, someAmount)
-		await dai.connect(adminAccount).approve(router.address, daiAmount)
-		await uniswapFactory.connect(adminAccount).createPair(someToken.address, dai.address)
+		await someToken.connect(adminAccount).approve(positionManager.address, someAmount)
+		await dai.connect(adminAccount).approve(positionManager.address, daiAmount)
+		;[token0, token1, token0Amount, token1Amount] = getToken0Token1(
+			dai.address,
+			someToken.address,
+			daiAmount,
+			someAmount
+		)
 
-		await router
+		await positionManager
 			.connect(adminAccount)
-			.addLiquidity(
-				someToken.address,
-				dai.address,
-				someAmount,
-				daiAmount,
-				someAmount,
-				daiAmount,
-				adminAccount.address,
-				BigNumber.from('9999999999999999999')
+			.createAndInitializePoolIfNecessary(
+				token0,
+				token1,
+				MEDIUM_POOL_FEE,
+				encodePriceSqrt(token1Amount, token0Amount)
 			)
 
-		// ETH-SOMEOTHER: 1 ETH, 500 SOMEOTHER
+		mintParams = {
+			token0,
+			token1,
+			fee: MEDIUM_POOL_FEE,
+			tickLower: -887220, // feeAmountTickSpacing[3000] = 60;
+			tickUpper: 887220,
+			amount0Desired: token0Amount,
+			amount1Desired: token1Amount,
+			amount0Min: 0,
+			amount1Min: 0,
+			recipient: adminAccount.address,
+			deadline: BigNumber.from('9999999999999999999'),
+		}
+		await positionManager.connect(adminAccount).mint(mintParams)
+
+		// ETH-SOMEOTHER: 1 ETH, 1000 SOMEOTHER
 		const someOtherAmount = tenPow18.mul(BigNumber.from('1000'))
 
 		await weth.connect(adminAccount).deposit({ value: ethAmount })
 		await someOtherToken.connect(adminAccount).mint(adminAccount.address, someOtherAmount)
-		await weth.connect(adminAccount).approve(router.address, ethAmount)
-		await someOtherToken.connect(adminAccount).approve(router.address, someOtherAmount)
-		await uniswapFactory.connect(adminAccount).createPair(weth.address, someOtherToken.address)
-		await router
+		await weth.connect(adminAccount).approve(positionManager.address, ethAmount)
+		await someOtherToken.connect(adminAccount).approve(positionManager.address, someOtherAmount)
+		;[token0, token1, token0Amount, token1Amount] = getToken0Token1(
+			weth.address,
+			someOtherToken.address,
+			ethAmount,
+			someOtherAmount
+		)
+
+		await positionManager
 			.connect(adminAccount)
-			.addLiquidity(
-				weth.address,
-				someOtherToken.address,
-				ethAmount,
-				someOtherAmount,
-				ethAmount,
-				someOtherAmount,
-				adminAccount.address,
-				BigNumber.from('9999999999999999999')
+			.createAndInitializePoolIfNecessary(
+				token0,
+				token1,
+				MEDIUM_POOL_FEE,
+				encodePriceSqrt(token1Amount, token0Amount)
 			)
+
+		mintParams = {
+			token0,
+			token1,
+			fee: MEDIUM_POOL_FEE,
+			tickLower: -887220,
+			tickUpper: 887220,
+			amount0Desired: token0Amount,
+			amount1Desired: token1Amount,
+			amount0Min: 0,
+			amount1Min: 0,
+			recipient: adminAccount.address,
+			deadline: BigNumber.from('9999999999999999999'),
+		}
+		await positionManager.connect(adminAccount).mint(mintParams)
 	})
 
 	it('can buy/sell tokens ETH', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
-		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
+		const requiredInputForCost = await quoter.callStatic.quoteExactOutputSingle(
+			weth.address,
+			dai.address,
+			LOW_POOL_FEE,
+			buyCost,
+			0
+		)
 
 		await multiAction.convertAndBuy(
 			zeroAddress,
@@ -261,7 +319,13 @@ describe('avm/core/MultiAction', () => {
 		expect(tokenBalanceAfterBuy.eq(ideaTokenAmount)).to.be.true
 
 		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
-		const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, weth.address]))[1]
+		const outputFromSell = await quoter.callStatic.quoteExactInputSingle(
+			dai.address,
+			weth.address,
+			LOW_POOL_FEE,
+			sellPrice,
+			0
+		)
 
 		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
 		await multiAction.sellAndConvert(
@@ -279,7 +343,13 @@ describe('avm/core/MultiAction', () => {
 	it('can buy/sell tokens WETH', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
-		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
+		const requiredInputForCost = await quoter.callStatic.quoteExactOutputSingle(
+			weth.address,
+			dai.address,
+			LOW_POOL_FEE,
+			buyCost,
+			0
+		)
 
 		await weth.deposit({ value: requiredInputForCost })
 		await weth.approve(multiAction.address, requiredInputForCost)
@@ -299,7 +369,13 @@ describe('avm/core/MultiAction', () => {
 		expect(tokenBalanceAfterBuy.eq(ideaTokenAmount)).to.be.true
 
 		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
-		const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, weth.address]))[1]
+		const outputFromSell = await quoter.callStatic.quoteExactInputSingle(
+			dai.address,
+			weth.address,
+			LOW_POOL_FEE,
+			sellPrice,
+			0
+		)
 
 		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
 		await multiAction.sellAndConvert(
@@ -319,7 +395,13 @@ describe('avm/core/MultiAction', () => {
 	it('can buy/sell tokens SOME', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
-		const requiredInputForCost = (await router.getAmountsIn(buyCost, [someToken.address, dai.address]))[0]
+		const requiredInputForCost = await quoter.callStatic.quoteExactOutputSingle(
+			someToken.address,
+			dai.address,
+			MEDIUM_POOL_FEE,
+			buyCost,
+			0
+		)
 
 		await someToken.mint(userAccount.address, requiredInputForCost)
 		await someToken.approve(multiAction.address, requiredInputForCost)
@@ -339,7 +421,13 @@ describe('avm/core/MultiAction', () => {
 		expect(tokenBalanceAfterBuy.eq(ideaTokenAmount)).to.be.true
 
 		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
-		const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, someToken.address]))[1]
+		const outputFromSell = await quoter.callStatic.quoteExactInputSingle(
+			dai.address,
+			someToken.address,
+			MEDIUM_POOL_FEE,
+			sellPrice,
+			0
+		)
 
 		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
 		await multiAction.sellAndConvert(
@@ -359,9 +447,9 @@ describe('avm/core/MultiAction', () => {
 	it('can buy/sell tokens 3-hop', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
-		const requiredInputForCost = (
-			await router.getAmountsIn(buyCost, [someOtherToken.address, weth.address, dai.address])
-		)[0]
+		// Exact Output Multihop Swap requires path to be encoded in reverse
+		let path = encodePath([dai.address, weth.address, someOtherToken.address], [LOW_POOL_FEE, MEDIUM_POOL_FEE])
+		const requiredInputForCost = await quoter.callStatic.quoteExactOutput(path, buyCost)
 
 		await someOtherToken.mint(userAccount.address, requiredInputForCost)
 		await someOtherToken.approve(multiAction.address, requiredInputForCost)
@@ -379,9 +467,8 @@ describe('avm/core/MultiAction', () => {
 		expect(tokenBalanceAfterBuy.eq(ideaTokenAmount)).to.be.true
 
 		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
-		const outputFromSell = (
-			await router.getAmountsOut(sellPrice, [dai.address, weth.address, someOtherToken.address])
-		)[2]
+		path = encodePath([dai.address, weth.address, someOtherToken.address], [LOW_POOL_FEE, MEDIUM_POOL_FEE])
+		const outputFromSell = await quoter.callStatic.quoteExactInput(path, sellPrice)
 
 		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
 		await multiAction.sellAndConvert(
@@ -406,9 +493,13 @@ describe('avm/core/MultiAction', () => {
 			ideaToken.address,
 			ideaTokenFallbackAmount
 		)
-		const requiredInputForFallbackCost = (
-			await router.getAmountsIn(buyFallbackCost, [weth.address, dai.address])
-		)[0]
+		const requiredInputForFallbackCost = await quoter.callStatic.quoteExactOutputSingle(
+			weth.address,
+			dai.address,
+			LOW_POOL_FEE,
+			buyFallbackCost,
+			0
+		)
 
 		await multiAction.convertAndBuy(
 			zeroAddress,
@@ -428,7 +519,13 @@ describe('avm/core/MultiAction', () => {
 	it('can buy and lock ETH', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
-		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
+		const requiredInputForCost = await quoter.callStatic.quoteExactOutputSingle(
+			weth.address,
+			dai.address,
+			LOW_POOL_FEE,
+			buyCost,
+			0
+		)
 
 		await multiAction.convertAndBuy(
 			zeroAddress,
@@ -561,7 +658,13 @@ describe('avm/core/MultiAction', () => {
 		const buyCost = (
 			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount, false)
 		).total
-		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
+		const requiredInputForCost = await quoter.callStatic.quoteExactOutputSingle(
+			weth.address,
+			dai.address,
+			LOW_POOL_FEE,
+			buyCost,
+			0
+		)
 
 		const newTokenName = 'sometoken.com'
 
@@ -600,9 +703,13 @@ describe('avm/core/MultiAction', () => {
 				false
 			)
 		).total
-		const requiredInputForFallbackCost = (
-			await router.getAmountsIn(buyFallbackCost, [weth.address, dai.address])
-		)[0]
+		const requiredInputForFallbackCost = await quoter.callStatic.quoteExactOutputSingle(
+			weth.address,
+			dai.address,
+			LOW_POOL_FEE,
+			buyFallbackCost,
+			0
+		)
 
 		const newTokenName = 'sometoken.com'
 
@@ -634,7 +741,13 @@ describe('avm/core/MultiAction', () => {
 		const buyCost = (
 			await ideaTokenExchange.getCostsForBuyingTokens(marketDetails, BigNumber.from('0'), ideaTokenAmount, false)
 		).total
-		const requiredInputForCost = (await router.getAmountsIn(buyCost, [weth.address, dai.address]))[0]
+		const requiredInputForCost = await quoter.callStatic.quoteExactOutputSingle(
+			weth.address,
+			dai.address,
+			LOW_POOL_FEE,
+			buyCost,
+			0
+		)
 
 		const newTokenName = 'sometoken.com'
 
@@ -668,7 +781,13 @@ describe('avm/core/MultiAction', () => {
 	it('fail buy cost too high', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
-		const requiredInputForCost = (await router.getAmountsIn(buyCost, [someToken.address, dai.address]))[0]
+		const requiredInputForCost = await quoter.callStatic.quoteExactOutputSingle(
+			someToken.address,
+			dai.address,
+			MEDIUM_POOL_FEE,
+			buyCost,
+			0
+		)
 
 		expect(
 			multiAction.convertAndBuy(
@@ -686,7 +805,13 @@ describe('avm/core/MultiAction', () => {
 	it('fail sell price too low', async () => {
 		const ideaTokenAmount = tenPow18.mul(BigNumber.from('25'))
 		const buyCost = await ideaTokenExchange.getCostForBuyingTokens(ideaToken.address, ideaTokenAmount)
-		const requiredInputForCost = (await router.getAmountsIn(buyCost, [someToken.address, dai.address]))[0]
+		const requiredInputForCost = await quoter.callStatic.quoteExactOutputSingle(
+			someToken.address,
+			dai.address,
+			MEDIUM_POOL_FEE,
+			buyCost,
+			0
+		)
 
 		await someToken.mint(userAccount.address, requiredInputForCost)
 		await someToken.approve(multiAction.address, requiredInputForCost)
@@ -706,7 +831,13 @@ describe('avm/core/MultiAction', () => {
 		expect(tokenBalanceAfterBuy.eq(ideaTokenAmount)).to.be.true
 
 		const sellPrice = await ideaTokenExchange.getPriceForSellingTokens(ideaToken.address, tokenBalanceAfterBuy)
-		const outputFromSell = (await router.getAmountsOut(sellPrice, [dai.address, someToken.address]))[1]
+		const outputFromSell = await quoter.callStatic.quoteExactInputSingle(
+			dai.address,
+			someToken.address,
+			MEDIUM_POOL_FEE,
+			sellPrice,
+			0
+		)
 
 		await ideaToken.approve(multiAction.address, tokenBalanceAfterBuy)
 		expect(

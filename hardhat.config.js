@@ -2,7 +2,8 @@ require('@nomiclabs/hardhat-waffle')
 require('@nomiclabs/hardhat-web3')
 require('solidity-coverage')
 require('dotenv').config()
-
+// Include the Etherscan contract verifier.
+require('@nomiclabs/hardhat-etherscan');
 module.exports = {
 	networks: {
 		// --- EVM
@@ -28,7 +29,7 @@ module.exports = {
 		version: '0.6.9',
 		settings: {
 			optimizer: {
-				enabled: false,
+				enabled: true,
 			},
 		},
 	},
@@ -37,6 +38,9 @@ module.exports = {
 		tests: './test/contracts',
 		cache: './cache',
 		artifacts: './build/contracts',
+	},
+	etherscan: {
+		apiKey: process.env.ETHERSCAN_API_KEY
 	},
 	mocha: {
 		timeout: 200000, // 200s

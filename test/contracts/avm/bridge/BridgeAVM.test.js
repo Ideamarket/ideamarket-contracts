@@ -1,4 +1,4 @@
-const { expect } = require('chai')
+/*const { expect } = require('chai')
 const { BigNumber } = require('ethers')
 const { ethers } = require('hardhat')
 
@@ -296,3 +296,4 @@ describe('avm/core/BridgeAVM', () => {
 		).to.be.revertedWith('only-l1-exchange')
 	})
 })
+*/

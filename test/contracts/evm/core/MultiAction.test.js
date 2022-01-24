@@ -79,7 +79,7 @@ describe('evm/core/MultiAction', () => {
 		TestUniswapV2Factory = await ethers.getContractFactory('TestUniswapV2Factory')
 		TestUniswapV2Router02 = await ethers.getContractFactory('TestUniswapV2Router02')
 		IdeaTokenVault = await ethers.getContractFactory('IdeaTokenVault')
-		MultiAction = await ethers.getContractFactory('MultiAction')
+		MultiAction = await ethers.getContractFactory('contracts/shared/core/MultiAction.sol:MultiAction')
 	})
 
 	beforeEach(async () => {

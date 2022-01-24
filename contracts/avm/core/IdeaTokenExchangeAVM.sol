@@ -26,7 +26,7 @@ contract IdeaTokenExchangeAVM is IIdeaTokenExchange, Initializable, Ownable {
         // The amount of Dai collected by trading
         uint dai;
         // The amount of "investment tokens", e.g. cDai
-        uint invested; 
+        uint invested;
     }
 
     uint constant FEE_SCALE = 10000;

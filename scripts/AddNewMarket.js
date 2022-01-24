@@ -17,18 +17,21 @@ async function run() {
 		network = 'mainnet'
 		console.log('Using mainnet')
 	} else {
-		throw 'Unknown network: ' + network
+		network = await shared.read("network: ")
+		console.log(network)
 	}
 
-	const marketName = await shared.getInput('market name')
-	const nameVerifierName = await shared.getInput('name of name verifier')
+	/*
 	const rawBaseCost = await shared.getInput('baseCost in dai')
 	const rawPriceRise = await shared.getInput('priceRise in dai')
 	const rawHatchTokens = await shared.getInput('hatch tokens')
 	const rawTradingFee = await shared.getInput('trading fee in percent')
 	const rawPlatformFee = await shared.getInput('platform fee in percent')
-	const rawAllInterestToPlatform = await shared.getInput('all interest to platform? [Y/n]')
-	const executionDate = await shared.getInput('execution date (DAY-MONTH-YEAR HOUR:MINUTE:SECOND) in UTC time')
+	*/
+	const marketName = await shared.read('market name: ')
+	const nameVerifierName = await shared.read('name of name verifier: ')
+	const rawAllInterestToPlatform = await shared.read('all interest to platform? [Y/n] ')
+	const executionDate = await shared.read('execution date (DAY-MONTH-YEAR HOUR:MINUTE:SECOND) in UTC time: ')
 
 	let allInterestToPlatform
 	if (rawAllInterestToPlatform === 'Y' || rawAllInterestToPlatform === 'y') {
@@ -39,16 +42,17 @@ async function run() {
 		throw 'Invalid input for rawAllInterestToPlatform'
 	}
 
-	const factoryAddress = shared.loadDeployedAddress(network, 'ideaTokenFactory')
+	const factoryAddress = shared.loadDeployedAddress(network, 'ideaTokenFactoryAVM')
 	const nameVerifier = shared.loadDeployedAddress(
 		network,
 		nameVerifierName.charAt(0).toLowerCase() + nameVerifierName.slice(1)
 	)
-	const baseCost = shared.toWei(rawBaseCost)
-	const priceRise = shared.toWei(rawPriceRise)
-	const hatchTokens = shared.toWei(rawHatchTokens)
-	const tradingFee = shared.percentageFeeToFeeRate(rawTradingFee, 10000)
-	const platformFee = shared.percentageFeeToFeeRate(rawPlatformFee, 10000)
+	
+	const baseCost = ethers.BigNumber.from('100000000000000000')
+	const priceRise = ethers.BigNumber.from('100000000000000')
+	const hatchTokens = ethers.BigNumber.from('1000000000000000000000')
+	const tradingFee = ethers.BigNumber.from('50')
+	const platformFee = ethers.BigNumber.from('50')
 
 	const executionTimestamp = shared.unixTimestampFromDateString(executionDate)
 
@@ -77,7 +81,7 @@ async function run() {
 	console.log('network:', network)
 
 	console.log('')
-	await shared.getInput('press enter to continue')
+	await shared.read('press enter to continue')
 
 	const fax = spell.interface.encodeFunctionData('execute', [
 		factoryAddress,
