@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"test:evm": "npx hardhat test test/contracts/evm/**/*",
-		"test:avm": "npx hardhat test --network avm_local test/contracts/avm/**/*",
+		"test:avm": "npx hardhat test --network avm test/contracts/avm/**/*",
 		"test": "npm run test:evm && npm run test:ovm",
 		"lint": "eslint --fix --ext .js,.ts,.tsx --ignore-path .gitignore .",
 		"prettier": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|ts|tsx)\"",
