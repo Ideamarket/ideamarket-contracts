@@ -14,24 +14,24 @@ describe('avm/nameVerifiers/URLNameVerifier', () => {
 		expect(await nameVerifier.verifyTokenName('')).to.be.false
 	})
 
-	it.only('http://test.com', async () => {
-		expect(await nameVerifier.verifyTokenName('http://test.com')).to.be.true
+	it.only('https://test.com', async () => {
+		expect(await nameVerifier.verifyTokenName('https://test.com')).to.be.true
 	})
 
 	it.only('https://abcdefghijklmnopqrstuvwxyz_1234567-89.com', async () => {
 		expect(await nameVerifier.verifyTokenName('https://abcdefghijklmnopqrstuvwxyz_1234567-89.com')).to.be.true
 	})
 
-	it.only('http://test.com (with trailing whitespace)', async () => {
-		expect(await nameVerifier.verifyTokenName('http://test.com ')).to.be.false
+	it.only('https://test.com (with trailing whitespace)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://test.com ')).to.be.false
 	})
 
-	it.only('test.com (with leading whitespace)', async () => {
-		expect(await nameVerifier.verifyTokenName(' http://test.com')).to.be.false
+	it.only('https://test.com (with leading whitespace)', async () => {
+		expect(await nameVerifier.verifyTokenName(' https://test.com')).to.be.false
 	})
 
-	it.only('ipfs://test.com (with leading and trailing whitespace)', async () => {
-		expect(await nameVerifier.verifyTokenName(' ipfs://test.com ')).to.be.false
+	it.only('https://test.com (with leading and trailing whitespace)', async () => {
+		expect(await nameVerifier.verifyTokenName(' https://test.com ')).to.be.false
 	})
 
 	it.only('test', async () => {
@@ -39,19 +39,19 @@ describe('avm/nameVerifiers/URLNameVerifier', () => {
 	})
 
     it.only('https://test', async () => {
-		expect(await nameVerifier.verifyTokenName('https://test')).to.be.true
+		expect(await nameVerifier.verifyTokenName('https://test')).to.be.false
 	})
 
-	it.only('ipfs://test.', async () => {
-		expect(await nameVerifier.verifyTokenName('ipfs://test.')).to.be.true
+	it.only('https://test.', async () => {
+		expect(await nameVerifier.verifyTokenName('https://test.')).to.be.false
 	})
 
 	it.only('. (dot only)', async () => {
 		expect(await nameVerifier.verifyTokenName('.')).to.be.false
 	})
 
-    it.only('http:/', async () => {
-		expect(await nameVerifier.verifyTokenName('http:/')).to.be.false
+    it.only('https:/', async () => {
+		expect(await nameVerifier.verifyTokenName('https:/')).to.be.false
 	})
 
     it.only('https://. (dot only)', async () => {
@@ -66,56 +66,64 @@ describe('avm/nameVerifiers/URLNameVerifier', () => {
 		expect(await nameVerifier.verifyTokenName('test..com')).to.be.false
 	})
 
-    it.only('ipfs://test..com (double dots)', async () => {
-		expect(await nameVerifier.verifyTokenName('ipfs://test..com')).to.be.false
+    it.only('https://test..com (double dots)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://test..com')).to.be.false
 	})
     
-    it.only('ipfs://test.com.testing..time (double dots)', async () => {
-		expect(await nameVerifier.verifyTokenName('ipfs://test..com')).to.be.false
+    it.only('https://test.com.testing..time (double dots)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://test..com')).to.be.false
 	})
 
-    it.only('ipfs://test.com.testing.time.. (double dots)', async () => {
-		expect(await nameVerifier.verifyTokenName('ipfs://test.com..')).to.be.false
+    it.only('https://test.com.testing.time.. (double dots)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://test.com..')).to.be.false
 	})
     
+    it.only('https://example.test.com (subdomain)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://example.test.com')).to.be.true
+	})
+
     it.only('http://example.test.com (subdomain)', async () => {
-		expect(await nameVerifier.verifyTokenName('http://example.test.com')).to.be.true
+		expect(await nameVerifier.verifyTokenName('http://example.test.com')).to.be.false
 	})
 
     it.only('https://example.test.com (subdomain)', async () => {
 		expect(await nameVerifier.verifyTokenName('https://example.test.com')).to.be.true
 	})
 
-    it.only('ipfs://example.test.com (subdomain)', async () => {
-		expect(await nameVerifier.verifyTokenName('ipfs://example.test.com')).to.be.true
+    it.only('https://example.test.com (subdomain)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://example.test.com')).to.be.true
 	})
 
 	it.only('example.test.com (subdomain)', async () => {
 		expect(await nameVerifier.verifyTokenName('example.test.com')).to.be.false
 	})
 
-    it.only('http://example.test.com/testing (subdomain)', async () => {
-		expect(await nameVerifier.verifyTokenName('http://example.test.com/testing')).to.be.true
+    it.only('https://example.test.com/testing (subdomain)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://example.test.com/testing')).to.be.true
 	})
 
-    it.only('http://example.test.com//testing (subdomain)', async () => {
-		expect(await nameVerifier.verifyTokenName('http://example.test.com//testing')).to.be.false
+    it.only('ipfs://example.test.com/testing (subdomain)', async () => {
+		expect(await nameVerifier.verifyTokenName('ipfs://example.test.com/testing')).to.be.false
 	})
 
-    it.only('http://example.test.com/testing// (subdomain)', async () => {
-		expect(await nameVerifier.verifyTokenName('http://example.test.com/testing//')).to.be.false
+    it.only('https://example.test.com//testing (subdomain)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://example.test.com//testing')).to.be.false
 	})
 
-    it.only('http://example.test.com/testing// (subdomain)', async () => {
-		expect(await nameVerifier.verifyTokenName('http://example.test.com/testing//time')).to.be.false
+    it.only('https://example.test.com/testing// (subdomain)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://example.test.com/testing//')).to.be.false
 	})
 
-    it.only('http://example.test.com/testing/ (subdomain)', async () => {
-		expect(await nameVerifier.verifyTokenName('http://example.test.com/testing/')).to.be.true
+    it.only('https://example.test.com/testing// (subdomain)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://example.test.com/testing//time')).to.be.false
 	})
 
-    it.only('http://test!.com (invalid character)', async () => {
-		expect(await nameVerifier.verifyTokenName('http://test!.com')).to.be.false
+    it.only('https://example.test.com/testing/ (subdomain)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://example.test.com/testing/')).to.be.true
+	})
+
+    it.only('https://test!.com (invalid character)', async () => {
+		expect(await nameVerifier.verifyTokenName('https://test!.com')).to.be.false
 	})
 
     it.only('https://webmasters.stackexchange.com/questions/8354/what-does-a-double-slash-in-the-url-path-mean', async () => {
@@ -138,13 +146,23 @@ describe('avm/nameVerifiers/URLNameVerifier', () => {
             'https://en.wiktionary.org/wiki/καιρός#Ancient_Greek')).to.be.true
 	})
 
-    it.only('http://www.reddit.com/r/漢字', async () => {
+    it.only('https://www.reddit.com/r/漢字', async () => {
 		expect(await nameVerifier.verifyTokenName(
-            'http://www.reddit.com/r/漢字')).to.be.true
+            'https://www.reddit.com/r/漢字')).to.be.true
+	})
+
+    it.only('https://arbiscan.io/token/0x4f2f0b724ce76deec3788d93a8830a0c7ff104f0', async () => {
+		expect(await nameVerifier.verifyTokenName(
+            'https://arbiscan.io/token/0x4f2f0b724ce76deec3788d93a8830a0c7ff104f0')).to.be.true
+	})
+
+    it.only('https://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/wiki/Vincent_van_Gogh.html', async () => {
+		expect(await nameVerifier.verifyTokenName(
+            'https://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/wiki/Vincent_van_Gogh.html')).to.be.false
 	})
 
     it.only('ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/wiki/Vincent_van_Gogh.html', async () => {
 		expect(await nameVerifier.verifyTokenName(
-            'ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/wiki/Vincent_van_Gogh.html')).to.be.true
+            'ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/wiki/Vincent_van_Gogh.html')).to.be.false
 	})
 })
