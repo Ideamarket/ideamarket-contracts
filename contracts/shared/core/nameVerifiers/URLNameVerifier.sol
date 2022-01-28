@@ -7,7 +7,7 @@ import "./IIdeaTokenNameVerifier.sol";
  * @title URLNameVerifier
  * @author Kelton Madden
  *
- * Verifies a string to be a domain names: 0-9 and a-z and - (hyphen). Excludes subdomains
+ * Verifies a string to be a a valid https:// url
  */
 contract URLNameVerifier is IIdeaTokenNameVerifier {
     /**
