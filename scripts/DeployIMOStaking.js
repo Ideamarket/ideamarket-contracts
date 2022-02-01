@@ -1,21 +1,19 @@
 require('dotenv').config({ path: '../.env' })
 const { BigNumber } = require('ethers')
 const { run, ethers, artifacts } = require('hardhat')
-const { saveDeployedAddress, saveDeployedABI } = require('./shared')
+const { saveDeployedAddress, saveDeployedABI, loadDeployedAddress } = require('./shared')
 
 const tenPow18 = BigNumber.from('1000000000000000000')
 
 // ----------------- UPDATE THESE -----------------
 const allDeploymentParams = {
 	avm: {
-		gasPrice: 2000000000, // 2 gwei
-		drippingIMOSourceRate: BigNumber.from('4').mul(tenPow18),
-		amountIMOToSource: BigNumber.from('10000000').mul(tenPow18),
+		gasPrice: 1500000000, // 1.5 gwei
+		drippingIMOSourceRate: BigNumber.from('2471500000000000000'), // 2.4715 per block = 3 million over 6 months
 	},
 	'test-avm-l2': {
 		gasPrice: 2000000000, // 1 gwei
 		drippingIMOSourceRate: BigNumber.from('4').mul(tenPow18),
-		amountIMOToSource: BigNumber.from('10000000').mul(tenPow18),
 	},
 }
 const allExternalContractAddresses = {
@@ -54,10 +52,38 @@ async function runDeployIMO() {
 		throw `unknown chain id: ${chainID}`
 	}
 
-	const imo = await deployContract('IMO', deployerAddress)
-	saveDeployedAddress(networkName, 'imo', imo.address)
-	saveDeployedABI(networkName, 'imo', artifacts.readArtifactSync('IMO').abi)
+	const imoAddress = loadDeployedAddress(networkName, 'imo')
+
+	const staking = await deployContract('IMOStaking', imoAddress, deployerAddress)
+	saveDeployedAddress(networkName, 'imoStaking', staking.address)
+	saveDeployedABI(networkName, 'imoStaking', artifacts.readArtifactSync('IMOStaking').abi)
 	console.log('')
+
+	const drippingIMOSource = await deployContract(
+		'DrippingIMOSource',
+		imoAddress,
+		staking.address,
+		deploymentParams.drippingIMOSourceRate,
+		externalContractAddresses.multisig
+	)
+	saveDeployedAddress(networkName, 'imoDrippingIMOSource', drippingIMOSource.address)
+	saveDeployedABI(networkName, 'imoDrippingIMOSource', artifacts.readArtifactSync('DrippingIMOSource').abi)
+	console.log('')
+
+	console.log('Adding DrippingIMOSource to IMOStaking')
+	let tx = await staking.addSource(drippingIMOSource.address)
+	await tx.wait()
+	console.log('')
+
+	console.log('Setting IMOStaking owner')
+	tx = await staking.setOwner(externalContractAddresses.multisig)
+	await tx.wait()
+	console.log('')
+
+	/*console.log('Sending IMO to DrippingIMOSource')
+	tx = await imo.transfer(drippingIMOSource.address, deploymentParams.amountIMOToSource)
+	await tx.wait()
+	console.log('')*/
 }
 
 async function deployContract(name, ...params) {
