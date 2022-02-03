@@ -156,6 +156,16 @@ describe('avm/nameVerifiers/URLNameVerifier', () => {
             'https://arbiscan.io/token/0x4f2f0b724ce76deec3788d93a8830a0c7ff104f0')).to.be.true
 	})
 
+    it.only('https://ideamarket.io/i/twitter/elonmusk', async () => {
+		expect(await nameVerifier.verifyTokenName(
+            'https://ideamarket.io/i/twitter/elonmusk')).to.be.true
+	})
+
+    it.only('https://ideamarket.io', async () => {
+		expect(await nameVerifier.verifyTokenName(
+            'https://ideamarket.io')).to.be.true
+	})
+
     it.only('https://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/wiki/Vincent_van_Gogh.html', async () => {
 		expect(await nameVerifier.verifyTokenName(
             'https://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/wiki/Vincent_van_Gogh.html')).to.be.false
