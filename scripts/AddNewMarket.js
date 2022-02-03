@@ -102,6 +102,8 @@ async function run() {
 	console.log('Param fax:', fax)
 	console.log('Param eta:', executionTimestamp.toString())
 	console.log('ABI:', JSON.stringify(DSPause.interface.fragments))
+	
+	//await timelockContract.plot(spellAddress, tag, fax, executionTimestamp.toString())
 }
 
 run()
