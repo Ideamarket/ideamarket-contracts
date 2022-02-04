@@ -12,6 +12,7 @@ jobs:
             node-version: 12.x
       - name: Install dependencies
         run: |
+            npm i -g npm@latest
             npm install
       - name: Run EVM tests
         run: |

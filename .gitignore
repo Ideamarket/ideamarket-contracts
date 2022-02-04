@@ -1,6 +1,9 @@
 # NPM / Node
 node_modules
 
+# Yarn
+yarn.lock
+
 # Coverage
 coverage
 coverage.json
