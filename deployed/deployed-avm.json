@@ -20,5 +20,10 @@
     "ideaTokenVaultLogic": "0xd2a2830B2B381Eb2bcA5584c5d96732FDC83FFe9",
     "multiAction": "0x3e2E703159E2a9fE4290c5949Ab6aC2AA60C8524",
     "addMarketSpell": "0x4332df6a97abb1776a4909ee283a7f04994b6b1c",
-    "changeTimelockOwnerSpell": "0x5e2a18eb368a6466ABb693AdabbbBd32B4d87c65"
+    "changeTimelockOwnerSpell": "0x5e2a18eb368a6466ABb693AdabbbBd32B4d87c65",
+    "imoTokenAddress": "0xB41bd4C99dA73510d9e081C5FADBE7A27Ac1F814",
+    "userAidropMerkleTree": "0x80125E8016B30D10Dd5f96A3D0b7d4594a3309B1",
+    "communityAirdropMerkleTree": "0x214a14850329Bec9fa577D4cE6e00b69dfD287d4",
+    "imoStakingContract": "0xe4CC6152F0173604f07C6ced613C302f21D77184",
+    "imoLPStakingContract": "0xb0448763523E129Bfc2Cd20ceeFAcC16c620F726"
 }
