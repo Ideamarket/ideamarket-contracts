@@ -24,6 +24,7 @@
     "imoTokenAddress": "0xB41bd4C99dA73510d9e081C5FADBE7A27Ac1F814",
     "userAidropMerkleTree": "0x80125E8016B30D10Dd5f96A3D0b7d4594a3309B1",
     "communityAirdropMerkleTree": "0x214a14850329Bec9fa577D4cE6e00b69dfD287d4",
+    "verificationMerkleTree": "0xB5Cc3be2dba60eABf13CA2a67B8881EE6f66a3Ba",
     "imoStakingContract": "0xe4CC6152F0173604f07C6ced613C302f21D77184",
     "imoDrippingIMOSource": "0xc1092Eb50fa05Ec3b632e8Cf993d57Da5152cA29",
     "imoLPStakingContract": "0xb0448763523E129Bfc2Cd20ceeFAcC16c620F726"
