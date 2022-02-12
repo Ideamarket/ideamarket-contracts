@@ -166,6 +166,11 @@ describe('avm/nameVerifiers/URLNameVerifier', () => {
             'https://ideamarket.io')).to.be.true
 	})
 
+    it.only('https://www.apple.com/', async () => {
+		expect(await nameVerifier.verifyTokenName(
+            'https://www.apple.com/')).to.be.true
+	})
+
     it.only('https://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/wiki/Vincent_van_Gogh.html', async () => {
 		expect(await nameVerifier.verifyTokenName(
             'https://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/wiki/Vincent_van_Gogh.html')).to.be.false
