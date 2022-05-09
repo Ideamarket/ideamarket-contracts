@@ -21,8 +21,6 @@ module.exports = {
 			accounts: process.env.RINKEBY_PRIVATE_KEY ? [process.env.RINKEBY_PRIVATE_KEY] : [],
 		},
 		rinkeby_avm: {
-			gas: 120000000000000,
-			allowUnlimitedContractSize: true,
 			url: process.env.RINKEBY_AVM_RPC || '',
 			accounts: process.env.RINKEBY_AVM_PRIVATE_KEY ? [process.env.RINKEBY_AVM_PRIVATE_KEY] : [],
 		}

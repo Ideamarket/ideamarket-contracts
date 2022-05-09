@@ -4,112 +4,15 @@ const { BigNumber } = require('ethers')
 const { read, loadDeployedAddress, saveDeployedAddress, saveDeployedABI } = require('./shared')
 
 const allDeploymentParams = {
-	mainnet: {
+	"avm": {
 		timelockDelay: '86400', // 24 hours
-		gasPrice: 130000000000,
-
-		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
-		twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		twitterAllInterestToPlatform: false,
-
-		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
-		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		substackAllInterestToPlatform: false,
-
-		showtimeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		showtimePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		showtimeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
-		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
-		showtimeAllInterestToPlatform: false,
-	},
-	rinkeby: {
-		timelockDelay: '1',
-		gasPrice: 1000000000, // 1 gwei
-
-		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
-		twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		twitterAllInterestToPlatform: false,
-
-		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
-		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		substackAllInterestToPlatform: false,
-
-		showtimeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		showtimePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		showtimeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
-		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
-		showtimeAllInterestToPlatform: false,
-	},
-	test: {
-		timelockDelay: '1',
-		gasPrice: 10000000000, // 10 gwei
-
-		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
-		twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		twitterAllInterestToPlatform: false,
-
-		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
-		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		substackAllInterestToPlatform: false,
-
-		showtimeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		showtimePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		showtimeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
-		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
-		showtimeAllInterestToPlatform: false,
-	},
-	'test-avm-l1': {
-		timelockDelay: '1',
-		gasPrice: 10000000000, // 10 gwei
-
-		twitterBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		twitterPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		twitterHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		twitterTradingFeeRate: BigNumber.from('50'), // 0.50%
-		twitterPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		twitterAllInterestToPlatform: false,
-
-		substackBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		substackPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		substackHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		substackTradingFeeRate: BigNumber.from('50'), // 0.50%
-		substackPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		substackAllInterestToPlatform: false,
-
-		showtimeBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		showtimePriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		showtimeHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		showtimeTradingFeeRate: BigNumber.from('50'), // 0.50%
-		showtimePlatformFeeRate: BigNumber.from('50'), // 0.50%
-		showtimeAllInterestToPlatform: false,
-
-		mindsBaseCost: BigNumber.from('100000000000000000'), // 0.1 DAI
-		mindsPriceRise: BigNumber.from('100000000000000'), // 0.0001 DAI
-		mindsHatchTokens: BigNumber.from('1000000000000000000000'), // 1000
-		mindsTradingFeeRate: BigNumber.from('50'), // 0.50%
-		mindsPlatformFeeRate: BigNumber.from('50'), // 0.50%
-		mindsAllInterestToPlatform: false,
+		gasPrice: 7500000000,
+		addressBaseCost: BigNumber.from('1000000000000000000'), // 1 IMO
+		addressPriceRise: 0, // 0 IMO
+		addressHatchTokens: 0, // 0
+		addressTradingFeeRate: 0, // 0.00%
+		addressPlatformFeeRate: 0, // 0.00%
+		addressAllInterestToPlatform: true,
 	},
     'test-avm-l2': {
 		timelockDelay: '1',
@@ -125,41 +28,15 @@ const allDeploymentParams = {
 }
 
 const allExternalContractAddresses = {
-	mainnet: {
-		multisig: '0x4905485d8B0Be42b317CCB4806b966aC0d4f4AE8',
+	"avm": {
+		multisig: '0x93f9707adb26d98cfc6d73C8840425010AfA968B',
 		authorizer: '0x78C15e4B4Ed9D8B4FFd031d0ec7BD09A55d02699',
-		dai: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+		imo: '0xb41bd4c99da73510d9e081c5fadbe7a27ac1f814',
 		cDai: '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643',
 		comp: '0xc00e94Cb662C3520282E6f5717214004A7f26888',
-		weth: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+		weth: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
 		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-	},
-	rinkeby: {
-		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-		dai: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
-		cDai: '0x6D7F0754FFeb405d23C51CE938289d4835bE3b14',
-		comp: '0x0000000000000000000000000000000000000001', // Not deployed on Rinkeby
-		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-	},
-	test: {
-		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-		dai: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
-		cDai: '0x6D7F0754FFeb405d23C51CE938289d4835bE3b14',
-		comp: '0x0000000000000000000000000000000000000001', // Not deployed on Rinkeby
-		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-	},
-	'test-avm-l1': {
-		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-		authorizer: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
-		dai: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
-		cDai: '0x6D7F0754FFeb405d23C51CE938289d4835bE3b14',
-		comp: '0x0000000000000000000000000000000000000001', // Not deployed on Rinkeby
-		weth: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-		uniswapV2Router02: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+		bridgeAVM: "0x04C451E7f6E391ee0D004139FFe125Bd75535DE6",
 	},
 	'test-avm-l2': {
 		multisig: '0x4e6a11b687F35fA21D92731F9CD2f231C61f9151',
@@ -185,32 +62,13 @@ async function main() {
 	console.log('')
 
 	let networkName = (await ethers.provider.getNetwork()).name
-	if (networkName === 'rinkeby') {
-		const input = await read('[1: rinkeby, 2: test, 3: test-avm-l1]')
+	console.log(networkName)
+	if (networkName != 'arbitrum') {
+		networkName = 'avm-imo-market'
 
-		if(input === '1') {
-			console.log('Using rinkeby')
-			deploymentParams = allDeploymentParams.rinkeby
-			externalContractAddresses = allExternalContractAddresses.rinkeby
-		} else if (input === '2') {
-			console.log('Using test')
-			networkName = 'test'
-			deploymentParams = allDeploymentParams.test
-			externalContractAddresses = allExternalContractAddresses.test
-		} else if (input === '3') {
-			console.log('Using test-avm-l1')
-			networkName = 'test-avm-l1'
-			deploymentParams = allDeploymentParams['test-avm-l1']
-			externalContractAddresses = allExternalContractAddresses['test-avm-l1']
-		} else {
-			throw new Error('Unknown network')
-		}
-	} else if (networkName === 'homestead') {
-		networkName = 'mainnet'
-
-		console.log('Using Mainnet')
-		deploymentParams = allDeploymentParams.mainnet
-		externalContractAddresses = allExternalContractAddresses.mainnet
+		console.log('Using arbitrum')
+		deploymentParams = allDeploymentParams.avm
+		externalContractAddresses = allExternalContractAddresses.avm
 	} else {
 		// if network is not one of the above, manually input data here
 		console.log('Using test-avm-l2')
@@ -221,7 +79,7 @@ async function main() {
 
 	console.log('Block', await ethers.provider.getBlockNumber())
 
-	const STAGE = 1
+	const STAGE = 10
 
 	let dsPauseProxyAddress
 	if (STAGE <= 1) {
@@ -376,7 +234,7 @@ async function main() {
 	}
 
 	let addressNameVerifierAddress
-	if (false) {
+	if (STAGE <= 10) {
 		console.log('12. Deploy addressNameVerifier')
 		console.log('==============================================')
 		const addressNameVerifier = await deployContract('AddressNameVerifier')
@@ -426,7 +284,7 @@ async function main() {
 		await tx.wait()
 		console.log('')
 	}
-
+	
 	let ideaTokenVaultProxyAddress
 	if (STAGE <= 17) {
 		console.log('17. Deploy IdeaTokenVault')
@@ -454,7 +312,7 @@ async function main() {
 			ideaTokenExchangeProxyAddress,
 			ideaTokenFactoryProxyAddress,
 			ideaTokenVaultProxyAddress,
-	imo,
+			imo,
 			externalContractAddresses.uniswapV2Router02,
 			externalContractAddresses.weth
 		)

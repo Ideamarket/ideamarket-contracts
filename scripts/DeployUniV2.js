@@ -35,13 +35,13 @@ async function main() {
 	let tokenID
 	let ideaToken
     const accounts = await ethers.getSigners()
-    userAccount = accounts[0]
-    adminAccount = accounts[1]
+    adminAccount = accounts[0]
     tradingFeeAccount = accounts[2]
-    imo = await ethers.getContractAt('TestERC20', "0x60CBB924c14d28C2Da82D3Ba0955dC19eC7f51B6")
+    imo = await ethers.getContractAt('TestERC20', "0x634a0900a5F90C9F2d42BF1d49d94B84Db0A260d")
     someToken = await ethers.getContractAt('TestERC20', "0x0a6346427aA7c352e0e006cC335fCA66B4dDfc86")
     someOtherToken = await ethers.getContractAt('TestERC20', '0x6B8fBB1265AbE7f349a5629c3aF58ebC10F8523D')
-    weth = await ethers.getContractAt('TestWETH', "0x6B8fBB1265AbE7f349a5629c3aF58ebC10F8523D")
+    //need to get some weth
+    weth = await ethers.getContractAt('TestWETH', "0xEBbc3452Cc911591e4F18f3b36727Df45d6bd1f9")
     uniswapV2Lib = await ethers.getContractAt('TestUniswapV2Library', '0x887561B37F774441EA93Fd0366dc97a66bfC6101')
     uniswapFactory = await ethers.getContractAt('TestUniswapV2Factory', '0x08e2c01BfC583D7A9F8FAB87f30e6386EC25759B')
     TestUniswapV2Router02 = await ethers.getContractFactory('TestUniswapV2Router02')
@@ -77,75 +77,75 @@ async function main() {
    const deploymentData = TestUniswapV2Router02.interface.encodeDeploy([uniswapFactory.address, weth.address])
    const estimatedGas = await ethers.provider.estimateGas({ data: deploymentData });
    console.log("gas:" + estimatedGas)
-    router = await TestUniswapV2Router02.deploy(uniswapFactory.address, weth.address)
+    router = await TestUniswapV2Router02.deploy(uniswapFactory.address, weth.address, { gasLimit: ethers.BigNumber.from(5000000)})
     await router.deployed()
     console.log("router: " + router.address)
-    // Setup Uniswap pools
-    // ETH-imo: 1 ETH, 200 imo
-    const ethAmount = tenPow18
-    let imoAmount = tenPow18.mul(BigNumber.from('200'))
+    // // Setup Uniswap pools
+    // // ETH-imo: .1 ETH, 200 imo
+    // const ethAmount = tenPow17
+    // let imoAmount = tenPow18.mul(BigNumber.from('200'))
 
-    await weth.connect(adminAccount).deposit({ value: ethAmount })
-    await imo.connect(adminAccount).mint(adminAccount.address, imoAmount)
-    await weth.connect(adminAccount).approve(router.address, ethAmount)
-    await imo.connect(adminAccount).approve(router.address, imoAmount)
-    await uniswapFactory.connect(adminAccount).createPair(weth.address, imo.address)
-    await router
-        .connect(adminAccount)
-        .addLiquidity(
-            weth.address,
-            imo.address,
-            ethAmount,
-            imoAmount,
-            ethAmount,
-            imoAmount,
-            adminAccount.address,
-            BigNumber.from('9999999999999999999')
-        )
-    console.log("here3")
-    // SOME-imo: 1000 SOME, 100 imo
-    const someAmount = tenPow18.mul(BigNumber.from('1000'))
-    imoAmount = tenPow18.mul(BigNumber.from('100'))
-    await someToken.connect(adminAccount).mint(adminAccount.address, someAmount)
-    await imo.connect(adminAccount).mint(adminAccount.address, imoAmount)
+    // await weth.connect(adminAccount).deposit({ value: ethAmount })
+    // await imo.connect(adminAccount).mint(adminAccount.address, imoAmount)
+    // await weth.connect(adminAccount).approve(router.address, ethAmount)
+    // await imo.connect(adminAccount).approve(router.address, imoAmount)
+    // await uniswapFactory.connect(adminAccount).createPair(weth.address, imo.address)
+    // await router
+    //     .connect(adminAccount)
+    //     .addLiquidity(
+    //         weth.address,
+    //         imo.address,
+    //         ethAmount,
+    //         imoAmount,
+    //         ethAmount,
+    //         imoAmount,
+    //         adminAccount.address,
+    //         BigNumber.from('9999999999999999999')
+    //     )
+    // console.log("here3")
+    // // SOME-imo: 1000 SOME, 100 imo
+    // const someAmount = tenPow18.mul(BigNumber.from('1000'))
+    // imoAmount = tenPow18.mul(BigNumber.from('100'))
+    // await someToken.connect(adminAccount).mint(adminAccount.address, someAmount)
+    // await imo.connect(adminAccount).mint(adminAccount.address, imoAmount)
 
-    await someToken.connect(adminAccount).approve(router.address, someAmount)
-    await imo.connect(adminAccount).approve(router.address, imoAmount)
-    await uniswapFactory.connect(adminAccount).createPair(someToken.address, imo.address)
+    // await someToken.connect(adminAccount).approve(router.address, someAmount)
+    // await imo.connect(adminAccount).approve(router.address, imoAmount)
+    // await uniswapFactory.connect(adminAccount).createPair(someToken.address, imo.address)
 
-    await router
-        .connect(adminAccount)
-        .addLiquidity(
-            someToken.address,
-            imo.address,
-            someAmount,
-            imoAmount,
-            someAmount,
-            imoAmount,
-            adminAccount.address,
-            BigNumber.from('9999999999999999999')
-        )
+    // await router
+    //     .connect(adminAccount)
+    //     .addLiquidity(
+    //         someToken.address,
+    //         imo.address,
+    //         someAmount,
+    //         imoAmount,
+    //         someAmount,
+    //         imoAmount,
+    //         adminAccount.address,
+    //         BigNumber.from('9999999999999999999')
+    //     )
 
-    // ETH-SOMEOTHER: 1 ETH, 500 SOMEOTHER
-    const someOtherAmount = tenPow18.mul(BigNumber.from('1000'))
+    // // ETH-SOMEOTHER: .1 ETH, 500 SOMEOTHER
+    // const someOtherAmount = tenPow18.mul(BigNumber.from('1000'))
 
-    await weth.connect(adminAccount).deposit({ value: ethAmount })
-    await someOtherToken.connect(adminAccount).mint(adminAccount.address, someOtherAmount)
-    await weth.connect(adminAccount).approve(router.address, ethAmount)
-    await someOtherToken.connect(adminAccount).approve(router.address, someOtherAmount)
-    await uniswapFactory.connect(adminAccount).createPair(weth.address, someOtherToken.address)
-    await router
-        .connect(adminAccount)
-        .addLiquidity(
-            weth.address,
-            someOtherToken.address,
-            ethAmount,
-            someOtherAmount,
-            ethAmount,
-            someOtherAmount,
-            adminAccount.address,
-            BigNumber.from('9999999999999999999')
-        )
+    // await weth.connect(adminAccount).deposit({ value: ethAmount })
+    // await someOtherToken.connect(adminAccount).mint(adminAccount.address, someOtherAmount)
+    // await weth.connect(adminAccount).approve(router.address, ethAmount)
+    // await someOtherToken.connect(adminAccount).approve(router.address, someOtherAmount)
+    // await uniswapFactory.connect(adminAccount).createPair(weth.address, someOtherToken.address)
+    // await router
+    //     .connect(adminAccount)
+    //     .addLiquidity(
+    //         weth.address,
+    //         someOtherToken.address,
+    //         ethAmount,
+    //         someOtherAmount,
+    //         ethAmount,
+    //         someOtherAmount,
+    //         adminAccount.address,
+    //         BigNumber.from('9999999999999999999')
+    //     )
 }
 
 main()
