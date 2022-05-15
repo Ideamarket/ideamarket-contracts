@@ -18,5 +18,8 @@
     "setTokenOwnerSpell": "0x6584FCB8f48dbF6F3d1a97d6e29f2d1a89CC60B7",
     "setPlatformOwnerSpell": "0x88A2dAa203aD48bD62672f8Cc4Acd3081df67334",
     "setTradingFeeSpell": "0xFf8887AfcF13d876c360E387B55762F68B610Ce3",
-    "setPlatformFeeSpell": "0xef6A0b544b717458307f382781CAD11Ad41ff2A2"
+    "setPlatformFeeSpell": "0xef6A0b544b717458307f382781CAD11Ad41ff2A2",
+    "uniswapFactory": "0x551B1Ad59325FB8fC9093bcebd9a497bbb3937D5",
+    "uniswapRouter": "0x0Da68B7FbC69FdCf7876EFb8e061e39596a005B4",
+    "multiAction": "0x249559Dbdc930a38B26BA4B23bC5d9fc2C3Cdeb8"
 }
